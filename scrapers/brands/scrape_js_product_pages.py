@@ -6,7 +6,6 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 
-MODELS_FILE = Path("scrapers/brands/js_canonical_models.json")
 OUTPUT_FILE = Path("scrapers/brands/output/js_page_catalogue.json")
 
 PRODUCT_URLS = [
@@ -43,8 +42,90 @@ PRODUCT_URLS = [
 ]
 
 
+MODEL_BY_SLUG = {
+    "mother-trucker": "Mother Trucker",
+    "step-off-performer": "Step Off",
+    "forget-me-not-3-step-up": "Forget Me Not 3 Step Up",
+    "big-horse": "Big Horse",
+    "golden-child": "Golden Child",
+    "forget-me-not-3": "Forget Me Not 3",
+    "monsta": "Monsta",
+    "schooner": "Schooner",
+    "raging-bull": "Raging Bull",
+    "xero-gravity": "Xero Gravity",
+    "xero-fusion": "Xero Fusion",
+    "el-baron": "El Baron",
+    "big-baron": "Big Baron",
+    "black-baron": "Black Baron",
+    "bull-run": "Bull Run",
+    "sub-xero": "Sub Xero",
+    "flame-fish": "Flame Fish",
+    "golden-child-youth": "Golden Child Youth",
+    "monsta-youth": "Monsta Youth",
+    "xero-gravity-youth": "Xero Gravity Youth",
+    "black-eagle-2": "Black Eagle 2",
+    "big-baron-easy-rider-softboard": "Big Baron Easy Rider",
+    "big-baron-softboard": "Big Baron Softboard",
+    "bull-run-softboard": "Bull Run Softboard",
+    "flame-fish-softboard": "Flame Fish Softboard",
+    "golden-child-easy-rider": "Golden Child Easy Rider",
+    "monsta-easy-rider": "Monsta Easy Rider",
+    "xero-gravity-easy-rider": "Xero Gravity Easy Rider",
+    "xero-fusion-easy-rider": "Xero Fusion Easy Rider",
+    "raging-bull-easy-rider-1": "Raging Bull Easy Rider",
+}
+
+
 def clean(value):
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def model_from_url(url):
+    slug = url.rstrip("/").split("/")[-1]
+    return MODEL_BY_SLUG.get(
+        slug,
+        slug.replace("-", " ").title()
+    )
+
+
+def normalise_construction(value):
+    value = clean(value)
+
+    if not value:
+        return None
+
+    upper_value = value.upper()
+
+    if upper_value == "CARBOTUNE":
+        return "CarboTune"
+
+    if upper_value.startswith("HYFI"):
+        return "HYFI 3.0"
+
+    if upper_value in ["PU", "PE", "EPS"]:
+        return upper_value
+
+    if upper_value == "SOFTBOARD":
+        return "Softboard"
+
+    return value
+
+
+def normalise_fin(value):
+    value = clean(value)
+
+    if not value:
+        return None
+
+    upper_value = value.upper()
+
+    if "FCS" in upper_value:
+        return "FCS II"
+
+    if "FUTURES" in upper_value:
+        return "Futures"
+
+    return value
 
 
 def parse_dimensions(text):
@@ -85,74 +166,69 @@ def parse_dimensions(text):
             "length": length.replace('"', ""),
             "width": width.replace('"', ""),
             "thickness": thickness.replace('"', ""),
-            "volume_litres": float(
-                volume_match.group(1)
-            ),
+            "volume_litres": float(volume_match.group(1)),
         })
 
     return results
 
 
-def parse_options(text):
+async def get_product_variants(page):
+    product = await page.evaluate(
+        """
+        () => {
+            if (
+                window.customerHub &&
+                window.customerHub.activeProduct &&
+                window.customerHub.activeProduct.variants
+            ) {
+                return window.customerHub.activeProduct;
+            }
 
-    constructions = []
-    fin_systems = []
-    tail_shapes = []
+            return null;
+        }
+        """
+    )
 
-    upper_text = text.upper()
+    if not product:
+        return []
 
-    if "PU" in upper_text:
-        constructions.append("PU")
+    rows = []
 
-    if "HYFI" in upper_text:
-        constructions.append("HYFI 3.0")
+    for variant in product.get("variants", []):
+        construction = None
+        fin_system = None
 
-    if "CARBOTUNE" in upper_text:
-        constructions.append("CarboTune")
+        for option in variant.get("selectedOptions", []):
+            name = clean(option.get("name")).lower()
+            value = clean(option.get("value"))
 
-    if "PE" in upper_text:
-        constructions.append("PE")
+            if name == "construction":
+                construction = normalise_construction(value)
 
-    if "SOFTBOARD" in upper_text:
-        constructions.append("Softboard")
+            if name == "fin system":
+                fin_system = normalise_fin(value)
 
-    if "FCS" in upper_text:
-        fin_systems.append("FCS II")
+        if construction:
+            rows.append({
+                "construction": construction,
+                "fin_system": fin_system,
+                "price": variant.get("price"),
+                "available": variant.get("availableForSale"),
+                "variant_id": variant.get("id"),
+                "image_url": variant.get("imageUrl"),
+            })
 
-    if "FUTURES" in upper_text:
-        fin_systems.append("Futures")
+    deduped = {}
 
-    if "SQUASH TAIL" in upper_text:
-        tail_shapes.append("Squash Tail")
+    for row in rows:
+        key = "|".join([
+            row.get("construction") or "",
+            row.get("fin_system") or "",
+        ])
 
-    if "ROUND TAIL" in upper_text:
-        tail_shapes.append("Round Tail")
+        deduped[key] = row
 
-    if "SWALLOW TAIL" in upper_text:
-        tail_shapes.append("Swallow Tail")
-
-    if "PIN TAIL" in upper_text:
-        tail_shapes.append("Pin Tail")
-
-    return {
-        "constructions": list(set(constructions)),
-        "fin_systems": list(set(fin_systems)),
-        "tail_shapes": list(set(tail_shapes)),
-    }
-
-
-def model_from_url(url):
-
-    slug = url.rstrip("/").split("/")[-1]
-
-    model = slug.replace("-", " ").title()
-
-    model = model.replace(" Performer", "")
-    model = model.replace(" Softboard", "")
-    model = model.replace(" Easy Rider", "")
-    model = model.replace(" 1", "")
-
-    return clean(model)
+    return list(deduped.values())
 
 
 async def scrape_product(page, url):
@@ -165,56 +241,50 @@ async def scrape_product(page, url):
         timeout=60000
     )
 
-    await page.wait_for_timeout(5000)
+    await page.wait_for_timeout(6000)
 
     await page.mouse.wheel(0, 2500)
 
     await page.wait_for_timeout(1500)
 
-    text = await page.locator(
-        "body"
-    ).inner_text()
+    text = await page.locator("body").inner_text()
 
     model_name = model_from_url(url)
 
     dimensions = parse_dimensions(text)
+    variants = await get_product_variants(page)
 
-    options = parse_options(text)
+    if not variants:
+        variants = [{
+            "construction": None,
+            "fin_system": None,
+            "price": None,
+            "available": None,
+            "variant_id": None,
+            "image_url": None,
+        }]
 
     rows = []
 
-    constructions = (
-        options["constructions"]
-        or [None]
-    )
-
-    fin_systems = (
-        options["fin_systems"]
-        or [None]
-    )
-
-    tail_shapes = (
-        options["tail_shapes"]
-        or [None]
-    )
-
-    for construction in constructions:
-        for fin_system in fin_systems:
-            for tail_shape in tail_shapes:
-                for dimension in dimensions:
-
-                    rows.append({
-                        "brand": "JS Industries",
-                        "model": model_name,
-                        "construction": construction,
-                        "fin_system": fin_system,
-                        "tail_shape": tail_shape,
-                        "product_url": url,
-                        **dimension,
-                    })
+    for variant in variants:
+        for dimension in dimensions:
+            rows.append({
+                "brand": "JS Industries",
+                "model": model_name,
+                "construction": variant.get("construction"),
+                "fin_system": variant.get("fin_system"),
+                "tail_shape": None,
+                "product_url": url,
+                "price": variant.get("price"),
+                "available": variant.get("available"),
+                "variant_id": variant.get("variant_id"),
+                "image_url": variant.get("image_url"),
+                **dimension,
+            })
 
     print(f"  Model: {model_name}")
     print(f"  Dimensions: {len(dimensions)}")
+    print(f"  Variant options: {len(variants)}")
     print(f"  Rows: {len(rows)}")
 
     return rows
@@ -245,7 +315,6 @@ async def main():
         for url in PRODUCT_URLS:
 
             try:
-
                 rows = await scrape_product(
                     page,
                     url
@@ -254,10 +323,7 @@ async def main():
                 all_rows.extend(rows)
 
             except Exception as error:
-
-                print(
-                    f"Failed {url}: {error}"
-                )
+                print(f"Failed {url}: {error}")
 
         await browser.close()
 
@@ -269,7 +335,6 @@ async def main():
             row.get("model") or "",
             row.get("construction") or "",
             row.get("fin_system") or "",
-            row.get("tail_shape") or "",
             row.get("length") or "",
             row.get("width") or "",
             row.get("thickness") or "",
@@ -278,9 +343,7 @@ async def main():
 
         deduped[key] = row
 
-    final_rows = list(
-        deduped.values()
-    )
+    final_rows = list(deduped.values())
 
     OUTPUT_FILE.write_text(
         json.dumps(

@@ -96,7 +96,7 @@ def get_brands():
 def get_models(brand_id: int):
 
     query = text("""
-        SELECT DISTINCT
+        SELECT
             BoardModelId,
             ModelName
         FROM dbo.BoardModels
@@ -164,18 +164,26 @@ def get_sizes(
 
     query = text("""
         SELECT
-            BoardSizeId,
+            MIN(BoardSizeId) AS BoardSizeId,
             LengthFeetInches,
             Width,
             Thickness,
             VolumeLitres,
-            Construction,
-            FinSetup,
-            TailShape
+            Construction
         FROM dbo.BoardSizes
         WHERE BoardModelId = :model_id
         AND Construction = :construction
-        ORDER BY VolumeLitres
+        GROUP BY
+            LengthFeetInches,
+            Width,
+            Thickness,
+            VolumeLitres,
+            Construction
+        ORDER BY
+            VolumeLitres,
+            LengthFeetInches,
+            Width,
+            Thickness
     """)
 
     with engine.connect() as connection:
@@ -188,23 +196,32 @@ def get_sizes(
             }
         )
 
-        sizes = [
-            {
+        sizes = []
+
+        for row in results:
+
+            volume = (
+                float(row.VolumeLitres)
+                if row.VolumeLitres
+                else None
+            )
+
+            label = (
+                f"{row.LengthFeetInches} x "
+                f"{row.Width} x "
+                f"{row.Thickness} / "
+                f"{volume:g}L"
+            )
+
+            sizes.append({
                 "boardSizeId": row.BoardSizeId,
+                "label": label,
                 "length": row.LengthFeetInches,
                 "width": row.Width,
                 "thickness": row.Thickness,
-                "volumeLitres": (
-                    float(row.VolumeLitres)
-                    if row.VolumeLitres
-                    else None
-                ),
-                "construction": row.Construction,
-                "finSetup": row.FinSetup,
-                "tailShape": row.TailShape
-            }
-            for row in results
-        ]
+                "volumeLitres": volume,
+                "construction": row.Construction
+            })
 
     return sizes
 
