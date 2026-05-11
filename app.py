@@ -2,6 +2,8 @@ import os
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, text
 
 
@@ -29,15 +31,132 @@ def build_connection_string() -> str:
     return f"mssql+pyodbc:///?odbc_connect={quote_plus(odbc_string)}"
 
 
-def test_database_connection() -> None:
-    engine = create_engine(build_connection_string())
+engine = create_engine(build_connection_string())
+
+app = FastAPI(
+    title="Quivrr API",
+    version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "service": "quivrr-api"
+    }
+
+
+@app.get("/api/brands")
+def get_brands():
+    query = text("""
+        SELECT
+            BrandId,
+            BrandName
+        FROM dbo.Brands
+        WHERE IsActive = 1
+        ORDER BY BrandName
+    """)
 
     with engine.connect() as connection:
-        result = connection.execute(text("SELECT DB_NAME() AS database_name;"))
+        results = connection.execute(query)
+
+        brands = [
+            {
+                "brandId": row.BrandId,
+                "brandName": row.BrandName
+            }
+            for row in results
+        ]
+
+    return brands
+
+
+@app.get("/api/models/{brand_id}")
+def get_models(brand_id: int):
+    query = text("""
+        SELECT
+            BoardModelId,
+            ModelName
+        FROM dbo.BoardModels
+        WHERE BrandId = :brand_id
+        AND IsActive = 1
+        ORDER BY ModelName
+    """)
+
+    with engine.connect() as connection:
+        results = connection.execute(
+            query,
+            {"brand_id": brand_id}
+        )
+
+        models = [
+            {
+                "modelId": row.BoardModelId,
+                "modelName": row.ModelName
+            }
+            for row in results
+        ]
+
+    return models
+
+
+@app.get("/api/sizes/{model_id}")
+def get_sizes(model_id: int):
+    query = text("""
+        SELECT
+            BoardSizeId,
+            LengthFeetInches,
+            Width,
+            Thickness,
+            VolumeLitres,
+            Construction,
+            FinSetup
+        FROM dbo.BoardSizes
+        WHERE BoardModelId = :model_id
+        ORDER BY VolumeLitres
+    """)
+
+    with engine.connect() as connection:
+        results = connection.execute(
+            query,
+            {"model_id": model_id}
+        )
+
+        sizes = [
+            {
+                "boardSizeId": row.BoardSizeId,
+                "length": row.LengthFeetInches,
+                "width": row.Width,
+                "thickness": row.Thickness,
+                "volumeLitres": float(row.VolumeLitres) if row.VolumeLitres else None,
+                "construction": row.Construction,
+                "finSetup": row.FinSetup
+            }
+            for row in results
+        ]
+
+    return sizes
+
+
+@app.get("/api/test-db")
+def test_database_connection():
+    with engine.connect() as connection:
+        result = connection.execute(
+            text("SELECT DB_NAME() AS database_name;")
+        )
+
         database_name = result.scalar()
 
-    print(f"Connected successfully to Azure SQL database: {database_name}")
-
-
-if __name__ == "__main__":
-    test_database_connection()
+    return {
+        "status": "connected",
+        "database": database_name
+    }
