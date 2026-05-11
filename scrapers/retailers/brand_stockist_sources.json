@@ -1,0 +1,156 @@
+[
+  {
+    "brand": "JS Industries",
+    "stockist_url": "https://jsindustries.com/pages/stockists",
+    "source_type": "official_stockist_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Lost Surfboards",
+    "stockist_url": "https://lostsurfboards.com.au/pages/store-locator",
+    "source_type": "official_store_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Pyzel Surfboards",
+    "stockist_url": "https://pyzelsurf.com.au/pages/store-locator",
+    "source_type": "official_store_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Channel Islands Surfboards",
+    "stockist_url": "https://shop-au.cisurfboards.com/pages/stockists",
+    "source_type": "official_stockist_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Firewire Surfboards",
+    "stockist_url": "https://aus.firewiresurfboards.com/pages/store-locator",
+    "source_type": "official_store_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Haydenshapes",
+    "stockist_url": "https://www.haydenshapes.com/pages/retail-partners",
+    "source_type": "official_retail_partners_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "DHD Surfboards",
+    "stockist_url": "https://dhdsurf.com/pages/retailers",
+    "source_type": "official_retailer_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Sharp Eye Surfboards",
+    "stockist_url": "https://www.sharpeyesurfboards.com.au",
+    "source_type": "brand_site_no_stockist_page_found_yet",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Album Surfboards",
+    "stockist_url": "https://albumsurf.com.au",
+    "source_type": "brand_site_no_stockist_page_found_yet",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Christenson Surfboards",
+    "stockist_url": "https://christensonsurfboards.com.au/pages/australia",
+    "source_type": "official_stockist_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Aipa Surfboards",
+    "stockist_url": "https://www.aroonasurf.shop/pages/dealer-locator",
+    "source_type": "official_or_distributor_dealer_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Chilli Surfboards",
+    "stockist_url": "https://www.chillisurfboards.com/dealers.php?direct=1&region=aus",
+    "source_type": "official_dealers_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Rusty Surfboards",
+    "stockist_url": "https://rustysurfboards.com.au/pages/store-locator",
+    "source_type": "official_store_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Pukas Surfboards",
+    "stockist_url": "https://pukassurf.com/",
+    "source_type": "brand_site_stockist_link_found_but_needs_extraction",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "McTavish Surfboards",
+    "stockist_url": "https://www.mctavish.com.au",
+    "source_type": "brand_site_no_stockist_page_found_yet",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "CJ Nelson Designs",
+    "stockist_url": "https://www.thunderboltsurf.com",
+    "source_type": "manufacturer_or_distribution_source_to_verify",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Slater Designs",
+    "stockist_url": "https://aus.firewiresurfboards.com/pages/store-locator",
+    "source_type": "official_store_locator_shared_with_firewire",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "T Patterson Surfboards",
+    "stockist_url": "https://www.tpattersonsurfboards.com/single-post/2019/01/02/tpatterson-surfboards-australia-now-available",
+    "source_type": "australia_distribution_reference_to_verify",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Chemistry Surfboards",
+    "stockist_url": "https://www.chemistrysurfboards.com/storelocator",
+    "source_type": "official_store_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Bing Surfboards",
+    "stockist_url": "https://bingsurf.com/pages/dealers",
+    "source_type": "official_dealer_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "NSP Surfboards",
+    "stockist_url": "https://www.nspsurfboards.com/find-your-local-nsp-distributor/",
+    "source_type": "official_distributor_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Walden Surfboards",
+    "stockist_url": "https://www.waldensurfboards.com/pages/find-a-dealer",
+    "source_type": "official_dealer_locator",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Love Machine Surfboards",
+    "stockist_url": "https://lovemachinesurfboards.au/pages/find",
+    "source_type": "official_australia_page",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Mick Mackie Surfboards",
+    "stockist_url": "https://mackiesurfboards.com.au",
+    "source_type": "official_site_stockists_list_visible",
+    "country_focus": "Australia"
+  },
+  {
+    "brand": "Dark Arts Surfboards",
+    "stockist_url": "https://lucidglassing.com/pages/dark-arts-surf",
+    "source_type": "official_australia_manufacturing_partner",
+    "country_focus": "Australia"
+  }
+]
+
+
+
+

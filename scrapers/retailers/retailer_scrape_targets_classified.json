@@ -1,0 +1,2082 @@
+[
+  {
+    "website": "https://alohasurfmanly.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Aloha Surf Manly"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Aloha Surf Manly",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='alohasurfmanly.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'alohasurfmanly.com.au'. (_ssl.c:1028)\")))"
+  },
+  {
+    "website": "https://beachbeat.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Beach Beat Alexandra Headland",
+      "Beach Beat Caloundra",
+      "Beach Beat Coolum",
+      "Beach Beat Surfboards"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Sunshine Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled",
+      "seed_unverified"
+    ],
+    "primary_name": "Beach Beat Alexandra Headland",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 171772
+  },
+  {
+    "website": "https://bellsbeachsurfshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Bells Beach Surf Shop"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Torquay"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Bells Beach Surf Shop",
+    "status_code": 502,
+    "platform": "unknown",
+    "homepage_bytes": 150
+  },
+  {
+    "website": "https://boardsinthebay.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Boards In The Bay"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Byron Bay"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_verified"
+    ],
+    "primary_name": "Boards In The Bay",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 349712
+  },
+  {
+    "website": "https://groovesurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Groove Surf"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Burleigh"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Groove Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='groovesurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='groovesurf.com.au', port=443): Failed to resolve 'groovesurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://jsindustries.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "JS Industries"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Gold Coast"
+    ],
+    "retailer_types": [
+      "shaper_direct"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "JS Industries",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 278817
+  },
+  {
+    "website": "https://kirrasurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Kirra Surf"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Coolangatta"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Kirra Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='kirrasurf.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'kirrasurf.com.au'. (_ssl.c:1028)\")))"
+  },
+  {
+    "website": "https://longreefsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Long Reef Surf Co"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Long Reef Surf Co",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 631611
+  },
+  {
+    "website": "https://naturalnecessity.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Natural Necessity",
+      "Natural Necessity Surf Shop"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "South Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands",
+      "Christenson"
+    ],
+    "verification_statuses": [
+      "prefilled",
+      "seed_unverified"
+    ],
+    "primary_name": "Natural Necessity",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 907925
+  },
+  {
+    "website": "https://onboardstore.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Onboard Store",
+      "Onboard Store - Byron Bay"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled",
+      "seed_unverified"
+    ],
+    "primary_name": "Onboard Store",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 383273
+  },
+  {
+    "website": "https://sanbah.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Sanbah Surf Shop"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Newcastle"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_verified"
+    ],
+    "primary_name": "Sanbah Surf Shop",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 671023
+  },
+  {
+    "website": "https://sideways.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Sideways Surf"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_verified"
+    ],
+    "primary_name": "Sideways Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 561466
+  },
+  {
+    "website": "https://slimes.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Slimes Boardstore",
+      "Slimes Boardstore Erina",
+      "Slimes Erina",
+      "Slimes Newcastle"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Central Coast",
+      "Newcastle"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands",
+      "Christenson"
+    ],
+    "verification_statuses": [
+      "prefilled",
+      "seed_verified"
+    ],
+    "primary_name": "Slimes Boardstore",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 324484
+  },
+  {
+    "website": "https://starsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Star Surf and Skate"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Mandurah"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_verified"
+    ],
+    "primary_name": "Star Surf and Skate",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 331029
+  },
+  {
+    "website": "https://strapper.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Strapper Surf Torquay"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Torquay"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Strapper Surf Torquay",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 254947
+  },
+  {
+    "website": "https://surffx.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Surf FX"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Gold Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surf FX",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 443317
+  },
+  {
+    "website": "https://surfboardempire.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Surfboard Empire",
+      "Surfboard Empire Coolangatta",
+      "Surfboard Empire Kawana",
+      "Surfboard Empire Kirra",
+      "Surfboard Empire Narrabeen",
+      "Surfboard Empire Nobby Beach",
+      "Surfboard Empire Wollongong"
+    ],
+    "states": [
+      "NSW",
+      "QLD"
+    ],
+    "region_clusters": [
+      "Gold Coast",
+      "Northern Beaches",
+      "Wollongong"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled",
+      "seed_verified"
+    ],
+    "primary_name": "Surfboard Empire",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 484851
+  },
+  {
+    "website": "https://surfection.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Surfection Bondi",
+      "Surfection Mosman"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surfection Bondi",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 237023
+  },
+  {
+    "website": "https://theboardlab.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "The Board Lab"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "The Board Lab",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 315219
+  },
+  {
+    "website": "https://thesurfboardwarehouse.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "The Surfboard Warehouse"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Gold Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_verified"
+    ],
+    "primary_name": "The Surfboard Warehouse",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 470392
+  },
+  {
+    "website": "https://triggerbrothers.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Trigger Bros Surfboards"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Mornington Peninsula"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Trigger Bros Surfboards",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 261964
+  },
+  {
+    "website": "https://wickssurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 1,
+    "retailer_names": [
+      "Wicks Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Wicks Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 274968
+  },
+  {
+    "website": "https://akwasurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Akwa Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "South Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Akwa Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 132059
+  },
+  {
+    "website": "https://beachlifemargs.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Beach Life Margaret River"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Margaret River"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Beach Life Margaret River",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='beachlifemargs.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='beachlifemargs.com.au', port=443): Failed to resolve 'beachlifemargs.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://bigdropsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Big Drop Surf"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Big Drop Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='bigdropsurf.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)')))"
+  },
+  {
+    "website": "https://bigsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Big Surf"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Big Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='bigsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='bigsurf.com.au', port=443): Failed to resolve 'bigsurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://boardstore.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Board Store"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Board Store",
+    "status_code": 200,
+    "platform": "algolia",
+    "homepage_bytes": 165146
+  },
+  {
+    "website": "https://boardriders.co",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Boardriders Coolangatta"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Boardriders Coolangatta",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 114
+  },
+  {
+    "website": "https://boardriders.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Boardriders Torquay"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Torquay"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Boardriders Torquay",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='boardriders.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='boardriders.com.au', port=443): Failed to resolve 'boardriders.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://byronbaysurfcompany.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Byron Bay Surf Company"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Byron Bay"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Byron Bay Surf Company",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='byronbaysurfcompany.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='byronbaysurfcompany.com.au', port=443): Failed to resolve 'byronbaysurfcompany.com.au' ([Errno 11002] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://cooperssurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Coopers Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Coffs Harbour"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Coopers Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='cooperssurf.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)')))"
+  },
+  {
+    "website": "https://cordingleyssurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Cordingley's Surf"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Cordingley's Surf",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 142696
+  },
+  {
+    "website": "https://cornersurfshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Corner Surf Shop"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Corner Surf Shop",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='cornersurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='cornersurfshop.com.au', port=443): Failed to resolve 'cornersurfshop.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://cronullasurfdesign.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Cronulla Surf Design"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Cronulla"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Cronulla Surf Design",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 186269
+  },
+  {
+    "website": "https://drippingwetsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Dripping Wet Surf Co"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Dripping Wet Surf Co",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='drippingwetsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='drippingwetsurf.com.au', port=443): Failed to resolve 'drippingwetsurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://fullcirclesurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Full Circle Surf"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Phillip Island"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Full Circle Surf",
+    "status_code": 404,
+    "platform": "unknown",
+    "homepage_bytes": 3312
+  },
+  {
+    "website": "https://hollowsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Hollow Surf"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Hollow Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='hollowsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='hollowsurf.com.au', port=443): Failed to resolve 'hollowsurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://innertubesurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Innertube Surf Shop"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "Innertube Surf Shop",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='innertubesurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='innertubesurf.com.au', port=443): Failed to resolve 'innertubesurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://manlysurfboards.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Manly Surfboards"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Manly Surfboards",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 265807
+  },
+  {
+    "website": "https://melbournesurfboardshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Melbourne Surfboard Shop"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Melbourne"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Melbourne Surfboard Shop",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 504731
+  },
+  {
+    "website": "https://noosalongboards.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Noosa Longboards"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Noosa"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Noosa Longboards",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 802432
+  },
+  {
+    "website": "https://ntsurfboards.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "NT Surfboards"
+    ],
+    "states": [],
+    "region_clusters": [],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Dark Arts"
+    ],
+    "verification_statuses": [
+      "prefilled"
+    ],
+    "primary_name": "NT Surfboards",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 142460
+  },
+  {
+    "website": "https://oceanaddicts.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Ocean Addicts"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Sunshine Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Ocean Addicts",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 361165
+  },
+  {
+    "website": "https://overboardsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Overboard Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Wollongong"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Overboard Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 687162
+  },
+  {
+    "website": "https://pittwatersurfboards.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Pittwater Surfboards"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Pittwater Surfboards",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='pittwatersurfboards.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='pittwatersurfboards.com.au', port=443): Failed to resolve 'pittwatersurfboards.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://redherringsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Red Herring Surf",
+      "Red Herring Surf Burnie",
+      "Red Herring Surf Hobart"
+    ],
+    "states": [
+      "TAS"
+    ],
+    "region_clusters": [
+      "Burnie",
+      "Hobart"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [
+      "Channel Islands"
+    ],
+    "verification_statuses": [
+      "prefilled",
+      "seed_unverified"
+    ],
+    "primary_name": "Red Herring Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 1480482
+  },
+  {
+    "website": "https://sessionssurfshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Sessions Surf Shop"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Margaret River"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Sessions Surf Shop",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='sessionssurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='sessionssurfshop.com.au', port=443): Failed to resolve 'sessionssurfshop.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://surfboardroom.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Surf Boardroom"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Perth"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surf Boardroom",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 166287
+  },
+  {
+    "website": "https://surfculture.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Surf Culture Bondi"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surf Culture Bondi",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 727850
+  },
+  {
+    "website": "https://yallingupsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 2,
+    "retailer_names": [
+      "Yallingup Surf Shop"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Yallingup"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Yallingup Surf Shop",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 114
+  },
+  {
+    "website": "https://actionboardsports.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Action Board Sports"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Action Board Sports",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='actionboardsports.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='actionboardsports.com.au', port=443): Failed to resolve 'actionboardsports.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://apollobaysurfshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Apollo Bay Surf Shop"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Great Ocean Road"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Apollo Bay Surf Shop",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='apollobaysurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='apollobaysurfshop.com.au', port=443): Failed to resolve 'apollobaysurfshop.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://beachinsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Beachin Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Beachin Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 1107612
+  },
+  {
+    "website": "https://blueplanetsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Blue Planet Surf"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Geraldton"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Blue Planet Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='blueplanetsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='blueplanetsurf.com.au', port=443): Failed to resolve 'blueplanetsurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://boardhub.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Board Hub"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Board Hub",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 2775
+  },
+  {
+    "website": "https://coogeesurfco.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Coogee Surf Co"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Coogee Surf Co",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='coogeesurfco.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='coogeesurfco.com.au', port=443): Failed to resolve 'coogeesurfco.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://cpssurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "CPS Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Cronulla"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "CPS Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='cpssurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='cpssurf.com.au', port=443): Failed to resolve 'cpssurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://empireave.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Empire Ave"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Empire Ave",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 1087588
+  },
+  {
+    "website": "https://extremeboardriders.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Extreme Boardriders"
+    ],
+    "states": [
+      "SA"
+    ],
+    "region_clusters": [
+      "Adelaide"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Extreme Boardriders",
+    "status_code": 200,
+    "platform": "woocommerce",
+    "homepage_bytes": 138008
+  },
+  {
+    "website": "https://harboursurfboards.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Harbour Surfboards"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Harbour Surfboards",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='harboursurfboards.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='harboursurfboards.com.au', port=443): Failed to resolve 'harboursurfboards.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://lespotsurfshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Le Spot Surf Shop"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Perth"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Le Spot Surf Shop",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='lespotsurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='lespotsurfshop.com.au', port=443): Failed to resolve 'lespotsurfshop.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://manlysurfguide.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Manly Surf Guide Surfboard Outlet"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Northern Beaches"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Manly Surf Guide Surfboard Outlet",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 164168
+  },
+  {
+    "website": "https://maroubrasurfandskate.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Maroubra Surf and Skate"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Maroubra Surf and Skate",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='maroubrasurfandskate.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='maroubrasurfandskate.com.au', port=443): Failed to resolve 'maroubrasurfandskate.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://midcoastsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Mid Coast Surf"
+    ],
+    "states": [
+      "SA"
+    ],
+    "region_clusters": [
+      "Fleurieu Peninsula"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Mid Coast Surf",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 114
+  },
+  {
+    "website": "https://murraysmithsurfwarehouse.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Murray Smith Surf Warehouse"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Murray Smith Surf Warehouse",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='murraysmithsurfwarehouse.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='murraysmithsurfwarehouse.com.au', port=443): Failed to resolve 'murraysmithsurfwarehouse.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://northcoastsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "North Coast Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "North Coast"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "North Coast Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='northcoastsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='northcoastsurf.com.au', port=443): Failed to resolve 'northcoastsurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://oceangrovesurfco.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Ocean Grove Surf Co"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Ocean Grove"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Ocean Grove Surf Co",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='oceangrovesurfco.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='oceangrovesurfco.com.au', port=443): Failed to resolve 'oceangrovesurfco.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://onawavesurfshop.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "On A Wave Surf Shop"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Perth"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "On A Wave Surf Shop",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='onawavesurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='onawavesurfshop.com.au', port=443): Failed to resolve 'onawavesurfshop.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://powerhousesurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Powerhouse Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Powerhouse Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 585376
+  },
+  {
+    "website": "https://prahransurfboards.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Prahran Surfboards"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Melbourne"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Prahran Surfboards",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='prahransurfboards.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='prahransurfboards.com.au', port=443): Failed to resolve 'prahransurfboards.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://saltwaterwine.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Saltwater Wine Port Macquarie"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Port Macquarie"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Saltwater Wine Port Macquarie",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 1623587
+  },
+  {
+    "website": "https://secretharboursurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Secret Harbour Surf"
+    ],
+    "states": [
+      "WA"
+    ],
+    "region_clusters": [
+      "Secret Harbour"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Secret Harbour Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='secretharboursurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='secretharboursurf.com.au', port=443): Failed to resolve 'secretharboursurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "website": "https://shednine.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Shed Nine"
+    ],
+    "states": [
+      "VIC"
+    ],
+    "region_clusters": [
+      "Mornington Peninsula"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Shed Nine",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='shednine.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)')))"
+  },
+  {
+    "website": "https://surfshopsaustralia.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Surf Shops Australia"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surf Shops Australia",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 355739
+  },
+  {
+    "website": "https://surfwarehouse.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Surf Warehouse"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surf Warehouse",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 1084
+  },
+  {
+    "website": "https://surferschoice.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Surfers Choice Surf Shop"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Sydney"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Surfers Choice Surf Shop",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 76060
+  },
+  {
+    "website": "https://undergroundsurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Underground Surf"
+    ],
+    "states": [
+      "NSW"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Underground Surf",
+    "status_code": 200,
+    "platform": "shopify",
+    "homepage_bytes": 348185
+  },
+  {
+    "website": "https://worldsurfaris.com",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "World Surfaris Surf Shop"
+    ],
+    "states": [
+      "QLD"
+    ],
+    "region_clusters": [
+      "Online"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "World Surfaris Surf Shop",
+    "status_code": 200,
+    "platform": "unknown",
+    "homepage_bytes": 727776
+  },
+  {
+    "website": "https://yorkessurf.com.au",
+    "country": "Australia",
+    "hardboards": true,
+    "priority": 3,
+    "retailer_names": [
+      "Yorkes Surf"
+    ],
+    "states": [
+      "SA"
+    ],
+    "region_clusters": [
+      "Yorke Peninsula"
+    ],
+    "retailer_types": [
+      "multi_brand"
+    ],
+    "source_brands": [],
+    "verification_statuses": [
+      "seed_unverified"
+    ],
+    "primary_name": "Yorkes Surf",
+    "status_code": null,
+    "platform": "error",
+    "error": "HTTPSConnectionPool(host='yorkessurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='yorkessurf.com.au', port=443): Failed to resolve 'yorkessurf.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  }
+]

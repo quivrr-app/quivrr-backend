@@ -1,5 +1,24 @@
+# Python
 venv/
 __pycache__/
-.env
-local.settings.json
 *.pyc
+*.pyo
+*.pyd
+
+# Logs
+logs/
+*.log
+scrapers/products/logs/
+scrapers/retailers/stockists/logs/
+
+# Generated scrape output
+scrapers/products/output/
+scrapers/retailers/stockists/output/
+
+# Raw downloaded stockist pages
+scrapers/retailers/stockists/raw/
+
+# Local OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
