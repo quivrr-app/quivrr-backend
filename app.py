@@ -38,7 +38,11 @@ def build_connection_string() -> str:
     )
 
 
-engine = create_engine(build_connection_string())
+engine = create_engine(
+    build_connection_string(),
+    pool_pre_ping=True,
+    pool_recycle=180
+)
 
 
 app = FastAPI(
@@ -54,6 +58,31 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def format_volume(value):
+
+    if value is None:
+        return None
+
+    return float(value)
+
+
+def format_size_label(row):
+
+    volume = format_volume(row.VolumeLitres)
+
+    if volume is None:
+        volume_text = ""
+    else:
+        volume_text = f"{volume:g}L"
+
+    return (
+        f"{row.LengthFeetInches} x "
+        f"{row.Width} x "
+        f"{row.Thickness} / "
+        f"{volume_text}"
+    )
 
 
 @app.get("/")
@@ -200,22 +229,13 @@ def get_sizes(
 
         for row in results:
 
-            volume = (
-                float(row.VolumeLitres)
-                if row.VolumeLitres
-                else None
-            )
-
-            label = (
-                f"{row.LengthFeetInches} x "
-                f"{row.Width} x "
-                f"{row.Thickness} / "
-                f"{volume:g}L"
+            volume = format_volume(
+                row.VolumeLitres
             )
 
             sizes.append({
                 "boardSizeId": row.BoardSizeId,
-                "label": label,
+                "label": format_size_label(row),
                 "length": row.LengthFeetInches,
                 "width": row.Width,
                 "thickness": row.Thickness,
@@ -224,6 +244,231 @@ def get_sizes(
             })
 
     return sizes
+
+
+@app.get("/api/search")
+def search_inventory(boardSizeId: int):
+
+    official_query = text("""
+        SELECT
+            bs.BoardSizeId,
+            b.BrandName,
+            bm.ModelName,
+            bm.OfficialProductUrl,
+            bs.LengthFeetInches,
+            bs.Width,
+            bs.Thickness,
+            bs.VolumeLitres,
+            bs.Construction,
+            bs.FinSetup,
+            bs.TailShape
+        FROM dbo.BoardSizes bs
+        INNER JOIN dbo.BoardModels bm
+            ON bs.BoardModelId = bm.BoardModelId
+        INNER JOIN dbo.Brands b
+            ON bm.BrandId = b.BrandId
+        WHERE bs.BoardSizeId = :board_size_id
+    """)
+
+    exact_query = text("""
+        SELECT TOP 25
+            ri.InventoryId,
+            ri.RawProductTitle,
+            ri.NormalisedProductTitle,
+            ri.ProductUrl,
+            ri.ProductImageUrl,
+            ri.PriceAud,
+            ri.StockStatus,
+            ri.Construction,
+            ri.FinSetup,
+            ri.LengthFeetInches,
+            ri.Width,
+            ri.Thickness,
+            ri.VolumeLitres,
+            r.RetailerName,
+            r.WebsiteUrl
+        FROM dbo.RetailerInventory ri
+        INNER JOIN dbo.Retailers r
+            ON ri.RetailerId = r.RetailerId
+        WHERE ri.IsActive = 1
+        AND ri.StockStatus = 'In Stock'
+        AND (
+            ri.RawProductTitle LIKE :brand_match
+            OR ri.RawProductTitle LIKE :model_match
+            OR ri.NormalisedProductTitle LIKE :model_match
+        )
+        AND ri.LengthFeetInches = :length
+        AND ri.VolumeLitres = :volume
+        ORDER BY
+            ri.PriceAud ASC
+    """)
+
+    close_query = text("""
+        SELECT TOP 25
+            ri.InventoryId,
+            ri.RawProductTitle,
+            ri.NormalisedProductTitle,
+            ri.ProductUrl,
+            ri.ProductImageUrl,
+            ri.PriceAud,
+            ri.StockStatus,
+            ri.Construction,
+            ri.FinSetup,
+            ri.LengthFeetInches,
+            ri.Width,
+            ri.Thickness,
+            ri.VolumeLitres,
+            r.RetailerName,
+            r.WebsiteUrl,
+            ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) AS VolumeDelta
+        FROM dbo.RetailerInventory ri
+        INNER JOIN dbo.Retailers r
+            ON ri.RetailerId = r.RetailerId
+        WHERE ri.IsActive = 1
+        AND ri.StockStatus = 'In Stock'
+        AND (
+            ri.RawProductTitle LIKE :brand_match
+            OR ri.RawProductTitle LIKE :model_match
+            OR ri.NormalisedProductTitle LIKE :model_match
+        )
+        AND ri.LengthFeetInches = :length
+        AND ri.VolumeLitres IS NOT NULL
+        AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 1.5
+        ORDER BY
+            VolumeDelta ASC,
+            ri.PriceAud ASC
+    """)
+
+    with engine.connect() as connection:
+
+        official = connection.execute(
+            official_query,
+            {
+                "board_size_id": boardSizeId
+            }
+        ).fetchone()
+
+        if not official:
+
+            return {
+                "manufacturer": None,
+                "exactRetailerMatches": [],
+                "closeRetailerMatches": []
+            }
+
+        brand_match = f"%{official.BrandName.split()[0]}%"
+        model_match = f"%{official.ModelName}%"
+
+        official_result = {
+            "resultType": "manufacturer",
+            "brandName": official.BrandName,
+            "modelName": official.ModelName,
+            "productUrl": official.OfficialProductUrl,
+            "label": format_size_label(official),
+            "length": official.LengthFeetInches,
+            "width": official.Width,
+            "thickness": official.Thickness,
+            "volumeLitres": format_volume(
+                official.VolumeLitres
+            ),
+            "construction": official.Construction,
+            "finSetup": official.FinSetup,
+            "tailShape": official.TailShape
+        }
+
+        exact_results = connection.execute(
+            exact_query,
+            {
+                "brand_match": brand_match,
+                "model_match": model_match,
+                "length": official.LengthFeetInches,
+                "volume": official.VolumeLitres
+            }
+        )
+
+        exact_matches = [
+            {
+                "resultType": "retailerExact",
+                "inventoryId": row.InventoryId,
+                "retailerName": row.RetailerName,
+                "websiteUrl": row.WebsiteUrl,
+                "title": row.RawProductTitle,
+                "productUrl": row.ProductUrl,
+                "imageUrl": row.ProductImageUrl,
+                "priceAud": (
+                    float(row.PriceAud)
+                    if row.PriceAud is not None
+                    else None
+                ),
+                "stockStatus": row.StockStatus,
+                "construction": row.Construction,
+                "finSetup": row.FinSetup,
+                "length": row.LengthFeetInches,
+                "width": row.Width,
+                "thickness": row.Thickness,
+                "volumeLitres": format_volume(
+                    row.VolumeLitres
+                )
+            }
+            for row in exact_results
+        ]
+
+        exact_ids = {
+            row["inventoryId"]
+            for row in exact_matches
+        }
+
+        close_results = connection.execute(
+            close_query,
+            {
+                "brand_match": brand_match,
+                "model_match": model_match,
+                "length": official.LengthFeetInches,
+                "volume": official.VolumeLitres
+            }
+        )
+
+        close_matches = []
+
+        for row in close_results:
+
+            if row.InventoryId in exact_ids:
+                continue
+
+            close_matches.append({
+                "resultType": "retailerClose",
+                "inventoryId": row.InventoryId,
+                "retailerName": row.RetailerName,
+                "websiteUrl": row.WebsiteUrl,
+                "title": row.RawProductTitle,
+                "productUrl": row.ProductUrl,
+                "imageUrl": row.ProductImageUrl,
+                "priceAud": (
+                    float(row.PriceAud)
+                    if row.PriceAud is not None
+                    else None
+                ),
+                "stockStatus": row.StockStatus,
+                "construction": row.Construction,
+                "finSetup": row.FinSetup,
+                "length": row.LengthFeetInches,
+                "width": row.Width,
+                "thickness": row.Thickness,
+                "volumeLitres": format_volume(
+                    row.VolumeLitres
+                ),
+                "volumeDelta": (
+                    float(row.VolumeDelta)
+                    if row.VolumeDelta is not None
+                    else None
+                )
+            })
+
+    return {
+        "manufacturer": official_result,
+        "exactRetailerMatches": exact_matches,
+        "closeRetailerMatches": close_matches
+    }
 
 
 @app.get("/api/test-db")

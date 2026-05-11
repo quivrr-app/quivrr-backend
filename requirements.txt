@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pyodbc
+python-dotenv
+requests
+beautifulsoup4
+playwright
+pandas
+gunicorn
