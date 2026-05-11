@@ -11,11 +11,15 @@ load_dotenv()
 
 
 def build_connection_string() -> str:
+
     server = os.getenv("SQL_SERVER")
     database = os.getenv("SQL_DATABASE")
     username = os.getenv("SQL_USERNAME")
     password = os.getenv("SQL_PASSWORD")
-    driver = os.getenv("SQL_DRIVER", "ODBC Driver 18 for SQL Server")
+    driver = os.getenv(
+        "SQL_DRIVER",
+        "ODBC Driver 18 for SQL Server"
+    )
 
     odbc_string = (
         f"DRIVER={{{driver}}};"
@@ -28,15 +32,20 @@ def build_connection_string() -> str:
         "Connection Timeout=30;"
     )
 
-    return f"mssql+pyodbc:///?odbc_connect={quote_plus(odbc_string)}"
+    return (
+        "mssql+pyodbc:///?odbc_connect="
+        + quote_plus(odbc_string)
+    )
 
 
 engine = create_engine(build_connection_string())
+
 
 app = FastAPI(
     title="Quivrr API",
     version="1.0.0"
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,6 +58,7 @@ app.add_middleware(
 
 @app.get("/")
 def root():
+
     return {
         "status": "online",
         "service": "quivrr-api"
@@ -57,6 +67,7 @@ def root():
 
 @app.get("/api/brands")
 def get_brands():
+
     query = text("""
         SELECT
             BrandId,
@@ -67,6 +78,7 @@ def get_brands():
     """)
 
     with engine.connect() as connection:
+
         results = connection.execute(query)
 
         brands = [
@@ -82,8 +94,9 @@ def get_brands():
 
 @app.get("/api/models/{brand_id}")
 def get_models(brand_id: int):
+
     query = text("""
-        SELECT
+        SELECT DISTINCT
             BoardModelId,
             ModelName
         FROM dbo.BoardModels
@@ -93,9 +106,12 @@ def get_models(brand_id: int):
     """)
 
     with engine.connect() as connection:
+
         results = connection.execute(
             query,
-            {"brand_id": brand_id}
+            {
+                "brand_id": brand_id
+            }
         )
 
         models = [
@@ -109,8 +125,43 @@ def get_models(brand_id: int):
     return models
 
 
-@app.get("/api/sizes/{model_id}")
-def get_sizes(model_id: int):
+@app.get("/api/constructions/{model_id}")
+def get_constructions(model_id: int):
+
+    query = text("""
+        SELECT DISTINCT
+            Construction
+        FROM dbo.BoardSizes
+        WHERE BoardModelId = :model_id
+        AND Construction IS NOT NULL
+        ORDER BY Construction
+    """)
+
+    with engine.connect() as connection:
+
+        results = connection.execute(
+            query,
+            {
+                "model_id": model_id
+            }
+        )
+
+        constructions = [
+            {
+                "construction": row.Construction
+            }
+            for row in results
+        ]
+
+    return constructions
+
+
+@app.get("/api/sizes/{model_id}/{construction}")
+def get_sizes(
+    model_id: int,
+    construction: str
+):
+
     query = text("""
         SELECT
             BoardSizeId,
@@ -119,16 +170,22 @@ def get_sizes(model_id: int):
             Thickness,
             VolumeLitres,
             Construction,
-            FinSetup
+            FinSetup,
+            TailShape
         FROM dbo.BoardSizes
         WHERE BoardModelId = :model_id
+        AND Construction = :construction
         ORDER BY VolumeLitres
     """)
 
     with engine.connect() as connection:
+
         results = connection.execute(
             query,
-            {"model_id": model_id}
+            {
+                "model_id": model_id,
+                "construction": construction
+            }
         )
 
         sizes = [
@@ -137,9 +194,14 @@ def get_sizes(model_id: int):
                 "length": row.LengthFeetInches,
                 "width": row.Width,
                 "thickness": row.Thickness,
-                "volumeLitres": float(row.VolumeLitres) if row.VolumeLitres else None,
+                "volumeLitres": (
+                    float(row.VolumeLitres)
+                    if row.VolumeLitres
+                    else None
+                ),
                 "construction": row.Construction,
-                "finSetup": row.FinSetup
+                "finSetup": row.FinSetup,
+                "tailShape": row.TailShape
             }
             for row in results
         ]
@@ -149,9 +211,13 @@ def get_sizes(model_id: int):
 
 @app.get("/api/test-db")
 def test_database_connection():
+
     with engine.connect() as connection:
+
         result = connection.execute(
-            text("SELECT DB_NAME() AS database_name;")
+            text(
+                "SELECT DB_NAME() AS database_name;"
+            )
         )
 
         database_name = result.scalar()
