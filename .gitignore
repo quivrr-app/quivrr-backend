@@ -5,6 +5,10 @@ __pycache__/
 *.pyo
 *.pyd
 
+# Environment
+.env
+.env.*
+
 # Logs
 logs/
 *.log
@@ -13,6 +17,7 @@ scrapers/retailers/stockists/logs/
 
 # Generated scrape output
 scrapers/products/output/
+scrapers/brands/output/
 scrapers/retailers/stockists/output/
 
 # Raw downloaded stockist pages
@@ -21,4 +26,6 @@ scrapers/retailers/stockists/raw/
 # Local OS/editor files
 .DS_Store
 Thumbs.db
+
+# VS Code local settings
 .vscode/

@@ -1,67 +1,112 @@
+from pathlib import Path
 import json
 import requests
-from pathlib import Path
 
-INPUT_FILE = Path("scrapers/retailers/retailer_scrape_targets.json")
-OUTPUT_FILE = Path("scrapers/retailers/retailer_scrape_targets_classified.json")
+INPUT_FILE = Path(
+    "scrapers/retailers/retailer_seed_expanded_enriched.json"
+)
 
-SHOPIFY_MARKERS = ["cdn.shopify.com", "shopify.theme", "shopify"]
-WOOCOMMERCE_MARKERS = ["woocommerce", "wp-content/plugins/woocommerce"]
-NEXTJS_MARKERS = ["__NEXT_DATA__"]
-ALGOLIA_MARKERS = ["algolia", "instantsearch"]
+OUTPUT_FILE = Path(
+    "scrapers/retailers/retailer_scrape_targets_classified.json"
+)
 
-def detect_platform(html):
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0 Safari/537.36"
+    )
+}
+
+
+def detect_platform(html, headers):
     html_lower = html.lower()
 
-    if any(marker in html_lower for marker in SHOPIFY_MARKERS):
-        return "shopify"
+    if "cdn.shopify.com" in html_lower:
+        return "Shopify"
 
-    if any(marker in html_lower for marker in WOOCOMMERCE_MARKERS):
-        return "woocommerce"
+    if "shopify.theme" in html_lower:
+        return "Shopify"
 
-    if any(marker in html_lower for marker in NEXTJS_MARKERS):
-        return "nextjs"
+    if "woocommerce" in html_lower:
+        return "WooCommerce"
 
-    if any(marker in html_lower for marker in ALGOLIA_MARKERS):
-        return "algolia"
+    if "wp-content/plugins/woocommerce" in html_lower:
+        return "WooCommerce"
 
-    return "unknown"
+    if "bigcommerce" in html_lower:
+        return "BigCommerce"
+
+    if "squarespace" in html_lower:
+        return "Squarespace"
+
+    server = headers.get("server", "").lower()
+
+    if "shopify" in server:
+        return "Shopify"
+
+    return None
+
+
+def classify(retailer):
+    website = retailer.get("website")
+
+    if not website:
+        retailer["ecommerce_platform"] = None
+        retailer["platform_detection_status"] = "missing_website"
+        return retailer
+
+    try:
+        response = requests.get(
+            website,
+            headers=HEADERS,
+            timeout=20
+        )
+
+        platform = detect_platform(
+            response.text,
+            response.headers
+        )
+
+        retailer["ecommerce_platform"] = platform
+        retailer["platform_detection_status"] = "ok"
+        retailer["http_status"] = response.status_code
+
+    except Exception as e:
+        retailer["ecommerce_platform"] = None
+        retailer["platform_detection_status"] = str(e)
+
+    return retailer
+
 
 def main():
-    targets = json.loads(INPUT_FILE.read_text(encoding="utf-8"))
-    results = []
+    retailers = json.loads(
+        INPUT_FILE.read_text(encoding="utf-8")
+    )
 
-    for target in targets:
-        url = target["website"]
+    classified = []
 
-        print(f"Checking {target['primary_name']}: {url}")
+    for idx, retailer in enumerate(retailers, start=1):
+        name = retailer.get("name")
 
-        try:
-            response = requests.get(
-                url,
-                timeout=20,
-                headers={"User-Agent": "Mozilla/5.0 QuivrrBot/0.1"}
-            )
+        print(f"[{idx}/{len(retailers)}] {name}")
 
-            target["status_code"] = response.status_code
-            target["platform"] = detect_platform(response.text)
-            target["homepage_bytes"] = len(response.text)
+        classified.append(
+            classify(retailer)
+        )
 
-            print(f"  {response.status_code} | {target['platform']} | {target['homepage_bytes']} bytes")
+    OUTPUT_FILE.write_text(
+        json.dumps(
+            classified,
+            indent=2,
+            ensure_ascii=False
+        ),
+        encoding="utf-8"
+    )
 
-        except Exception as exc:
-            target["status_code"] = None
-            target["platform"] = "error"
-            target["error"] = str(exc)
-
-            print(f"  ERROR | {exc}")
-
-        results.append(target)
-
-    OUTPUT_FILE.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
-
-    print("")
+    print("\nRetailer classification complete")
     print(f"Saved: {OUTPUT_FILE}")
+
 
 if __name__ == "__main__":
     main()
