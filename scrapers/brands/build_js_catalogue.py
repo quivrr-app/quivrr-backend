@@ -2,7 +2,12 @@ from pathlib import Path
 import json
 import re
 
+
 INPUT_FILE = Path("scrapers/products/output/shopify/js_industries.json")
+
+CANONICAL_MODELS_FILE = Path(
+    "scrapers/brands/js_canonical_models.json"
+)
 
 OUTPUT_DIR = Path("scrapers/brands/output")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -10,16 +15,44 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_FILE = OUTPUT_DIR / "js_master_catalogue.json"
 
 
+def load_canonical_models():
+    return json.loads(
+        CANONICAL_MODELS_FILE.read_text(
+            encoding="utf-8"
+        )
+    )
+
+
+def normalise_text(value):
+    return re.sub(
+        r"\s+",
+        " ",
+        str(value or "")
+    ).strip()
+
+
 def is_real_board(item):
-    title = str(item.get("title", ""))
+    title = normalise_text(
+        item.get("title", "")
+    )
 
     if "Custom Order" in title:
         return False
 
-    has_volume = re.search(r"\d+\.\d+L", title)
-    has_length = re.search(r"\d{1,2}'\d{1,2}", title)
+    has_volume = re.search(
+        r"\d+\.\d+L",
+        title
+    )
 
-    return bool(has_volume and has_length)
+    has_length = re.search(
+        r"\d{1,2}'\d{1,2}",
+        title
+    )
+
+    return bool(
+        has_volume
+        and has_length
+    )
 
 
 def clean_dimension(value):
@@ -27,20 +60,63 @@ def clean_dimension(value):
         return None
 
     value = str(value).replace('"', "")
-    value = re.sub(r"\s+", " ", value).strip()
+
+    return normalise_text(value)
+
+
+def normalise_construction(value):
+    if not value:
+        return None
+
+    value = normalise_text(value)
+
+    if value.lower() == "carbotune":
+        return "CarboTune"
+
+    if value.upper() == "PU":
+        return "PU"
 
     return value
 
 
-def parse_board(title):
-    title = re.sub(r"\s+", " ", title).strip()
+def find_canonical_model(
+    raw_title,
+    canonical_models
+):
+    raw_lower = raw_title.lower()
 
-    model_match = re.match(r"^(.*?)\s+\d{1,2}'\d{1,2}", title)
+    matches = []
 
-    if not model_match:
+    for model in canonical_models:
+        if model.lower() in raw_lower:
+            matches.append(model)
+
+    if not matches:
         return None
 
-    model = model_match.group(1).strip()
+    matches.sort(
+        key=len,
+        reverse=True
+    )
+
+    return matches[0]
+
+
+def parse_board(
+    item,
+    canonical_models
+):
+    title = normalise_text(
+        item.get("title", "")
+    )
+
+    model = find_canonical_model(
+        title,
+        canonical_models
+    )
+
+    if not model:
+        return None
 
     dims_match = re.search(
         r"(\d{1,2}'\d{1,2}\"?)\s*[xX]\s*"
@@ -50,7 +126,10 @@ def parse_board(title):
         re.IGNORECASE
     )
 
-    volume_match = re.search(r"(\d+\.\d+)L", title)
+    volume_match = re.search(
+        r"(\d+\.\d+)L",
+        title
+    )
 
     construction_match = re.search(
         r"(HYFI 3\.0|Carbotune|PU|PE|EPS|Softboard)",
@@ -72,13 +151,42 @@ def parse_board(title):
 
     return {
         "model": model,
-        "length": clean_dimension(dims_match.group(1)) if dims_match else None,
-        "width": clean_dimension(dims_match.group(2)) if dims_match else None,
-        "thickness": clean_dimension(dims_match.group(3)) if dims_match else None,
-        "volume_litres": float(volume_match.group(1)) if volume_match else None,
-        "construction": construction_match.group(1) if construction_match else None,
-        "fin_system": fin_match.group(1) if fin_match else None,
-        "tail_shape": tail_match.group(1) if tail_match else None,
+        "raw_title": title,
+        "length": (
+            clean_dimension(dims_match.group(1))
+            if dims_match
+            else None
+        ),
+        "width": (
+            clean_dimension(dims_match.group(2))
+            if dims_match
+            else None
+        ),
+        "thickness": (
+            clean_dimension(dims_match.group(3))
+            if dims_match
+            else None
+        ),
+        "volume_litres": (
+            float(volume_match.group(1))
+            if volume_match
+            else None
+        ),
+        "construction": normalise_construction(
+            construction_match.group(1)
+            if construction_match
+            else None
+        ),
+        "fin_system": (
+            fin_match.group(1)
+            if fin_match
+            else None
+        ),
+        "tail_shape": (
+            tail_match.group(1)
+            if tail_match
+            else None
+        ),
     }
 
 
@@ -91,21 +199,42 @@ def variant_key(board):
         str(board.get("volume_litres") or ""),
         board.get("construction") or "",
         board.get("fin_system") or "",
+        board.get("tail_shape") or "",
     ])
 
 
 def main():
-    raw = json.loads(INPUT_FILE.read_text(encoding="utf-8"))
+    canonical_models = load_canonical_models()
+
+    raw = json.loads(
+        INPUT_FILE.read_text(
+            encoding="utf-8"
+        )
+    )
 
     boards = []
+    skipped = 0
 
     for item in raw:
         if not is_real_board(item):
+            skipped += 1
             continue
 
-        parsed = parse_board(item.get("title", ""))
+        parsed = parse_board(
+            item,
+            canonical_models
+        )
 
         if not parsed:
+            skipped += 1
+            continue
+
+        if (
+            not parsed["length"]
+            or not parsed["volume_litres"]
+            or not parsed["construction"]
+        ):
+            skipped += 1
             continue
 
         images = item.get("images") or []
@@ -114,26 +243,37 @@ def main():
         parsed["price"] = item.get("price")
         parsed["available"] = item.get("available")
         parsed["product_url"] = item.get("product_url")
-        parsed["image_url"] = images[0] if images else None
+        parsed["image_url"] = (
+            images[0]
+            if images
+            else None
+        )
 
         boards.append(parsed)
 
     deduped = {}
 
     for board in boards:
-        deduped[variant_key(board)] = board
+        deduped[
+            variant_key(board)
+        ] = board
 
     final_catalogue = sorted(
         deduped.values(),
         key=lambda x: (
             x["model"],
+            x["construction"] or "",
             x["length"] or "",
             x["volume_litres"] or 0
         )
     )
 
     OUTPUT_FILE.write_text(
-        json.dumps(final_catalogue, indent=2, ensure_ascii=False),
+        json.dumps(
+            final_catalogue,
+            indent=2,
+            ensure_ascii=False
+        ),
         encoding="utf-8"
     )
 
@@ -141,20 +281,20 @@ def main():
     print(f"Raw products: {len(raw)}")
     print(f"Parsed boards: {len(boards)}")
     print(f"Canonical variants: {len(final_catalogue)}")
+    print(f"Skipped rows: {skipped}")
 
-    print("\nFirst 20 entries:\n")
+    print("\nModels in catalogue:\n")
 
-    for board in final_catalogue[:20]:
-        print(
-            f"{board['model']} | "
-            f"{board['length']} x {board['width']} x {board['thickness']} | "
-            f"{board['volume_litres']}L | "
-            f"{board['construction']} | "
-            f"{board['fin_system']}"
+    models = sorted(
+        set(
+            board["model"]
+            for board in final_catalogue
         )
+    )
+
+    for model in models:
+        print(f"- {model}")
 
 
 if __name__ == "__main__":
     main()
-
-    
