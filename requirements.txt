@@ -7,3 +7,5 @@ beautifulsoup4
 playwright
 pandas
 gunicorn
+sqlalchemy
+pymssql
