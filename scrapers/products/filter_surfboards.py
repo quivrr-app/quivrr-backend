@@ -1,6 +1,7 @@
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 INPUT_DIRS = [
     Path("scrapers/products/output/shopify"),
@@ -8,6 +9,8 @@ INPUT_DIRS = [
 ]
 
 OUTPUT_FILE = Path("scrapers/products/output/likely_surfboards.json")
+REJECTED_FILE = Path("scrapers/products/output/rejected_products.json")
+REPORT_FILE = Path("scrapers/products/output/surfboard_filter_report.json")
 
 SURFBOARD_BOARD_TYPES = [
     "surfboard",
@@ -20,27 +23,33 @@ SURFBOARD_BOARD_TYPES = [
     "step-up",
     "softboard",
     "foamie",
+    "foam board",
     "funboard",
     "malibu",
     "mini mal",
+    "mini-mal",
     "gun",
     "fish",
     "twin fin",
     "twinfin",
+    "performance board",
+    "hybrid board",
 ]
 
 SURFBOARD_BRANDS = [
     "js",
     "js industries",
     "channel islands",
-    "ci",
+    "ci surfboards",
     "lost",
+    "lost surfboards",
     "mayhem",
     "pyzel",
     "firewire",
     "slater designs",
     "dhd",
     "haydenshapes",
+    "hayden shapes",
     "sharp eye",
     "sharpeye",
     "chilli",
@@ -51,6 +60,7 @@ SURFBOARD_BRANDS = [
     "torq",
     "softlite",
     "mick fanning",
+    "mick fanning softboards",
     "nsp",
     "aloha",
     "misfit",
@@ -62,29 +72,59 @@ SURFBOARD_BRANDS = [
     "takayama",
     "walden",
     "bennetts",
+    "creative army",
+    "modern",
+    "superbrand",
+    "mctavish",
+    "stacey",
+    "dhdsurf",
 ]
 
 BOARD_CONSTRUCTIONS = [
     "hyfi",
     "hyfi 3.0",
     "spinetek",
+    "helium",
+    "lft",
+    "timbertek",
     "thunderbolt",
     "futureflex",
     "dark arts",
     "carbotune",
     "pu",
+    "poly",
     "eps",
+    "epoxy",
     "pe",
+    "carbon",
+    "soft tech",
+    "softtech",
 ]
 
-EXCLUDE_TERMS = [
+FIN_SYSTEMS = [
+    "futures",
+    "fcs",
+    "fcs ii",
+    "fcs2",
+    "single fin",
+    "2 plus 1",
+    "thruster",
+    "quad",
+    "twin",
+    "five fin",
+    "5 fin",
+]
+
+HARD_EXCLUDE_TERMS = [
     "boardshort",
     "board short",
     "wetsuit",
     "spring suit",
+    "springsuit",
     "steamer",
     "rash vest",
     "rashguard",
+    "rash guard",
     "tee",
     "t-shirt",
     "shirt",
@@ -106,17 +146,12 @@ EXCLUDE_TERMS = [
     "wax",
     "comb",
     "legrope",
+    "leg rope",
     "leash",
     "tail pad",
     "traction",
     "deck grip",
     "grip pad",
-    "fins",
-    "fin set",
-    "keel fin",
-    "thruster fin",
-    "quad fin",
-    "single fin",
     "sticker",
     "towel",
     "poncho",
@@ -134,7 +169,6 @@ EXCLUDE_TERMS = [
     "strap",
     "tie down",
     "roof rack",
-    "rack",
     "wall rack",
     "board sling",
     "skate",
@@ -146,29 +180,54 @@ EXCLUDE_TERMS = [
     "voucher",
     "repair kit",
     "ding repair",
+    "ding all",
 ]
 
+FIN_ACCESSORY_TERMS = [
+    "fins",
+    "fin set",
+    "keel fin",
+    "thruster fin",
+    "quad fin",
+    "single fin",
+    "centre fin",
+    "center fin",
+    "side fins",
+    "replacement fin",
+]
+
+PRICE_PATTERN = re.compile(r"^\d+(?:\.\d{1,2})?$")
+
 LENGTH_PATTERN = re.compile(
-    r"\b(?:[4-9]|1[0-2])\s*['’]\s*\d{0,2}\b|"
-    r"\b(?:[4-9]|1[0-2])\s*ft\s*\d{0,2}\b",
+    r"\b(?:[4-9]|1[0-2])\s*(?:'|’|ft)\s*\d{0,2}\b",
     re.IGNORECASE,
 )
 
 FULL_DIMENSION_PATTERN = re.compile(
-    r"\b(?:[4-9]|1[0-2])\s*['’]\s*\d{0,2}\s*"
-    r"(?:\"|in)?\s*[xX\*]\s*"
+    r"\b(?:[4-9]|1[0-2])\s*(?:'|’|ft)\s*\d{0,2}\s*"
+    r"(?:\"|in)?\s*[xX*]\s*"
     r"\d{1,2}(?:\s+\d{1,2}/\d{1,2})?(?:\.\d+)?\s*"
-    r"(?:\"|in)?\s*[xX\*]\s*"
+    r"(?:\"|in)?\s*[xX*]\s*"
     r"\d(?:\s+\d{1,2}/\d{1,2})?(?:\.\d+)?",
     re.IGNORECASE,
 )
 
 LITRE_PATTERN = re.compile(
-    r"\b(?:1[5-9]|[2-7]\d|8[0-5])(?:\.\d{1,2})?\s*l\b",
+    r"\b(?:1[5-9]|[2-7]\d|8[0-5])(?:\.\d{1,2})?\s*(?:l|ltr|litre|litres)\b",
     re.IGNORECASE,
 )
 
-PRICE_PATTERN = re.compile(r"^\d+(?:\.\d{1,2})?$")
+URL_BOARD_HINT_PATTERN = re.compile(
+    r"(surfboard|surfboards|shortboard|longboard|midlength|mid-length|softboard|foamie)",
+    re.IGNORECASE,
+)
+
+
+def clean_text(value):
+    if value is None:
+        return ""
+
+    return str(value).replace("â€™", "’").lower().strip()
 
 
 def text_blob(item):
@@ -178,93 +237,206 @@ def text_blob(item):
         item.get("vendor"),
         item.get("product_type"),
         item.get("sku"),
+        item.get("handle"),
+        item.get("url"),
+        item.get("product_url"),
     ]
 
-    return " ".join([str(p) for p in parts if p]).lower()
+    return " ".join([clean_text(p) for p in parts if p])
 
 
-def has_excluded_term(text):
-    return any(term in text for term in EXCLUDE_TERMS)
+def get_url(item):
+    raw = item.get("url") or item.get("product_url") or ""
+    return str(raw).strip()
+
+
+def get_domain(item):
+    raw = get_url(item)
+
+    if not raw:
+        return ""
+
+    try:
+        parsed = urlparse(raw)
+        return parsed.netloc.lower()
+    except Exception:
+        return ""
+
+
+def contains_phrase(text, phrases):
+    return any(phrase in text for phrase in phrases)
+
+
+def has_term_boundary(text, terms):
+    for term in terms:
+        pattern = rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])"
+        if re.search(pattern, text):
+            return True
+
+    return False
+
+
+def has_hard_exclusion(text):
+    return contains_phrase(text, HARD_EXCLUDE_TERMS)
+
+
+def has_fin_accessory_exclusion(text):
+    if contains_phrase(text, FIN_ACCESSORY_TERMS):
+        if not contains_phrase(text, SURFBOARD_BOARD_TYPES):
+            return True
+
+    return False
 
 
 def has_board_type(text):
-    return any(term in text for term in SURFBOARD_BOARD_TYPES)
+    return contains_phrase(text, SURFBOARD_BOARD_TYPES)
 
 
 def has_board_brand(text):
-    return any(
-        re.search(rf"\b{re.escape(brand)}\b", text)
-        for brand in SURFBOARD_BRANDS
-    )
+    return has_term_boundary(text, SURFBOARD_BRANDS)
 
 
 def has_construction(text):
-    return any(
-        re.search(rf"\b{re.escape(term)}\b", text)
-        for term in BOARD_CONSTRUCTIONS
-    )
+    return has_term_boundary(text, BOARD_CONSTRUCTIONS)
 
 
-def has_realistic_price(item):
+def has_fin_system(text):
+    return has_term_boundary(text, FIN_SYSTEMS)
+
+
+def has_board_url_hint(item):
+    url = get_url(item)
+    return bool(URL_BOARD_HINT_PATTERN.search(url))
+
+
+def get_numeric_price(item):
     raw_price = item.get("price")
 
     if raw_price is None:
-        return True
+        return None
 
-    price = str(raw_price).strip()
+    price = str(raw_price).strip().replace("$", "").replace(",", "")
 
     if not PRICE_PATTERN.match(price):
-        return True
+        return None
 
     try:
-        numeric = float(price)
+        return float(price)
     except ValueError:
-        return True
-
-    return numeric >= 250
+        return None
 
 
-def is_likely_surfboard(item):
+def has_realistic_price(item):
+    price = get_numeric_price(item)
+
+    if price is None:
+        return True, "missing_or_unparsed_price"
+
+    if price < 250:
+        return False, "price_too_low"
+
+    if price > 5000:
+        return False, "price_too_high"
+
+    return True, "price_ok"
+
+
+def score_item(item):
     text = text_blob(item)
 
+    result = {
+        "is_surfboard": False,
+        "confidence": 0,
+        "reasons": [],
+        "reject_reason": None,
+    }
+
     if not text:
-        return False
+        result["reject_reason"] = "missing_text"
+        return result
 
-    if has_excluded_term(text):
-        return False
+    if has_hard_exclusion(text):
+        result["reject_reason"] = "hard_excluded_product_type"
+        return result
 
-    if not has_realistic_price(item):
-        return False
+    if has_fin_accessory_exclusion(text):
+        result["reject_reason"] = "fin_accessory_not_board"
+        return result
+
+    price_ok, price_reason = has_realistic_price(item)
+
+    if not price_ok:
+        result["reject_reason"] = price_reason
+        return result
+
+    result["reasons"].append(price_reason)
 
     has_length = bool(LENGTH_PATTERN.search(text))
     has_full_dimensions = bool(FULL_DIMENSION_PATTERN.search(text))
     has_litres = bool(LITRE_PATTERN.search(text))
-
     board_type = has_board_type(text)
     brand = has_board_brand(text)
     construction = has_construction(text)
-
-    confidence = 0
-
-    if has_length:
-        confidence += 2
+    fin_system = has_fin_system(text)
+    url_hint = has_board_url_hint(item)
 
     if has_full_dimensions:
-        confidence += 3
+        result["confidence"] += 4
+        result["reasons"].append("full_dimensions")
+
+    if has_length:
+        result["confidence"] += 2
+        result["reasons"].append("length")
 
     if has_litres:
-        confidence += 2
+        result["confidence"] += 3
+        result["reasons"].append("litres")
 
     if board_type:
-        confidence += 2
+        result["confidence"] += 3
+        result["reasons"].append("board_type")
 
     if brand:
-        confidence += 2
+        result["confidence"] += 3
+        result["reasons"].append("brand")
 
     if construction:
-        confidence += 1
+        result["confidence"] += 1
+        result["reasons"].append("construction")
 
-    return confidence >= 4
+    if fin_system:
+        result["confidence"] += 1
+        result["reasons"].append("fin_system")
+
+    if url_hint:
+        result["confidence"] += 1
+        result["reasons"].append("url_board_hint")
+
+    strong_identity = brand and (board_type or has_full_dimensions or has_litres)
+    strong_dimensions = has_full_dimensions and (has_litres or board_type or brand)
+    strong_board_type = board_type and (has_length or has_litres) and get_numeric_price(item) is not None
+
+    result["is_surfboard"] = (
+        result["confidence"] >= 6
+        and (
+            strong_identity
+            or strong_dimensions
+            or strong_board_type
+        )
+    )
+
+    if not result["is_surfboard"]:
+        result["reject_reason"] = "low_confidence_or_missing_board_identity"
+
+    return result
+
+
+def enrich_item(item, score):
+    enriched = dict(item)
+    enriched["surfboard_confidence"] = score["confidence"]
+    enriched["surfboard_match_reasons"] = score["reasons"]
+    enriched["retailer_domain"] = get_domain(item)
+    return enriched
 
 
 def load_items(file_path):
@@ -289,8 +461,10 @@ def load_items(file_path):
 
 
 def main():
-    output = []
+    accepted = []
+    rejected = []
     total_items = 0
+    file_results = []
 
     for input_dir in INPUT_DIRS:
         if not input_dir.exists():
@@ -300,30 +474,71 @@ def main():
             items = load_items(file_path)
             total_items += len(items)
 
-            matched = [
-                item for item in items
-                if is_likely_surfboard(item)
-            ]
+            file_accepted = 0
+            file_rejected = 0
 
-            output.extend(matched)
+            for item in items:
+                score = score_item(item)
+
+                if score["is_surfboard"]:
+                    accepted.append(enrich_item(item, score))
+                    file_accepted += 1
+                else:
+                    rejected_item = enrich_item(item, score)
+                    rejected_item["surfboard_reject_reason"] = score["reject_reason"]
+                    rejected.append(rejected_item)
+                    file_rejected += 1
+
+            file_results.append(
+                {
+                    "file": str(file_path),
+                    "raw": len(items),
+                    "accepted": file_accepted,
+                    "rejected": file_rejected,
+                }
+            )
 
             print(
                 f"{file_path.name}: "
                 f"{len(items)} raw -> "
-                f"{len(matched)} likely surfboards"
+                f"{file_accepted} verified surfboards, "
+                f"{file_rejected} rejected"
             )
 
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+
     OUTPUT_FILE.write_text(
-        json.dumps(output, indent=2, ensure_ascii=False),
-        encoding="utf-8"
+        json.dumps(accepted, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    REJECTED_FILE.write_text(
+        json.dumps(rejected[:5000], indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    report = {
+        "raw_items": total_items,
+        "verified_surfboards": len(accepted),
+        "rejected_products_sample": min(len(rejected), 5000),
+        "accepted_output": str(OUTPUT_FILE),
+        "rejected_output": str(REJECTED_FILE),
+        "files": file_results,
+    }
+
+    REPORT_FILE.write_text(
+        json.dumps(report, indent=2, ensure_ascii=False),
+        encoding="utf-8",
     )
 
     print("")
     print(f"Raw items: {total_items}")
-    print(f"Likely surfboards: {len(output)}")
+    print(f"Verified surfboards: {len(accepted)}")
+    print(f"Rejected sample saved: {min(len(rejected), 5000)}")
     print(f"Saved: {OUTPUT_FILE}")
+    print(f"Rejected sample: {REJECTED_FILE}")
+    print(f"Report: {REPORT_FILE}")
 
 
 if __name__ == "__main__":
     main()
-    

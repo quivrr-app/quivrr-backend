@@ -11,8 +11,40 @@ def clean(value):
     return str(value or "").strip().lower()
 
 
+def normalise_construction(value):
+    text = clean(value)
+
+    if text in ["hyfi", "hyfi 3", "hyfi 3.0"]:
+        return "hyfi 3.0"
+
+    if text in ["fcs ii", "fcs2"]:
+        return "fcs ii"
+
+    return text
+
+
 def exact_match(value_a, value_b):
     return clean(value_a) == clean(value_b)
+
+
+def construction_match(value_a, value_b):
+    return normalise_construction(value_a) == normalise_construction(value_b)
+
+
+def price_float(value):
+    try:
+        return float(value)
+    except Exception:
+        return None
+
+
+def first_image(row):
+    images = row.get("images") or []
+
+    if isinstance(images, list) and images:
+        return images[0]
+
+    return row.get("image_url")
 
 
 def find_manufacturer_results(model, length, construction):
@@ -30,27 +62,37 @@ def find_manufacturer_results(model, length, construction):
         if not exact_match(row.get("length"), length):
             continue
 
-        if not exact_match(row.get("construction"), construction):
+        if not construction_match(row.get("construction"), construction):
             continue
 
-        results.append({
-            "source_type": "manufacturer",
-            "retailer": "JS Industries",
-            "brand": row.get("brand"),
-            "model": row.get("model"),
-            "length": row.get("length"),
-            "width": row.get("width"),
-            "thickness": row.get("thickness"),
-            "volume_litres": row.get("volume_litres"),
-            "construction": row.get("construction"),
-            "fin_system": row.get("fin_system"),
-            "tail_shape": row.get("tail_shape"),
-            "price": row.get("price"),
-            "available": row.get("available"),
-            "product_url": row.get("product_url"),
-            "image_url": row.get("image_url"),
-            "match_type": "exact",
-        })
+        results.append(
+            {
+                "source_type": "manufacturer",
+                "retailer": "JS Industries",
+                "brand": row.get("brand"),
+                "model": row.get("model"),
+                "length": row.get("length"),
+                "width": row.get("width"),
+                "thickness": row.get("thickness"),
+                "volume_litres": row.get("volume_litres"),
+                "construction": row.get("construction"),
+                "fin_system": row.get("fin_system"),
+                "tail_shape": row.get("tail_shape"),
+                "price": row.get("price"),
+                "available": row.get("available"),
+                "product_url": row.get("product_url"),
+                "image_url": row.get("image_url"),
+                "retailer_logo_url": None,
+                "match_type": "exact",
+            }
+        )
+
+    results.sort(
+        key=lambda row: (
+            row.get("fin_system") or "",
+            row.get("volume_litres") or 0,
+        )
+    )
 
     return results
 
@@ -59,10 +101,12 @@ def find_retailer_results(model, length, construction):
     rows = json.loads(INVENTORY_FILE.read_text(encoding="utf-8"))
 
     results = []
-
     model_clean = clean(model)
 
     for row in rows:
+        if row.get("available") is not True:
+            continue
+
         retailer_name = clean(row.get("retailer"))
 
         if retailer_name == "js industries":
@@ -86,29 +130,42 @@ def find_retailer_results(model, length, construction):
         if not exact_match(row.get("length"), length):
             continue
 
-        if not exact_match(row.get("construction"), construction):
+        if not construction_match(row.get("construction"), construction):
             continue
 
-        results.append({
-            "source_type": "retailer",
-            "retailer": row.get("retailer"),
-            "website": row.get("website"),
-            "brand": row.get("brand"),
-            "model": model,
-            "title": row.get("title"),
-            "variant_title": row.get("variant_title"),
-            "length": row.get("length"),
-            "width": row.get("width"),
-            "thickness": row.get("thickness"),
-            "volume_litres": row.get("volume_litres"),
-            "construction": row.get("construction"),
-            "fin_system": row.get("fin_system"),
-            "price": row.get("price"),
-            "available": row.get("available"),
-            "product_url": row.get("product_url"),
-            "images": row.get("images", []),
-            "match_type": "exact",
-        })
+        results.append(
+            {
+                "source_type": "retailer",
+                "retailer": row.get("retailer"),
+                "website": row.get("website"),
+                "brand": row.get("brand"),
+                "model": model,
+                "title": row.get("title"),
+                "variant_title": row.get("variant_title"),
+                "length": row.get("length"),
+                "width": row.get("width"),
+                "thickness": row.get("thickness"),
+                "volume_litres": row.get("volume_litres"),
+                "construction": row.get("construction"),
+                "fin_system": row.get("fin_system"),
+                "price": row.get("price"),
+                "available": row.get("available"),
+                "product_url": row.get("product_url"),
+                "image_url": first_image(row),
+                "images": row.get("images", []),
+                "retailer_logo_url": row.get("retailer_logo_url"),
+                "match_type": "exact",
+            }
+        )
+
+    results.sort(
+        key=lambda row: (
+            price_float(row.get("price")) is None,
+            price_float(row.get("price")) or 999999,
+            row.get("retailer") or "",
+            row.get("volume_litres") or 0,
+        )
+    )
 
     return results
 
@@ -137,6 +194,8 @@ def search(model, length, construction):
             len(manufacturer_results)
             + len(retailer_results)
         ),
+        "manufacturer_result_count": len(manufacturer_results),
+        "retailer_result_count": len(retailer_results),
         "manufacturer_results": manufacturer_results,
         "retailer_results": retailer_results,
     }
@@ -174,4 +233,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

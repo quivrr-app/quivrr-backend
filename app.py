@@ -85,6 +85,38 @@ def format_size_label(row):
     )
 
 
+def format_price(value):
+
+    if value is None:
+        return None
+
+    return float(value)
+
+
+def retailer_result(row, result_type):
+
+    return {
+        "resultType": result_type,
+        "inventoryId": row.InventoryId,
+        "retailerName": row.RetailerName,
+        "websiteUrl": row.WebsiteUrl,
+        "retailerLogoUrl": row.LogoUrl,
+        "title": row.RawProductTitle,
+        "productUrl": row.ProductUrl,
+        "imageUrl": row.ProductImageUrl,
+        "priceAud": format_price(row.PriceAud),
+        "stockStatus": row.StockStatus,
+        "construction": row.Construction,
+        "finSetup": row.FinSetup,
+        "length": row.LengthFeetInches,
+        "width": row.Width,
+        "thickness": row.Thickness,
+        "volumeLitres": format_volume(
+            row.VolumeLitres
+        )
+    }
+
+
 @app.get("/")
 def root():
 
@@ -286,7 +318,8 @@ def search_inventory(boardSizeId: int):
             ri.Thickness,
             ri.VolumeLitres,
             r.RetailerName,
-            r.WebsiteUrl
+            r.WebsiteUrl,
+            r.LogoUrl
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
@@ -320,6 +353,7 @@ def search_inventory(boardSizeId: int):
             ri.VolumeLitres,
             r.RetailerName,
             r.WebsiteUrl,
+            r.LogoUrl,
             ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) AS VolumeDelta
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
@@ -387,29 +421,10 @@ def search_inventory(boardSizeId: int):
         )
 
         exact_matches = [
-            {
-                "resultType": "retailerExact",
-                "inventoryId": row.InventoryId,
-                "retailerName": row.RetailerName,
-                "websiteUrl": row.WebsiteUrl,
-                "title": row.RawProductTitle,
-                "productUrl": row.ProductUrl,
-                "imageUrl": row.ProductImageUrl,
-                "priceAud": (
-                    float(row.PriceAud)
-                    if row.PriceAud is not None
-                    else None
-                ),
-                "stockStatus": row.StockStatus,
-                "construction": row.Construction,
-                "finSetup": row.FinSetup,
-                "length": row.LengthFeetInches,
-                "width": row.Width,
-                "thickness": row.Thickness,
-                "volumeLitres": format_volume(
-                    row.VolumeLitres
-                )
-            }
+            retailer_result(
+                row,
+                "retailerExact"
+            )
             for row in exact_results
         ]
 
@@ -435,34 +450,18 @@ def search_inventory(boardSizeId: int):
             if row.InventoryId in exact_ids:
                 continue
 
-            close_matches.append({
-                "resultType": "retailerClose",
-                "inventoryId": row.InventoryId,
-                "retailerName": row.RetailerName,
-                "websiteUrl": row.WebsiteUrl,
-                "title": row.RawProductTitle,
-                "productUrl": row.ProductUrl,
-                "imageUrl": row.ProductImageUrl,
-                "priceAud": (
-                    float(row.PriceAud)
-                    if row.PriceAud is not None
-                    else None
-                ),
-                "stockStatus": row.StockStatus,
-                "construction": row.Construction,
-                "finSetup": row.FinSetup,
-                "length": row.LengthFeetInches,
-                "width": row.Width,
-                "thickness": row.Thickness,
-                "volumeLitres": format_volume(
-                    row.VolumeLitres
-                ),
-                "volumeDelta": (
-                    float(row.VolumeDelta)
-                    if row.VolumeDelta is not None
-                    else None
-                )
-            })
+            item = retailer_result(
+                row,
+                "retailerClose"
+            )
+
+            item["volumeDelta"] = (
+                float(row.VolumeDelta)
+                if row.VolumeDelta is not None
+                else None
+            )
+
+            close_matches.append(item)
 
     return {
         "manufacturer": official_result,
