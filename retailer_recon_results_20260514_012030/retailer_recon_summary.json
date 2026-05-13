@@ -1,0 +1,580 @@
+[
+  {
+    "retailer": "Surf FX",
+    "base_url": "https://www.surffx.com.au",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Salesforce Commerce Cloud",
+      "Shopify",
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Bot challenge",
+      "Cloudflare challenge",
+      "Geo restriction"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/products",
+      "/shop",
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard",
+      "/",
+      "/robots.txt",
+      "/sitemap.xml",
+      "/products.json?limit=250",
+      "/collections/all/products.json?limit=250",
+      "/collections/surfboards/products.json?limit=250"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Mundo Surf",
+    "base_url": "https://www.mundo-surf.com",
+    "status_codes_seen": [
+      200,
+      404
+    ],
+    "platforms": [],
+    "cdn_or_waf": [
+      "Cloudflare"
+    ],
+    "protection_signals": [
+      "Cloudflare challenge"
+    ],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "Protection or restriction detected. Use public sitemap, retailer feed, approved API, affiliate feed, or manual partnership path."
+  },
+  {
+    "retailer": "Le BAO",
+    "base_url": "https://www.lebao.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Board Collectors",
+    "base_url": "https://www.boardcollectors.com",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Surfstitch",
+    "base_url": "https://www.surfstitch.com",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Custom or unknown ecommerce",
+      "Shopify"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Cloudflare challenge"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/products.json?limit=250",
+      "/collections/all/products.json?limit=250",
+      "/collections/surfboards/products.json?limit=250",
+      "/robots.txt",
+      "/sitemap.xml"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Seaside Surf Shop",
+    "base_url": "https://www.seasidesurfshop.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "12 Board Store",
+    "base_url": "https://www.12boardstore.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Strapper Surf",
+    "base_url": "https://www.strapper.com.au",
+    "status_codes_seen": [
+      200,
+      404
+    ],
+    "platforms": [
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [],
+    "protection_signals": [
+      "Bot challenge",
+      "Geo restriction"
+    ],
+    "product_signals": [
+      "Retail product content",
+      "Surfboard keyword content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/",
+      "/sitemap.xml"
+    ],
+    "recommended_next_step": "WooCommerce detected. Build scraper around Store API, product sitemap, or product schema."
+  },
+  {
+    "retailer": "Surf Dive n Ski",
+    "base_url": "https://www.sds.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "City Beach",
+    "base_url": "https://www.citybeach.com",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Riders Lodge",
+    "base_url": "https://www.riderslodge.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Bennys Boardroom",
+    "base_url": "https://www.bennysboardroom.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Kirra Surf",
+    "base_url": "https://www.kirrasurf.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "Boardcave",
+    "base_url": "https://www.boardcave.com.au",
+    "status_codes_seen": [
+      403
+    ],
+    "platforms": [
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, PerimeterX"
+    ],
+    "protection_signals": [
+      "Blocking or challenge status 403",
+      "Cloudflare challenge",
+      "Geo restriction",
+      "JavaScript required",
+      "PerimeterX challenge"
+    ],
+    "product_signals": [
+      "Surfboard keyword content"
+    ],
+    "useful_paths": [],
+    "recommended_next_step": "WooCommerce detected. Build scraper around Store API, product sitemap, or product schema."
+  },
+  {
+    "retailer": "Trigger Bros",
+    "base_url": "https://www.triggerbrothers.com.au",
+    "status_codes_seen": [
+      403
+    ],
+    "platforms": [
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare"
+    ],
+    "protection_signals": [
+      "Blocking or challenge status 403",
+      "Cloudflare challenge",
+      "Geo restriction",
+      "JavaScript required"
+    ],
+    "product_signals": [
+      "Surfboard keyword content"
+    ],
+    "useful_paths": [],
+    "recommended_next_step": "WooCommerce detected. Build scraper around Store API, product sitemap, or product schema."
+  },
+  {
+    "retailer": "Ocean and Earth",
+    "base_url": "https://www.oceanearthstore.com",
+    "status_codes_seen": [
+      200,
+      404
+    ],
+    "platforms": [
+      "Shopify",
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Bot challenge",
+      "Cloudflare challenge",
+      "Geo restriction"
+    ],
+    "product_signals": [
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content"
+    ],
+    "useful_paths": [
+      "/collections/all",
+      "/collections/surfboard",
+      "/products",
+      "/api/products",
+      "/shop",
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard",
+      "/robots.txt"
+    ],
+    "recommended_next_step": "Shopify detected, but common feeds may be blocked or unavailable. Test collection handles and sitemap product URLs."
+  },
+  {
+    "retailer": "Momentum Surf",
+    "base_url": "https://www.momentumsurf.com.au",
+    "status_codes_seen": [],
+    "platforms": [],
+    "cdn_or_waf": [],
+    "protection_signals": [],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "No reliable product path found. Needs manual inspection."
+  },
+  {
+    "retailer": "SDS Surf",
+    "base_url": "https://www.sds.com.au",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Custom or unknown ecommerce",
+      "Salesforce Commerce Cloud",
+      "Shopify",
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Bot challenge",
+      "Cloudflare challenge",
+      "Geo restriction",
+      "PerimeterX challenge"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content"
+    ],
+    "useful_paths": [
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard",
+      "/collections/all/products.json?limit=250",
+      "/collections/surfboards/products.json?limit=250",
+      "/collections/all",
+      "/products",
+      "/shop",
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Onboard Store",
+    "base_url": "https://www.onboardstore.com.au",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Custom or unknown ecommerce",
+      "Shopify",
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Cloudflare challenge"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content"
+    ],
+    "useful_paths": [
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard",
+      "/products.json?limit=250",
+      "/collections/all/products.json?limit=250",
+      "/collections/surfboards/products.json?limit=250",
+      "/collections/all",
+      "/products",
+      "/shop",
+      "/search?q=surfboard"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Natural Necessity",
+    "base_url": "https://www.naturalnecessity.com.au",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Custom or unknown ecommerce",
+      "Shopify",
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Cloudflare challenge"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/shop",
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard",
+      "/",
+      "/robots.txt",
+      "/sitemap.xml",
+      "/products.json?limit=250",
+      "/shop",
+      "/search?q=surfboard",
+      "/search?type=product&q=surfboard"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Underground Surf",
+    "base_url": "https://www.undergroundsurf.com.au",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Custom or unknown ecommerce",
+      "Shopify",
+      "WooCommerce",
+      "WordPress"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, AWS CloudFront, Shopify Edge",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Cloudflare challenge"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/products.json?limit=250",
+      "/collections/all/products.json?limit=250",
+      "/collections/surfboards/products.json?limit=250",
+      "/collections/all",
+      "/products",
+      "/shop",
+      "/",
+      "/robots.txt",
+      "/sitemap.xml",
+      "/products.json?limit=250"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Coastalwatch",
+    "base_url": "https://www.coastalwatch.com",
+    "status_codes_seen": [
+      403
+    ],
+    "platforms": [],
+    "cdn_or_waf": [
+      "Cloudflare"
+    ],
+    "protection_signals": [
+      "Blocking or challenge status 403",
+      "Cloudflare challenge",
+      "Geo restriction",
+      "JavaScript required"
+    ],
+    "product_signals": [],
+    "useful_paths": [],
+    "recommended_next_step": "Protection or restriction detected. Use public sitemap, retailer feed, approved API, affiliate feed, or manual partnership path."
+  },
+  {
+    "retailer": "Sideways Surf",
+    "base_url": "https://www.sideways.com.au",
+    "status_codes_seen": [
+      200,
+      400,
+      404
+    ],
+    "platforms": [
+      "Custom or unknown ecommerce",
+      "Shopify"
+    ],
+    "cdn_or_waf": [
+      "Cloudflare",
+      "Cloudflare, Shopify Edge"
+    ],
+    "protection_signals": [
+      "Cloudflare challenge"
+    ],
+    "product_signals": [
+      "JSON products array",
+      "Product URL references",
+      "Retail product content",
+      "Surfboard keyword content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/products.json?limit=250",
+      "/collections/surfboards/products.json?limit=250",
+      "/collections/all/products.json?limit=250",
+      "/",
+      "/robots.txt",
+      "/sitemap.xml",
+      "/collections/surfboards",
+      "/collections/all",
+      "/products.json?limit=250",
+      "/"
+    ],
+    "recommended_next_step": "Likely structured product feed available. Build or fix feed scraper first."
+  },
+  {
+    "retailer": "Nth Degree",
+    "base_url": "https://www.nthdegree.com.au",
+    "status_codes_seen": [
+      200,
+      404
+    ],
+    "platforms": [
+      "Squarespace"
+    ],
+    "cdn_or_waf": [],
+    "protection_signals": [
+      "Bot challenge"
+    ],
+    "product_signals": [
+      "Retail product content",
+      "Surfboard keyword content",
+      "XML sitemap"
+    ],
+    "useful_paths": [
+      "/search?type=product&q=surfboard",
+      "/search?q=surfboard",
+      "/",
+      "/sitemap.xml"
+    ],
+    "recommended_next_step": "Protection or restriction detected. Use public sitemap, retailer feed, approved API, affiliate feed, or manual partnership path."
+  }
+]
