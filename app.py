@@ -1,4 +1,5 @@
 import os
+import re
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
@@ -58,6 +59,36 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def clean_text(value):
+
+    if value is None:
+        return ""
+
+    text_value = str(value).lower()
+    text_value = text_value.replace("’", "'")
+    text_value = text_value.replace("‘", "'")
+    text_value = re.sub(r"[^a-z0-9']+", " ", text_value)
+    text_value = re.sub(r"\s+", " ", text_value).strip()
+
+    return text_value
+
+
+def model_name_matches(title, normalised_title, model_name):
+
+    model = clean_text(model_name)
+
+    if not model:
+        return False
+
+    combined_title = clean_text(
+        f"{title or ''} {normalised_title or ''}"
+    )
+
+    pattern = rf"(?<![a-z0-9]){re.escape(model)}(?![a-z0-9])"
+
+    return re.search(pattern, combined_title) is not None
 
 
 def format_volume(value):
@@ -303,7 +334,7 @@ def search_inventory(boardSizeId: int):
     """)
 
     exact_query = text("""
-        SELECT TOP 25
+        SELECT TOP 75
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -330,8 +361,7 @@ def search_inventory(boardSizeId: int):
         WHERE ri.IsActive = 1
         AND ri.StockStatus = 'In Stock'
         AND (
-            ri.RawProductTitle LIKE :brand_match
-            OR ri.RawProductTitle LIKE :model_match
+            ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
         )
         AND ri.LengthFeetInches = :length
@@ -346,7 +376,7 @@ def search_inventory(boardSizeId: int):
     """)
 
     close_query = text("""
-        SELECT TOP 25
+        SELECT TOP 75
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -373,8 +403,7 @@ def search_inventory(boardSizeId: int):
         WHERE ri.IsActive = 1
         AND ri.StockStatus = 'In Stock'
         AND (
-            ri.RawProductTitle LIKE :brand_match
-            OR ri.RawProductTitle LIKE :model_match
+            ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
         )
         AND ri.LengthFeetInches = :length
@@ -405,7 +434,6 @@ def search_inventory(boardSizeId: int):
                 "closeRetailerMatches": []
             }
 
-        brand_match = f"%{official.BrandName.split()[0]}%"
         model_match = f"%{official.ModelName}%"
 
         official_result = {
@@ -428,20 +456,32 @@ def search_inventory(boardSizeId: int):
         exact_results = connection.execute(
             exact_query,
             {
-                "brand_match": brand_match,
                 "model_match": model_match,
                 "length": official.LengthFeetInches,
                 "volume": official.VolumeLitres
             }
         )
 
-        exact_matches = [
-            retailer_result(
-                row,
-                "retailerExact"
+        exact_matches = []
+
+        for row in exact_results:
+
+            if not model_name_matches(
+                row.RawProductTitle,
+                row.NormalisedProductTitle,
+                official.ModelName
+            ):
+                continue
+
+            exact_matches.append(
+                retailer_result(
+                    row,
+                    "retailerExact"
+                )
             )
-            for row in exact_results
-        ]
+
+            if len(exact_matches) >= 25:
+                break
 
         exact_ids = {
             row["inventoryId"]
@@ -451,7 +491,6 @@ def search_inventory(boardSizeId: int):
         close_results = connection.execute(
             close_query,
             {
-                "brand_match": brand_match,
                 "model_match": model_match,
                 "length": official.LengthFeetInches,
                 "volume": official.VolumeLitres
@@ -463,6 +502,13 @@ def search_inventory(boardSizeId: int):
         for row in close_results:
 
             if row.InventoryId in exact_ids:
+                continue
+
+            if not model_name_matches(
+                row.RawProductTitle,
+                row.NormalisedProductTitle,
+                official.ModelName
+            ):
                 continue
 
             item = retailer_result(
@@ -477,6 +523,9 @@ def search_inventory(boardSizeId: int):
             )
 
             close_matches.append(item)
+
+            if len(close_matches) >= 25:
+                break
 
     return {
         "manufacturer": official_result,
