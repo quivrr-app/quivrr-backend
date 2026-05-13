@@ -150,6 +150,15 @@ def main():
             "retry_count": 1,
         },
         {
+            "name": "Scrape BigCommerce retailers",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/bigcommerce_scraper.py",
+            ],
+            "retry_count": 1,
+        },
+        {
             "name": "Filter likely surfboards",
             "command": [
                 sys.executable,

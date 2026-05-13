@@ -1,5 +1,69 @@
 [
   {
+    "primary_name": "Surf Shops Australia",
+    "website": "https://surfshopsaustralia.com.au",
+    "website_key": "https://surfshopsaustralia.com.au",
+    "country": "Australia",
+    "platform": "bigcommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Surf Shops Australia",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Trigger Bros Surfboards",
+    "website": "https://triggerbrothers.com.au",
+    "website_key": "https://triggerbrothers.com.au",
+    "country": "Australia",
+    "platform": "bigcommerce",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Trigger Bros Surfboards",
+        "states": [
+          "VIC"
+        ],
+        "region_clusters": [
+          "Mornington Peninsula"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      },
+      {
+        "name": "Trigger Bros",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
     "primary_name": "Akwa Surf",
     "website": "https://akwasurf.com.au",
     "website_key": "https://akwasurf.com.au",

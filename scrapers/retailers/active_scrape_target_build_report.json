@@ -1,27 +1,45 @@
 {
   "total_records": 104,
-  "active_targets": 42,
-  "excluded_records": 60,
+  "supported_platforms": [
+    "bigcommerce",
+    "shopify",
+    "woocommerce"
+  ],
+  "active_targets": 44,
+  "excluded_records": 57,
   "platforms_seen": {
-    "error": 31,
+    "ssl_problem_site": 4,
     "woocommerce": 15,
-    "unknown": 26,
+    "unknown": 6,
     "shopify": 31,
-    "algolia": 1
+    "connection_error": 31,
+    "ecwid": 1,
+    "bigcommerce": 3,
+    "ssl_error": 3,
+    "neto_maropost": 1,
+    "magento": 4,
+    "squarespace": 4,
+    "blocked": 1
   },
   "exclusion_reasons": {
-    "unsupported_platform_error": 31,
-    "unsupported_platform_unknown": 25,
+    "unsupported_platform_ssl_problem_site": 4,
+    "unsupported_platform_unknown": 6,
+    "unsupported_platform_connection_error": 31,
     "excluded_retailer": 2,
-    "unsupported_platform_algolia": 1,
+    "unsupported_platform_ecwid": 1,
+    "unsupported_platform_ssl_error": 3,
+    "unsupported_platform_neto_maropost": 1,
+    "unsupported_platform_magento": 3,
+    "unsupported_platform_squarespace": 4,
+    "unsupported_platform_blocked": 1,
     "not_hardboard_retailer": 1
   },
   "excluded": [
     {
       "name": "Aloha Surf Manly",
       "website": "https://alohasurfmanly.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "ssl_problem_site",
+      "reason": "unsupported_platform_ssl_problem_site"
     },
     {
       "name": "Bells Beach Surf Shop",
@@ -32,8 +50,8 @@
     {
       "name": "Groove Surf",
       "website": "https://groovesurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "JS Industries",
@@ -44,212 +62,200 @@
     {
       "name": "Kirra Surf",
       "website": "https://kirrasurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "ssl_problem_site",
+      "reason": "unsupported_platform_ssl_problem_site"
     },
     {
       "name": "Slimes Boardstore",
       "website": "https://slimes.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
-    },
-    {
-      "name": "Trigger Bros Surfboards",
-      "website": "https://triggerbrothers.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "ecwid",
+      "reason": "unsupported_platform_ecwid"
     },
     {
       "name": "Beach Life Margaret River",
       "website": "https://beachlifemargs.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Big Drop Surf",
       "website": "https://bigdropsurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "ssl_error",
+      "reason": "unsupported_platform_ssl_error"
     },
     {
       "name": "Big Surf",
       "website": "https://bigsurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Board Store",
       "website": "https://boardstore.com.au",
-      "platform": "algolia",
-      "reason": "unsupported_platform_algolia"
+      "platform": "neto_maropost",
+      "reason": "unsupported_platform_neto_maropost"
     },
     {
       "name": "Boardriders Torquay",
       "website": "https://boardriders.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Byron Bay Surf Company",
       "website": "https://byronbaysurfcompany.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Coopers Surf",
       "website": "https://cooperssurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "magento",
+      "reason": "unsupported_platform_magento"
     },
     {
       "name": "Corner Surf Shop",
       "website": "https://cornersurfshop.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Dripping Wet Surf Co",
       "website": "https://drippingwetsurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Full Circle Surf",
       "website": "https://fullcirclesurf.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "squarespace",
+      "reason": "unsupported_platform_squarespace"
     },
     {
       "name": "Hollow Surf",
       "website": "https://hollowsurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Innertube Surf Shop",
       "website": "https://innertubesurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Pittwater Surfboards",
       "website": "https://pittwatersurfboards.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Sessions Surf Shop",
       "website": "https://sessionssurfshop.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Action Board Sports",
       "website": "https://actionboardsports.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Apollo Bay Surf Shop",
       "website": "https://apollobaysurfshop.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Blue Planet Surf",
       "website": "https://blueplanetsurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Coogee Surf Co",
       "website": "https://coogeesurfco.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "CPS Surf",
       "website": "https://cpssurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Empire Ave",
       "website": "https://empireave.com",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "magento",
+      "reason": "unsupported_platform_magento"
     },
     {
       "name": "Harbour Surfboards",
       "website": "https://harboursurfboards.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Le Spot Surf Shop",
       "website": "https://lespotsurfshop.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Manly Surf Guide Surfboard Outlet",
       "website": "https://manlysurfguide.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "squarespace",
+      "reason": "unsupported_platform_squarespace"
     },
     {
       "name": "Maroubra Surf and Skate",
       "website": "https://maroubrasurfandskate.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Murray Smith Surf Warehouse",
       "website": "https://murraysmithsurfwarehouse.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "North Coast Surf",
       "website": "https://northcoastsurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Ocean Grove Surf Co",
       "website": "https://oceangrovesurfco.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "On A Wave Surf Shop",
       "website": "https://onawavesurfshop.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Prahran Surfboards",
       "website": "https://prahransurfboards.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Secret Harbour Surf",
       "website": "https://secretharboursurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Shed Nine",
       "website": "https://shednine.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
-    },
-    {
-      "name": "Surf Shops Australia",
-      "website": "https://surfshopsaustralia.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "ssl_error",
+      "reason": "unsupported_platform_ssl_error"
     },
     {
       "name": "Surfers Choice Surf Shop",
@@ -266,32 +272,26 @@
     {
       "name": "Yorkes Surf",
       "website": "https://yorkessurf.com.au",
-      "platform": "error",
-      "reason": "unsupported_platform_error"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Boardcave",
       "website": "https://boardcave.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
-    },
-    {
-      "name": "Trigger Bros",
-      "website": "https://triggerbrothers.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "blocked",
+      "reason": "unsupported_platform_blocked"
     },
     {
       "name": "Island Surfboards",
       "website": "https://islandsurfboards.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "squarespace",
+      "reason": "unsupported_platform_squarespace"
     },
     {
       "name": "Full Circle Surf",
       "website": "https://fullcirclesurf.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "squarespace",
+      "reason": "unsupported_platform_squarespace"
     },
     {
       "name": "Bells Beach Surf Shop",
@@ -302,7 +302,7 @@
     {
       "name": "City Beach",
       "website": "https://citybeach.com",
-      "platform": "unknown",
+      "platform": "magento",
       "reason": "not_hardboard_retailer"
     },
     {
@@ -314,38 +314,38 @@
     {
       "name": "Drift Surf",
       "website": "https://driftsurf.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Pittwater Surf",
       "website": "https://pittwatersurf.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Byron Bay Surfboard Co",
       "website": "https://byronbaysurfboardco.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Surfboard Agency",
       "website": "https://surfboardagency.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Kirra Surf",
       "website": "https://kirrasurf.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "ssl_problem_site",
+      "reason": "unsupported_platform_ssl_problem_site"
     },
     {
       "name": "Goodtime Surfboards",
       "website": "https://goodtime.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "magento",
+      "reason": "unsupported_platform_magento"
     },
     {
       "name": "Surf Connect",
@@ -356,14 +356,14 @@
     {
       "name": "Second Surf",
       "website": "https://secondsurf.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "connection_error",
+      "reason": "unsupported_platform_connection_error"
     },
     {
       "name": "Three Stories",
       "website": "https://threestories.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "ssl_problem_site",
+      "reason": "unsupported_platform_ssl_problem_site"
     },
     {
       "name": "Soul Boardstore",
@@ -374,11 +374,75 @@
     {
       "name": "Surfection Mosman",
       "website": "https://surfectionmosman.com.au",
-      "platform": "unknown",
-      "reason": "unsupported_platform_unknown"
+      "platform": "ssl_error",
+      "reason": "unsupported_platform_ssl_error"
     }
   ],
   "active": [
+    {
+      "primary_name": "Surf Shops Australia",
+      "website": "https://surfshopsaustralia.com.au",
+      "website_key": "https://surfshopsaustralia.com.au",
+      "country": "Australia",
+      "platform": "bigcommerce",
+      "status": "active",
+      "priority": 3,
+      "locations": [
+        {
+          "name": "Surf Shops Australia",
+          "states": [
+            "NSW"
+          ],
+          "region_clusters": [
+            "Online"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Trigger Bros Surfboards",
+      "website": "https://triggerbrothers.com.au",
+      "website_key": "https://triggerbrothers.com.au",
+      "country": "Australia",
+      "platform": "bigcommerce",
+      "status": "active",
+      "priority": 1,
+      "locations": [
+        {
+          "name": "Trigger Bros Surfboards",
+          "states": [
+            "VIC"
+          ],
+          "region_clusters": [
+            "Mornington Peninsula"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
+        },
+        {
+          "name": "Trigger Bros",
+          "states": [],
+          "region_clusters": [],
+          "retailer_types": [],
+          "hardboards": true,
+          "verification_statuses": []
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
     {
       "primary_name": "Akwa Surf",
       "website": "https://akwasurf.com.au",

@@ -20,6 +20,7 @@ REPORT_FILE = Path(
 SUPPORTED_PLATFORMS = {
     "shopify",
     "woocommerce",
+    "bigcommerce",
 }
 
 MANUFACTURER_OR_BRAND_TYPES = {
@@ -174,8 +175,8 @@ def get_platform(record, overrides):
     if override:
         platform = override.get("platform")
 
-        if platform in SUPPORTED_PLATFORMS:
-            return platform
+        if platform:
+            return normalise_platform(platform)
 
     return normalise_platform(
         record.get("platform")
@@ -325,6 +326,7 @@ def main():
         json.dumps(
             {
                 "total_records": len(retailers),
+                "supported_platforms": sorted(SUPPORTED_PLATFORMS),
                 "active_targets": len(targets),
                 "excluded_records": len(excluded),
                 "platforms_seen": dict(platforms),
@@ -345,6 +347,12 @@ def main():
     print(f"Retailer records loaded: {len(retailers)}")
     print(f"Unique active retailer targets: {len(targets)}")
     print(f"Excluded records: {len(excluded)}")
+
+    print("")
+    print("Supported platforms:")
+
+    for platform in sorted(SUPPORTED_PLATFORMS):
+        print(platform)
 
     print("")
     print("Platforms seen:")
