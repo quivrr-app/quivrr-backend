@@ -319,7 +319,11 @@ def search_inventory(boardSizeId: int):
             ri.VolumeLitres,
             r.RetailerName,
             r.WebsiteUrl,
-            r.LogoUrl
+            r.LogoUrl,
+            ABS(
+                CAST(ri.VolumeLitres AS float)
+                - CAST(:volume AS float)
+            ) AS VolumeDelta
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
@@ -331,8 +335,13 @@ def search_inventory(boardSizeId: int):
             OR ri.NormalisedProductTitle LIKE :model_match
         )
         AND ri.LengthFeetInches = :length
-        AND ri.VolumeLitres = :volume
+        AND ri.VolumeLitres IS NOT NULL
+        AND ABS(
+            CAST(ri.VolumeLitres AS float)
+            - CAST(:volume AS float)
+        ) <= 0.2
         ORDER BY
+            VolumeDelta ASC,
             ri.PriceAud ASC
     """)
 
@@ -354,7 +363,10 @@ def search_inventory(boardSizeId: int):
             r.RetailerName,
             r.WebsiteUrl,
             r.LogoUrl,
-            ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) AS VolumeDelta
+            ABS(
+                CAST(ri.VolumeLitres AS float)
+                - CAST(:volume AS float)
+            ) AS VolumeDelta
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
@@ -367,7 +379,10 @@ def search_inventory(boardSizeId: int):
         )
         AND ri.LengthFeetInches = :length
         AND ri.VolumeLitres IS NOT NULL
-        AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 1.5
+        AND ABS(
+            CAST(ri.VolumeLitres AS float)
+            - CAST(:volume AS float)
+        ) <= 1.5
         ORDER BY
             VolumeDelta ASC,
             ri.PriceAud ASC
