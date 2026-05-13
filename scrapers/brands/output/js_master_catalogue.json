@@ -177,7 +177,7 @@
   },
   {
     "model": "Big Baron",
-    "raw_title": "Big Baron Clear 7'6\" x 21 3/4\" X 2 7/8\" - 50.00L, Round, 2x FCS 2 Fin Boxes, PE - ID:1025990",
+    "raw_title": "Big Baron Clear 7'6\" x 21 3/4\" X 2 7/8\" - 50.00L, Round, 2x FCS 2 Fin Boxes, PE - ID:1025992",
     "length": "7'6",
     "width": "21 3/4",
     "thickness": "2 7/8",
@@ -188,8 +188,8 @@
     "brand": "JS Industries",
     "price": "1199.00",
     "available": true,
-    "product_url": "https://jsindustries.com/products/sb1025990",
-    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/62929260761a90_f3369a42-39b0-4e7b-9e3e-a57551b776d3.jpg?v=1765140591"
+    "product_url": "https://jsindustries.com/products/sb1025992",
+    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/62929260761a90_c52ee531-9919-47eb-b686-f4319d3d78ae.jpg?v=1765140573"
   },
   {
     "model": "Big Baron",
@@ -1217,19 +1217,19 @@
   },
   {
     "model": "Monsta",
-    "raw_title": "Monsta 10 6'1\" x 19\" X 2 7/16\" - 29.90L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1031948",
-    "length": "6'1",
-    "width": "19",
-    "thickness": "2 7/16",
-    "volume_litres": 29.9,
-    "construction": "HYFI 3.0",
-    "fin_system": "FCS 2",
+    "raw_title": "Monsta 10 6'0\" x 18 7/8\" X 2 9/16\" - 29.48L, Squash, 3x Futures Fin Boxes, PU [Semi New] - ID:939176",
+    "length": "6'0",
+    "width": "18 7/8",
+    "thickness": "2 9/16",
+    "volume_litres": 29.48,
+    "construction": "PU",
+    "fin_system": "Futures",
     "tail_shape": "Squash",
     "brand": "JS Industries",
-    "price": "1099.00",
+    "price": "1199.00",
     "available": true,
-    "product_url": "https://jsindustries.com/products/sb1031948",
-    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/monsta-10-hyfi3-full-js-industries-surfboards.jpg?v=1776649868"
+    "product_url": "https://jsindustries.com/products/sb939176",
+    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/jack_m10_939176.jpg?v=1775702735"
   },
   {
     "model": "Monsta",
@@ -1630,22 +1630,6 @@
     "available": true,
     "product_url": "https://jsindustries.com/products/sb1052629",
     "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/910523992667e0_2e0c3bc4-31b5-42d4-99d5-0d930e76e92c.png?v=1776382586"
-  },
-  {
-    "model": "Sub Xero",
-    "raw_title": "Sub Xero 5'5\" x 19 7/8\" X 2 1/2\" - 29.00L, Swallow, 5x Futures Fin Boxes, HYFI 3.0 - ID:1067821",
-    "length": "5'5",
-    "width": "19 7/8",
-    "thickness": "2 1/2",
-    "volume_litres": 29.0,
-    "construction": "HYFI 3.0",
-    "fin_system": "Futures",
-    "tail_shape": "Swallow",
-    "brand": "JS Industries",
-    "price": "1349.00",
-    "available": true,
-    "product_url": "https://jsindustries.com/products/sb1067821",
-    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/266980861667e0_d7ec7ebf-a2d5-49f5-b6f1-468294e5bf45.jpg?v=1774399938"
   },
   {
     "model": "Sub Xero",
@@ -2705,7 +2689,7 @@
   },
   {
     "model": "Xero Fusion Easy Rider",
-    "raw_title": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1038176",
+    "raw_title": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046092",
     "length": "6'4",
     "width": "21 1/2",
     "thickness": "3 1/8",
@@ -2716,8 +2700,8 @@
     "brand": "JS Industries",
     "price": "1399.00",
     "available": true,
-    "product_url": "https://jsindustries.com/products/sb1038176",
-    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/1465714469690d_f459a99d-6e4c-4c5a-9b34-bd7926500b69.jpg?v=1766365197"
+    "product_url": "https://jsindustries.com/products/sb1046092",
+    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/1465714469690d_7f18ca5c-c308-4fb9-aae5-9a11847a09cc.jpg?v=1772763932"
   },
   {
     "model": "Xero Fusion Easy Rider",
@@ -3310,22 +3294,6 @@
     "available": true,
     "product_url": "https://jsindustries.com/products/sb973417",
     "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/2116160738667d_eb4356e6-d118-49d9-8b01-5edac4aa793e.jpg?v=1748544382"
-  },
-  {
-    "model": "Xero Gravity",
-    "raw_title": "Xero Gravity 6'3\" x 20 1/2\" X 2 3/4\" - 38.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046002",
-    "length": "6'3",
-    "width": "20 1/2",
-    "thickness": "2 3/4",
-    "volume_litres": 38.0,
-    "construction": "HYFI 3.0",
-    "fin_system": "FCS 2",
-    "tail_shape": "Squash",
-    "brand": "JS Industries",
-    "price": "1349.00",
-    "available": true,
-    "product_url": "https://jsindustries.com/products/sb1046002",
-    "image_url": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/2116160738667d_d31edbd6-edf8-4a7e-b171-e00eb050273f.jpg?v=1772765970"
   },
   {
     "model": "Xero Gravity",

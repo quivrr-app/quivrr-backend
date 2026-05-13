@@ -4,6 +4,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 
+
 TARGETS_FILE = Path("scrapers/retailers/active_scrape_targets.json")
 OUTPUT_DIR = Path("scrapers/products/output")
 REPORT_FILE = OUTPUT_DIR / "au_inventory_refresh_report.json"
@@ -11,47 +12,84 @@ REPORT_FILE = OUTPUT_DIR / "au_inventory_refresh_report.json"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def run_step(name, script_path):
-    print(f"\n{name}")
+def run_step(index, total, name, script_path):
+    print("")
+    print(f"Step {index}/{total}")
+    print(name)
     print("=" * 60)
 
-    result = subprocess.run(
-        [sys.executable, script_path],
+    started_at = datetime.now(timezone.utc)
+
+    process = subprocess.Popen(
+        [sys.executable, "-u", script_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
         text=True,
-        capture_output=True
+        bufsize=1,
     )
 
-    print(result.stdout)
+    output_lines = []
 
-    if result.stderr:
-        print(result.stderr)
+    if process.stdout:
+        for line in process.stdout:
+            print(line, end="")
+            output_lines.append(line)
+
+    return_code = process.wait()
+
+    completed_at = datetime.now(timezone.utc)
 
     return {
+        "step": index,
         "name": name,
         "script_path": script_path,
-        "return_code": result.returncode,
-        "success": result.returncode == 0,
-        "stdout": result.stdout[-4000:],
-        "stderr": result.stderr[-4000:],
+        "return_code": return_code,
+        "success": return_code == 0,
+        "started_at": started_at.isoformat(),
+        "completed_at": completed_at.isoformat(),
+        "duration_seconds": int(
+            (completed_at - started_at).total_seconds()
+        ),
+        "output_tail": "".join(output_lines[-120:]),
     }
 
 
-def main():
+def load_active_target_count():
     if not TARGETS_FILE.exists():
-        raise FileNotFoundError(
-            f"Missing active scrape targets file: {TARGETS_FILE}"
+        return 0
+
+    try:
+        targets = json.loads(
+            TARGETS_FILE.read_text(encoding="utf-8")
         )
 
-    targets = json.loads(TARGETS_FILE.read_text(encoding="utf-8"))
+        return len(targets)
 
-    print("\nQuivrr AU inventory refresh")
+    except Exception:
+        return 0
+
+
+def main():
+    print("")
+    print("Quivrr AU inventory refresh")
     print("=" * 60)
-    print(f"Active scrape targets: {len(targets)}")
 
     steps = [
         {
-            "name": "Refresh surfboard inventory",
-            "script_path": "scrapers/products/refresh_surfboard_inventory.py",
+            "name": "Build active retailer targets",
+            "script_path": "scrapers/retailers/build_active_scrape_targets.py",
+        },
+        {
+            "name": "Build retailer activation report",
+            "script_path": "scrapers/retailers/build_retailer_activation_report.py",
+        },
+        {
+            "name": "Scrape Shopify retailers",
+            "script_path": "scrapers/products/shopify_scraper.py",
+        },
+        {
+            "name": "Scrape WooCommerce retailers",
+            "script_path": "scrapers/products/woocommerce_scraper.py",
         },
         {
             "name": "Filter likely surfboards",
@@ -77,36 +115,73 @@ def main():
             "name": "Match JS inventory to catalogue",
             "script_path": "scrapers/products/match_js_inventory_to_catalogue.py",
         },
+        {
+            "name": "Import available retailer inventory into Azure SQL",
+            "script_path": "scripts/import_retailer_inventory.py",
+        },
+        {
+            "name": "Build retailer scrape health report",
+            "script_path": "scrapers/products/build_retailer_quality_report.py",
+        },
     ]
+
+    total_steps = len(steps)
 
     results = []
 
-    for step in steps:
-        results.append(
-            run_step(
-                step["name"],
-                step["script_path"]
-            )
+    started_at = datetime.now(timezone.utc)
+
+    for index, step in enumerate(steps, start=1):
+        result = run_step(
+            index=index,
+            total=total_steps,
+            name=step["name"],
+            script_path=step["script_path"],
         )
 
+        results.append(result)
+
+        if not result["success"]:
+            print("")
+            print("Pipeline stopped because a step failed.")
+            print(f"Failed step: {step['name']}")
+            break
+
+    completed_at = datetime.now(timezone.utc)
+
+    success = all(item["success"] for item in results)
+
     report = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "active_scrape_targets": len(targets),
+        "started_at": started_at.isoformat(),
+        "completed_at": completed_at.isoformat(),
+        "duration_seconds": int(
+            (completed_at - started_at).total_seconds()
+        ),
+        "success": success,
+        "active_scrape_targets": load_active_target_count(),
         "steps": results,
-        "success": all(item["success"] for item in results),
     }
 
     REPORT_FILE.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False),
-        encoding="utf-8"
+        json.dumps(
+            report,
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
     )
 
-    print("\nAU inventory refresh complete")
+    print("")
+    print("AU inventory refresh complete")
     print("=" * 60)
-    print(f"Success: {report['success']}")
+    print(f"Success: {success}")
+    print(f"Duration: {report['duration_seconds']} seconds")
+    print(
+        f"Active scrape targets: "
+        f"{report['active_scrape_targets']}"
+    )
     print(f"Report: {REPORT_FILE}")
 
 
 if __name__ == "__main__":
     main()
-    

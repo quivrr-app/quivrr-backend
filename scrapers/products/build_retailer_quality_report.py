@@ -1,15 +1,33 @@
-from pathlib import Path
 import json
 from collections import defaultdict
+from pathlib import Path
 
-RAW_DIRS = [
-    Path("scrapers/products/output/shopify"),
-    Path("scrapers/products/output/woocommerce"),
-]
 
-LIKELY_FILE = Path("scrapers/products/output/likely_surfboards.json")
-NORMALISED_FILE = Path("scrapers/products/output/normalised_surfboards.json")
-OUTPUT_FILE = Path("scrapers/products/output/retailer_quality_report.json")
+SHOPIFY_DIR = Path("scrapers/products/output/shopify")
+WOOCOMMERCE_DIR = Path("scrapers/products/output/woocommerce")
+
+LIKELY_SURFBOARDS_FILE = Path(
+    "scrapers/products/output/likely_surfboards.json"
+)
+
+NORMALISED_FILE = Path(
+    "scrapers/products/output/normalised_surfboards.json"
+)
+
+OUTPUT_FILE = Path(
+    "scrapers/products/output/retailer_scrape_health.json"
+)
+
+
+def clean(value):
+    if value is None:
+        return ""
+
+    return str(value).strip()
+
+
+def retailer_slug_to_name(slug):
+    return slug.replace("_", " ").title()
 
 
 def load_json(path):
@@ -17,162 +35,239 @@ def load_json(path):
         return []
 
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-
-        if isinstance(data, list):
-            return data
-
-        if isinstance(data, dict):
-            if isinstance(data.get("products"), list):
-                return data["products"]
-
-            if isinstance(data.get("items"), list):
-                return data["items"]
-
-        return []
-
+        with open(path, "r", encoding="utf-8") as file:
+            return json.load(file)
     except Exception:
         return []
 
 
-def retailer_name_from_file(path):
-    return path.stem.replace("_", " ").title()
+def collect_raw_counts():
+    retailer_stats = {}
+
+    scrape_sources = [
+        ("shopify", SHOPIFY_DIR),
+        ("woocommerce", WOOCOMMERCE_DIR),
+    ]
+
+    for platform, directory in scrape_sources:
+        if not directory.exists():
+            continue
+
+        for file_path in directory.glob("*.json"):
+            retailer_slug = file_path.stem
+            retailer_name = retailer_slug_to_name(retailer_slug)
+
+            raw_products = load_json(file_path)
+
+            retailer_stats[retailer_slug] = {
+                "retailer_slug": retailer_slug,
+                "retailer_name": retailer_name,
+                "platform": platform,
+                "raw_products": len(raw_products),
+                "verified_surfboards": 0,
+                "available_inventory": 0,
+                "normalised_inventory": 0,
+                "duplicate_candidates": 0,
+                "status": "success",
+                "notes": [],
+            }
+
+            if len(raw_products) == 0:
+                retailer_stats[retailer_slug]["status"] = "empty_scrape"
+                retailer_stats[retailer_slug]["notes"].append(
+                    "No products returned from retailer scrape"
+                )
+
+    return retailer_stats
 
 
-def has_value(item, key):
-    value = item.get(key)
-    return value is not None and str(value).strip() != ""
+def add_verified_counts(retailer_stats):
+    likely_surfboards = load_json(LIKELY_SURFBOARDS_FILE)
+
+    for item in likely_surfboards:
+        retailer = clean(item.get("retailer"))
+
+        if not retailer:
+            continue
+
+        retailer_slug = retailer.lower().replace(" ", "_")
+
+        if retailer_slug not in retailer_stats:
+            retailer_stats[retailer_slug] = {
+                "retailer_slug": retailer_slug,
+                "retailer_name": retailer,
+                "platform": "unknown",
+                "raw_products": 0,
+                "verified_surfboards": 0,
+                "available_inventory": 0,
+                "normalised_inventory": 0,
+                "duplicate_candidates": 0,
+                "status": "unknown",
+                "notes": [],
+            }
+
+        retailer_stats[retailer_slug]["verified_surfboards"] += 1
+
+        if item.get("available") is True:
+            retailer_stats[retailer_slug]["available_inventory"] += 1
+
+
+def add_normalised_counts(retailer_stats):
+    normalised = load_json(NORMALISED_FILE)
+
+    dedupe_tracker = defaultdict(set)
+
+    for item in normalised:
+        retailer = clean(item.get("retailer"))
+
+        if not retailer:
+            continue
+
+        retailer_slug = retailer.lower().replace(" ", "_")
+
+        if retailer_slug not in retailer_stats:
+            continue
+
+        retailer_stats[retailer_slug]["normalised_inventory"] += 1
+
+        dedupe_key = "|".join([
+            clean(item.get("product_url")).lower(),
+            clean(item.get("title")).lower(),
+            clean(item.get("length")).lower(),
+            str(item.get("volume_litres") or ""),
+            str(item.get("price") or ""),
+        ])
+
+        if dedupe_key in dedupe_tracker[retailer_slug]:
+            retailer_stats[retailer_slug]["duplicate_candidates"] += 1
+        else:
+            dedupe_tracker[retailer_slug].add(dedupe_key)
+
+
+def classify_health(retailer_stats):
+    for retailer in retailer_stats.values():
+        raw_products = retailer["raw_products"]
+        verified = retailer["verified_surfboards"]
+        available = retailer["available_inventory"]
+
+        if raw_products == 0:
+            retailer["health"] = "failed"
+            continue
+
+        if verified == 0:
+            retailer["health"] = "poor"
+            retailer["notes"].append(
+                "Products scraped but no surfboards identified"
+            )
+            continue
+
+        if available == 0:
+            retailer["health"] = "poor"
+            retailer["notes"].append(
+                "Surfboards identified but no available inventory"
+            )
+            continue
+
+        surfboard_ratio = verified / raw_products
+
+        if surfboard_ratio < 0.02:
+            retailer["health"] = "warning"
+            retailer["notes"].append(
+                "Very low surfboard extraction ratio"
+            )
+        elif surfboard_ratio < 0.08:
+            retailer["health"] = "fair"
+        else:
+            retailer["health"] = "good"
+
+
+def build_summary(retailer_stats):
+    summary = {
+        "total_retailers": len(retailer_stats),
+        "good": 0,
+        "fair": 0,
+        "warning": 0,
+        "poor": 0,
+        "failed": 0,
+        "total_raw_products": 0,
+        "total_verified_surfboards": 0,
+        "total_available_inventory": 0,
+        "total_duplicate_candidates": 0,
+    }
+
+    for retailer in retailer_stats.values():
+        health = retailer.get("health", "unknown")
+
+        if health in summary:
+            summary[health] += 1
+
+        summary["total_raw_products"] += retailer["raw_products"]
+        summary["total_verified_surfboards"] += retailer["verified_surfboards"]
+        summary["total_available_inventory"] += retailer["available_inventory"]
+        summary["total_duplicate_candidates"] += retailer["duplicate_candidates"]
+
+    return summary
 
 
 def main():
-    raw_counts = {}
+    retailer_stats = collect_raw_counts()
 
-    for raw_dir in RAW_DIRS:
-        if not raw_dir.exists():
-            continue
+    add_verified_counts(retailer_stats)
 
-        for file_path in raw_dir.glob("*.json"):
-            retailer = retailer_name_from_file(file_path)
-            raw_counts[retailer] = len(load_json(file_path))
+    add_normalised_counts(retailer_stats)
 
-    likely = load_json(LIKELY_FILE)
-    normalised = load_json(NORMALISED_FILE)
+    classify_health(retailer_stats)
 
-    likely_by_retailer = defaultdict(int)
-    normalised_by_retailer = defaultdict(list)
-
-    for item in likely:
-        retailer = item.get("retailer") or "Unknown"
-        likely_by_retailer[retailer] += 1
-
-    for item in normalised:
-        retailer = item.get("retailer") or "Unknown"
-        normalised_by_retailer[retailer].append(item)
-
-    report = []
-
-    all_retailers = sorted(
-        set(raw_counts.keys()) |
-        set(likely_by_retailer.keys()) |
-        set(normalised_by_retailer.keys())
+    ordered = sorted(
+        retailer_stats.values(),
+        key=lambda item: (
+            item.get("health", ""),
+            -item.get("available_inventory", 0),
+            item.get("retailer_name", ""),
+        ),
     )
 
-    for retailer in all_retailers:
-        raw_count = raw_counts.get(retailer, 0)
-        likely_count = likely_by_retailer.get(retailer, 0)
-        items = normalised_by_retailer.get(retailer, [])
-
-        normalised_count = len(items)
-
-        available_count = sum(
-            1 for item in items
-            if item.get("available") is True
-        )
-
-        length_count = sum(1 for item in items if has_value(item, "length"))
-        volume_count = sum(1 for item in items if has_value(item, "volume_litres"))
-        model_count = sum(1 for item in items if has_value(item, "model"))
-        brand_count = sum(1 for item in items if has_value(item, "brand"))
-        price_count = sum(1 for item in items if has_value(item, "price"))
-
-        parse_score = 0
-
-        if normalised_count:
-            parse_score = round(
-                (
-                    (length_count / normalised_count) * 25 +
-                    (volume_count / normalised_count) * 25 +
-                    (model_count / normalised_count) * 20 +
-                    (brand_count / normalised_count) * 15 +
-                    (price_count / normalised_count) * 15
-                ),
-                2
-            )
-
-        if raw_count == 0:
-            status = "no_raw_inventory"
-        elif likely_count == 0:
-            status = "needs_filter_or_scraper_review"
-        elif parse_score >= 75:
-            status = "strong"
-        elif parse_score >= 45:
-            status = "usable"
-        else:
-            status = "needs_parser_review"
-
-        report.append({
-            "retailer": retailer,
-            "status": status,
-            "raw_count": raw_count,
-            "likely_surfboards": likely_count,
-            "normalised_count": normalised_count,
-            "available_count": available_count,
-            "parse_score": parse_score,
-            "fields": {
-                "brand": brand_count,
-                "model": model_count,
-                "length": length_count,
-                "volume_litres": volume_count,
-                "price": price_count,
-            }
-        })
-
-    report = sorted(
-        report,
-        key=lambda x: (
-            x["status"] != "strong",
-            x["status"] != "usable",
-            -x["likely_surfboards"]
-        )
-    )
+    report = {
+        "summary": build_summary(retailer_stats),
+        "retailers": ordered,
+    }
 
     OUTPUT_FILE.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False),
-        encoding="utf-8"
+        json.dumps(
+            report,
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
     )
 
-    print("\nRetailer quality report built")
+    print("")
+    print("Retailer scrape health report")
     print("=" * 60)
 
-    status_counts = defaultdict(int)
+    summary = report["summary"]
 
-    for row in report:
-        status_counts[row["status"]] += 1
+    for key, value in summary.items():
+        print(f"{key}: {value}")
 
-    for status, count in sorted(status_counts.items()):
-        print(f"{status}: {count}")
+    print("")
+    print("Top retailers by available inventory")
 
-    print("\nTop retailer quality:")
-    for row in report[:20]:
+    top = sorted(
+        ordered,
+        key=lambda item: item.get("available_inventory", 0),
+        reverse=True,
+    )[:20]
+
+    for retailer in top:
         print(
-            f"{row['retailer']} | "
-            f"{row['status']} | "
-            f"raw={row['raw_count']} | "
-            f"likely={row['likely_surfboards']} | "
-            f"score={row['parse_score']}"
+            f"- {retailer['retailer_name']} | "
+            f"{retailer['available_inventory']} available | "
+            f"{retailer['health']}"
         )
 
-    print(f"\nSaved: {OUTPUT_FILE}")
+    print("")
+    print(f"Saved: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":

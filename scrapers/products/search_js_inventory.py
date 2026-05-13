@@ -1,235 +1,49 @@
-import json
-import sys
-from pathlib import Path
+Here’s where we landed.
 
+Quivrr is now using Azure SQL for live search, not local JSON. The backend API is returning product images and retailerLogoUrl, and the frontend is now rendering retailer logos and board images correctly.
 
-CATALOGUE_FILE = Path("scrapers/brands/output/js_master_catalogue.json")
-INVENTORY_FILE = Path("scrapers/products/output/normalised_surfboards.json")
+Current state:
 
+Area	Status
+Live Azure SQL connection	Working
+Product images in result cards	Working
+Retailer logos in result cards	Working
+Available stock only imported	Working
+Retailer profiles enriched	78 profiles
+Retailers with searchable inventory	~21 active
+Backend deployment	Manual Azure sync required after Git push
 
-def clean(value):
-    return str(value or "").strip().lower()
+Important command after backend pushes:
 
+az webapp deployment source sync `
+  --name quivrr-backend-api `
+  --resource-group quivrr-production-rg
 
-def normalise_construction(value):
-    text = clean(value)
+Next session should focus on retailer scrape coverage.
 
-    if text in ["hyfi", "hyfi 3", "hyfi 3.0"]:
-        return "hyfi 3.0"
+Priority next steps:
 
-    if text in ["fcs ii", "fcs2"]:
-        return "fcs ii"
+Audit current scraper output and find why only ~21 retailers have live inventory.
+Separate retailers into groups:
+Shopify working
+WooCommerce working
+blocked
+wrong platform
+no catalogue endpoint
+needs custom scraper
+Fix the active target builder so we are scraping all usable retailers from the 78 profile list.
+Add missing large Australian retailers.
+Improve scrape health reporting so each nightly run shows:
+retailer name
+platform
+raw products found
+surfboards accepted
+available surfboards
+fail reason
+Then wire this into Azure nightly scheduling.
 
-    return text
+Key issue for next time:
 
+We have 78 retailer profiles, but only about 21 retailers contributing searchable inventory.
 
-def exact_match(value_a, value_b):
-    return clean(value_a) == clean(value_b)
-
-
-def construction_match(value_a, value_b):
-    return normalise_construction(value_a) == normalise_construction(value_b)
-
-
-def price_float(value):
-    try:
-        return float(value)
-    except Exception:
-        return None
-
-
-def first_image(row):
-    images = row.get("images") or []
-
-    if isinstance(images, list) and images:
-        return images[0]
-
-    return row.get("image_url")
-
-
-def find_manufacturer_results(model, length, construction):
-    rows = json.loads(CATALOGUE_FILE.read_text(encoding="utf-8"))
-
-    results = []
-
-    for row in rows:
-        if not exact_match(row.get("brand"), "JS Industries"):
-            continue
-
-        if not exact_match(row.get("model"), model):
-            continue
-
-        if not exact_match(row.get("length"), length):
-            continue
-
-        if not construction_match(row.get("construction"), construction):
-            continue
-
-        results.append(
-            {
-                "source_type": "manufacturer",
-                "retailer": "JS Industries",
-                "brand": row.get("brand"),
-                "model": row.get("model"),
-                "length": row.get("length"),
-                "width": row.get("width"),
-                "thickness": row.get("thickness"),
-                "volume_litres": row.get("volume_litres"),
-                "construction": row.get("construction"),
-                "fin_system": row.get("fin_system"),
-                "tail_shape": row.get("tail_shape"),
-                "price": row.get("price"),
-                "available": row.get("available"),
-                "product_url": row.get("product_url"),
-                "image_url": row.get("image_url"),
-                "retailer_logo_url": None,
-                "match_type": "exact",
-            }
-        )
-
-    results.sort(
-        key=lambda row: (
-            row.get("fin_system") or "",
-            row.get("volume_litres") or 0,
-        )
-    )
-
-    return results
-
-
-def find_retailer_results(model, length, construction):
-    rows = json.loads(INVENTORY_FILE.read_text(encoding="utf-8"))
-
-    results = []
-    model_clean = clean(model)
-
-    for row in rows:
-        if row.get("available") is not True:
-            continue
-
-        retailer_name = clean(row.get("retailer"))
-
-        if retailer_name == "js industries":
-            continue
-
-        if (
-            not exact_match(row.get("brand"), "JS")
-            and not exact_match(row.get("brand"), "JS Industries")
-        ):
-            continue
-
-        title_blob = clean(
-            f"{row.get('title')} "
-            f"{row.get('variant_title')} "
-            f"{row.get('model_key')}"
-        )
-
-        if model_clean not in title_blob:
-            continue
-
-        if not exact_match(row.get("length"), length):
-            continue
-
-        if not construction_match(row.get("construction"), construction):
-            continue
-
-        results.append(
-            {
-                "source_type": "retailer",
-                "retailer": row.get("retailer"),
-                "website": row.get("website"),
-                "brand": row.get("brand"),
-                "model": model,
-                "title": row.get("title"),
-                "variant_title": row.get("variant_title"),
-                "length": row.get("length"),
-                "width": row.get("width"),
-                "thickness": row.get("thickness"),
-                "volume_litres": row.get("volume_litres"),
-                "construction": row.get("construction"),
-                "fin_system": row.get("fin_system"),
-                "price": row.get("price"),
-                "available": row.get("available"),
-                "product_url": row.get("product_url"),
-                "image_url": first_image(row),
-                "images": row.get("images", []),
-                "retailer_logo_url": row.get("retailer_logo_url"),
-                "match_type": "exact",
-            }
-        )
-
-    results.sort(
-        key=lambda row: (
-            price_float(row.get("price")) is None,
-            price_float(row.get("price")) or 999999,
-            row.get("retailer") or "",
-            row.get("volume_litres") or 0,
-        )
-    )
-
-    return results
-
-
-def search(model, length, construction):
-    manufacturer_results = find_manufacturer_results(
-        model,
-        length,
-        construction,
-    )
-
-    retailer_results = find_retailer_results(
-        model,
-        length,
-        construction,
-    )
-
-    return {
-        "query": {
-            "brand": "JS Industries",
-            "model": model,
-            "length": length,
-            "construction": construction,
-        },
-        "total_results": (
-            len(manufacturer_results)
-            + len(retailer_results)
-        ),
-        "manufacturer_result_count": len(manufacturer_results),
-        "retailer_result_count": len(retailer_results),
-        "manufacturer_results": manufacturer_results,
-        "retailer_results": retailer_results,
-    }
-
-
-def main():
-    if len(sys.argv) < 4:
-        print("Usage:")
-        print(
-            "python scrapers/products/search_js_inventory.py "
-            "\"Baron Flyer\" "
-            "\"5'11\" "
-            "\"PU\""
-        )
-        sys.exit(1)
-
-    model = sys.argv[1]
-    length = sys.argv[2]
-    construction = sys.argv[3]
-
-    results = search(
-        model,
-        length,
-        construction,
-    )
-
-    print(
-        json.dumps(
-            results,
-            indent=2,
-            ensure_ascii=False,
-        )
-    )
-
-
-if __name__ == "__main__":
-    main()
+The next technical target is not UI anymore. It is the scrape pipeline and retailer activation coverage.

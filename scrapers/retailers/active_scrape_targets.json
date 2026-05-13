@@ -1,0 +1,899 @@
+[
+  {
+    "primary_name": "Akwa Surf",
+    "website": "https://akwasurf.com.au",
+    "website_key": "https://akwasurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Akwa Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "South Coast"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Beachin Surf",
+    "website": "https://beachinsurf.com.au",
+    "website_key": "https://beachinsurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Beachin Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Boards In The Bay",
+    "website": "https://boardsinthebay.com.au",
+    "website_key": "https://boardsinthebay.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Boards In The Bay",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Byron Bay"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Cronulla Surf Design",
+    "website": "https://cronullasurfdesign.com.au",
+    "website_key": "https://cronullasurfdesign.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Cronulla Surf Design",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Cronulla"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Long Reef Surf Co",
+    "website": "https://longreefsurf.com.au",
+    "website_key": "https://longreefsurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Long Reef Surf Co",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Northern Beaches"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Melbourne Surfboard Shop",
+    "website": "https://melbournesurfboardshop.com.au",
+    "website_key": "https://melbournesurfboardshop.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Melbourne Surfboard Shop",
+        "states": [
+          "VIC"
+        ],
+        "region_clusters": [
+          "Melbourne"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Natural Necessity",
+    "website": "https://naturalnecessity.com.au",
+    "website_key": "https://naturalnecessity.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Natural Necessity",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "South Coast"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled",
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Noosa Longboards",
+    "website": "https://noosalongboards.com",
+    "website_key": "https://noosalongboards.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Noosa Longboards",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Noosa"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "NT Surfboards",
+    "website": "https://ntsurfboards.com",
+    "website_key": "https://ntsurfboards.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "NT Surfboards",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Onboard Store",
+    "website": "https://onboardstore.com.au",
+    "website_key": "https://onboardstore.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Onboard Store",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled",
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Overboard Surf",
+    "website": "https://overboardsurf.com.au",
+    "website_key": "https://overboardsurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Overboard Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Wollongong"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Powerhouse Surf",
+    "website": "https://powerhousesurf.com.au",
+    "website_key": "https://powerhousesurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Powerhouse Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Sydney"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Red Herring Surf",
+    "website": "https://redherringsurf.com.au",
+    "website_key": "https://redherringsurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Red Herring Surf",
+        "states": [
+          "TAS"
+        ],
+        "region_clusters": [
+          "Burnie",
+          "Hobart"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled",
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Saltwater Wine Port Macquarie",
+    "website": "https://saltwaterwine.com.au",
+    "website_key": "https://saltwaterwine.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Saltwater Wine Port Macquarie",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Port Macquarie"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Sanbah Surf Shop",
+    "website": "https://sanbah.com",
+    "website_key": "https://sanbah.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Sanbah Surf Shop",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Newcastle"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Sideways Surf",
+    "website": "https://sideways.com.au",
+    "website_key": "https://sideways.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Sideways Surf",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Star Surf and Skate",
+    "website": "https://starsurf.com.au",
+    "website_key": "https://starsurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Star Surf and Skate",
+        "states": [
+          "WA"
+        ],
+        "region_clusters": [
+          "Mandurah"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Surf Culture Bondi",
+    "website": "https://surfculture.com.au",
+    "website_key": "https://surfculture.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Surf Culture Bondi",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Sydney"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Surf FX",
+    "website": "https://surffx.com.au",
+    "website_key": "https://surffx.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Surf FX",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Gold Coast"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Surfboard Empire",
+    "website": "https://surfboardempire.com.au",
+    "website_key": "https://surfboardempire.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Surfboard Empire",
+        "states": [
+          "NSW",
+          "QLD"
+        ],
+        "region_clusters": [
+          "Gold Coast",
+          "Northern Beaches",
+          "Wollongong"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled",
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Surfection Bondi",
+    "website": "https://surfection.com",
+    "website_key": "https://surfection.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Surfection Bondi",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Sydney"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "The Board Lab",
+    "website": "https://theboardlab.com.au",
+    "website_key": "https://theboardlab.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "The Board Lab",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "The Surfboard Warehouse",
+    "website": "https://thesurfboardwarehouse.com.au",
+    "website_key": "https://thesurfboardwarehouse.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "The Surfboard Warehouse",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Gold Coast"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Underground Surf",
+    "website": "https://undergroundsurf.com.au",
+    "website_key": "https://undergroundsurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Underground Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Wicks Surf",
+    "website": "https://wickssurf.com.au",
+    "website_key": "https://wickssurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Wicks Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Northern Beaches"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Beach Beat Alexandra Headland",
+    "website": "https://beachbeat.com.au",
+    "website_key": "https://beachbeat.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Beach Beat Alexandra Headland",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Sunshine Coast"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled",
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Cordingley's Surf",
+    "website": "https://cordingleyssurf.com.au",
+    "website_key": "https://cordingleyssurf.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Cordingley's Surf",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Extreme Boardriders",
+    "website": "https://extremeboardriders.com.au",
+    "website_key": "https://extremeboardriders.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Extreme Boardriders",
+        "states": [
+          "SA"
+        ],
+        "region_clusters": [
+          "Adelaide"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Manly Surfboards",
+    "website": "https://manlysurfboards.com.au",
+    "website_key": "https://manlysurfboards.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Manly Surfboards",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Northern Beaches"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Ocean Addicts",
+    "website": "https://oceanaddicts.com.au",
+    "website_key": "https://oceanaddicts.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Ocean Addicts",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Sunshine Coast"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Strapper Surf Torquay",
+    "website": "https://strapper.com.au",
+    "website_key": "https://strapper.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Strapper Surf Torquay",
+        "states": [
+          "VIC"
+        ],
+        "region_clusters": [
+          "Torquay"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  },
+  {
+    "primary_name": "Surf Boardroom",
+    "website": "https://surfboardroom.com.au",
+    "website_key": "https://surfboardroom.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Surf Boardroom",
+        "states": [
+          "WA"
+        ],
+        "region_clusters": [
+          "Perth"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_scrape_targets_classified"
+  }
+]
