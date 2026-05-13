@@ -25,7 +25,27 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Aloha Surf Manly",
+    "website": "https://alohasurfmanly.com",
+    "website_key": "https://alohasurfmanly.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Aloha Surf Manly",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Beachin Surf",
@@ -53,7 +73,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Boards In The Bay",
@@ -81,7 +101,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Cronulla Surf Design",
@@ -109,7 +129,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Long Reef Surf Co",
@@ -137,7 +157,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Melbourne Surfboard Shop",
@@ -165,7 +185,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Natural Necessity",
@@ -194,7 +214,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Noosa Longboards",
@@ -222,7 +242,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "NT Surfboards",
@@ -246,7 +266,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Onboard Store",
@@ -275,7 +295,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Overboard Surf",
@@ -303,7 +323,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Powerhouse Surf",
@@ -331,7 +351,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Red Herring Surf",
@@ -361,7 +381,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Saltwater Wine Port Macquarie",
@@ -389,7 +409,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Sanbah Surf Shop",
@@ -417,7 +437,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Sideways Surf",
@@ -445,7 +465,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Star Surf and Skate",
@@ -473,7 +493,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Surf Culture Bondi",
@@ -499,9 +519,37 @@
         "verification_statuses": [
           "seed_unverified"
         ]
+      },
+      {
+        "name": "Surf Culture Australia",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Surf Dive n Ski",
+    "website": "https://sds.com.au",
+    "website_key": "https://sds.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Surf Dive n Ski",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Surf FX",
@@ -529,7 +577,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Surfboard Empire",
@@ -561,7 +609,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Surfection Bondi",
@@ -589,7 +637,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "The Board Lab",
@@ -617,7 +665,27 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "The Surfboard Studio",
+    "website": "https://thesurfboardstudio.com.au",
+    "website_key": "https://thesurfboardstudio.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "The Surfboard Studio",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "The Surfboard Warehouse",
@@ -645,7 +713,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Underground Surf",
@@ -673,7 +741,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Wicks Surf",
@@ -701,7 +769,27 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Anglesea Surf Centre",
+    "website": "https://angleseasurfcentre.com.au",
+    "website_key": "https://angleseasurfcentre.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Anglesea Surf Centre",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Beach Beat Alexandra Headland",
@@ -730,7 +818,79 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Board Hub",
+    "website": "https://boardhub.com.au",
+    "website_key": "https://boardhub.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Board Hub",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Boardriders Coolangatta",
+    "website": "https://boardriders.co",
+    "website_key": "https://boardriders.co",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Boardriders Coolangatta",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Classic Malibu",
+    "website": "https://classicmalibu.com",
+    "website_key": "https://classicmalibu.com",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Classic Malibu",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Cordingley's Surf",
@@ -754,7 +914,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Extreme Boardriders",
@@ -782,7 +942,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Manly Surfboards",
@@ -810,7 +970,35 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Mid Coast Surf",
+    "website": "https://midcoastsurf.com.au",
+    "website_key": "https://midcoastsurf.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Mid Coast Surf",
+        "states": [
+          "SA"
+        ],
+        "region_clusters": [
+          "Fleurieu Peninsula"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Ocean Addicts",
@@ -838,7 +1026,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Strapper Surf Torquay",
@@ -866,7 +1054,7 @@
         ]
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
   },
   {
     "primary_name": "Surf Boardroom",
@@ -892,8 +1080,72 @@
         "verification_statuses": [
           "seed_unverified"
         ]
+      },
+      {
+        "name": "The Surf Boardroom",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
       }
     ],
-    "source": "retailer_scrape_targets_classified"
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Surf Warehouse",
+    "website": "https://surfwarehouse.com.au",
+    "website_key": "https://surfwarehouse.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Surf Warehouse",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Yallingup Surf Shop",
+    "website": "https://yallingupsurf.com.au",
+    "website_key": "https://yallingupsurf.com.au",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Yallingup Surf Shop",
+        "states": [
+          "WA"
+        ],
+        "region_clusters": [
+          "Yallingup"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
   }
 ]

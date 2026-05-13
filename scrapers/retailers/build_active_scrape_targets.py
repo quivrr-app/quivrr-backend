@@ -5,10 +5,22 @@ from urllib.parse import urlparse
 
 
 INPUT_FILE = Path("scrapers/retailers/retailer_scrape_targets_classified.json")
-OUTPUT_FILE = Path("scrapers/retailers/active_scrape_targets.json")
-REPORT_FILE = Path("scrapers/retailers/active_scrape_target_build_report.json")
+EXPANSION_FILE = Path("scrapers/retailers/retailer_expansion_candidates_au.json")
 
-SUPPORTED_PLATFORMS = {"shopify", "woocommerce"}
+DETECTION_REPORT = Path(
+    "scrapers/retailers/retailer_platform_detection_report.json"
+)
+
+OUTPUT_FILE = Path("scrapers/retailers/active_scrape_targets.json")
+
+REPORT_FILE = Path(
+    "scrapers/retailers/active_scrape_target_build_report.json"
+)
+
+SUPPORTED_PLATFORMS = {
+    "shopify",
+    "woocommerce",
+}
 
 MANUFACTURER_OR_BRAND_TYPES = {
     "shaper_direct",
@@ -17,6 +29,11 @@ MANUFACTURER_OR_BRAND_TYPES = {
     "stockist_source",
     "manufacturer",
     "brand",
+}
+
+EXCLUDED_RETAILERS = {
+    "js industries",
+    "ocean & earth store",
 }
 
 
@@ -29,9 +46,6 @@ def clean(value):
 
 def normalise_platform(value):
     value = clean(value).lower()
-
-    if value in SUPPORTED_PLATFORMS:
-        return value
 
     return value or "unknown"
 
@@ -89,7 +103,11 @@ def get_retailer_types(record):
     retailer_types = record.get("retailer_types")
 
     if isinstance(retailer_types, list):
-        values.extend(clean(item).lower() for item in retailer_types if clean(item))
+        values.extend(
+            clean(item).lower()
+            for item in retailer_types
+            if clean(item)
+        )
 
     return values
 
@@ -97,14 +115,84 @@ def get_retailer_types(record):
 def is_manufacturer_or_brand(record):
     retailer_types = get_retailer_types(record)
 
-    return any(item in MANUFACTURER_OR_BRAND_TYPES for item in retailer_types)
+    return any(
+        item in MANUFACTURER_OR_BRAND_TYPES
+        for item in retailer_types
+    )
 
 
-def get_exclusion_reason(record):
+def load_retailers():
+    retailers = json.loads(
+        INPUT_FILE.read_text(encoding="utf-8")
+    )
+
+    if EXPANSION_FILE.exists():
+        retailers.extend(
+            json.loads(
+                EXPANSION_FILE.read_text(encoding="utf-8")
+            )
+        )
+
+    return retailers
+
+
+def load_detection_overrides():
+    overrides = {}
+
+    if not DETECTION_REPORT.exists():
+        return overrides
+
+    report = json.loads(
+        DETECTION_REPORT.read_text(encoding="utf-8")
+    )
+
+    for result in report.get("results", []):
+        website = normalise_website(result.get("website"))
+
+        if not website:
+            continue
+
+        overrides[website] = {
+            "platform": normalise_platform(
+                result.get("detected_platform")
+            ),
+            "status": clean(result.get("status")).lower(),
+        }
+
+    return overrides
+
+
+def get_detection_override(record, overrides):
+    website = normalise_website(record.get("website"))
+
+    return overrides.get(website)
+
+
+def get_platform(record, overrides):
+    override = get_detection_override(record, overrides)
+
+    if override:
+        platform = override.get("platform")
+
+        if platform in SUPPORTED_PLATFORMS:
+            return platform
+
+    return normalise_platform(
+        record.get("platform")
+        or record.get("ecommerce_platform")
+    )
+
+
+def get_exclusion_reason(record, overrides):
     country = clean(record.get("country")).lower()
 
     if country and country != "australia":
         return "non_australian"
+
+    name = retailer_name(record).lower()
+
+    if name in EXCLUDED_RETAILERS:
+        return "excluded_retailer"
 
     if is_manufacturer_or_brand(record):
         return "manufacturer_or_brand"
@@ -112,7 +200,7 @@ def get_exclusion_reason(record):
     if record.get("hardboards") is False:
         return "not_hardboard_retailer"
 
-    platform = normalise_platform(record.get("platform") or record.get("ecommerce_platform"))
+    platform = get_platform(record, overrides)
 
     if platform not in SUPPORTED_PLATFORMS:
         return f"unsupported_platform_{platform}"
@@ -125,9 +213,10 @@ def get_exclusion_reason(record):
     return ""
 
 
-def build_target(record):
+def build_target(record, overrides):
     website = normalise_website(record.get("website"))
-    platform = normalise_platform(record.get("platform") or record.get("ecommerce_platform"))
+
+    platform = get_platform(record, overrides)
 
     return {
         "primary_name": retailer_name(record),
@@ -138,7 +227,7 @@ def build_target(record):
         "status": "active",
         "priority": record.get("priority", 3),
         "locations": [],
-        "source": "retailer_scrape_targets_classified",
+        "source": "retailer_detection_pipeline",
     }
 
 
@@ -149,40 +238,66 @@ def build_location(record):
         "region_clusters": record.get("region_clusters", []),
         "retailer_types": record.get("retailer_types", []),
         "hardboards": record.get("hardboards"),
-        "verification_statuses": record.get("verification_statuses", []),
+        "verification_statuses": record.get(
+            "verification_statuses",
+            []
+        ),
     }
 
 
 def main():
-    retailers = json.loads(INPUT_FILE.read_text(encoding="utf-8"))
+    retailers = load_retailers()
+
+    detection_overrides = load_detection_overrides()
 
     grouped = {}
+
     excluded = []
+
     reasons = Counter()
+
     platforms = Counter()
 
     for record in retailers:
-        platform = normalise_platform(record.get("platform") or record.get("ecommerce_platform"))
+        platform = get_platform(
+            record,
+            detection_overrides,
+        )
+
         platforms[platform] += 1
 
-        reason = get_exclusion_reason(record)
+        reason = get_exclusion_reason(
+            record,
+            detection_overrides,
+        )
 
         if reason:
             reasons[reason] += 1
+
             excluded.append({
                 "name": retailer_name(record),
-                "website": normalise_website(record.get("website")),
+                "website": normalise_website(
+                    record.get("website")
+                ),
                 "platform": platform,
                 "reason": reason,
             })
+
             continue
 
-        website_key = normalise_website(record.get("website"))
+        website_key = normalise_website(
+            record.get("website")
+        )
 
         if website_key not in grouped:
-            grouped[website_key] = build_target(record)
+            grouped[website_key] = build_target(
+                record,
+                detection_overrides,
+            )
 
-        grouped[website_key]["locations"].append(build_location(record))
+        grouped[website_key]["locations"].append(
+            build_location(record)
+        )
 
         grouped[website_key]["priority"] = min(
             grouped[website_key].get("priority", 3),
@@ -198,7 +313,11 @@ def main():
     )
 
     OUTPUT_FILE.write_text(
-        json.dumps(targets, indent=2, ensure_ascii=False),
+        json.dumps(
+            targets,
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
@@ -222,6 +341,7 @@ def main():
     print("")
     print("Active scrape targets built")
     print("=" * 60)
+
     print(f"Retailer records loaded: {len(retailers)}")
     print(f"Unique active retailer targets: {len(targets)}")
     print(f"Excluded records: {len(excluded)}")
