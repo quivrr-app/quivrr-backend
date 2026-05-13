@@ -69,26 +69,74 @@ def clean_text(value):
     text_value = str(value).lower()
     text_value = text_value.replace("’", "'")
     text_value = text_value.replace("‘", "'")
+    text_value = text_value.replace('"', "")
     text_value = re.sub(r"[^a-z0-9']+", " ", text_value)
     text_value = re.sub(r"\s+", " ", text_value).strip()
 
     return text_value
 
 
-def model_name_matches(title, normalised_title, model_name):
+def model_family_name(model_name):
 
     model = clean_text(model_name)
 
     if not model:
+        return ""
+
+    parts = model.split()
+
+    family_parts = []
+
+    for part in parts:
+        if re.search(r"\d", part):
+            break
+
+        family_parts.append(part)
+
+    if family_parts:
+        return " ".join(family_parts)
+
+    return model
+
+
+def text_contains_phrase(title, normalised_title, phrase):
+
+    cleaned_phrase = clean_text(phrase)
+
+    if not cleaned_phrase:
         return False
 
     combined_title = clean_text(
         f"{title or ''} {normalised_title or ''}"
     )
 
-    pattern = rf"(?<![a-z0-9]){re.escape(model)}(?![a-z0-9])"
+    pattern = (
+        rf"(?<![a-z0-9])"
+        rf"{re.escape(cleaned_phrase)}"
+        rf"(?![a-z0-9])"
+    )
 
     return re.search(pattern, combined_title) is not None
+
+
+def model_name_matches(title, normalised_title, model_name):
+
+    return text_contains_phrase(
+        title,
+        normalised_title,
+        model_name
+    )
+
+
+def model_family_matches(title, normalised_title, model_name):
+
+    family_name = model_family_name(model_name)
+
+    return text_contains_phrase(
+        title,
+        normalised_title,
+        family_name
+    )
 
 
 def format_volume(value):
@@ -403,8 +451,8 @@ def search_inventory(boardSizeId: int):
         WHERE ri.IsActive = 1
         AND ri.StockStatus = 'In Stock'
         AND (
-            ri.RawProductTitle LIKE :model_match
-            OR ri.NormalisedProductTitle LIKE :model_match
+            ri.RawProductTitle LIKE :model_family_match
+            OR ri.NormalisedProductTitle LIKE :model_family_match
         )
         AND ri.LengthFeetInches = :length
         AND ri.VolumeLitres IS NOT NULL
@@ -435,6 +483,7 @@ def search_inventory(boardSizeId: int):
             }
 
         model_match = f"%{official.ModelName}%"
+        model_family_match = f"%{model_family_name(official.ModelName)}%"
 
         official_result = {
             "resultType": "manufacturer",
@@ -491,7 +540,7 @@ def search_inventory(boardSizeId: int):
         close_results = connection.execute(
             close_query,
             {
-                "model_match": model_match,
+                "model_family_match": model_family_match,
                 "length": official.LengthFeetInches,
                 "volume": official.VolumeLitres
             }
@@ -504,7 +553,7 @@ def search_inventory(boardSizeId: int):
             if row.InventoryId in exact_ids:
                 continue
 
-            if not model_name_matches(
+            if not model_family_matches(
                 row.RawProductTitle,
                 row.NormalisedProductTitle,
                 official.ModelName
