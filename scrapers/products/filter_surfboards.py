@@ -21,17 +21,23 @@ REPORT_FILE = Path("scrapers/products/output/surfboard_filter_report.json")
 
 SURFBOARD_BOARD_TYPES = [
     "surfboard",
+    "surfboards",
     "surf board",
+    "surf boards",
     "shortboard",
+    "shortboards",
     "longboard",
+    "longboards",
     "mid length",
     "midlength",
     "step up",
     "step-up",
     "softboard",
+    "softboards",
     "foamie",
     "foam board",
     "funboard",
+    "fun board",
     "malibu",
     "mini mal",
     "mini-mal",
@@ -40,7 +46,24 @@ SURFBOARD_BOARD_TYPES = [
     "twin fin",
     "twinfin",
     "performance board",
+    "performance boards",
     "hybrid board",
+    "hybrid boards",
+]
+
+SURFBOARD_CATEGORY_TERMS = [
+    "surfboards",
+    "surfboard",
+    "surf-surfboards",
+    "performance_boards",
+    "performance boards",
+    "fun_boards",
+    "fun boards",
+    "longboards",
+    "shortboards",
+    "softboards",
+    "midlengths",
+    "mid lengths",
 ]
 
 SURFBOARD_BRANDS = [
@@ -105,6 +128,8 @@ BOARD_CONSTRUCTIONS = [
     "carbon",
     "soft tech",
     "softtech",
+    "ibolic",
+    "volcanic",
 ]
 
 FIN_SYSTEMS = [
@@ -124,6 +149,7 @@ FIN_SYSTEMS = [
 HARD_EXCLUDE_TERMS = [
     "boardshort",
     "board short",
+    "brdshrt",
     "wetsuit",
     "spring suit",
     "springsuit",
@@ -209,6 +235,16 @@ LENGTH_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+DECIMAL_LENGTH_PATTERN = re.compile(
+    r"\b(?:[4-9]|1[0-2])\.(?:0|1|2|3|4|5|6|7|8|9|10|11|12)\b",
+    re.IGNORECASE,
+)
+
+COMPACT_LENGTH_PATTERN = re.compile(
+    r"\b(?:[4-9]|1[0-2])(?:0|1|2|3|4|5|6|7|8|9|10|11|12)\b",
+    re.IGNORECASE,
+)
+
 FULL_DIMENSION_PATTERN = re.compile(
     r"\b(?:[4-9]|1[0-2])\s*(?:'|’|ft)\s*\d{0,2}\s*"
     r"(?:\"|in)?\s*[xX*]\s*"
@@ -233,7 +269,13 @@ def clean_text(value):
     if value is None:
         return ""
 
-    return str(value).replace("â€™", "’").lower().strip()
+    if isinstance(value, list):
+        return " ".join([clean_text(item) for item in value if item])
+
+    if isinstance(value, dict):
+        return " ".join([clean_text(item) for item in value.values() if item])
+
+    return str(value).replace("â€™", "’").replace("&#8217;", "'").lower().strip()
 
 
 def text_blob(item):
@@ -242,9 +284,33 @@ def text_blob(item):
         item.get("variant_title"),
         item.get("vendor"),
         item.get("product_type"),
+        item.get("categories"),
+        item.get("tags"),
+        item.get("description"),
+        item.get("short_description"),
         item.get("sku"),
         item.get("handle"),
         item.get("url"),
+        item.get("product_url"),
+    ]
+
+    return " ".join([clean_text(p) for p in parts if p])
+
+
+def category_blob(item):
+    parts = [
+        item.get("product_type"),
+        item.get("categories"),
+    ]
+
+    return " ".join([clean_text(p) for p in parts if p])
+
+
+def title_blob(item):
+    parts = [
+        item.get("title"),
+        item.get("variant_title"),
+        item.get("handle"),
         item.get("product_url"),
     ]
 
@@ -271,7 +337,13 @@ def get_domain(item):
 
 
 def contains_phrase(text, phrases):
-    return any(phrase in text for phrase in phrases)
+    for phrase in phrases:
+        pattern = rf"(?<![a-z0-9]){re.escape(phrase)}(?![a-z0-9])"
+
+        if re.search(pattern, text):
+            return True
+
+    return False
 
 
 def has_term_boundary(text, terms):
@@ -284,13 +356,28 @@ def has_term_boundary(text, terms):
     return False
 
 
-def has_hard_exclusion(text):
-    return contains_phrase(text, HARD_EXCLUDE_TERMS)
+def has_category_board_signal(item):
+    categories = category_blob(item)
+
+    return contains_phrase(categories, SURFBOARD_CATEGORY_TERMS)
 
 
-def has_fin_accessory_exclusion(text):
-    if contains_phrase(text, FIN_ACCESSORY_TERMS):
-        if not contains_phrase(text, SURFBOARD_BOARD_TYPES):
+def has_hard_exclusion(item):
+    title = title_blob(item)
+
+    return contains_phrase(title, HARD_EXCLUDE_TERMS)
+
+
+def has_fin_accessory_exclusion(item):
+    title = title_blob(item)
+    categories = category_blob(item)
+
+    if contains_phrase(title, FIN_ACCESSORY_TERMS):
+        if not has_category_board_signal(item):
+            return True
+
+    if contains_phrase(categories, FIN_ACCESSORY_TERMS):
+        if not has_category_board_signal(item):
             return True
 
     return False
@@ -364,11 +451,11 @@ def score_item(item):
         result["reject_reason"] = "missing_text"
         return result
 
-    if has_hard_exclusion(text):
+    if has_hard_exclusion(item):
         result["reject_reason"] = "hard_excluded_product_type"
         return result
 
-    if has_fin_accessory_exclusion(text):
+    if has_fin_accessory_exclusion(item):
         result["reject_reason"] = "fin_accessory_not_board"
         return result
 
@@ -380,10 +467,15 @@ def score_item(item):
 
     result["reasons"].append(price_reason)
 
+    price = get_numeric_price(item)
+
     has_length = bool(LENGTH_PATTERN.search(text))
+    has_decimal_length = bool(DECIMAL_LENGTH_PATTERN.search(text))
+    has_compact_length = bool(COMPACT_LENGTH_PATTERN.search(text))
     has_full_dimensions = bool(FULL_DIMENSION_PATTERN.search(text))
     has_litres = bool(LITRE_PATTERN.search(text))
     board_type = has_board_type(text)
+    category_board_signal = has_category_board_signal(item)
     brand = has_board_brand(text)
     construction = has_construction(text)
     fin_system = has_fin_system(text)
@@ -397,6 +489,14 @@ def score_item(item):
         result["confidence"] += 2
         result["reasons"].append("length")
 
+    if has_decimal_length:
+        result["confidence"] += 2
+        result["reasons"].append("decimal_length")
+
+    if has_compact_length:
+        result["confidence"] += 1
+        result["reasons"].append("compact_length")
+
     if has_litres:
         result["confidence"] += 3
         result["reasons"].append("litres")
@@ -404,6 +504,10 @@ def score_item(item):
     if board_type:
         result["confidence"] += 3
         result["reasons"].append("board_type")
+
+    if category_board_signal:
+        result["confidence"] += 6
+        result["reasons"].append("category_board_signal")
 
     if brand:
         result["confidence"] += 3
@@ -423,6 +527,7 @@ def score_item(item):
 
     strong_identity = brand and (
         board_type
+        or category_board_signal
         or has_full_dimensions
         or has_litres
     )
@@ -430,13 +535,27 @@ def score_item(item):
     strong_dimensions = has_full_dimensions and (
         has_litres
         or board_type
+        or category_board_signal
         or brand
     )
 
     strong_board_type = (
-        board_type
-        and (has_length or has_litres)
-        and get_numeric_price(item) is not None
+        (board_type or category_board_signal)
+        and (
+            has_length
+            or has_decimal_length
+            or has_compact_length
+            or has_litres
+            or brand
+            or construction
+        )
+        and price is not None
+    )
+
+    strong_category = (
+        category_board_signal
+        and price is not None
+        and price >= 400
     )
 
     result["is_surfboard"] = (
@@ -445,6 +564,7 @@ def score_item(item):
             strong_identity
             or strong_dimensions
             or strong_board_type
+            or strong_category
         )
     )
 
@@ -492,26 +612,30 @@ def main():
 
     for input_dir in INPUT_DIRS:
         if not input_dir.exists():
-            file_results.append({
-                "directory": str(input_dir),
-                "status": "missing",
-                "raw": 0,
-                "accepted": 0,
-                "rejected": 0,
-            })
+            file_results.append(
+                {
+                    "directory": str(input_dir),
+                    "status": "missing",
+                    "raw": 0,
+                    "accepted": 0,
+                    "rejected": 0,
+                }
+            )
 
             continue
 
         json_files = sorted(input_dir.glob("*.json"))
 
         if not json_files:
-            file_results.append({
-                "directory": str(input_dir),
-                "status": "empty",
-                "raw": 0,
-                "accepted": 0,
-                "rejected": 0,
-            })
+            file_results.append(
+                {
+                    "directory": str(input_dir),
+                    "status": "empty",
+                    "raw": 0,
+                    "accepted": 0,
+                    "rejected": 0,
+                }
+            )
 
             continue
 
@@ -534,13 +658,15 @@ def main():
                     rejected.append(rejected_item)
                     file_rejected += 1
 
-            file_results.append({
-                "file": str(file_path),
-                "platform_directory": str(input_dir),
-                "raw": len(items),
-                "accepted": file_accepted,
-                "rejected": file_rejected,
-            })
+            file_results.append(
+                {
+                    "file": str(file_path),
+                    "platform_directory": str(input_dir),
+                    "raw": len(items),
+                    "accepted": file_accepted,
+                    "rejected": file_rejected,
+                }
+            )
 
             print(
                 f"{file_path.name}: "

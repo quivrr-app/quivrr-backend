@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Natural Necessity",
+    "url": "https://naturalnecessity.com.au",
+    "homepage_status": 200,
+    "platform": "shopify",
+    "sample_product_links": [
+      "/products/rhythm-lula-knit",
+      "/products/rhythm-lula-knit",
+      "/products/pink-cool-it-cowboy-long-sleeve-tee",
+      "/products/pink-cool-it-cowboy-long-sleeve-tee",
+      "/products/dark-leopard-pants-with-green-heart",
+      "/products/dark-leopard-pants-with-green-heart",
+      "/products/black-acid-cool-it-cowboy-long-sleeve-tee",
+      "/products/black-acid-cool-it-cowboy-long-sleeve-tee",
+      "/products/remote-projects-utility-blanket",
+      "/products/remote-projects-utility-blanket"
+    ],
+    "shopify_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 37956
+    },
+    "woocommerce_test": {
+      "status_code": 400,
+      "content_type": "text/plain",
+      "length": 11
+    }
+  },
+  {
+    "name": "Surf FX",
+    "url": "https://surffx.com.au",
+    "homepage_status": 200,
+    "platform": "shopify",
+    "sample_product_links": [
+      "/collections/shop-sale/products/starboard-windsurfer-lt-one-design",
+      "/collections/shop-sale/products/2025-starboard-generation-blue-carbon-with-bag",
+      "/collections/shop-sale/products/2025-starboard-generation-blue-carbon",
+      "/collections/shop-sale/products/2026-duotone-rebel-sls-kite",
+      "/collections/shop-sale/products/2026-duotone-skybrid-sls-foilboard",
+      "/collections/shop-sale/products/2025-duotone-eagle-sls-windsurf-board",
+      "/collections/shop-sale/products/2025-duotone-rebel-d-lab",
+      "/collections/shop-sale/products/axis-frank-downwind-board",
+      "/collections/shop-sale/products/duotone-eagle-windsurf-board-with-daggerboard",
+      "/collections/shop-sale/products/2024-duotone-grip-4-sls"
+    ],
+    "shopify_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 37859
+    },
+    "woocommerce_test": {
+      "status_code": 400,
+      "content_type": "text/plain",
+      "length": 11
+    }
+  },
+  {
+    "name": "Strapper Surf",
+    "url": "https://strapper.com.au",
+    "homepage_status": 200,
+    "platform": "woocommerce",
+    "sample_product_links": [
+      "https://strapper.com.au/product/giftcard/",
+      "https://strapper.com.au/product/giftcard/",
+      "https://strapper.com.au/product/giftcard/"
+    ],
+    "shopify_test": {
+      "status_code": 404,
+      "content_type": "text/html; charset=UTF-8",
+      "length": 196780
+    },
+    "woocommerce_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=UTF-8",
+      "length": 24541
+    }
+  },
+  {
+    "name": "Southern Man",
+    "url": "https://www.southernman.com.au",
+    "homepage_status": 200,
+    "platform": "woocommerce",
+    "sample_product_links": [
+      "/product/rip-curl-search-gps-3/",
+      "/product/rip-curl-search-gps-3/",
+      "/product/rip-curl-search-gps-3/",
+      "https://www.southernman.com.au/product/hydro-flask-standard-flex-mouth-straw-lid/",
+      "https://www.southernman.com.au/product/reef-j-bay-111/",
+      "https://www.southernman.com.au/product/reef-j-bay-111/",
+      "https://www.southernman.com.au/product/rip-curl-search-keyring/",
+      "https://www.southernman.com.au/product/rip-curl-search-keyring/",
+      "https://www.southernman.com.au/product/reef-cushion-bounce-court/",
+      "https://www.southernman.com.au/product/reef-cushion-bounce-court/"
+    ],
+    "shopify_test": {
+      "status_code": 404,
+      "content_type": "text/html; charset=utf-8",
+      "length": 548
+    },
+    "woocommerce_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=UTF-8",
+      "length": 30932
+    }
+  },
+  {
+    "name": "Coopers Board Store",
+    "url": "https://coopersboardstore.com.au",
+    "error": "HTTPSConnectionPool(host='coopersboardstore.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)')))"
+  },
+  {
+    "name": "The Surfboard Warehouse",
+    "url": "https://www.thesurfboardwarehouse.com.au",
+    "homepage_status": 200,
+    "platform": "shopify",
+    "sample_product_links": [
+      "/products/flash-series-softboard-lime-white-9-0",
+      "/products/flash-series-softboard-lime-white-9-0",
+      "/products/flash-series-softboard-navy-yellow-8-0",
+      "/products/flash-series-softboard-navy-yellow-8-0",
+      "/products/tech-softboard-v3-saw-tooth-9-0",
+      "/products/tech-softboard-v3-saw-tooth-9-0",
+      "/products/olaian-mens-1-5mm-springsuit-navy",
+      "/products/olaian-mens-1-5mm-springsuit-navy"
+    ],
+    "shopify_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 40922
+    },
+    "woocommerce_test": {
+      "status_code": 400,
+      "content_type": "text/plain",
+      "length": 11
+    }
+  },
+  {
+    "name": "The Board Lab",
+    "url": "https://www.theboardlab.com.au",
+    "homepage_status": 200,
+    "platform": "shopify",
+    "sample_product_links": [
+      "/products/sharpeye-radar",
+      "https://www.theboardlab.com.au/products/custom-surfboard",
+      "/products/custom-surfboard",
+      "/products/sharpeye-disco-ii",
+      "/products/sharpeye-radar",
+      "/products/sharpeye-radar",
+      "/products/sharpeye-radar",
+      "/products/sharpeye-disco-ii",
+      "/products/sharpeye-disco-ii",
+      "/products/sharpeye-disco-ii"
+    ],
+    "shopify_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 18599
+    },
+    "woocommerce_test": {
+      "status_code": 400,
+      "content_type": "text/plain",
+      "length": 11
+    }
+  },
+  {
+    "name": "Welcome Boardstore",
+    "url": "https://welcomeboardstore.com.au",
+    "homepage_status": 200,
+    "platform": "shopify",
+    "sample_product_links": [
+      "/products/dakine-wristguards",
+      "/products/gift-card-1",
+      "/products/gift-card-1",
+      "/products/dakine-wristguards",
+      "/products/gift-card-1",
+      "/products/afends-chains-recycled-beanie-black",
+      "/products/afends-chains-recycled-beanie-black",
+      "/products/afends-thc-hemp-wharfie-beanie-sycamore",
+      "/products/afends-thc-hemp-wharfie-beanie-sycamore",
+      "/products/afends-mellross-recycled-bomber-jacket-military"
+    ],
+    "shopify_test": {
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 22631
+    },
+    "woocommerce_test": {
+      "status_code": 400,
+      "content_type": "text/plain",
+      "length": 11
+    }
+  }
+]

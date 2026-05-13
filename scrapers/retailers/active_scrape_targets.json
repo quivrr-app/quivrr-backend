@@ -94,34 +94,6 @@
     "source": "retailer_detection_pipeline"
   },
   {
-    "primary_name": "Coopers Surf",
-    "website": "https://cooperssurf.com.au",
-    "website_key": "https://cooperssurf.com.au",
-    "country": "Australia",
-    "platform": "magento",
-    "status": "active",
-    "priority": 2,
-    "locations": [
-      {
-        "name": "Coopers Surf",
-        "states": [
-          "NSW"
-        ],
-        "region_clusters": [
-          "Coffs Harbour"
-        ],
-        "retailer_types": [
-          "multi_brand"
-        ],
-        "hardboards": true,
-        "verification_statuses": [
-          "seed_unverified"
-        ]
-      }
-    ],
-    "source": "retailer_detection_pipeline"
-  },
-  {
     "primary_name": "Empire Ave",
     "website": "https://empireave.com",
     "website_key": "https://empireave.com",
@@ -160,6 +132,26 @@
     "locations": [
       {
         "name": "Goodtime Surfboards",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Aloha Surf Manly",
+    "website": "https://alohasurfmanly.com",
+    "website_key": "https://alohasurfmanly.com",
+    "country": "Australia",
+    "platform": "neto_maropost",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Aloha Surf Manly",
         "states": [],
         "region_clusters": [],
         "retailer_types": [],
@@ -221,26 +213,6 @@
         "verification_statuses": [
           "seed_unverified"
         ]
-      }
-    ],
-    "source": "retailer_detection_pipeline"
-  },
-  {
-    "primary_name": "Aloha Surf Manly",
-    "website": "https://alohasurfmanly.com",
-    "website_key": "https://alohasurfmanly.com",
-    "country": "Australia",
-    "platform": "shopify",
-    "status": "active",
-    "priority": 2,
-    "locations": [
-      {
-        "name": "Aloha Surf Manly",
-        "states": [],
-        "region_clusters": [],
-        "retailer_types": [],
-        "hardboards": true,
-        "verification_statuses": []
       }
     ],
     "source": "retailer_detection_pipeline"

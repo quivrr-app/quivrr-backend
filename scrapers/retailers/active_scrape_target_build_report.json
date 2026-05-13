@@ -10,20 +10,20 @@
     "wix",
     "woocommerce"
   ],
-  "active_targets": 52,
-  "excluded_records": 48,
+  "active_targets": 51,
+  "excluded_records": 49,
   "platforms_seen": {
     "ssl_problem_site": 4,
     "woocommerce": 15,
     "unknown": 6,
-    "shopify": 31,
+    "shopify": 30,
     "connection_error": 31,
     "ecwid": 1,
     "bigcommerce": 3,
-    "ssl_error": 3,
-    "neto_maropost": 1,
-    "magento": 4,
+    "ssl_error": 4,
+    "neto_maropost": 2,
     "squarespace": 4,
+    "magento": 3,
     "blocked": 1
   },
   "exclusion_reasons": {
@@ -31,7 +31,7 @@
     "unsupported_platform_unknown": 6,
     "unsupported_platform_connection_error": 31,
     "excluded_retailer": 2,
-    "unsupported_platform_ssl_error": 3,
+    "unsupported_platform_ssl_error": 4,
     "unsupported_platform_blocked": 1,
     "not_hardboard_retailer": 1
   },
@@ -95,6 +95,12 @@
       "website": "https://byronbaysurfcompany.com.au",
       "platform": "connection_error",
       "reason": "unsupported_platform_connection_error"
+    },
+    {
+      "name": "Coopers Surf",
+      "website": "https://cooperssurf.com.au",
+      "platform": "ssl_error",
+      "reason": "unsupported_platform_ssl_error"
     },
     {
       "name": "Corner Surf Shop",
@@ -421,34 +427,6 @@
       "source": "retailer_detection_pipeline"
     },
     {
-      "primary_name": "Coopers Surf",
-      "website": "https://cooperssurf.com.au",
-      "website_key": "https://cooperssurf.com.au",
-      "country": "Australia",
-      "platform": "magento",
-      "status": "active",
-      "priority": 2,
-      "locations": [
-        {
-          "name": "Coopers Surf",
-          "states": [
-            "NSW"
-          ],
-          "region_clusters": [
-            "Coffs Harbour"
-          ],
-          "retailer_types": [
-            "multi_brand"
-          ],
-          "hardboards": true,
-          "verification_statuses": [
-            "seed_unverified"
-          ]
-        }
-      ],
-      "source": "retailer_detection_pipeline"
-    },
-    {
       "primary_name": "Empire Ave",
       "website": "https://empireave.com",
       "website_key": "https://empireave.com",
@@ -487,6 +465,26 @@
       "locations": [
         {
           "name": "Goodtime Surfboards",
+          "states": [],
+          "region_clusters": [],
+          "retailer_types": [],
+          "hardboards": true,
+          "verification_statuses": []
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Aloha Surf Manly",
+      "website": "https://alohasurfmanly.com",
+      "website_key": "https://alohasurfmanly.com",
+      "country": "Australia",
+      "platform": "neto_maropost",
+      "status": "active",
+      "priority": 2,
+      "locations": [
+        {
+          "name": "Aloha Surf Manly",
           "states": [],
           "region_clusters": [],
           "retailer_types": [],
@@ -548,26 +546,6 @@
           "verification_statuses": [
             "seed_unverified"
           ]
-        }
-      ],
-      "source": "retailer_detection_pipeline"
-    },
-    {
-      "primary_name": "Aloha Surf Manly",
-      "website": "https://alohasurfmanly.com",
-      "website_key": "https://alohasurfmanly.com",
-      "country": "Australia",
-      "platform": "shopify",
-      "status": "active",
-      "priority": 2,
-      "locations": [
-        {
-          "name": "Aloha Surf Manly",
-          "states": [],
-          "region_clusters": [],
-          "retailer_types": [],
-          "hardboards": true,
-          "verification_statuses": []
         }
       ],
       "source": "retailer_detection_pipeline"
