@@ -1,0 +1,12 @@
+.git
+.gitignore
+venv
+__pycache__
+*.pyc
+.env
+*.log
+
+scrapers/products/output
+scrapers/brands/output
+node_modules
+.DS_Store
