@@ -1,11 +1,11 @@
 import json
 import re
 from pathlib import Path
-from urllib.parse import urljoin
 from xml.etree import ElementTree
 
 import requests
 from bs4 import BeautifulSoup
+from requests.exceptions import RequestException
 
 
 INPUT_FILE = Path("scrapers/retailers/active_scrape_targets.json")
@@ -14,11 +14,82 @@ OUTPUT_DIR = Path("scrapers/products/output/magento")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 QuivrrBot/1.0"
+    "User-Agent": "Mozilla/5.0 QuivrrBot/1.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Connection": "close",
 }
 
-MAX_PRODUCT_URLS = 1500
-REQUEST_TIMEOUT = 30
+MAX_PRODUCT_URLS_PER_RETAILER = 250
+REQUEST_TIMEOUT = (8, 8)
+MAX_HTML_BYTES = 2_000_000
+
+LIKELY_PRODUCT_URL_TERMS = [
+    "surfboard",
+    "surfboards",
+    "shortboard",
+    "longboard",
+    "midlength",
+    "mid-length",
+    "fish",
+    "twin",
+    "step-up",
+    "stepup",
+    "gun",
+    "malibu",
+    "mini-mal",
+    "foamie",
+    "softboard",
+    "js-",
+    "js_",
+    "pyzel",
+    "firewire",
+    "lost",
+    "mayhem",
+    "channel-islands",
+    "channel_islands",
+    "ci-",
+    "dhd",
+    "haydenshapes",
+    "sharp-eye",
+    "sharpeye",
+    "chilli",
+    "rusty",
+    "album",
+    "christenson",
+    "mctavish",
+    "aloha",
+    "torq",
+    "nsp",
+]
+
+EXCLUDED_URL_TERMS = [
+    "wetsuit",
+    "boardshort",
+    "board-short",
+    "tee",
+    "shirt",
+    "hat",
+    "cap",
+    "wax",
+    "legrope",
+    "leash",
+    "tail-pad",
+    "traction",
+    "deck-grip",
+    "fins",
+    "fin-set",
+    "sunscreen",
+    "zinc",
+    "towel",
+    "poncho",
+    "bag",
+    "cover",
+    "rack",
+    "skate",
+    "snowboard",
+    "gift-card",
+    "voucher",
+]
 
 
 def safe_filename(value):
@@ -59,6 +130,56 @@ def extract_price_from_text(value):
         return ""
 
     return match.group(1).replace(",", "")
+
+
+def is_likely_product_url(url):
+    url_lower = clean(url).lower()
+
+    if not url_lower:
+        return False
+
+    if any(term in url_lower for term in EXCLUDED_URL_TERMS):
+        return False
+
+    return any(term in url_lower for term in LIKELY_PRODUCT_URL_TERMS)
+
+
+def fetch_text(url):
+    try:
+        with requests.get(
+            url,
+            timeout=REQUEST_TIMEOUT,
+            headers=HEADERS,
+            stream=True,
+        ) as response:
+            if response.status_code != 200:
+                return None, response.status_code
+
+            chunks = []
+            total_bytes = 0
+
+            for chunk in response.iter_content(chunk_size=65536):
+                if not chunk:
+                    continue
+
+                chunks.append(chunk)
+                total_bytes += len(chunk)
+
+                if total_bytes > MAX_HTML_BYTES:
+                    break
+
+            encoding = response.encoding or "utf-8"
+
+            return (
+                b"".join(chunks).decode(
+                    encoding,
+                    errors="replace",
+                ),
+                response.status_code,
+            )
+
+    except RequestException:
+        return None, "request_error"
 
 
 def get_json_ld_products(html):
@@ -258,6 +379,33 @@ def extract_product_from_page(url, retailer, html):
     }]
 
 
+def collect_urls_from_xml(xml_content):
+    found = []
+    nested_sitemaps = []
+
+    root = ElementTree.fromstring(xml_content)
+
+    for element in root.iter():
+        if not element.tag.endswith("loc"):
+            continue
+
+        url = clean(element.text)
+
+        if not url:
+            continue
+
+        url_lower = url.lower()
+
+        if url_lower.endswith(".xml"):
+            nested_sitemaps.append(url)
+            continue
+
+        if is_likely_product_url(url):
+            found.append(url)
+
+    return found, nested_sitemaps
+
+
 def sitemap_urls(base):
     candidates = [
         f"{base}/sitemap.xml",
@@ -279,35 +427,16 @@ def sitemap_urls(base):
             if response.status_code != 200:
                 continue
 
-            root = ElementTree.fromstring(response.content)
+            urls, nested_sitemaps = collect_urls_from_xml(
+                response.content
+            )
 
-            nested_sitemaps = []
-
-            for element in root.iter():
-                if not element.tag.endswith("loc"):
-                    continue
-
-                url = clean(element.text)
-
-                if not url:
-                    continue
-
-                url_lower = url.lower()
-
-                if url_lower.endswith(".xml"):
-                    nested_sitemaps.append(url)
-                    continue
-
-                if (
-                    "/products/" in url_lower
-                    or "/product/" in url_lower
-                    or "/surfboards/" in url_lower
-                    or "surfboard" in url_lower
-                    or url_lower.endswith(".html")
-                ):
-                    found.append(url)
+            found.extend(urls)
 
             for nested_url in nested_sitemaps[:30]:
+                if len(found) >= MAX_PRODUCT_URLS_PER_RETAILER:
+                    break
+
                 try:
                     nested_response = requests.get(
                         nested_url,
@@ -318,29 +447,11 @@ def sitemap_urls(base):
                     if nested_response.status_code != 200:
                         continue
 
-                    nested_root = ElementTree.fromstring(
+                    nested_urls, _ = collect_urls_from_xml(
                         nested_response.content
                     )
 
-                    for element in nested_root.iter():
-                        if not element.tag.endswith("loc"):
-                            continue
-
-                        url = clean(element.text)
-
-                        if not url:
-                            continue
-
-                        url_lower = url.lower()
-
-                        if (
-                            "/products/" in url_lower
-                            or "/product/" in url_lower
-                            or "/surfboards/" in url_lower
-                            or "surfboard" in url_lower
-                            or url_lower.endswith(".html")
-                        ):
-                            found.append(url)
+                    found.extend(nested_urls)
 
                 except Exception:
                     continue
@@ -348,7 +459,9 @@ def sitemap_urls(base):
         except Exception:
             continue
 
-    return list(dict.fromkeys(found))[:MAX_PRODUCT_URLS]
+    deduped = list(dict.fromkeys(found))
+
+    return deduped[:MAX_PRODUCT_URLS_PER_RETAILER]
 
 
 def scrape_magento(retailer):
@@ -361,33 +474,28 @@ def scrape_magento(retailer):
     all_products = []
 
     for index, product_url in enumerate(product_urls, start=1):
-        try:
-            response = requests.get(
-                product_url,
-                timeout=REQUEST_TIMEOUT,
-                headers=HEADERS,
-            )
+        print(f"  [{index}/{len(product_urls)}] Fetching: {product_url}")
 
-            if response.status_code != 200:
-                print(
-                    f"  [{index}/{len(product_urls)}] "
-                    f"FAILED {response.status_code}: {product_url}"
-                )
-                continue
+        html, status = fetch_text(product_url)
 
-            products = extract_product_from_page(
-                product_url,
-                retailer,
-                response.text,
-            )
+        if not html:
+            print(f"  [{index}/{len(product_urls)}] SKIPPED: {status}")
+            continue
 
-            if products:
-                all_products.extend(products)
+        products = extract_product_from_page(
+            product_url,
+            retailer,
+            html,
+        )
 
-        except Exception as exc:
+        if products:
             print(
-                f"  [{index}/{len(product_urls)}] ERROR: {exc}"
+                f"  [{index}/{len(product_urls)}] "
+                f"Extracted: {len(products)}"
             )
+            all_products.extend(products)
+        else:
+            print(f"  [{index}/{len(product_urls)}] Extracted: 0")
 
     print(f"  Total extracted products: {len(all_products)}")
 

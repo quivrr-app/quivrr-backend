@@ -1,0 +1,40 @@
+[
+  {
+    "brand": "JS Industries",
+    "model": "Monsta 10",
+    "status": "legacy",
+    "is_active": true,
+    "reason": "Discontinued from current JS Industries catalogue menu but official product page and size table remain available.",
+    "source": "manual_override",
+    "product_url": "https://jsindustries.com/products/monsta-10",
+    "sizes": [
+      { "length": "5'6", "width": "18 1/8", "thickness": "2 1/8", "volume_litres": 22.4, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'8", "width": "18 1/4", "thickness": "2 3/16", "volume_litres": 23.9, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'9", "width": "18 3/8", "thickness": "2 1/4", "volume_litres": 25.0, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'10", "width": "18 1/2", "thickness": "2 1/4", "volume_litres": 25.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'10", "width": "18 5/8", "thickness": "2 5/16", "volume_litres": 26.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'11", "width": "18 1/2", "thickness": "2 1/4", "volume_litres": 26.0, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'11", "width": "18 5/8", "thickness": "2 5/16", "volume_litres": 26.9, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "5'11", "width": "18 3/4", "thickness": "2 3/8", "volume_litres": 27.8, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'0", "width": "18 3/4", "thickness": "2 5/16", "volume_litres": 27.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'0", "width": "18 7/8", "thickness": "2 3/8", "volume_litres": 28.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'0", "width": "19", "thickness": "2 7/16", "volume_litres": 29.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'1", "width": "18 7/8", "thickness": "2 3/8", "volume_litres": 28.9, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'1", "width": "19", "thickness": "2 7/16", "volume_litres": 29.9, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'1", "width": "19 1/8", "thickness": "2 1/2", "volume_litres": 31.0, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'2", "width": "19", "thickness": "2 3/8", "volume_litres": 29.4, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'2", "width": "19 1/8", "thickness": "2 7/16", "volume_litres": 30.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'2", "width": "19 1/4", "thickness": "2 1/2", "volume_litres": 31.6, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'3", "width": "19 1/8", "thickness": "2 7/16", "volume_litres": 30.9, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'3", "width": "19 1/4", "thickness": "2 1/2", "volume_litres": 32.0, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'3", "width": "19 1/2", "thickness": "2 9/16", "volume_litres": 33.3, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'4", "width": "19 1/4", "thickness": "2 1/2", "volume_litres": 32.5, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'4", "width": "19 1/2", "thickness": "2 9/16", "volume_litres": 33.8, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'4", "width": "19 3/4", "thickness": "2 5/8", "volume_litres": 35.0, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'5", "width": "19 3/4", "thickness": "2 5/8", "volume_litres": 35.6, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'6", "width": "19 7/8", "thickness": "2 11/16", "volume_litres": 37.2, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'8", "width": "20", "thickness": "2 3/4", "volume_litres": 39.4, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" },
+      { "length": "6'10", "width": "20 1/4", "thickness": "2 7/8", "volume_litres": 42.7, "construction": "PU", "fin_system": "FCS II", "tail_shape": "Squash Tail" }
+    ]
+  }
+]
