@@ -159,6 +159,51 @@ def main():
             "retry_count": 1,
         },
         {
+            "name": "Scrape Magento retailers",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/magento_scraper.py",
+            ],
+            "retry_count": 1,
+        },
+        {
+            "name": "Scrape Neto Maropost retailers",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/neto_maropost_scraper.py",
+            ],
+            "retry_count": 1,
+        },
+        {
+            "name": "Scrape Squarespace retailers",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/squarespace_scraper.py",
+            ],
+            "retry_count": 1,
+        },
+        {
+            "name": "Scrape Wix retailers",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/wix_scraper.py",
+            ],
+            "retry_count": 1,
+        },
+        {
+            "name": "Scrape Ecwid retailers",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/ecwid_scraper.py",
+            ],
+            "retry_count": 1,
+        },
+        {
             "name": "Filter likely surfboards",
             "command": [
                 sys.executable,

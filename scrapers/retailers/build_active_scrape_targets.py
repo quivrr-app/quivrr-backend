@@ -21,6 +21,11 @@ SUPPORTED_PLATFORMS = {
     "shopify",
     "woocommerce",
     "bigcommerce",
+    "magento",
+    "neto_maropost",
+    "squarespace",
+    "wix",
+    "ecwid",
 }
 
 MANUFACTURER_OR_BRAND_TYPES = {
@@ -48,7 +53,18 @@ def clean(value):
 def normalise_platform(value):
     value = clean(value).lower()
 
-    return value or "unknown"
+    platform_aliases = {
+        "neto": "neto_maropost",
+        "maropost": "neto_maropost",
+        "maropost commerce cloud": "neto_maropost",
+        "big commerce": "bigcommerce",
+        "woo commerce": "woocommerce",
+        "woo": "woocommerce",
+        "wix stores": "wix",
+        "squarespace commerce": "squarespace",
+    }
+
+    return platform_aliases.get(value, value or "unknown")
 
 
 def normalise_website(url):
@@ -216,7 +232,6 @@ def get_exclusion_reason(record, overrides):
 
 def build_target(record, overrides):
     website = normalise_website(record.get("website"))
-
     platform = get_platform(record, overrides)
 
     return {
@@ -248,15 +263,11 @@ def build_location(record):
 
 def main():
     retailers = load_retailers()
-
     detection_overrides = load_detection_overrides()
 
     grouped = {}
-
     excluded = []
-
     reasons = Counter()
-
     platforms = Counter()
 
     for record in retailers:

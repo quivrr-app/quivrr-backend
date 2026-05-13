@@ -64,6 +64,140 @@
     "source": "retailer_detection_pipeline"
   },
   {
+    "primary_name": "Slimes Boardstore",
+    "website": "https://slimes.com.au",
+    "website_key": "https://slimes.com.au",
+    "country": "Australia",
+    "platform": "ecwid",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Slimes Boardstore",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Central Coast",
+          "Newcastle"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "prefilled",
+          "seed_verified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Coopers Surf",
+    "website": "https://cooperssurf.com.au",
+    "website_key": "https://cooperssurf.com.au",
+    "country": "Australia",
+    "platform": "magento",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Coopers Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Coffs Harbour"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Empire Ave",
+    "website": "https://empireave.com",
+    "website_key": "https://empireave.com",
+    "country": "Australia",
+    "platform": "magento",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Empire Ave",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Goodtime Surfboards",
+    "website": "https://goodtime.com.au",
+    "website_key": "https://goodtime.com.au",
+    "country": "Australia",
+    "platform": "magento",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Goodtime Surfboards",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Board Store",
+    "website": "https://boardstore.com.au",
+    "website_key": "https://boardstore.com.au",
+    "country": "Australia",
+    "platform": "neto_maropost",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Board Store",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [
+          "Online"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
     "primary_name": "Akwa Surf",
     "website": "https://akwasurf.com.au",
     "website_key": "https://akwasurf.com.au",
@@ -818,6 +952,90 @@
     "locations": [
       {
         "name": "Wicks Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Northern Beaches"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Full Circle Surf",
+    "website": "https://fullcirclesurf.com.au",
+    "website_key": "https://fullcirclesurf.com.au",
+    "country": "Australia",
+    "platform": "squarespace",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Full Circle Surf",
+        "states": [
+          "VIC"
+        ],
+        "region_clusters": [
+          "Phillip Island"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      },
+      {
+        "name": "Full Circle Surf",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Island Surfboards",
+    "website": "https://islandsurfboards.com.au",
+    "website_key": "https://islandsurfboards.com.au",
+    "country": "Australia",
+    "platform": "squarespace",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Island Surfboards",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Manly Surf Guide Surfboard Outlet",
+    "website": "https://manlysurfguide.com.au",
+    "website_key": "https://manlysurfguide.com.au",
+    "country": "Australia",
+    "platform": "squarespace",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Manly Surf Guide Surfboard Outlet",
         "states": [
           "NSW"
         ],

@@ -2,11 +2,16 @@
   "total_records": 104,
   "supported_platforms": [
     "bigcommerce",
+    "ecwid",
+    "magento",
+    "neto_maropost",
     "shopify",
+    "squarespace",
+    "wix",
     "woocommerce"
   ],
-  "active_targets": 44,
-  "excluded_records": 57,
+  "active_targets": 52,
+  "excluded_records": 48,
   "platforms_seen": {
     "ssl_problem_site": 4,
     "woocommerce": 15,
@@ -26,11 +31,7 @@
     "unsupported_platform_unknown": 6,
     "unsupported_platform_connection_error": 31,
     "excluded_retailer": 2,
-    "unsupported_platform_ecwid": 1,
     "unsupported_platform_ssl_error": 3,
-    "unsupported_platform_neto_maropost": 1,
-    "unsupported_platform_magento": 3,
-    "unsupported_platform_squarespace": 4,
     "unsupported_platform_blocked": 1,
     "not_hardboard_retailer": 1
   },
@@ -66,12 +67,6 @@
       "reason": "unsupported_platform_ssl_problem_site"
     },
     {
-      "name": "Slimes Boardstore",
-      "website": "https://slimes.com.au",
-      "platform": "ecwid",
-      "reason": "unsupported_platform_ecwid"
-    },
-    {
       "name": "Beach Life Margaret River",
       "website": "https://beachlifemargs.com.au",
       "platform": "connection_error",
@@ -90,12 +85,6 @@
       "reason": "unsupported_platform_connection_error"
     },
     {
-      "name": "Board Store",
-      "website": "https://boardstore.com.au",
-      "platform": "neto_maropost",
-      "reason": "unsupported_platform_neto_maropost"
-    },
-    {
       "name": "Boardriders Torquay",
       "website": "https://boardriders.com.au",
       "platform": "connection_error",
@@ -108,12 +97,6 @@
       "reason": "unsupported_platform_connection_error"
     },
     {
-      "name": "Coopers Surf",
-      "website": "https://cooperssurf.com.au",
-      "platform": "magento",
-      "reason": "unsupported_platform_magento"
-    },
-    {
       "name": "Corner Surf Shop",
       "website": "https://cornersurfshop.com.au",
       "platform": "connection_error",
@@ -124,12 +107,6 @@
       "website": "https://drippingwetsurf.com.au",
       "platform": "connection_error",
       "reason": "unsupported_platform_connection_error"
-    },
-    {
-      "name": "Full Circle Surf",
-      "website": "https://fullcirclesurf.com.au",
-      "platform": "squarespace",
-      "reason": "unsupported_platform_squarespace"
     },
     {
       "name": "Hollow Surf",
@@ -186,12 +163,6 @@
       "reason": "unsupported_platform_connection_error"
     },
     {
-      "name": "Empire Ave",
-      "website": "https://empireave.com",
-      "platform": "magento",
-      "reason": "unsupported_platform_magento"
-    },
-    {
       "name": "Harbour Surfboards",
       "website": "https://harboursurfboards.com.au",
       "platform": "connection_error",
@@ -202,12 +173,6 @@
       "website": "https://lespotsurfshop.com.au",
       "platform": "connection_error",
       "reason": "unsupported_platform_connection_error"
-    },
-    {
-      "name": "Manly Surf Guide Surfboard Outlet",
-      "website": "https://manlysurfguide.com.au",
-      "platform": "squarespace",
-      "reason": "unsupported_platform_squarespace"
     },
     {
       "name": "Maroubra Surf and Skate",
@@ -282,18 +247,6 @@
       "reason": "unsupported_platform_blocked"
     },
     {
-      "name": "Island Surfboards",
-      "website": "https://islandsurfboards.com.au",
-      "platform": "squarespace",
-      "reason": "unsupported_platform_squarespace"
-    },
-    {
-      "name": "Full Circle Surf",
-      "website": "https://fullcirclesurf.com.au",
-      "platform": "squarespace",
-      "reason": "unsupported_platform_squarespace"
-    },
-    {
       "name": "Bells Beach Surf Shop",
       "website": "https://bellsbeachsurfshop.com.au",
       "platform": "unknown",
@@ -340,12 +293,6 @@
       "website": "https://kirrasurf.com.au",
       "platform": "ssl_problem_site",
       "reason": "unsupported_platform_ssl_problem_site"
-    },
-    {
-      "name": "Goodtime Surfboards",
-      "website": "https://goodtime.com.au",
-      "platform": "magento",
-      "reason": "unsupported_platform_magento"
     },
     {
       "name": "Surf Connect",
@@ -439,6 +386,140 @@
           "retailer_types": [],
           "hardboards": true,
           "verification_statuses": []
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Slimes Boardstore",
+      "website": "https://slimes.com.au",
+      "website_key": "https://slimes.com.au",
+      "country": "Australia",
+      "platform": "ecwid",
+      "status": "active",
+      "priority": 1,
+      "locations": [
+        {
+          "name": "Slimes Boardstore",
+          "states": [
+            "NSW"
+          ],
+          "region_clusters": [
+            "Central Coast",
+            "Newcastle"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "prefilled",
+            "seed_verified"
+          ]
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Coopers Surf",
+      "website": "https://cooperssurf.com.au",
+      "website_key": "https://cooperssurf.com.au",
+      "country": "Australia",
+      "platform": "magento",
+      "status": "active",
+      "priority": 2,
+      "locations": [
+        {
+          "name": "Coopers Surf",
+          "states": [
+            "NSW"
+          ],
+          "region_clusters": [
+            "Coffs Harbour"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Empire Ave",
+      "website": "https://empireave.com",
+      "website_key": "https://empireave.com",
+      "country": "Australia",
+      "platform": "magento",
+      "status": "active",
+      "priority": 3,
+      "locations": [
+        {
+          "name": "Empire Ave",
+          "states": [
+            "QLD"
+          ],
+          "region_clusters": [
+            "Online"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Goodtime Surfboards",
+      "website": "https://goodtime.com.au",
+      "website_key": "https://goodtime.com.au",
+      "country": "Australia",
+      "platform": "magento",
+      "status": "active",
+      "priority": 2,
+      "locations": [
+        {
+          "name": "Goodtime Surfboards",
+          "states": [],
+          "region_clusters": [],
+          "retailer_types": [],
+          "hardboards": true,
+          "verification_statuses": []
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Board Store",
+      "website": "https://boardstore.com.au",
+      "website_key": "https://boardstore.com.au",
+      "country": "Australia",
+      "platform": "neto_maropost",
+      "status": "active",
+      "priority": 2,
+      "locations": [
+        {
+          "name": "Board Store",
+          "states": [
+            "QLD"
+          ],
+          "region_clusters": [
+            "Online"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
         }
       ],
       "source": "retailer_detection_pipeline"
@@ -1198,6 +1279,90 @@
       "locations": [
         {
           "name": "Wicks Surf",
+          "states": [
+            "NSW"
+          ],
+          "region_clusters": [
+            "Northern Beaches"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Full Circle Surf",
+      "website": "https://fullcirclesurf.com.au",
+      "website_key": "https://fullcirclesurf.com.au",
+      "country": "Australia",
+      "platform": "squarespace",
+      "status": "active",
+      "priority": 2,
+      "locations": [
+        {
+          "name": "Full Circle Surf",
+          "states": [
+            "VIC"
+          ],
+          "region_clusters": [
+            "Phillip Island"
+          ],
+          "retailer_types": [
+            "multi_brand"
+          ],
+          "hardboards": true,
+          "verification_statuses": [
+            "seed_unverified"
+          ]
+        },
+        {
+          "name": "Full Circle Surf",
+          "states": [],
+          "region_clusters": [],
+          "retailer_types": [],
+          "hardboards": true,
+          "verification_statuses": []
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Island Surfboards",
+      "website": "https://islandsurfboards.com.au",
+      "website_key": "https://islandsurfboards.com.au",
+      "country": "Australia",
+      "platform": "squarespace",
+      "status": "active",
+      "priority": 1,
+      "locations": [
+        {
+          "name": "Island Surfboards",
+          "states": [],
+          "region_clusters": [],
+          "retailer_types": [],
+          "hardboards": true,
+          "verification_statuses": []
+        }
+      ],
+      "source": "retailer_detection_pipeline"
+    },
+    {
+      "primary_name": "Manly Surf Guide Surfboard Outlet",
+      "website": "https://manlysurfguide.com.au",
+      "website_key": "https://manlysurfguide.com.au",
+      "country": "Australia",
+      "platform": "squarespace",
+      "status": "active",
+      "priority": 3,
+      "locations": [
+        {
+          "name": "Manly Surf Guide Surfboard Outlet",
           "states": [
             "NSW"
           ],

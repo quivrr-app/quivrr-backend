@@ -3,9 +3,16 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 
+
 INPUT_DIRS = [
     Path("scrapers/products/output/shopify"),
     Path("scrapers/products/output/woocommerce"),
+    Path("scrapers/products/output/bigcommerce"),
+    Path("scrapers/products/output/magento"),
+    Path("scrapers/products/output/neto_maropost"),
+    Path("scrapers/products/output/squarespace"),
+    Path("scrapers/products/output/wix"),
+    Path("scrapers/products/output/ecwid"),
 ]
 
 OUTPUT_FILE = Path("scrapers/products/output/likely_surfboards.json")
@@ -75,7 +82,6 @@ SURFBOARD_BRANDS = [
     "creative army",
     "modern",
     "superbrand",
-    "mctavish",
     "stacey",
     "dhdsurf",
 ]
@@ -247,6 +253,7 @@ def text_blob(item):
 
 def get_url(item):
     raw = item.get("url") or item.get("product_url") or ""
+
     return str(raw).strip()
 
 
@@ -270,6 +277,7 @@ def contains_phrase(text, phrases):
 def has_term_boundary(text, terms):
     for term in terms:
         pattern = rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])"
+
         if re.search(pattern, text):
             return True
 
@@ -306,6 +314,7 @@ def has_fin_system(text):
 
 def has_board_url_hint(item):
     url = get_url(item)
+
     return bool(URL_BOARD_HINT_PATTERN.search(url))
 
 
@@ -412,9 +421,23 @@ def score_item(item):
         result["confidence"] += 1
         result["reasons"].append("url_board_hint")
 
-    strong_identity = brand and (board_type or has_full_dimensions or has_litres)
-    strong_dimensions = has_full_dimensions and (has_litres or board_type or brand)
-    strong_board_type = board_type and (has_length or has_litres) and get_numeric_price(item) is not None
+    strong_identity = brand and (
+        board_type
+        or has_full_dimensions
+        or has_litres
+    )
+
+    strong_dimensions = has_full_dimensions and (
+        has_litres
+        or board_type
+        or brand
+    )
+
+    strong_board_type = (
+        board_type
+        and (has_length or has_litres)
+        and get_numeric_price(item) is not None
+    )
 
     result["is_surfboard"] = (
         result["confidence"] >= 6
@@ -436,6 +459,7 @@ def enrich_item(item, score):
     enriched["surfboard_confidence"] = score["confidence"]
     enriched["surfboard_match_reasons"] = score["reasons"]
     enriched["retailer_domain"] = get_domain(item)
+
     return enriched
 
 
@@ -468,9 +492,30 @@ def main():
 
     for input_dir in INPUT_DIRS:
         if not input_dir.exists():
+            file_results.append({
+                "directory": str(input_dir),
+                "status": "missing",
+                "raw": 0,
+                "accepted": 0,
+                "rejected": 0,
+            })
+
             continue
 
-        for file_path in sorted(input_dir.glob("*.json")):
+        json_files = sorted(input_dir.glob("*.json"))
+
+        if not json_files:
+            file_results.append({
+                "directory": str(input_dir),
+                "status": "empty",
+                "raw": 0,
+                "accepted": 0,
+                "rejected": 0,
+            })
+
+            continue
+
+        for file_path in json_files:
             items = load_items(file_path)
             total_items += len(items)
 
@@ -489,14 +534,13 @@ def main():
                     rejected.append(rejected_item)
                     file_rejected += 1
 
-            file_results.append(
-                {
-                    "file": str(file_path),
-                    "raw": len(items),
-                    "accepted": file_accepted,
-                    "rejected": file_rejected,
-                }
-            )
+            file_results.append({
+                "file": str(file_path),
+                "platform_directory": str(input_dir),
+                "raw": len(items),
+                "accepted": file_accepted,
+                "rejected": file_rejected,
+            })
 
             print(
                 f"{file_path.name}: "
@@ -508,16 +552,28 @@ def main():
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     OUTPUT_FILE.write_text(
-        json.dumps(accepted, indent=2, ensure_ascii=False),
+        json.dumps(
+            accepted,
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
     REJECTED_FILE.write_text(
-        json.dumps(rejected[:5000], indent=2, ensure_ascii=False),
+        json.dumps(
+            rejected[:5000],
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
     report = {
+        "input_directories": [
+            str(input_dir)
+            for input_dir in INPUT_DIRS
+        ],
         "raw_items": total_items,
         "verified_surfboards": len(accepted),
         "rejected_products_sample": min(len(rejected), 5000),
@@ -527,7 +583,11 @@ def main():
     }
 
     REPORT_FILE.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False),
+        json.dumps(
+            report,
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
