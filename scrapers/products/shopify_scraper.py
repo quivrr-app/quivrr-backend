@@ -9,8 +9,16 @@ OUTPUT_DIR = Path("scrapers/products/output/shopify")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 QuivrrBot/1.0"
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/136.0 Safari/537.36 QuivrrBot/1.0"
+    ),
+    "Accept": "application/json,text/html,*/*",
 }
+
+PAGE_LIMIT = 250
+MAX_PAGES = 80
 
 
 def safe_filename(value):
@@ -26,11 +34,6 @@ def safe_filename(value):
     )
 
 
-def clear_existing_outputs():
-    for file_path in OUTPUT_DIR.glob("*.json"):
-        file_path.unlink()
-
-
 def extract_products(products, retailer):
     output = []
 
@@ -41,7 +44,7 @@ def extract_products(products, retailer):
         image_urls = [
             image.get("src")
             for image in images
-            if image.get("src")
+            if isinstance(image, dict) and image.get("src")
         ]
 
         for variant in variants:
@@ -77,11 +80,12 @@ def scrape_shopify(retailer):
     base = retailer["website"].rstrip("/")
     page = 1
     all_products = []
+    failed = False
 
     print(f"Scraping: {retailer['primary_name']}")
 
-    while True:
-        url = f"{base}/products.json?limit=250&page={page}"
+    while page <= MAX_PAGES:
+        url = f"{base}/products.json?limit={PAGE_LIMIT}&page={page}"
 
         try:
             response = requests.get(
@@ -92,6 +96,7 @@ def scrape_shopify(retailer):
 
             if response.status_code != 200:
                 print(f"  FAILED page {page}: {response.status_code}")
+                failed = True
                 break
 
             data = response.json()
@@ -103,18 +108,41 @@ def scrape_shopify(retailer):
             print(f"  Page {page}: {len(products)} products")
             all_products.extend(products)
 
-            if len(products) < 250:
+            if len(products) < PAGE_LIMIT:
                 break
 
             page += 1
 
         except Exception as exc:
             print(f"  ERROR page {page}: {exc}")
+            failed = True
             break
 
     print(f"  Total products: {len(all_products)}")
 
-    return extract_products(all_products, retailer)
+    extracted = extract_products(all_products, retailer)
+
+    return {
+        "products": extracted,
+        "failed": failed,
+        "raw_product_count": len(all_products),
+    }
+
+
+def should_write_output(result, output_file):
+    products = result["products"]
+    failed = result["failed"]
+
+    if products:
+        return True
+
+    if failed and output_file.exists():
+        return False
+
+    if failed:
+        return False
+
+    return True
 
 
 def main():
@@ -129,25 +157,38 @@ def main():
     print(f"Shopify retailers: {len(shopify_retailers)}")
     print("")
 
-    clear_existing_outputs()
-
     total_products = 0
+    skipped_outputs = 0
 
     for index, retailer in enumerate(shopify_retailers, start=1):
         print(f"[{index}/{len(shopify_retailers)}] {retailer['primary_name']}")
 
-        products = scrape_shopify(retailer)
+        output_file = OUTPUT_DIR / f"{safe_filename(retailer['primary_name'])}.json"
+
+        result = scrape_shopify(retailer)
+        products = result["products"]
+
         total_products += len(products)
 
-        output_file = OUTPUT_DIR / f"{safe_filename(retailer['primary_name'])}.json"
+        if not should_write_output(result, output_file):
+            skipped_outputs += 1
+            print(
+                f"  Keeping existing output file because this scrape failed "
+                f"or returned no usable products: {output_file}"
+            )
+            print("")
+            continue
 
         output_file.write_text(
             json.dumps(products, indent=2, ensure_ascii=False),
             encoding="utf-8",
         )
 
-    print("")
-    print(f"Total extracted products: {total_products}")
+        print(f"  Saved: {output_file}")
+        print("")
+
+    print(f"Total extracted products this run: {total_products}")
+    print(f"Outputs preserved due to failed or empty scrape: {skipped_outputs}")
 
 
 if __name__ == "__main__":

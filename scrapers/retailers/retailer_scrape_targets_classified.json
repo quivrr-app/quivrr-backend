@@ -1,6 +1,6 @@
 [
   {
-    "website": "https://alohasurfmanly.com.au",
+    "website": "https://alohasurfmanly.com",
     "country": "Australia",
     "hardboards": true,
     "priority": 1,
@@ -22,8 +22,10 @@
     ],
     "primary_name": "Aloha Surf Manly",
     "status_code": null,
-    "platform": "error",
-    "error": "HTTPSConnectionPool(host='alohasurfmanly.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'alohasurfmanly.com.au'. (_ssl.c:1028)\")))"
+    "platform": "shopify",
+    "error": "HTTPSConnectionPool(host='alohasurfmanly.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'alohasurfmanly.com.au'. (_ssl.c:1028)\")))",
+    "website_key": "https://alohasurfmanly.com",
+    "status": "active"
   },
   {
     "website": "https://beachbeat.com.au",
