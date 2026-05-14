@@ -84,7 +84,6 @@ def model_family_name(model_name):
         return ""
 
     parts = model.split()
-
     family_parts = []
 
     for part in parts:
@@ -119,6 +118,17 @@ def text_contains_phrase(title, normalised_title, phrase):
     return re.search(pattern, combined_title) is not None
 
 
+def model_family_matches(title, normalised_title, model_name):
+
+    family_name = model_family_name(model_name)
+
+    return text_contains_phrase(
+        title,
+        normalised_title,
+        family_name
+    )
+
+
 def model_name_matches(title, normalised_title, model_name):
 
     if text_contains_phrase(
@@ -132,17 +142,6 @@ def model_name_matches(title, normalised_title, model_name):
         title,
         normalised_title,
         model_name
-    )
-
-
-def model_family_matches(title, normalised_title, model_name):
-
-    family_name = model_family_name(model_name)
-
-    return text_contains_phrase(
-        title,
-        normalised_title,
-        family_name
     )
 
 
@@ -225,7 +224,6 @@ def get_brands():
     """)
 
     with engine.connect() as connection:
-
         results = connection.execute(query)
 
         brands = [
@@ -253,7 +251,6 @@ def get_models(brand_id: int):
     """)
 
     with engine.connect() as connection:
-
         results = connection.execute(
             query,
             {
@@ -285,7 +282,6 @@ def get_constructions(model_id: int):
     """)
 
     with engine.connect() as connection:
-
         results = connection.execute(
             query,
             {
@@ -334,7 +330,6 @@ def get_sizes(
     """)
 
     with engine.connect() as connection:
-
         results = connection.execute(
             query,
             {
@@ -346,7 +341,6 @@ def get_sizes(
         sizes = []
 
         for row in results:
-
             volume = format_volume(
                 row.VolumeLitres
             )
@@ -389,7 +383,7 @@ def search_inventory(boardSizeId: int):
     """)
 
     exact_query = text("""
-        SELECT TOP 150
+        SELECT TOP 200
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -426,19 +420,19 @@ def search_inventory(boardSizeId: int):
                 'true'
             )
         )
+        AND ri.LengthFeetInches = :length
         AND (
             ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
             OR ri.RawProductTitle LIKE :model_family_match
             OR ri.NormalisedProductTitle LIKE :model_family_match
         )
-        AND ri.LengthFeetInches = :length
         AND (
             ri.VolumeLitres IS NULL
             OR ABS(
                 CAST(ri.VolumeLitres AS float)
                 - CAST(:volume AS float)
-            ) <= 0.35
+            ) <= 0.75
         )
         ORDER BY
             CASE
@@ -446,11 +440,12 @@ def search_inventory(boardSizeId: int):
                 ELSE 0
             END,
             VolumeDelta ASC,
-            ri.PriceAud ASC
+            ri.PriceAud ASC,
+            r.RetailerName ASC
     """)
 
     close_query = text("""
-        SELECT TOP 150
+        SELECT TOP 200
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -487,11 +482,11 @@ def search_inventory(boardSizeId: int):
                 'true'
             )
         )
+        AND ri.LengthFeetInches = :length
         AND (
             ri.RawProductTitle LIKE :model_family_match
             OR ri.NormalisedProductTitle LIKE :model_family_match
         )
-        AND ri.LengthFeetInches = :length
         AND (
             ri.VolumeLitres IS NULL
             OR ABS(
@@ -505,11 +500,11 @@ def search_inventory(boardSizeId: int):
                 ELSE 0
             END,
             VolumeDelta ASC,
-            ri.PriceAud ASC
+            ri.PriceAud ASC,
+            r.RetailerName ASC
     """)
 
     with engine.connect() as connection:
-
         official = connection.execute(
             official_query,
             {
@@ -518,7 +513,6 @@ def search_inventory(boardSizeId: int):
         ).fetchone()
 
         if not official:
-
             return {
                 "manufacturer": None,
                 "exactRetailerMatches": [],
@@ -558,7 +552,6 @@ def search_inventory(boardSizeId: int):
         exact_matches = []
 
         for row in exact_results:
-
             if not model_name_matches(
                 row.RawProductTitle,
                 row.NormalisedProductTitle,
@@ -573,7 +566,7 @@ def search_inventory(boardSizeId: int):
                 )
             )
 
-            if len(exact_matches) >= 25:
+            if len(exact_matches) >= 50:
                 break
 
         exact_ids = {
@@ -593,7 +586,6 @@ def search_inventory(boardSizeId: int):
         close_matches = []
 
         for row in close_results:
-
             if row.InventoryId in exact_ids:
                 continue
 
@@ -617,7 +609,7 @@ def search_inventory(boardSizeId: int):
 
             close_matches.append(item)
 
-            if len(close_matches) >= 25:
+            if len(close_matches) >= 50:
                 break
 
     return {
@@ -631,7 +623,6 @@ def search_inventory(boardSizeId: int):
 def test_database_connection():
 
     with engine.connect() as connection:
-
         result = connection.execute(
             text(
                 "SELECT DB_NAME() AS database_name;"
