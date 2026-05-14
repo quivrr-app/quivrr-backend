@@ -1,9 +1,16 @@
+import html
 import json
 import re
+import time
+import urllib3
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
+
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 INPUT_FILE = Path("scrapers/retailers/active_scrape_targets.json")
@@ -22,6 +29,48 @@ HEADERS = {
 }
 
 PER_PAGE = 100
+REQUEST_DELAY_SECONDS = 0.15
+
+SURFBOARD_CATEGORY_HINTS = [
+    "surfboard",
+    "surfboards",
+    "surf-surfboards",
+    "performance_boards",
+    "performance boards",
+    "fun_boards",
+    "fun boards",
+    "longboards",
+    "longboard",
+    "shortboards",
+    "shortboard",
+    "softboards",
+    "softboard",
+    "midlength",
+    "mid length",
+]
+
+SURFBOARD_TITLE_HINTS = [
+    " surfboard",
+    " shortboard",
+    " longboard",
+    " softboard",
+    " foamie",
+    " funboard",
+    " js ",
+    " ci ",
+    " lost ",
+    " pyzel ",
+    " firewire ",
+    " dhd ",
+    " chilli ",
+    " sharp eye ",
+    " sharpeye ",
+    " slater ",
+    " haydenshapes ",
+    " hayden shapes ",
+    " mick fanning ",
+    " mf ",
+]
 
 
 def clean_html(value):
@@ -31,7 +80,22 @@ def clean_html(value):
     text = BeautifulSoup(str(value), "html.parser").get_text(" ", strip=True)
     text = re.sub(r"\s+", " ", text).strip()
 
-    return text
+    return html.unescape(text)
+
+
+def normalise_price_from_value(value):
+    if value is None:
+        return None
+
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return None
+
+    if numeric > 10000:
+        numeric = numeric / 100
+
+    return round(numeric, 2)
 
 
 def normalise_price(product):
@@ -169,45 +233,249 @@ def is_product_available(product):
     return available
 
 
+def product_looks_like_surfboard(product):
+    category_text = " ".join(extract_category_names(product)).lower()
+    tag_text = " ".join(extract_tag_names(product)).lower()
+    title = f" {str(product.get('name') or '').lower()} "
+    slug = f" {str(product.get('slug') or '').lower()} "
+    combined_category_text = f"{category_text} {tag_text}"
+
+    if any(term in combined_category_text for term in SURFBOARD_CATEGORY_HINTS):
+        return True
+
+    if any(term in title for term in SURFBOARD_TITLE_HINTS):
+        return True
+
+    if any(term.strip() in slug for term in SURFBOARD_TITLE_HINTS):
+        return True
+
+    return False
+
+
+def format_size_token(value):
+    if value is None:
+        return ""
+
+    raw = str(value).strip().lower()
+    raw = raw.replace("ft", "").replace("feet", "")
+    raw = raw.replace("’", "'").replace('"', "")
+    raw = raw.replace("-", "").replace("_", "")
+
+    if "'" in raw:
+        return raw
+
+    digits = re.sub(r"[^0-9]", "", raw)
+
+    if len(digits) == 2:
+        return f"{digits[0]}'{digits[1]}"
+
+    if len(digits) == 3 and digits[1:] in {"10", "11", "12"}:
+        return f"{digits[0]}'{digits[1:]}"
+
+    return str(value).strip()
+
+
+def extract_variation_attributes(variation):
+    attributes = variation.get("attributes") or {}
+    values = []
+
+    if isinstance(attributes, dict):
+        for key, value in attributes.items():
+            clean_key = str(key).replace("attribute_pa_", "").replace("attribute_", "")
+            clean_key = clean_key.replace("_", " ").replace("-", " ").title()
+
+            if clean_key.lower() == "size":
+                clean_value = format_size_token(value)
+            else:
+                clean_value = str(value).replace("-", " ").title()
+
+            if clean_value:
+                values.append(f"{clean_key} {clean_value}")
+
+    return " ".join(values).strip()
+
+
+def variation_is_available(variation):
+    if variation.get("variation_is_active") is False:
+        return False
+
+    if variation.get("variation_is_visible") is False:
+        return False
+
+    if variation.get("is_purchasable") is False:
+        return False
+
+    if variation.get("is_in_stock") is True:
+        return True
+
+    availability_html = clean_html(variation.get("availability_html")).lower()
+
+    if "in stock" in availability_html:
+        return True
+
+    return False
+
+
+def extract_variation_image_urls(variation):
+    image = variation.get("image") or {}
+
+    if not isinstance(image, dict):
+        return []
+
+    urls = []
+
+    for key in ["src", "url", "full_src"]:
+        value = image.get(key)
+
+        if value:
+            urls.append(value)
+
+    return list(dict.fromkeys(urls))
+
+
+def get_product_variations_from_page(product_url):
+    if not product_url:
+        return []
+
+    try:
+        response = requests.get(
+            product_url,
+            timeout=30,
+            headers=HEADERS,
+            verify=False,
+        )
+
+        if response.status_code != 200:
+            return []
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        forms = soup.select("form.variations_form")
+
+        for form in forms:
+            raw = form.get("data-product_variations")
+
+            if not raw:
+                continue
+
+            decoded = html.unescape(raw)
+            variations = json.loads(decoded)
+
+            if isinstance(variations, list):
+                return variations
+
+    except Exception:
+        return []
+
+    return []
+
+
+def build_base_product(product, retailer):
+    category_names = extract_category_names(product)
+    tag_names = extract_tag_names(product)
+    attribute_text = extract_attribute_text(product)
+
+    short_description = clean_html(product.get("short_description"))
+    description = clean_html(product.get("description"))
+
+    title = product.get("name") or ""
+    slug = product.get("slug") or ""
+    permalink = product.get("permalink") or ""
+
+    return {
+        "retailer": retailer["primary_name"],
+        "website": retailer["website"],
+        "platform": retailer["platform"],
+        "product_id": product.get("id"),
+        "variant_id": None,
+        "title": title,
+        "handle": slug,
+        "vendor": "",
+        "product_type": " ".join(category_names),
+        "categories": category_names,
+        "tags": tag_names,
+        "variant_title": attribute_text,
+        "description": description,
+        "short_description": short_description,
+        "price": normalise_price(product),
+        "compare_at_price": None,
+        "available": is_product_available(product),
+        "sku": product.get("sku"),
+        "product_url": permalink,
+        "images": extract_image_urls(product),
+    }
+
+
+def build_variation_product(base_product, variation):
+    output = dict(base_product)
+
+    variation_attributes = extract_variation_attributes(variation)
+    variation_images = extract_variation_image_urls(variation)
+
+    variation_price = normalise_price_from_value(
+        variation.get("display_price")
+        or variation.get("display_regular_price")
+    )
+
+    output["variant_id"] = variation.get("variation_id")
+    output["variant_title"] = variation_attributes
+    output["price"] = variation_price if variation_price is not None else base_product.get("price")
+    output["compare_at_price"] = normalise_price_from_value(
+        variation.get("display_regular_price")
+    )
+    output["available"] = variation_is_available(variation)
+    output["sku"] = variation.get("sku") or base_product.get("sku")
+    output["images"] = variation_images or base_product.get("images", [])
+
+    return output
+
+
+def dedupe_products(products):
+    seen = set()
+    output = []
+
+    for product in products:
+        key = (
+            product.get("retailer"),
+            product.get("product_id"),
+            product.get("variant_id"),
+            product.get("title"),
+            product.get("variant_title"),
+            product.get("sku"),
+            product.get("product_url"),
+        )
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        output.append(product)
+
+    return output
+
+
 def extract_products(products, retailer):
     output = []
 
     for product in products:
-        category_names = extract_category_names(product)
-        tag_names = extract_tag_names(product)
-        attribute_text = extract_attribute_text(product)
+        base_product = build_base_product(product, retailer)
 
-        short_description = clean_html(product.get("short_description"))
-        description = clean_html(product.get("description"))
-
-        title = product.get("name") or ""
-        slug = product.get("slug") or ""
-        permalink = product.get("permalink") or ""
-
-        output.append(
-            {
-                "retailer": retailer["primary_name"],
-                "website": retailer["website"],
-                "platform": retailer["platform"],
-                "product_id": product.get("id"),
-                "variant_id": None,
-                "title": title,
-                "handle": slug,
-                "vendor": "",
-                "product_type": " ".join(category_names),
-                "categories": category_names,
-                "tags": tag_names,
-                "variant_title": attribute_text,
-                "description": description,
-                "short_description": short_description,
-                "price": normalise_price(product),
-                "compare_at_price": None,
-                "available": is_product_available(product),
-                "sku": product.get("sku"),
-                "product_url": permalink,
-                "images": extract_image_urls(product),
-            }
+        should_expand_variations = (
+            product_looks_like_surfboard(product)
+            and product.get("type") == "variable"
+            and base_product.get("product_url")
         )
+
+        if should_expand_variations:
+            variations = get_product_variations_from_page(base_product["product_url"])
+            time.sleep(REQUEST_DELAY_SECONDS)
+
+            if variations:
+                for variation in variations:
+                    output.append(build_variation_product(base_product, variation))
+
+                continue
+
+        output.append(base_product)
 
     return output
 
@@ -258,6 +526,8 @@ def scrape_woocommerce(retailer):
             print(f"  ERROR page {page}: {exc}")
             break
 
+    all_products = dedupe_products(all_products)
+
     print(f"  Total products: {len(all_products)}")
 
     return all_products
@@ -278,6 +548,7 @@ def safe_filename(name):
         .replace("&", "and")
         .replace("/", "_")
         .replace("\\", "_")
+        .replace("'", "")
         .replace(" ", "_")
     )
 
