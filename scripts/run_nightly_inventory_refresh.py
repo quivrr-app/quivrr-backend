@@ -1,12 +1,9 @@
-from pathlib import Path
+﻿from pathlib import Path
 import json
-import os
-import smtplib
 import subprocess
 import sys
 import time
 from datetime import datetime, timezone
-from email.message import EmailMessage
 
 
 OUTPUT_DIR = Path("scrapers/products/output")
@@ -14,13 +11,6 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 JOB_REPORT_FILE = OUTPUT_DIR / "nightly_inventory_job_report.json"
 ACTIVE_TARGETS_FILE = Path("scrapers/retailers/active_scrape_targets.json")
-
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp-mail.outlook.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USERNAME = os.getenv("SMTP_USERNAME", "quivrr.platform@outlook.com")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-EMAIL_TO = os.getenv("NIGHTLY_REPORT_EMAIL_TO", "dunn.nathan@hotmail.com")
-EMAIL_FROM = os.getenv("NIGHTLY_REPORT_EMAIL_FROM", SMTP_USERNAME)
 
 
 def utc_now():
@@ -106,126 +96,6 @@ def active_target_count():
         return len(targets)
     except Exception:
         return 0
-
-
-def load_json_file(file_path):
-    if not file_path.exists():
-        return None
-
-    try:
-        return json.loads(file_path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-
-
-def build_email_body(report):
-    quality_report = load_json_file(
-        OUTPUT_DIR / "inventory_quality_report.json"
-    )
-
-    grouped_inventory = load_json_file(
-        OUTPUT_DIR / "grouped_inventory_index.json"
-    )
-
-    js_inventory = load_json_file(
-        OUTPUT_DIR / "js_inventory_index.json"
-    )
-
-    successful_steps = [
-        step for step in report["steps"]
-        if step.get("success")
-    ]
-
-    failed_steps = [
-        step for step in report["steps"]
-        if not step.get("success")
-    ]
-
-    lines = [
-        "Quivrr nightly AU retailer inventory report",
-        "",
-        f"Status: {'Succeeded' if report['success'] else 'Failed'}",
-        f"Started UTC: {report['started_at']}",
-        f"Completed UTC: {report['completed_at']}",
-        f"Duration seconds: {report['duration_seconds']}",
-        f"Active scrape targets: {report['active_scrape_targets']}",
-        f"Steps completed: {len(successful_steps)}/{len(report['steps'])}",
-        "",
-    ]
-
-    if quality_report:
-        lines.extend([
-            "Inventory quality",
-            f"Total records: {quality_report.get('total_records', 'n/a')}",
-            f"With length: {quality_report.get('with_length', 'n/a')}",
-            f"With volume: {quality_report.get('with_volume', 'n/a')}",
-            f"Available: {quality_report.get('available', 'n/a')}",
-            f"Retailers: {quality_report.get('retailers', 'n/a')}",
-            "",
-        ])
-
-    if isinstance(grouped_inventory, list):
-        lines.append(f"Grouped inventory records: {len(grouped_inventory)}")
-    elif isinstance(grouped_inventory, dict):
-        lines.append(f"Grouped inventory keys: {len(grouped_inventory)}")
-
-    if isinstance(js_inventory, list):
-        lines.append(f"JS inventory records: {len(js_inventory)}")
-    elif isinstance(js_inventory, dict):
-        lines.append(f"JS inventory keys: {len(js_inventory)}")
-
-    lines.append("")
-
-    if failed_steps:
-        lines.append("Failed steps")
-        for step in failed_steps:
-            lines.append(f"- {step['name']}")
-            lines.append(step.get("output_tail", "")[-2000:])
-            lines.append("")
-    else:
-        lines.append("All steps completed successfully.")
-
-    lines.append("")
-    lines.append("Step summary")
-
-    for step in report["steps"]:
-        status = "OK" if step.get("success") else "FAILED"
-        lines.append(
-            f"- {status}: {step['name']} "
-            f"({step.get('duration_seconds', 0)} seconds)"
-        )
-
-    return "\n".join(lines)
-
-
-def send_email_report(report):
-    if not SMTP_PASSWORD:
-        print("")
-        print("Email report skipped. SMTP_PASSWORD is not configured.")
-        return
-
-    subject_status = "Succeeded" if report["success"] else "Failed"
-
-    message = EmailMessage()
-    message["Subject"] = f"Quivrr nightly inventory report: {subject_status}"
-    message["From"] = EMAIL_FROM
-    message["To"] = EMAIL_TO
-    message.set_content(build_email_body(report))
-
-    message.add_attachment(
-        JOB_REPORT_FILE.read_bytes(),
-        maintype="application",
-        subtype="json",
-        filename=JOB_REPORT_FILE.name,
-    )
-
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=60) as smtp:
-        smtp.starttls()
-        smtp.login(SMTP_USERNAME, SMTP_PASSWORD)
-        smtp.send_message(message)
-
-    print("")
-    print(f"Email report sent to {EMAIL_TO}")
 
 
 def main():
@@ -435,12 +305,6 @@ def main():
     print(f"Duration: {report['duration_seconds']} seconds")
     print(f"Active scrape targets: {report['active_scrape_targets']}")
     print(f"Report: {JOB_REPORT_FILE}")
-
-    try:
-        send_email_report(report)
-    except Exception as exc:
-        print("")
-        print(f"Email report failed: {exc}")
 
     if not success:
         sys.exit(1)
