@@ -28,6 +28,32 @@
     "status": "active"
   },
   {
+    "primary_name": "AWSM Surf",
+    "website": "https://awsmsurf.com",
+    "website_key": "https://awsmsurf.com",
+    "country": "Australia",
+    "platform": "unknown",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "AWSM Surf",
+        "states": [
+          "QLD"
+        ],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "js_stockist_seed"
+        ]
+      }
+    ],
+    "source": "js_stockist_seed"
+  },
+  {
     "website": "https://beachbeat.com.au",
     "country": "Australia",
     "hardboards": true,
@@ -1140,6 +1166,32 @@
     "homepage_bytes": 361165
   },
   {
+    "primary_name": "Ocean and Earth",
+    "website": "https://oceanearthstore.com",
+    "website_key": "https://oceanearthstore.com",
+    "country": "Australia",
+    "platform": "unknown",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Ocean and Earth",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "js_stockist_seed"
+        ]
+      }
+    ],
+    "source": "js_stockist_seed"
+  },
+  {
     "website": "https://overboardsurf.com.au",
     "country": "Australia",
     "hardboards": true,
@@ -1224,6 +1276,30 @@
     "homepage_bytes": 1480482
   },
   {
+    "primary_name": "Rip Curl Australia",
+    "website": "https://www.ripcurl.com/au",
+    "website_key": "https://www.ripcurl.com/au",
+    "country": "Australia",
+    "platform": "unknown",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Rip Curl Australia",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "js_stockist_seed"
+        ]
+      }
+    ],
+    "source": "js_stockist_seed"
+  },
+  {
     "website": "https://sessionssurfshop.com.au",
     "country": "Australia",
     "hardboards": true,
@@ -1302,6 +1378,32 @@
     "homepage_bytes": 727850
   },
   {
+    "primary_name": "Triple Bull Surf and Skate",
+    "website": "https://triplebull.com.au",
+    "website_key": "https://triplebull.com.au",
+    "country": "Australia",
+    "platform": "unknown",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Triple Bull Surf and Skate",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "js_stockist_seed"
+        ]
+      }
+    ],
+    "source": "js_stockist_seed"
+  },
+  {
     "website": "https://yallingupsurf.com.au",
     "country": "Australia",
     "hardboards": true,
@@ -1326,6 +1428,32 @@
     "status_code": 200,
     "platform": "unknown",
     "homepage_bytes": 114
+  },
+  {
+    "primary_name": "Zink Surf",
+    "website": "https://zinksurf.com.au",
+    "website_key": "https://zinksurf.com.au",
+    "country": "Australia",
+    "platform": "unknown",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Zink Surf",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "js_stockist_seed"
+        ]
+      }
+    ],
+    "source": "js_stockist_seed"
   },
   {
     "website": "https://actionboardsports.com.au",
@@ -1378,6 +1506,32 @@
     "status_code": null,
     "platform": "error",
     "error": "HTTPSConnectionPool(host='apollobaysurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='apollobaysurfshop.com.au', port=443): Failed to resolve 'apollobaysurfshop.com.au' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "primary_name": "Beaches Apparel",
+    "website": "https://beachesapparel.com",
+    "website_key": "https://beachesapparel.com",
+    "country": "Australia",
+    "platform": "unknown",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Beaches Apparel",
+        "states": [
+          "SA"
+        ],
+        "region_clusters": [],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "js_stockist_seed"
+        ]
+      }
+    ],
+    "source": "js_stockist_seed"
   },
   {
     "website": "https://beachinsurf.com.au",

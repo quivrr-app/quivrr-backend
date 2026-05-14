@@ -142,20 +142,40 @@
     "source": "retailer_detection_pipeline"
   },
   {
-    "primary_name": "Aloha Surf Manly",
-    "website": "https://alohasurfmanly.com",
-    "website_key": "https://alohasurfmanly.com",
+    "primary_name": "Ocean and Earth",
+    "website": "https://oceanearthstore.com",
+    "website_key": "https://oceanearthstore.com",
     "country": "Australia",
-    "platform": "shopify",
+    "platform": "magento",
     "status": "active",
     "priority": 2,
     "locations": [
       {
-        "name": "Aloha Surf Manly",
+        "name": "Ocean and Earth",
         "states": [],
         "region_clusters": [],
         "retailer_types": [],
-        "hardboards": true,
+        "hardboards": null,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Rip Curl Australia",
+    "website": "https://ripcurl.com",
+    "website_key": "https://ripcurl.com",
+    "country": "Australia",
+    "platform": "magento",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Rip Curl Australia",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": null,
         "verification_statuses": []
       }
     ],
@@ -213,6 +233,62 @@
         "verification_statuses": [
           "seed_unverified"
         ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Aloha Surf Manly",
+    "website": "https://alohasurfmanly.com",
+    "website_key": "https://alohasurfmanly.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Aloha Surf Manly",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Northern Beaches"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "seed_unverified"
+        ]
+      },
+      {
+        "name": "Aloha Surf Manly",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": true,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "AWSM Surf",
+    "website": "https://awsmsurf.com",
+    "website_key": "https://awsmsurf.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "AWSM Surf",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": null,
+        "verification_statuses": []
       }
     ],
     "source": "retailer_detection_pipeline"
@@ -942,6 +1018,26 @@
     "source": "retailer_detection_pipeline"
   },
   {
+    "primary_name": "Zink Surf",
+    "website": "https://zinksurf.com.au",
+    "website_key": "https://zinksurf.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 2,
+    "locations": [
+      {
+        "name": "Zink Surf",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": null,
+        "verification_statuses": []
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
     "primary_name": "Full Circle Surf",
     "website": "https://fullcirclesurf.com.au",
     "website_key": "https://fullcirclesurf.com.au",
@@ -1070,6 +1166,26 @@
           "prefilled",
           "seed_unverified"
         ]
+      }
+    ],
+    "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Beaches Apparel",
+    "website": "https://beachesapparel.com",
+    "website_key": "https://beachesapparel.com",
+    "country": "Australia",
+    "platform": "woocommerce",
+    "status": "active",
+    "priority": 3,
+    "locations": [
+      {
+        "name": "Beaches Apparel",
+        "states": [],
+        "region_clusters": [],
+        "retailer_types": [],
+        "hardboards": null,
+        "verification_statuses": []
       }
     ],
     "source": "retailer_detection_pipeline"
