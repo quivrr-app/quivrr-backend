@@ -1,7 +1,6 @@
 from pathlib import Path
 import json
 import os
-import ssl
 import smtplib
 import subprocess
 import sys
@@ -15,7 +14,13 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 JOB_REPORT_FILE = OUTPUT_DIR / "nightly_inventory_job_report.json"
 ACTIVE_TARGETS_FILE = Path("scrapers/retailers/active_scrape_targets.json")
-QUALITY_REPORT_FILE = OUTPUT_DIR / "inventory_quality_report.json"
+
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp-mail.outlook.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+SMTP_USERNAME = os.getenv("SMTP_USERNAME", "quivrr.platform@outlook.com")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+EMAIL_TO = os.getenv("NIGHTLY_REPORT_EMAIL_TO", "dunn.nathan@hotmail.com")
+EMAIL_FROM = os.getenv("NIGHTLY_REPORT_EMAIL_FROM", SMTP_USERNAME)
 
 
 def utc_now():
@@ -64,7 +69,9 @@ def run_step(index, total, name, command, retry_count=0):
                 "return_code": return_code,
                 "started_at": started_at.isoformat(),
                 "completed_at": completed_at.isoformat(),
-                "duration_seconds": int((completed_at - started_at).total_seconds()),
+                "duration_seconds": int(
+                    (completed_at - started_at).total_seconds()
+                ),
                 "output_tail": "".join(output_lines[-160:]),
             }
 
@@ -81,7 +88,9 @@ def run_step(index, total, name, command, retry_count=0):
         "return_code": return_code,
         "started_at": started_at.isoformat(),
         "completed_at": completed_at.isoformat(),
-        "duration_seconds": int((completed_at - started_at).total_seconds()),
+        "duration_seconds": int(
+            (completed_at - started_at).total_seconds()
+        ),
         "output_tail": "".join(output_lines[-160:]),
     }
 
@@ -91,116 +100,132 @@ def active_target_count():
         return 0
 
     try:
-        targets = json.loads(ACTIVE_TARGETS_FILE.read_text(encoding="utf-8"))
+        targets = json.loads(
+            ACTIVE_TARGETS_FILE.read_text(encoding="utf-8")
+        )
         return len(targets)
     except Exception:
         return 0
 
 
-def read_json_file(path):
-    if not path.exists():
+def load_json_file(file_path):
+    if not file_path.exists():
         return None
 
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(file_path.read_text(encoding="utf-8"))
     except Exception:
         return None
 
 
-def extract_quality_summary():
-    quality = read_json_file(QUALITY_REPORT_FILE)
-
-    if not quality:
-        return {}
-
-    return {
-        "total_records": quality.get("total_records"),
-        "available": quality.get("available"),
-        "retailers": quality.get("retailers"),
-        "with_length": quality.get("with_length"),
-        "with_volume": quality.get("with_volume"),
-    }
-
-
 def build_email_body(report):
-    failed_steps = [
+    quality_report = load_json_file(
+        OUTPUT_DIR / "inventory_quality_report.json"
+    )
+
+    grouped_inventory = load_json_file(
+        OUTPUT_DIR / "grouped_inventory_index.json"
+    )
+
+    js_inventory = load_json_file(
+        OUTPUT_DIR / "js_inventory_index.json"
+    )
+
+    successful_steps = [
         step for step in report["steps"]
-        if not step["success"]
+        if step.get("success")
     ]
 
-    quality = extract_quality_summary()
+    failed_steps = [
+        step for step in report["steps"]
+        if not step.get("success")
+    ]
 
     lines = [
-        "Quivrr nightly AU inventory refresh complete.",
+        "Quivrr nightly AU retailer inventory report",
         "",
-        f"Status: {'SUCCESS' if report['success'] else 'FAILED'}",
+        f"Status: {'Succeeded' if report['success'] else 'Failed'}",
         f"Started UTC: {report['started_at']}",
         f"Completed UTC: {report['completed_at']}",
         f"Duration seconds: {report['duration_seconds']}",
         f"Active scrape targets: {report['active_scrape_targets']}",
+        f"Steps completed: {len(successful_steps)}/{len(report['steps'])}",
         "",
     ]
 
-    if quality:
+    if quality_report:
         lines.extend([
-            "Inventory summary:",
-            f"Total normalised records: {quality.get('total_records')}",
-            f"Available records: {quality.get('available')}",
-            f"Retailers with records: {quality.get('retailers')}",
-            f"Records with length: {quality.get('with_length')}",
-            f"Records with volume: {quality.get('with_volume')}",
+            "Inventory quality",
+            f"Total records: {quality_report.get('total_records', 'n/a')}",
+            f"With length: {quality_report.get('with_length', 'n/a')}",
+            f"With volume: {quality_report.get('with_volume', 'n/a')}",
+            f"Available: {quality_report.get('available', 'n/a')}",
+            f"Retailers: {quality_report.get('retailers', 'n/a')}",
             "",
         ])
 
-    lines.append("Step summary:")
+    if isinstance(grouped_inventory, list):
+        lines.append(f"Grouped inventory records: {len(grouped_inventory)}")
+    elif isinstance(grouped_inventory, dict):
+        lines.append(f"Grouped inventory keys: {len(grouped_inventory)}")
 
-    for step in report["steps"]:
-        status = "OK" if step["success"] else "FAILED"
-        lines.append(
-            f"{step['step']}. {status} | {step['name']} | {step['duration_seconds']}s"
-        )
-
-    if failed_steps:
-        lines.append("")
-        lines.append("Failed step output:")
-        lines.append(failed_steps[0].get("output_tail", ""))
+    if isinstance(js_inventory, list):
+        lines.append(f"JS inventory records: {len(js_inventory)}")
+    elif isinstance(js_inventory, dict):
+        lines.append(f"JS inventory keys: {len(js_inventory)}")
 
     lines.append("")
-    lines.append(f"Report file: {JOB_REPORT_FILE}")
+
+    if failed_steps:
+        lines.append("Failed steps")
+        for step in failed_steps:
+            lines.append(f"- {step['name']}")
+            lines.append(step.get("output_tail", "")[-2000:])
+            lines.append("")
+    else:
+        lines.append("All steps completed successfully.")
+
+    lines.append("")
+    lines.append("Step summary")
+
+    for step in report["steps"]:
+        status = "OK" if step.get("success") else "FAILED"
+        lines.append(
+            f"- {status}: {step['name']} "
+            f"({step.get('duration_seconds', 0)} seconds)"
+        )
 
     return "\n".join(lines)
 
 
 def send_email_report(report):
-    smtp_host = os.getenv("SMTP_HOST")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_username = os.getenv("SMTP_USERNAME")
-    smtp_password = os.getenv("SMTP_PASSWORD")
-    email_from = os.getenv("EMAIL_FROM")
-    email_to = os.getenv("EMAIL_TO")
-
-    if not all([smtp_host, smtp_username, smtp_password, email_from, email_to]):
+    if not SMTP_PASSWORD:
         print("")
-        print("Email report skipped. SMTP or email environment variables are not configured.")
+        print("Email report skipped. SMTP_PASSWORD is not configured.")
         return
 
-    subject_status = "SUCCESS" if report["success"] else "FAILED"
+    subject_status = "Succeeded" if report["success"] else "Failed"
 
     message = EmailMessage()
-    message["Subject"] = f"Quivrr nightly AU inventory job: {subject_status}"
-    message["From"] = email_from
-    message["To"] = email_to
+    message["Subject"] = f"Quivrr nightly inventory report: {subject_status}"
+    message["From"] = EMAIL_FROM
+    message["To"] = EMAIL_TO
     message.set_content(build_email_body(report))
 
-    context = ssl.create_default_context()
+    message.add_attachment(
+        JOB_REPORT_FILE.read_bytes(),
+        maintype="application",
+        subtype="json",
+        filename=JOB_REPORT_FILE.name,
+    )
 
-    with smtplib.SMTP(smtp_host, smtp_port, timeout=60) as server:
-        server.starttls(context=context)
-        server.login(smtp_username, smtp_password)
-        server.send_message(message)
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=60) as smtp:
+        smtp.starttls()
+        smtp.login(SMTP_USERNAME, SMTP_PASSWORD)
+        smtp.send_message(message)
 
     print("")
-    print(f"Email report sent to {email_to}")
+    print(f"Email report sent to {EMAIL_TO}")
 
 
 def main():
@@ -213,85 +238,149 @@ def main():
     steps = [
         {
             "name": "Detect retailer platforms",
-            "command": [sys.executable, "-u", "scrapers/retailers/detect_retailer_platforms.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/retailers/detect_retailer_platforms.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Build active retailer targets",
-            "command": [sys.executable, "-u", "scrapers/retailers/build_active_scrape_targets.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/retailers/build_active_scrape_targets.py",
+            ],
         },
         {
             "name": "Build retailer activation report",
-            "command": [sys.executable, "-u", "scrapers/retailers/build_retailer_activation_report.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/retailers/build_retailer_activation_report.py",
+            ],
         },
         {
             "name": "Scrape Shopify retailers",
-            "command": [sys.executable, "-u", "scrapers/products/shopify_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/shopify_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape WooCommerce retailers",
-            "command": [sys.executable, "-u", "scrapers/products/woocommerce_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/woocommerce_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape BigCommerce retailers",
-            "command": [sys.executable, "-u", "scrapers/products/bigcommerce_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/bigcommerce_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape Magento retailers",
-            "command": [sys.executable, "-u", "scrapers/products/magento_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/magento_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape Neto Maropost retailers",
-            "command": [sys.executable, "-u", "scrapers/products/neto_maropost_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/neto_maropost_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape Squarespace retailers",
-            "command": [sys.executable, "-u", "scrapers/products/squarespace_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/squarespace_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape Wix retailers",
-            "command": [sys.executable, "-u", "scrapers/products/wix_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/wix_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Scrape Ecwid retailers",
-            "command": [sys.executable, "-u", "scrapers/products/ecwid_scraper.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/ecwid_scraper.py",
+            ],
             "retry_count": 1,
         },
         {
             "name": "Filter likely surfboards",
-            "command": [sys.executable, "-u", "scrapers/products/filter_surfboards.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/filter_surfboards.py",
+            ],
         },
         {
             "name": "Normalise surfboards",
-            "command": [sys.executable, "-u", "scrapers/products/normalise_surfboards.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/normalise_surfboards.py",
+            ],
         },
         {
             "name": "Build grouped inventory index",
-            "command": [sys.executable, "-u", "scrapers/products/build_grouped_inventory_index.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/build_grouped_inventory_index.py",
+            ],
         },
         {
             "name": "Build JS inventory index",
-            "command": [sys.executable, "-u", "scrapers/products/build_js_inventory_index.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/build_js_inventory_index.py",
+            ],
         },
         {
             "name": "Import available retailer inventory into Azure SQL",
-            "command": [sys.executable, "-u", "scripts/import_retailer_inventory.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scripts/import_retailer_inventory.py",
+            ],
             "retry_count": 2,
         },
         {
             "name": "Build retailer scrape health report",
-            "command": [sys.executable, "-u", "scrapers/products/build_retailer_quality_report.py"],
-        },
-        {
-            "name": "Build inventory quality report",
-            "command": [sys.executable, "-u", "scrapers/products/inventory_quality_report.py"],
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/products/build_retailer_quality_report.py",
+            ],
         },
     ]
 
@@ -315,6 +404,7 @@ def main():
             break
 
     completed_at = utc_now()
+
     success = all(result["success"] for result in results)
 
     report = {
@@ -322,13 +412,19 @@ def main():
         "success": success,
         "started_at": started_at.isoformat(),
         "completed_at": completed_at.isoformat(),
-        "duration_seconds": int((completed_at - started_at).total_seconds()),
+        "duration_seconds": int(
+            (completed_at - started_at).total_seconds()
+        ),
         "active_scrape_targets": active_target_count(),
         "steps": results,
     }
 
     JOB_REPORT_FILE.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False),
+        json.dumps(
+            report,
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
