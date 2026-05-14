@@ -204,6 +204,15 @@ def main():
             "retry_count": 1,
         },
         {
+            "name": "Scrape Coopers Board Store",
+            "command": [
+                sys.executable,
+                "-u",
+                "scrapers/retailers/scrape_coopers_inventory.py",
+            ],
+            "retry_count": 1,
+        },
+        {
             "name": "Filter likely surfboards",
             "command": [
                 sys.executable,
@@ -312,3 +321,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
