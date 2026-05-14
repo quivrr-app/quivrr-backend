@@ -121,7 +121,14 @@ def text_contains_phrase(title, normalised_title, phrase):
 
 def model_name_matches(title, normalised_title, model_name):
 
-    return text_contains_phrase(
+    if text_contains_phrase(
+        title,
+        normalised_title,
+        model_name
+    ):
+        return True
+
+    return model_family_matches(
         title,
         normalised_title,
         model_name
@@ -382,7 +389,7 @@ def search_inventory(boardSizeId: int):
     """)
 
     exact_query = text("""
-        SELECT TOP 75
+        SELECT TOP 150
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -399,32 +406,51 @@ def search_inventory(boardSizeId: int):
             r.RetailerName,
             r.WebsiteUrl,
             r.LogoUrl,
-            ABS(
-                CAST(ri.VolumeLitres AS float)
-                - CAST(:volume AS float)
-            ) AS VolumeDelta
+            CASE
+                WHEN ri.VolumeLitres IS NULL THEN NULL
+                ELSE ABS(
+                    CAST(ri.VolumeLitres AS float)
+                    - CAST(:volume AS float)
+                )
+            END AS VolumeDelta
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
-        AND ri.StockStatus = 'In Stock'
+        AND (
+            ri.StockStatus IS NULL
+            OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
+                'in stock',
+                'instock',
+                'available',
+                'true'
+            )
+        )
         AND (
             ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
+            OR ri.RawProductTitle LIKE :model_family_match
+            OR ri.NormalisedProductTitle LIKE :model_family_match
         )
         AND ri.LengthFeetInches = :length
-        AND ri.VolumeLitres IS NOT NULL
-        AND ABS(
-            CAST(ri.VolumeLitres AS float)
-            - CAST(:volume AS float)
-        ) <= 0.2
+        AND (
+            ri.VolumeLitres IS NULL
+            OR ABS(
+                CAST(ri.VolumeLitres AS float)
+                - CAST(:volume AS float)
+            ) <= 0.35
+        )
         ORDER BY
+            CASE
+                WHEN ri.VolumeLitres IS NULL THEN 1
+                ELSE 0
+            END,
             VolumeDelta ASC,
             ri.PriceAud ASC
     """)
 
     close_query = text("""
-        SELECT TOP 75
+        SELECT TOP 150
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -441,26 +467,43 @@ def search_inventory(boardSizeId: int):
             r.RetailerName,
             r.WebsiteUrl,
             r.LogoUrl,
-            ABS(
-                CAST(ri.VolumeLitres AS float)
-                - CAST(:volume AS float)
-            ) AS VolumeDelta
+            CASE
+                WHEN ri.VolumeLitres IS NULL THEN NULL
+                ELSE ABS(
+                    CAST(ri.VolumeLitres AS float)
+                    - CAST(:volume AS float)
+                )
+            END AS VolumeDelta
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
-        AND ri.StockStatus = 'In Stock'
+        AND (
+            ri.StockStatus IS NULL
+            OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
+                'in stock',
+                'instock',
+                'available',
+                'true'
+            )
+        )
         AND (
             ri.RawProductTitle LIKE :model_family_match
             OR ri.NormalisedProductTitle LIKE :model_family_match
         )
         AND ri.LengthFeetInches = :length
-        AND ri.VolumeLitres IS NOT NULL
-        AND ABS(
-            CAST(ri.VolumeLitres AS float)
-            - CAST(:volume AS float)
-        ) <= 1.5
+        AND (
+            ri.VolumeLitres IS NULL
+            OR ABS(
+                CAST(ri.VolumeLitres AS float)
+                - CAST(:volume AS float)
+            ) <= 1.75
+        )
         ORDER BY
+            CASE
+                WHEN ri.VolumeLitres IS NULL THEN 1
+                ELSE 0
+            END,
             VolumeDelta ASC,
             ri.PriceAud ASC
     """)
@@ -506,6 +549,7 @@ def search_inventory(boardSizeId: int):
             exact_query,
             {
                 "model_match": model_match,
+                "model_family_match": model_family_match,
                 "length": official.LengthFeetInches,
                 "volume": official.VolumeLitres
             }
