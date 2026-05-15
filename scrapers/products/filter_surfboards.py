@@ -13,6 +13,7 @@ INPUT_DIRS = [
     Path("scrapers/products/output/squarespace"),
     Path("scrapers/products/output/wix"),
     Path("scrapers/products/output/ecwid"),
+    Path("scrapers/products/output/coopers"),
 ]
 
 OUTPUT_FILE = Path("scrapers/products/output/likely_surfboards.json")
@@ -282,6 +283,7 @@ def text_blob(item):
     parts = [
         item.get("title"),
         item.get("variant_title"),
+        item.get("variant"),
         item.get("vendor"),
         item.get("product_type"),
         item.get("categories"),
@@ -292,6 +294,8 @@ def text_blob(item):
         item.get("handle"),
         item.get("url"),
         item.get("product_url"),
+        item.get("length"),
+        item.get("volume_litres"),
     ]
 
     return " ".join([clean_text(p) for p in parts if p])
@@ -310,6 +314,7 @@ def title_blob(item):
     parts = [
         item.get("title"),
         item.get("variant_title"),
+        item.get("variant"),
         item.get("handle"),
         item.get("product_url"),
     ]
@@ -437,6 +442,16 @@ def has_realistic_price(item):
     return True, "price_ok"
 
 
+def has_structured_board_dimensions(item):
+    length = item.get("length")
+    volume = item.get("volume_litres")
+
+    has_length = bool(length)
+    has_volume = volume is not None and str(volume).strip() != ""
+
+    return has_length or has_volume
+
+
 def score_item(item):
     text = text_blob(item)
 
@@ -474,6 +489,7 @@ def score_item(item):
     has_compact_length = bool(COMPACT_LENGTH_PATTERN.search(text))
     has_full_dimensions = bool(FULL_DIMENSION_PATTERN.search(text))
     has_litres = bool(LITRE_PATTERN.search(text))
+    has_structured_dimensions = has_structured_board_dimensions(item)
     board_type = has_board_type(text)
     category_board_signal = has_category_board_signal(item)
     brand = has_board_brand(text)
@@ -500,6 +516,10 @@ def score_item(item):
     if has_litres:
         result["confidence"] += 3
         result["reasons"].append("litres")
+
+    if has_structured_dimensions:
+        result["confidence"] += 4
+        result["reasons"].append("structured_dimensions")
 
     if board_type:
         result["confidence"] += 3
@@ -530,26 +550,31 @@ def score_item(item):
         or category_board_signal
         or has_full_dimensions
         or has_litres
+        or has_structured_dimensions
     )
 
-    strong_dimensions = has_full_dimensions and (
+    strong_dimensions = (
+        has_full_dimensions
+        or has_structured_dimensions
+    ) and (
         has_litres
         or board_type
         or category_board_signal
         or brand
+        or url_hint
     )
 
     strong_board_type = (
-        (board_type or category_board_signal)
+        (board_type or category_board_signal or url_hint)
         and (
             has_length
             or has_decimal_length
             or has_compact_length
             or has_litres
+            or has_structured_dimensions
             or brand
             or construction
         )
-        and price is not None
     )
 
     strong_category = (

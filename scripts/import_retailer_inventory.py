@@ -2,7 +2,7 @@ import json
 import os
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, event, text
@@ -134,11 +134,64 @@ def decimal_or_none(value):
         return None
 
 
-def first_image(images):
+def int_or_none(value):
+    if value is None:
+        return None
+
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def first_image(item):
+    images = item.get("images")
+
     if isinstance(images, list) and images:
         return clean(images[0])
 
+    return (
+        clean(item.get("image_url"))
+        or clean(item.get("product_image_url"))
+        or clean(item.get("ProductImageUrl"))
+    )
+
+
+def first_valid_url(*values):
+    for value in values:
+        cleaned = clean(value)
+
+        if cleaned and cleaned.startswith(("http://", "https://")):
+            return cleaned
+
     return None
+
+
+def website_from_product_url(product_url):
+    product_url = clean(product_url)
+
+    if not product_url:
+        return None
+
+    try:
+        parsed = urlparse(product_url)
+
+        if parsed.scheme and parsed.netloc:
+            return f"{parsed.scheme}://{parsed.netloc}"
+    except Exception:
+        return None
+
+    return None
+
+
+def get_website_url(item):
+    return first_valid_url(
+        item.get("website"),
+        item.get("website_url"),
+        item.get("retailer_url"),
+        item.get("store_url"),
+        website_from_product_url(item.get("product_url")),
+    )
 
 
 def is_excluded_retailer(retailer_name):
@@ -195,6 +248,7 @@ def main():
 
     rows_before_dedupe = []
     excluded_manufacturer_rows = 0
+    rows_missing_website = 0
 
     for item in available_inventory:
         retailer_name = clean(item.get("retailer"))
@@ -206,18 +260,25 @@ def main():
             excluded_manufacturer_rows += 1
             continue
 
+        website_url = get_website_url(item)
+
+        if not website_url:
+            rows_missing_website += 1
+            website_url = "https://unknown.quivrr.app"
+
         raw_brand = clean(item.get("brand")) or clean(item.get("vendor"))
 
         rows_before_dedupe.append({
             "retailer_name": retailer_name,
-            "website_url": clean(item.get("website")),
+            "website_url": website_url,
             "raw_brand": raw_brand,
             "raw_title": clean(item.get("title")),
             "normalised_title": clean(item.get("model_key")),
             "product_url": clean(item.get("product_url")),
-            "image_url": first_image(item.get("images")),
+            "image_url": first_image(item),
             "price": money(item.get("price")),
             "stock_status": "In Stock",
+            "stock_quantity": int_or_none(item.get("stock_quantity")),
             "construction": clean(item.get("construction")),
             "fin_setup": clean(item.get("fin_system")),
             "length": clean(item.get("length")),
@@ -244,9 +305,20 @@ def main():
         if not existing.get("confidence") and row.get("confidence"):
             existing["confidence"] = row.get("confidence")
 
+        if existing.get("stock_quantity") is None and row.get("stock_quantity") is not None:
+            existing["stock_quantity"] = row.get("stock_quantity")
+
+        if (
+            existing.get("website_url") == "https://unknown.quivrr.app"
+            and row.get("website_url")
+            and row.get("website_url") != "https://unknown.quivrr.app"
+        ):
+            existing["website_url"] = row.get("website_url")
+
     rows_to_import = list(deduped_rows_by_key.values())
 
     print(f"Manufacturer/direct brand rows excluded: {excluded_manufacturer_rows}")
+    print(f"Rows with missing website fallback: {rows_missing_website}")
     print(f"Rows before dedupe: {len(rows_before_dedupe)}")
     print(f"Rows after dedupe: {len(rows_to_import)}")
     print(f"Duplicate rows removed: {len(rows_before_dedupe) - len(rows_to_import)}")
@@ -265,7 +337,7 @@ def main():
         if key not in retailer_keys:
             retailer_keys[key] = {
                 "retailer_name": retailer_name,
-                "website_url": website,
+                "website_url": website or "https://unknown.quivrr.app",
             }
 
     with engine.begin() as connection:
@@ -381,6 +453,7 @@ def main():
                 "image_url": clean(row.get("image_url")),
                 "price": row.get("price"),
                 "stock_status": clean(row.get("stock_status")) or "In Stock",
+                "stock_quantity": row.get("stock_quantity"),
                 "construction": clean(row.get("construction")),
                 "fin_setup": clean(row.get("fin_setup")),
                 "length": clean(row.get("length")),
@@ -431,7 +504,7 @@ def main():
                         :image_url,
                         :price,
                         :stock_status,
-                        NULL,
+                        :stock_quantity,
                         :construction,
                         :fin_setup,
                         :length,

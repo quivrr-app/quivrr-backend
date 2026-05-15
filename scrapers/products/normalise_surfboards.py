@@ -23,7 +23,10 @@ DIMENSION_PATTERN = re.compile(
     r"(?P<thickness>\d(?:\s?\d\/\d)?(?:\.\d+)?)?"
 )
 
-LITRE_PATTERN = re.compile(r"(\d{2}(?:\.\d)?)\s?l", re.IGNORECASE)
+LITRE_PATTERN = re.compile(
+    r"(\d{2}(?:\.\d+)?)\s?l",
+    re.IGNORECASE,
+)
 
 
 def clean_text(value):
@@ -91,10 +94,18 @@ def create_model_key(vendor, title, parsed_brand=None):
         base = base.replace(term, "")
 
     base = re.sub(r"\d{1,2}['’]\d{1,2}", "", base)
-    base = re.sub(r"\d{2}(?:\.\d)?\s?l", "", base, flags=re.IGNORECASE)
+    base = re.sub(r"\d{2}(?:\.\d+)?\s?l", "", base, flags=re.IGNORECASE)
     base = re.sub(r"\s+", " ", base)
 
     return base.strip()
+
+
+def first_non_empty(*values):
+    for value in values:
+        if value is not None and str(value).strip() != "":
+            return value
+
+    return None
 
 
 def main():
@@ -104,7 +115,12 @@ def main():
 
     for item in products:
         title = clean_text(item.get("title"))
-        variant = clean_text(item.get("variant_title"))
+        variant = clean_text(
+            first_non_empty(
+                item.get("variant_title"),
+                item.get("variant"),
+            )
+        )
         vendor = clean_text(item.get("vendor"))
 
         combined = f"{vendor} {title} {variant}".strip()
@@ -114,28 +130,70 @@ def main():
         dimensions = extract_dimensions(combined)
         volume = extract_volume(combined)
 
-        length = parsed.get("length") or (dimensions["length"] if dimensions else None)
-        volume_litres = parsed.get("volume_litres") or volume
+        source_length = first_non_empty(item.get("length"))
+        source_width = first_non_empty(item.get("width"))
+        source_thickness = first_non_empty(item.get("thickness"))
+        source_volume = first_non_empty(item.get("volume_litres"), item.get("volume"))
+
+        length = first_non_empty(
+            source_length,
+            parsed.get("length"),
+            dimensions["length"] if dimensions else None,
+        )
+
+        width = first_non_empty(
+            source_width,
+            dimensions["width"] if dimensions else None,
+        )
+
+        thickness = first_non_empty(
+            source_thickness,
+            dimensions["thickness"] if dimensions else None,
+        )
+
+        volume_litres = first_non_empty(
+            source_volume,
+            parsed.get("volume_litres"),
+            volume,
+        )
 
         normalised = {
             "retailer": item.get("retailer"),
-            "website": item.get("website"),
+            "website": first_non_empty(
+                item.get("website"),
+                item.get("retailer_url"),
+            ),
             "vendor": vendor,
             "title": title,
             "variant_title": variant,
-            "brand": parsed.get("brand"),
+            "variant": variant,
+            "variant_source": item.get("variant_source"),
+            "brand": first_non_empty(
+                parsed.get("brand"),
+                item.get("brand"),
+            ),
             "model_key": create_model_key(vendor, title, parsed.get("brand")),
             "length": length,
-            "width": dimensions["width"] if dimensions else None,
-            "thickness": dimensions["thickness"] if dimensions else None,
+            "width": width,
+            "thickness": thickness,
             "volume_litres": volume_litres,
-            "construction": parsed.get("construction"),
-            "fin_system": parsed.get("fin_system"),
+            "construction": first_non_empty(
+                parsed.get("construction"),
+                item.get("construction"),
+            ),
+            "fin_system": first_non_empty(
+                parsed.get("fin_system"),
+                item.get("fin_system"),
+            ),
             "price": item.get("price"),
             "available": item.get("available"),
+            "stock_quantity": item.get("stock_quantity"),
             "sku": item.get("sku"),
             "product_url": item.get("product_url"),
             "images": item.get("images", []),
+            "surfboard_confidence": item.get("surfboard_confidence"),
+            "surfboard_match_reasons": item.get("surfboard_match_reasons"),
+            "retailer_domain": item.get("retailer_domain"),
         }
 
         output.append(normalised)
