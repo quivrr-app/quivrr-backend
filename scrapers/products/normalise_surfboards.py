@@ -33,6 +33,157 @@ def clean_text(value):
     return (value or "").strip()
 
 
+def first_non_empty(*values):
+    for value in values:
+        if value is not None and str(value).strip() != "":
+            return value
+
+    return None
+
+
+def clean_dimension_value(value):
+    if value is None:
+        return None
+
+    value = str(value).strip()
+
+    if not value:
+        return None
+
+    value = (
+        value.replace("’", "'")
+        .replace("‘", "'")
+        .replace("″", '"')
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("′", "'")
+    )
+
+    value = value.replace('"', "").strip()
+    value = re.sub(r"\s+", " ", value)
+
+    return value if value else None
+
+
+def looks_like_html(value):
+    if value is None:
+        return False
+
+    text = str(value).lower()
+
+    return "<" in text or ">" in text or "class=" in text or "</" in text
+
+
+def looks_like_sku(value):
+    if value is None:
+        return False
+
+    text = str(value).strip()
+
+    return bool(re.fullmatch(r"[0-9]{8,}", text))
+
+
+def is_valid_length(value):
+    value = clean_dimension_value(value)
+
+    if not value:
+        return False
+
+    match = re.fullmatch(r"[4-9]'[0-9]{1,2}", value)
+
+    if not match:
+        return False
+
+    try:
+        inches = int(value.split("'")[1])
+    except Exception:
+        return False
+
+    return 0 <= inches <= 12
+
+
+def is_valid_width(value):
+    value = clean_dimension_value(value)
+
+    if not value:
+        return False
+
+    if looks_like_html(value) or looks_like_sku(value):
+        return False
+
+    if len(value) > 20:
+        return False
+
+    if "stock" in value.lower():
+        return False
+
+    if re.fullmatch(r"\d{1,2}(?:\.\d+)?(?:\s\d\/\d)?", value):
+        try:
+            whole = float(value.split()[0])
+        except Exception:
+            return False
+
+        return 10 <= whole <= 30
+
+    return False
+
+
+def is_valid_thickness(value):
+    value = clean_dimension_value(value)
+
+    if not value:
+        return False
+
+    if looks_like_html(value) or looks_like_sku(value):
+        return False
+
+    if len(value) > 20:
+        return False
+
+    if "stock" in value.lower():
+        return False
+
+    if re.fullmatch(r"\d(?:\.\d+)?(?:\s\d\/\d)?", value):
+        try:
+            whole = float(value.split()[0])
+        except Exception:
+            return False
+
+        return 1 <= whole <= 5
+
+    return False
+
+
+def safe_length(*values):
+    for value in values:
+        cleaned = clean_dimension_value(value)
+
+        if is_valid_length(cleaned):
+            return cleaned
+
+    return None
+
+
+def safe_width(*values):
+    for value in values:
+        cleaned = clean_dimension_value(value)
+
+        if is_valid_width(cleaned):
+            return cleaned
+
+    return None
+
+
+def safe_thickness(*values):
+    for value in values:
+        cleaned = clean_dimension_value(value)
+
+        if is_valid_thickness(cleaned):
+            return cleaned
+
+    return None
+
+
 def extract_dimensions(text):
     if not text:
         return None
@@ -43,9 +194,9 @@ def extract_dimensions(text):
         return None
 
     return {
-        "length": match.group("length"),
-        "width": match.group("width"),
-        "thickness": match.group("thickness"),
+        "length": clean_dimension_value(match.group("length")),
+        "width": clean_dimension_value(match.group("width")),
+        "thickness": clean_dimension_value(match.group("thickness")),
     }
 
 
@@ -100,14 +251,6 @@ def create_model_key(vendor, title, parsed_brand=None):
     return base.strip()
 
 
-def first_non_empty(*values):
-    for value in values:
-        if value is not None and str(value).strip() != "":
-            return value
-
-    return None
-
-
 def main():
     products = json.loads(INPUT_FILE.read_text(encoding="utf-8"))
 
@@ -135,18 +278,18 @@ def main():
         source_thickness = first_non_empty(item.get("thickness"))
         source_volume = first_non_empty(item.get("volume_litres"), item.get("volume"))
 
-        length = first_non_empty(
+        length = safe_length(
             source_length,
             parsed.get("length"),
             dimensions["length"] if dimensions else None,
         )
 
-        width = first_non_empty(
+        width = safe_width(
             source_width,
             dimensions["width"] if dimensions else None,
         )
 
-        thickness = first_non_empty(
+        thickness = safe_thickness(
             source_thickness,
             dimensions["thickness"] if dimensions else None,
         )

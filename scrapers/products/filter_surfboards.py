@@ -295,6 +295,8 @@ def text_blob(item):
         item.get("url"),
         item.get("product_url"),
         item.get("length"),
+        item.get("width"),
+        item.get("thickness"),
         item.get("volume_litres"),
     ]
 
@@ -444,12 +446,23 @@ def has_realistic_price(item):
 
 def has_structured_board_dimensions(item):
     length = item.get("length")
+    width = item.get("width")
+    thickness = item.get("thickness")
     volume = item.get("volume_litres")
 
-    has_length = bool(length)
+    has_length = length is not None and str(length).strip() != ""
+    has_width = width is not None and str(width).strip() != ""
+    has_thickness = thickness is not None and str(thickness).strip() != ""
     has_volume = volume is not None and str(volume).strip() != ""
 
-    return has_length or has_volume
+    structured_dimension_count = sum([
+        has_length,
+        has_width,
+        has_thickness,
+        has_volume,
+    ])
+
+    return structured_dimension_count >= 2
 
 
 def score_item(item):
@@ -583,6 +596,16 @@ def score_item(item):
         and price >= 400
     )
 
+    structured_variant_board = (
+        has_structured_dimensions
+        and (
+            fin_system
+            or construction
+            or url_hint
+            or brand
+        )
+    )
+
     result["is_surfboard"] = (
         result["confidence"] >= 6
         and (
@@ -590,6 +613,7 @@ def score_item(item):
             or strong_dimensions
             or strong_board_type
             or strong_category
+            or structured_variant_board
         )
     )
 

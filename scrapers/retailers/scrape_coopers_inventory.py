@@ -4,6 +4,7 @@ import json
 import re
 import time
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -31,6 +32,49 @@ EXCLUDED_SLUG_PARTS = [
     "/test-2/",
 ]
 
+IMAGE_REJECT_TERMS = [
+    "leash",
+    "legrope",
+    "leg-rope",
+    "traction",
+    "tail-pad",
+    "tailpad",
+    "grip",
+    "wax",
+    "fin",
+    "fins",
+    "cover",
+    "bag",
+    "sock",
+    "strap",
+    "tie-down",
+    "wetsuit",
+    "steamer",
+    "rash",
+    "oe-6ft-flex",
+    "diamond-flex",
+    "regular-diamond",
+    "premium-one-xt",
+]
+
+IMAGE_PREFERRED_TERMS = [
+    "monsta",
+    "xero",
+    "gravity",
+    "fusion",
+    "black-baron",
+    "baron",
+    "raging-bull",
+    "bull",
+    "blak-box",
+    "air-17",
+    "golden-child",
+    "sub-xero",
+    "surfboard",
+    "board",
+    "main",
+]
+
 TEST_PRODUCT_URLS = [
     "https://coopersboardstore.com.au/product/7s-double-down-pu-2/",
     "https://coopersboardstore.com.au/product/7s-superfish-4-pu/",
@@ -39,6 +83,7 @@ TEST_PRODUCT_URLS = [
     "https://coopersboardstore.com.au/product/aloha-habanero-ii-pu/",
     "https://coopersboardstore.com.au/product/js-xero-gravity-carbotune/",
     "https://coopersboardstore.com.au/product/js-xero-gravity-hyfi-3-0/",
+    "https://coopersboardstore.com.au/product/monsta-pu-fcsii/",
 ]
 
 
@@ -76,6 +121,137 @@ def normalise_price(value):
         return float(str(value).replace("$", "").replace(",", "").strip())
     except ValueError:
         return None
+
+
+def absolute_url(value):
+    if not value:
+        return None
+
+    value = str(value).strip()
+
+    if not value:
+        return None
+
+    if value.startswith("//"):
+        return f"https:{value}"
+
+    return urljoin(BASE_URL, value)
+
+
+def valid_image_url(value):
+    url = absolute_url(value)
+
+    if not url:
+        return None
+
+    lowered = url.lower()
+
+    if not lowered.startswith(("http://", "https://")):
+        return None
+
+    if any(skip in lowered for skip in [
+        "placeholder",
+        "logo",
+        "icon",
+        "sprite",
+        "avatar",
+        "payment",
+        "afterpay",
+        "zip-pay",
+        "loading",
+        "blank",
+    ]):
+        return None
+
+    if not any(ext in lowered for ext in [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+    ]):
+        return None
+
+    return url
+
+
+def first_valid_image_url(values):
+    for value in values:
+        url = valid_image_url(value)
+
+        if url:
+            return url
+
+    return None
+
+
+def slug_tokens_from_title(title):
+    text = clean_text(title).lower()
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+    tokens = [
+        token
+        for token in text.split("-")
+        if token
+        and len(token) >= 3
+        and token not in ["the", "and", "with", "fcs", "fcsii", "fcs2", "pu", "eps"]
+    ]
+
+    return tokens
+
+
+def image_score(image_url, title):
+    if not image_url:
+        return -1000
+
+    lowered = image_url.lower()
+    score = 0
+
+    if "/wp-content/uploads/" in lowered:
+        score += 20
+
+    if any(term in lowered for term in IMAGE_REJECT_TERMS):
+        score -= 80
+
+    if any(term in lowered for term in IMAGE_PREFERRED_TERMS):
+        score += 20
+
+    title_tokens = slug_tokens_from_title(title)
+
+    for token in title_tokens:
+        if token in lowered:
+            score += 15
+
+    if "main" in lowered:
+        score += 8
+
+    if "front" in lowered:
+        score += 6
+
+    if "back" in lowered:
+        score += 4
+
+    if "346x461" in lowered or "300x300" in lowered:
+        score -= 5
+
+    if "1536" in lowered or "2048" in lowered:
+        score += 5
+
+    return score
+
+
+def rank_images(image_urls, title):
+    unique_images = []
+
+    for image_url in image_urls:
+        valid_url = valid_image_url(image_url)
+
+        if valid_url and valid_url not in unique_images:
+            unique_images.append(valid_url)
+
+    return sorted(
+        unique_images,
+        key=lambda value: image_score(value, title),
+        reverse=True,
+    )
 
 
 def get_product_sitemap_urls():
@@ -159,6 +335,136 @@ def extract_price_from_json_ld(soup):
 
                         if price:
                             return price
+
+    return None
+
+
+def extract_images_from_json_ld(soup):
+    image_urls = []
+
+    for script in soup.find_all("script", type="application/ld+json"):
+        raw = clean_text(script.string or script.get_text())
+
+        if not raw:
+            continue
+
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+
+        items = data if isinstance(data, list) else [data]
+
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+
+            image = item.get("image")
+
+            if isinstance(image, str):
+                image_urls.append(image)
+
+            if isinstance(image, list):
+                image_urls.extend(image)
+
+            if isinstance(image, dict):
+                image_urls.extend([
+                    image.get("url"),
+                    image.get("@id"),
+                    image.get("contentUrl"),
+                ])
+
+    return [
+        image_url
+        for image_url in image_urls
+        if valid_image_url(image_url)
+    ]
+
+
+def extract_product_images(soup, title):
+    image_candidates = []
+
+    priority_selectors = [
+        ".woocommerce-product-gallery__image img",
+        ".product .images img",
+        ".wp-post-image",
+        "img.wp-post-image",
+    ]
+
+    fallback_selectors = [
+        ".summary img",
+        "img",
+    ]
+
+    for selector in priority_selectors:
+        for image in soup.select(selector):
+            image_candidates.extend([
+                image.get("data-large_image"),
+                image.get("data-o_src"),
+                image.get("src"),
+                image.get("data-src"),
+                image.get("data-lazy-src"),
+            ])
+
+            srcset = image.get("srcset") or image.get("data-srcset")
+
+            if srcset:
+                for part in srcset.split(","):
+                    image_candidates.append(part.strip().split(" ")[0])
+
+    for meta_property in [
+        "og:image",
+        "og:image:secure_url",
+        "twitter:image",
+    ]:
+        meta = soup.find("meta", property=meta_property)
+
+        if meta:
+            image_candidates.append(meta.get("content"))
+
+        meta = soup.find("meta", attrs={"name": meta_property})
+
+        if meta:
+            image_candidates.append(meta.get("content"))
+
+    image_candidates.extend(extract_images_from_json_ld(soup))
+
+    for selector in fallback_selectors:
+        for image in soup.select(selector):
+            image_candidates.extend([
+                image.get("data-large_image"),
+                image.get("data-o_src"),
+                image.get("src"),
+                image.get("data-src"),
+                image.get("data-lazy-src"),
+            ])
+
+            srcset = image.get("srcset") or image.get("data-srcset")
+
+            if srcset:
+                for part in srcset.split(","):
+                    image_candidates.append(part.strip().split(" ")[0])
+
+    return rank_images(image_candidates, title)
+
+
+def extract_variation_image(variation):
+    if not isinstance(variation, dict):
+        return None
+
+    image = variation.get("image")
+
+    if isinstance(image, dict):
+        return first_valid_image_url([
+            image.get("full_src"),
+            image.get("src"),
+            image.get("url"),
+            image.get("thumb_src"),
+            image.get("gallery_thumbnail_src"),
+        ])
+
+    if isinstance(image, str):
+        return valid_image_url(image)
 
     return None
 
@@ -286,6 +592,142 @@ def compact_length_from_slug(value):
     return f"{feet}'{inches_int}"
 
 
+def format_fraction_dimension(tokens):
+    clean_tokens = [
+        str(token).strip()
+        for token in tokens
+        if str(token).strip()
+    ]
+
+    if not clean_tokens:
+        return None
+
+    if len(clean_tokens) == 1:
+        return clean_tokens[0]
+
+    if len(clean_tokens) == 2:
+        return f"{clean_tokens[0]} {clean_tokens[1]}"
+
+    return f"{clean_tokens[0]} {clean_tokens[1]}/{clean_tokens[2]}"
+
+
+def parse_compact_dimension_slug(value):
+    if not value:
+        return {}
+
+    lower_value = normalise_quotes(value).lower()
+
+    candidates = re.findall(
+        r"\b[4-9][0-9]{2}(?:-[0-9]+)+-[1-8][0-9]-[0-9]+l\b",
+        lower_value,
+    )
+
+    if not candidates:
+        return {}
+
+    candidate = candidates[-1]
+    parts = candidate.rstrip("l").split("-")
+
+    if len(parts) < 5:
+        return {}
+
+    length_token = parts[0]
+    volume_whole = parts[-2]
+    volume_decimal = parts[-1]
+    dimension_tokens = parts[1:-2]
+
+    length = compact_length_from_slug(length_token)
+
+    try:
+        volume_litres = float(f"{volume_whole}.{volume_decimal}")
+    except ValueError:
+        volume_litres = None
+
+    thickness_start_index = None
+
+    for index, token in enumerate(dimension_tokens):
+        if token in ["2", "3"]:
+            thickness_start_index = index
+            break
+
+    if thickness_start_index is None:
+        width_tokens = dimension_tokens[:1]
+        thickness_tokens = dimension_tokens[1:]
+    else:
+        width_tokens = dimension_tokens[:thickness_start_index]
+        thickness_tokens = dimension_tokens[thickness_start_index:]
+
+    width = format_fraction_dimension(width_tokens)
+    thickness = format_fraction_dimension(thickness_tokens)
+
+    return {
+        "length": length,
+        "width": width,
+        "thickness": thickness,
+        "volume_litres": volume_litres,
+    }
+
+
+def parse_pipe_dimension_text(value):
+    if not value:
+        return {}
+
+    normalised = normalise_quotes(value)
+
+    parts = [
+        clean_text(part)
+        for part in normalised.split("|")
+        if clean_text(part)
+    ]
+
+    if len(parts) < 2:
+        return {}
+
+    length = None
+    width = None
+    thickness = None
+    volume_litres = None
+
+    for part in parts:
+        if length is None:
+            length = extract_length(part)
+
+        if volume_litres is None:
+            volume_litres = extract_volume_litres(part)
+
+    if looks_like_dimension_variant(parts[0]):
+        length = extract_length(parts[0]) or length
+
+    dimension_parts = [
+        part
+        for part in parts
+        if looks_like_dimension_variant(part)
+        or re.search(r"[0-9]", part)
+    ]
+
+    if len(dimension_parts) >= 2:
+        width = dimension_parts[1]
+
+    if len(dimension_parts) >= 3:
+        thickness = dimension_parts[2]
+
+    return {
+        "length": length,
+        "width": width,
+        "thickness": thickness,
+        "volume_litres": volume_litres,
+    }
+
+
+def parse_dimension_values(value):
+    compact = parse_compact_dimension_slug(value)
+
+    if compact:
+        return compact
+
+    return parse_pipe_dimension_text(value)
+
+
 def extract_length(value):
     if not value:
         return None
@@ -296,6 +738,11 @@ def extract_length(value):
 
     if match:
         return match.group(1)
+
+    parsed = parse_compact_dimension_slug(normalised)
+
+    if parsed.get("length"):
+        return parsed["length"]
 
     return compact_length_from_slug(normalised)
 
@@ -317,6 +764,11 @@ def extract_volume_litres(value):
         except ValueError:
             return None
 
+    parsed = parse_compact_dimension_slug(lower_value)
+
+    if parsed.get("volume_litres") is not None:
+        return parsed["volume_litres"]
+
     compact_matches = re.findall(
         r"\b([1-8][0-9])-([0-9]{1,2})l\b",
         lower_value,
@@ -337,6 +789,11 @@ def extract_width(value):
     if not value:
         return None
 
+    parsed = parse_dimension_values(value)
+
+    if parsed.get("width"):
+        return parsed["width"]
+
     normalised = normalise_quotes(value)
 
     parts = [
@@ -353,6 +810,11 @@ def extract_width(value):
 def extract_thickness(value):
     if not value:
         return None
+
+    parsed = parse_dimension_values(value)
+
+    if parsed.get("thickness"):
+        return parsed["thickness"]
 
     normalised = normalise_quotes(value)
 
@@ -409,6 +871,8 @@ def variation_attribute_text(variation):
         "attribute_size",
         "attribute_sizes",
         "attribute_pa_sizes",
+        "attribute_pa_brand",
+        "attribute_brand",
     ]
 
     for key in preferred_keys:
@@ -440,8 +904,15 @@ def looks_like_dimension_variant(value):
         lower_value,
     )
     has_compact_volume = re.search(r"\b[1-8][0-9]-[0-9]{1,2}l\b", lower_value)
+    has_compact_dimensions = bool(parse_compact_dimension_slug(lower_value))
 
-    return bool(has_length or has_compact_length or has_volume or has_compact_volume)
+    return bool(
+        has_length
+        or has_compact_length
+        or has_volume
+        or has_compact_volume
+        or has_compact_dimensions
+    )
 
 
 def extract_raw_variant_values(soup):
@@ -527,6 +998,9 @@ def row_quality(row):
     if row.get("thickness"):
         score += 2
 
+    if row.get("image_url"):
+        score += 2
+
     if row.get("price"):
         score += 1
 
@@ -562,6 +1036,8 @@ def build_base_item(url, response, soup, html_text):
     title = extract_title(soup)
     price = extract_price_from_page(soup, html_text)
     availability_text = extract_availability_text(soup)
+    images = extract_product_images(soup, title)
+    image_url = images[0] if images else None
 
     return {
         "retailer": RETAILER_NAME,
@@ -574,6 +1050,9 @@ def build_base_item(url, response, soup, html_text):
         "title": title,
         "price": price,
         "availability_text": availability_text,
+        "image_url": image_url,
+        "product_image_url": image_url,
+        "images": images,
     }
 
 
@@ -586,6 +1065,7 @@ def rows_from_woocommerce_variations(base_item, variations):
 
         attribute_text = variation_attribute_text(variation)
         availability_html = variation.get("availability_html") or ""
+
         variation_text = " | ".join(
             [
                 value
@@ -601,11 +1081,22 @@ def rows_from_woocommerce_variations(base_item, variations):
         if not looks_like_dimension_variant(variation_text):
             continue
 
+        parsed_dimensions = parse_dimension_values(variation_text)
+        variation_image_url = extract_variation_image(variation)
+
         price = normalise_price(
             variation.get("display_price")
             or variation.get("display_regular_price")
             or base_item.get("price")
         )
+
+        image_candidates = []
+        if variation_image_url:
+            image_candidates.append(variation_image_url)
+
+        image_candidates.extend(base_item.get("images") or [])
+        ranked_images = rank_images(image_candidates, base_item.get("title"))
+        image_url = ranked_images[0] if ranked_images else None
 
         row = dict(base_item)
         row["variant"] = variation_text
@@ -614,10 +1105,17 @@ def rows_from_woocommerce_variations(base_item, variations):
         row["sku"] = variation.get("sku")
         row["available"] = True
         row["price"] = price
-        row["length"] = extract_length(variation_text)
-        row["width"] = extract_width(attribute_text)
-        row["thickness"] = extract_thickness(attribute_text)
-        row["volume_litres"] = extract_volume_litres(variation_text)
+        row["image_url"] = image_url
+        row["product_image_url"] = image_url
+        row["images"] = ranked_images
+        row["length"] = parsed_dimensions.get("length") or extract_length(variation_text)
+        row["width"] = parsed_dimensions.get("width") or extract_width(variation_text)
+        row["thickness"] = parsed_dimensions.get("thickness") or extract_thickness(variation_text)
+        row["volume_litres"] = (
+            parsed_dimensions.get("volume_litres")
+            if parsed_dimensions.get("volume_litres") is not None
+            else extract_volume_litres(variation_text)
+        )
         row["stock_quantity"] = extract_stock_quantity(availability_html)
         rows.append(row)
 
@@ -628,13 +1126,19 @@ def rows_from_dropdown_options(base_item, soup):
     rows = []
 
     for option in extract_variant_options(soup):
+        parsed_dimensions = parse_dimension_values(option)
+
         row = dict(base_item)
         row["variant"] = option
         row["variant_source"] = "dropdown_option"
-        row["length"] = extract_length(option)
-        row["width"] = extract_width(option)
-        row["thickness"] = extract_thickness(option)
-        row["volume_litres"] = extract_volume_litres(option)
+        row["length"] = parsed_dimensions.get("length") or extract_length(option)
+        row["width"] = parsed_dimensions.get("width") or extract_width(option)
+        row["thickness"] = parsed_dimensions.get("thickness") or extract_thickness(option)
+        row["volume_litres"] = (
+            parsed_dimensions.get("volume_litres")
+            if parsed_dimensions.get("volume_litres") is not None
+            else extract_volume_litres(option)
+        )
         row["stock_quantity"] = None
         rows.append(row)
 
@@ -710,6 +1214,7 @@ def print_summary(results, output_file):
     length_rows = sum(1 for item in results if item.get("length"))
     volume_rows = sum(1 for item in results if item.get("volume_litres"))
     stock_rows = sum(1 for item in results if item.get("stock_quantity") is not None)
+    image_rows = sum(1 for item in results if item.get("image_url"))
 
     print("", flush=True)
     print(f"Inventory rows collected: {len(results)}", flush=True)
@@ -717,6 +1222,7 @@ def print_summary(results, output_file):
     print(f"Rows with length: {length_rows}", flush=True)
     print(f"Rows with volume: {volume_rows}", flush=True)
     print(f"Rows with stock quantity: {stock_rows}", flush=True)
+    print(f"Rows with image: {image_rows}", flush=True)
     print(f"Output file: {output_file}", flush=True)
 
 
@@ -786,6 +1292,7 @@ def main():
                         "volume_litres": item.get("volume_litres"),
                         "stock_quantity": item.get("stock_quantity"),
                         "price": item.get("price"),
+                        "image_url": item.get("image_url"),
                         "product_url": item.get("product_url"),
                     },
                     ensure_ascii=False,
