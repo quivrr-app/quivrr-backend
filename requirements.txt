@@ -8,3 +8,4 @@ pandas
 gunicorn
 sqlalchemy
 pymssql
+lxml
