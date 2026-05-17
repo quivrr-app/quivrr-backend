@@ -1,0 +1,384 @@
+[
+  {
+    "name": "Slimes Boardstore",
+    "input_url": "https://www.slimes.com.au/surfboards",
+    "base_url": "https://www.slimes.com.au",
+    "checked_at_utc": "2026-05-17T09:05:07.225875+00:00",
+    "page_status_code": 200,
+    "page_final_url": "https://www.slimes.com.au/surfboards",
+    "page_content_type": "text/html;charset=utf-8",
+    "platform_signals": [
+      "unknown"
+    ],
+    "product_link_discovery": {
+      "count": 0,
+      "sample": []
+    },
+    "endpoint_results": {
+      "home": {
+        "url": "https://www.slimes.com.au",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimes.com.au/",
+        "content_type": "text/html;charset=utf-8",
+        "server": "nginx"
+      },
+      "robots": {
+        "url": "https://www.slimes.com.au/robots.txt",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimes.com.au/robots.txt",
+        "content_type": "text/plain",
+        "server": "nginx"
+      },
+      "sitemap": {
+        "url": "https://www.slimes.com.au/sitemap.xml",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimes.com.au/sitemap.xml",
+        "content_type": "text/xml",
+        "server": "nginx"
+      },
+      "shopify_products": {
+        "url": "https://www.slimes.com.au/products.json?limit=250",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://www.slimes.com.au/products.json?limit=250",
+        "content_type": "text/html;charset=utf-8",
+        "server": "nginx"
+      },
+      "shopify_surfboards_collection": {
+        "url": "https://www.slimes.com.au/collections/surfboards/products.json?limit=250",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://www.slimes.com.au/collections/surfboards/products.json?limit=250",
+        "content_type": "text/html;charset=utf-8",
+        "server": "nginx"
+      },
+      "woocommerce_store_products": {
+        "url": "https://www.slimes.com.au/wp-json/wc/store/products?per_page=100",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://www.slimes.com.au/wp-json/wc/store/products?per_page=100",
+        "content_type": "text/html;charset=utf-8",
+        "server": "nginx"
+      },
+      "woocommerce_v3_probe": {
+        "url": "https://www.slimes.com.au/wp-json/wc/v3/products",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://www.slimes.com.au/wp-json/wc/v3/products",
+        "content_type": "text/html;charset=utf-8",
+        "server": "nginx"
+      }
+    }
+  },
+  {
+    "name": "Slimes Newcastle",
+    "input_url": "https://www.slimesnewcastle.com.au/",
+    "base_url": "https://www.slimesnewcastle.com.au",
+    "checked_at_utc": "2026-05-17T09:05:15.792665+00:00",
+    "page_status_code": 200,
+    "page_final_url": "https://www.slimesnewcastle.com.au/",
+    "page_content_type": "text/html; charset=utf-8",
+    "platform_signals": [
+      "cloudflare",
+      "shopify"
+    ],
+    "product_link_discovery": {
+      "count": 0,
+      "sample": []
+    },
+    "endpoint_results": {
+      "home": {
+        "url": "https://www.slimesnewcastle.com.au",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimesnewcastle.com.au/",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "robots": {
+        "url": "https://www.slimesnewcastle.com.au/robots.txt",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimesnewcastle.com.au/robots.txt",
+        "content_type": "text/plain; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "sitemap": {
+        "url": "https://www.slimesnewcastle.com.au/sitemap.xml",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimesnewcastle.com.au/sitemap.xml",
+        "content_type": "application/xml; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "shopify_products": {
+        "url": "https://www.slimesnewcastle.com.au/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimesnewcastle.com.au/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "shopify_surfboards_collection": {
+        "url": "https://www.slimesnewcastle.com.au/collections/surfboards/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://www.slimesnewcastle.com.au/collections/surfboards/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "woocommerce_store_products": {
+        "url": "https://www.slimesnewcastle.com.au/wp-json/wc/store/products?per_page=100",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://www.slimesnewcastle.com.au/wp-json/wc/store/products?per_page=100",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "woocommerce_v3_probe": {
+        "url": "https://www.slimesnewcastle.com.au/wp-json/wc/v3/products",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://www.slimesnewcastle.com.au/wp-json/wc/v3/products",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      }
+    }
+  },
+  {
+    "name": "Surfection",
+    "input_url": "https://surfection.com/",
+    "base_url": "https://surfection.com",
+    "checked_at_utc": "2026-05-17T09:05:22.354788+00:00",
+    "page_status_code": 200,
+    "page_final_url": "https://surfection.com/",
+    "page_content_type": "text/html; charset=utf-8",
+    "platform_signals": [
+      "cloudflare",
+      "shopify"
+    ],
+    "product_link_discovery": {
+      "count": 0,
+      "sample": []
+    },
+    "endpoint_results": {
+      "home": {
+        "url": "https://surfection.com",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfection.com/",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "robots": {
+        "url": "https://surfection.com/robots.txt",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfection.com/robots.txt",
+        "content_type": "text/plain; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "sitemap": {
+        "url": "https://surfection.com/sitemap.xml",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfection.com/sitemap.xml",
+        "content_type": "application/xml; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "shopify_products": {
+        "url": "https://surfection.com/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfection.com/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "shopify_surfboards_collection": {
+        "url": "https://surfection.com/collections/surfboards/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfection.com/collections/surfboards/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "woocommerce_store_products": {
+        "url": "https://surfection.com/wp-json/wc/store/products?per_page=100",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://surfection.com/wp-json/wc/store/products?per_page=100",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "woocommerce_v3_probe": {
+        "url": "https://surfection.com/wp-json/wc/v3/products",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://surfection.com/wp-json/wc/v3/products",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      }
+    }
+  },
+  {
+    "name": "Surfection Mosman",
+    "input_url": "https://surfectionmosman.com/",
+    "base_url": "https://surfectionmosman.com",
+    "checked_at_utc": "2026-05-17T09:05:28.589359+00:00",
+    "page_status_code": 200,
+    "page_final_url": "https://surfectionmosman.com/",
+    "page_content_type": "text/html; charset=utf-8",
+    "platform_signals": [
+      "cloudflare",
+      "shopify"
+    ],
+    "product_link_discovery": {
+      "count": 0,
+      "sample": []
+    },
+    "endpoint_results": {
+      "home": {
+        "url": "https://surfectionmosman.com",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfectionmosman.com/",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "robots": {
+        "url": "https://surfectionmosman.com/robots.txt",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfectionmosman.com/robots.txt",
+        "content_type": "text/plain; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "sitemap": {
+        "url": "https://surfectionmosman.com/sitemap.xml",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfectionmosman.com/sitemap.xml",
+        "content_type": "application/xml; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "shopify_products": {
+        "url": "https://surfectionmosman.com/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfectionmosman.com/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "shopify_surfboards_collection": {
+        "url": "https://surfectionmosman.com/collections/surfboards/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://surfectionmosman.com/collections/surfboards/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "woocommerce_store_products": {
+        "url": "https://surfectionmosman.com/wp-json/wc/store/products?per_page=100",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://surfectionmosman.com/wp-json/wc/store/products?per_page=100",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "woocommerce_v3_probe": {
+        "url": "https://surfectionmosman.com/wp-json/wc/v3/products",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://surfectionmosman.com/wp-json/wc/v3/products",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      }
+    }
+  },
+  {
+    "name": "Board Collective",
+    "input_url": "https://boardcollective.com.au/collections/surfboards",
+    "base_url": "https://boardcollective.com.au",
+    "checked_at_utc": "2026-05-17T09:05:41.016909+00:00",
+    "page_status_code": 200,
+    "page_final_url": "https://boardcollective.com.au/collections/surfboards",
+    "page_content_type": "text/html; charset=utf-8",
+    "platform_signals": [
+      "cloudflare",
+      "shopify"
+    ],
+    "product_link_discovery": {
+      "count": 0,
+      "sample": []
+    },
+    "endpoint_results": {
+      "home": {
+        "url": "https://boardcollective.com.au",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://boardcollective.com.au/",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "robots": {
+        "url": "https://boardcollective.com.au/robots.txt",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://boardcollective.com.au/robots.txt",
+        "content_type": "text/plain; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "sitemap": {
+        "url": "https://boardcollective.com.au/sitemap.xml",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://boardcollective.com.au/sitemap.xml",
+        "content_type": "application/xml; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "shopify_products": {
+        "url": "https://boardcollective.com.au/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://boardcollective.com.au/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "shopify_surfboards_collection": {
+        "url": "https://boardcollective.com.au/collections/surfboards/products.json?limit=250",
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://boardcollective.com.au/collections/surfboards/products.json?limit=250",
+        "content_type": "application/json; charset=utf-8",
+        "server": "cloudflare",
+        "looks_like_json_products": true
+      },
+      "woocommerce_store_products": {
+        "url": "https://boardcollective.com.au/wp-json/wc/store/products?per_page=100",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://boardcollective.com.au/wp-json/wc/store/products?per_page=100",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      },
+      "woocommerce_v3_probe": {
+        "url": "https://boardcollective.com.au/wp-json/wc/v3/products",
+        "ok": true,
+        "status_code": 404,
+        "final_url": "https://boardcollective.com.au/wp-json/wc/v3/products",
+        "content_type": "text/html; charset=utf-8",
+        "server": "cloudflare"
+      }
+    }
+  }
+]

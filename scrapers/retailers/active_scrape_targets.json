@@ -1517,5 +1517,67 @@
       }
     ],
     "source": "retailer_detection_pipeline"
+  },
+  {
+    "primary_name": "Slimes Newcastle",
+    "website": "https://www.slimesnewcastle.com.au",
+    "website_key": "https://www.slimesnewcastle.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Slimes Newcastle",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Newcastle",
+          "Hunter"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "manual_verified",
+          "shopify_products_verified",
+          "surfboards_collection_verified"
+        ]
+      }
+    ],
+    "source": "manual_final_retailer_onboarding"
+  },
+  {
+    "primary_name": "Board Collective",
+    "website": "https://boardcollective.com.au",
+    "website_key": "https://boardcollective.com.au",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "locations": [
+      {
+        "name": "Board Collective",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Online",
+          "Australia"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "manual_verified",
+          "shopify_products_verified",
+          "surfboards_collection_verified"
+        ]
+      }
+    ],
+    "source": "manual_final_retailer_onboarding"
   }
 ]
