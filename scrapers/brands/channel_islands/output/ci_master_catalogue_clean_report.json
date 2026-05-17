@@ -1,8 +1,8 @@
 {
-  "input_models": 105,
-  "clean_models": 60,
-  "removed_models": 45,
-  "total_sizes": 651,
+  "input_models": 108,
+  "clean_models": 62,
+  "removed_models": 46,
+  "total_sizes": 676,
   "removed": [
     {
       "slug": "big-willy",
@@ -132,6 +132,11 @@
     {
       "slug": "the-m13",
       "model_name": "the-m13",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-m4",
+      "model_name": "the-m4",
       "reason": "no active stock dimensions"
     },
     {

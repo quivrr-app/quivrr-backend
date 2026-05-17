@@ -3938,6 +3938,233 @@
   {
     "brand": "Channel Islands",
     "source": "channel_islands_model_page",
+    "slug": "neckbeard-3",
+    "model_name": "",
+    "model_key": "neckbeard-3",
+    "product_url": "https://cisurfboards.com/products/neckbeard-3",
+    "region": "global",
+    "description": "When something isn’t broke, there’s no need to fix it. That said, Britt Merrick and Dane Reynolds still felt a few slight refinements would make an already epic board that much better. And it did: The merits to this update can be seen in Dane’s new surf film “The Electric Acid Surfboard Test.” A big fan of single conca",
+    "constructions": [
+      "PU",
+      "ECT",
+      "Spine-Tek",
+      "EPS",
+      "Carbon"
+    ],
+    "fin_setups": [
+      "Futures",
+      "FCS II",
+      "Single Fin",
+      "Twin",
+      "Thruster",
+      "Quad"
+    ],
+    "sizes": [
+      {
+        "length": "5'4",
+        "width": "18 5/8",
+        "thickness": "2 3/16",
+        "volume_litres": 23.8
+      },
+      {
+        "length": "5'5",
+        "width": "18 7/8",
+        "thickness": "2 1/4",
+        "volume_litres": 25.1
+      },
+      {
+        "length": "5'6",
+        "width": "19",
+        "thickness": "2 5/16",
+        "volume_litres": 26.4
+      },
+      {
+        "length": "5'7",
+        "width": "19 1/8",
+        "thickness": "2 3/8",
+        "volume_litres": 27.6
+      },
+      {
+        "length": "5'8",
+        "width": "19 3/8",
+        "thickness": "2 7/16",
+        "volume_litres": 29.2
+      },
+      {
+        "length": "5'9",
+        "width": "19 5/8",
+        "thickness": "2 1/2",
+        "volume_litres": 30.7
+      },
+      {
+        "length": "5'10",
+        "width": "19 7/8",
+        "thickness": "2 9/16",
+        "volume_litres": 32.3
+      },
+      {
+        "length": "5'11",
+        "width": "20",
+        "thickness": "2 5/8",
+        "volume_litres": 33.8
+      },
+      {
+        "length": "6'0",
+        "width": "20 1/8",
+        "thickness": "2 11/16",
+        "volume_litres": 35.2
+      },
+      {
+        "length": "6'2",
+        "width": "20 3/8",
+        "thickness": "2 3/4",
+        "volume_litres": 37.5
+      }
+    ],
+    "official_image_url": "http://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-deck-568x2000.png?v=1675280956",
+    "images": [
+      "http://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-deck-568x2000.png?v=1675280956",
+      "https://cisurfboards.com/cdn/shop/t/32/assets/dragdrop.png?v=42517194733940736251703193779",
+      "https://cisurfboards.com/cdn/shopifycloud/storefront/assets/no-image-2048-a2addb12_grande.gif",
+      "https://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-deck-568x2000.png?v=1675280956",
+      "https://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-fcsii-thruster-bottom-579x2000.png?v=1675280956",
+      "https://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-futures-thruster-bottom-581x2000.png?v=1675280956",
+      "https://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-fcsii-thruster-bottom-347x1200_d80aa33b-2cc1-4799-a5a0-da00ca840c0a_medium.jpg?v=1617401619",
+      "https://cisurfboards.com/cdn/shop/products/ci-neckbeard-3-fcsii-thruster-bottom-347x1200_3677fafe-d4a7-431f-aeae-c52d033ec099_medium.jpg?v=1617401641",
+      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxNCI+IDxzdHlsZT4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRn0uc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2Rn0uc3Qye2ZpbGw6I0ZGRn0uc3Qze2ZpbGw6IzA2Rn08L3N0eWxlPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNy40IDEyLjhoNi44bDMuMS0xMS42SDcuNEM0LjIgMS4yIDEuNiAzLjggMS42IDdzMi42IDUuOCA1LjggNS44eiIvPiA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjIuNiAwSDcuNEMzLjUgMCAuNCAzLjEuNCA3czMuMSA3IDcgN2gxNS4yYzMuOSAwIDctMy4xIDctN3MtMy4xLTctNy03ek0xLjYgN2MwLTMuMiAyLjYtNS44IDUuOC01LjhoOS45bC0zLjEgMTEuNkg3LjRDNC4yIDEyLjggMS42IDEwLjIgMS42IDd6Ii8+IDxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNC42IDRjLjIuMi4yLjYgMCAuOEwyMi41IDdsMi4yIDIuMmMuMi4yLjIuNiAwIC44LS4yLjItLjYuMi0uOCAwbC0yLjItMi4yTDE5LjUgMTBjLS4yLjItLjYuMi0uOCAwLS4yLS4yLS4yLS42IDAtLjhMMjAuOCA3bC0yLjItMi4yYy0uMi0uMi0uMi0uNiAwLS44LjItLjIuNi0uMi44IDBsMi4yIDIuMkwyMy44IDRjLjItLjIuNi0uMi44IDB6Ii8+IDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xMi43IDQuMWMuMi4yLjMuNi4xLjhMOC42IDkuOGMtLjEuMS0uMi4yLS4zLjItLjIuMS0uNS4xLS43LS4xTDUuNCA3LjdjLS4yLS4yLS4yLS42IDAtLjguMi0uMi42LS4yLjggMEw4IDguNmwzLjgtNC41Yy4yLS4yLjYtLjIuOSAweiIvPiA8L3N2Zz4=",
+      "{{ image }}",
+      "https://flagcdn.com/w160/us.png",
+      "https://flagcdn.com/w160/au.png"
+    ]
+  },
+  {
+    "brand": "Channel Islands",
+    "source": "channel_islands_model_page",
+    "slug": "og-flyer",
+    "model_name": "",
+    "model_key": "og-flyer",
+    "product_url": "https://cisurfboards.com/products/og-flyer",
+    "region": "global",
+    "description": "Our all-time most popular design is The Flyer. In 1999 Al was searching for a solution to team riders’ dilemma of needing more speed and flow in lesser waves while maintaining high performance, world tour level surfing. The answer was a board that departed from the then overly narrow designs and set the stage for the",
+    "constructions": [
+      "PU",
+      "ECT",
+      "Spine-Tek",
+      "Carbon"
+    ],
+    "fin_setups": [
+      "Single Fin",
+      "Twin",
+      "Thruster",
+      "Quad"
+    ],
+    "sizes": [
+      {
+        "length": "5'6",
+        "width": "18 1/4",
+        "thickness": "2 3/16",
+        "volume_litres": 23.6
+      },
+      {
+        "length": "5'7",
+        "width": "18 1/2",
+        "thickness": "2 1/4",
+        "volume_litres": 25.0
+      },
+      {
+        "length": "5'8",
+        "width": "18 3/4",
+        "thickness": "2 5/16",
+        "volume_litres": 26.4
+      },
+      {
+        "length": "5'9",
+        "width": "19",
+        "thickness": "2 3/8",
+        "volume_litres": 27.9
+      },
+      {
+        "length": "5'10",
+        "width": "19 1/4",
+        "thickness": "2 7/16",
+        "volume_litres": 29.4
+      },
+      {
+        "length": "5'11",
+        "width": "19 1/2",
+        "thickness": "2 1/2",
+        "volume_litres": 31.0
+      },
+      {
+        "length": "6'0",
+        "width": "19 3/4",
+        "thickness": "2 9/16",
+        "volume_litres": 32.6
+      },
+      {
+        "length": "6'1",
+        "width": "20",
+        "thickness": "2 5/8",
+        "volume_litres": 34.3
+      },
+      {
+        "length": "6'2",
+        "width": "20 1/4",
+        "thickness": "2 5/8",
+        "volume_litres": 35.2
+      },
+      {
+        "length": "6'3",
+        "width": "20 1/2",
+        "thickness": "2 3/4",
+        "volume_litres": 37.8
+      },
+      {
+        "length": "6'4",
+        "width": "20 3/4",
+        "thickness": "2 3/4",
+        "volume_litres": 38.8
+      },
+      {
+        "length": "6'6",
+        "width": "21",
+        "thickness": "2 3/4",
+        "volume_litres": 40.1
+      },
+      {
+        "length": "6'8",
+        "width": "21 1/4",
+        "thickness": "2 7/8",
+        "volume_litres": 43.7
+      },
+      {
+        "length": "6'10",
+        "width": "21 1/2",
+        "thickness": "3",
+        "volume_litres": 47.3
+      },
+      {
+        "length": "7'0",
+        "width": "22",
+        "thickness": "3",
+        "volume_litres": 49.5
+      }
+    ],
+    "official_image_url": "http://cisurfboards.com/cdn/shop/products/OG-Flyer-Deck-for-Web.png?v=1619470436",
+    "images": [
+      "http://cisurfboards.com/cdn/shop/products/OG-Flyer-Deck-for-Web.png?v=1619470436",
+      "https://cisurfboards.com/cdn/shop/t/32/assets/dragdrop.png?v=42517194733940736251703193779",
+      "https://cisurfboards.com/cdn/shop/products/OG-Flyer-Deck-for-Web.png?v=1619470436",
+      "https://cisurfboards.com/cdn/shop/products/OG-Flyer-Bottom-for-Web-700x2458.png?v=1619470436",
+      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxNCI+IDxzdHlsZT4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRn0uc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2Rn0uc3Qye2ZpbGw6I0ZGRn0uc3Qze2ZpbGw6IzA2Rn08L3N0eWxlPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNy40IDEyLjhoNi44bDMuMS0xMS42SDcuNEM0LjIgMS4yIDEuNiAzLjggMS42IDdzMi42IDUuOCA1LjggNS44eiIvPiA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjIuNiAwSDcuNEMzLjUgMCAuNCAzLjEuNCA3czMuMSA3IDcgN2gxNS4yYzMuOSAwIDctMy4xIDctN3MtMy4xLTctNy03ek0xLjYgN2MwLTMuMiAyLjYtNS44IDUuOC01LjhoOS45bC0zLjEgMTEuNkg3LjRDNC4yIDEyLjggMS42IDEwLjIgMS42IDd6Ii8+IDxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNC42IDRjLjIuMi4yLjYgMCAuOEwyMi41IDdsMi4yIDIuMmMuMi4yLjIuNiAwIC44LS4yLjItLjYuMi0uOCAwbC0yLjItMi4yTDE5LjUgMTBjLS4yLjItLjYuMi0uOCAwLS4yLS4yLS4yLS42IDAtLjhMMjAuOCA3bC0yLjItMi4yYy0uMi0uMi0uMi0uNiAwLS44LjItLjIuNi0uMi44IDBsMi4yIDIuMkwyMy44IDRjLjItLjIuNi0uMi44IDB6Ii8+IDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xMi43IDQuMWMuMi4yLjMuNi4xLjhMOC42IDkuOGMtLjEuMS0uMi4yLS4zLjItLjIuMS0uNS4xLS43LS4xTDUuNCA3LjdjLS4yLS4yLS4yLS42IDAtLjguMi0uMi42LS4yLjggMEw4IDguNmwzLjgtNC41Yy4yLS4yLjYtLjIuOSAweiIvPiA8L3N2Zz4=",
+      "{{ image }}",
+      "https://flagcdn.com/w160/us.png",
+      "https://flagcdn.com/w160/au.png"
+    ]
+  },
+  {
+    "brand": "Channel Islands",
+    "source": "channel_islands_model_page",
     "slug": "pod-mod-1",
     "model_name": "",
     "model_key": "pod-mod-1",
@@ -5599,6 +5826,39 @@
       "https://cisurfboards.com/cdn/shop/t/32/assets/dragdrop.png?v=42517194733940736251703193779",
       "https://cisurfboards.com/cdn/shop/products/m13_grande.jpg?v=1646527412",
       "https://cisurfboards.com/cdn/shop/products/M13-transparent280x800.png?v=1646527412",
+      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxNCI+IDxzdHlsZT4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRn0uc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2Rn0uc3Qye2ZpbGw6I0ZGRn0uc3Qze2ZpbGw6IzA2Rn08L3N0eWxlPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNy40IDEyLjhoNi44bDMuMS0xMS42SDcuNEM0LjIgMS4yIDEuNiAzLjggMS42IDdzMi42IDUuOCA1LjggNS44eiIvPiA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjIuNiAwSDcuNEMzLjUgMCAuNCAzLjEuNCA3czMuMSA3IDcgN2gxNS4yYzMuOSAwIDctMy4xIDctN3MtMy4xLTctNy03ek0xLjYgN2MwLTMuMiAyLjYtNS44IDUuOC01LjhoOS45bC0zLjEgMTEuNkg3LjRDNC4yIDEyLjggMS42IDEwLjIgMS42IDd6Ii8+IDxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNC42IDRjLjIuMi4yLjYgMCAuOEwyMi41IDdsMi4yIDIuMmMuMi4yLjIuNiAwIC44LS4yLjItLjYuMi0uOCAwbC0yLjItMi4yTDE5LjUgMTBjLS4yLjItLjYuMi0uOCAwLS4yLS4yLS4yLS42IDAtLjhMMjAuOCA3bC0yLjItMi4yYy0uMi0uMi0uMi0uNiAwLS44LjItLjIuNi0uMi44IDBsMi4yIDIuMkwyMy44IDRjLjItLjIuNi0uMi44IDB6Ii8+IDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xMi43IDQuMWMuMi4yLjMuNi4xLjhMOC42IDkuOGMtLjEuMS0uMi4yLS4zLjItLjIuMS0uNS4xLS43LS4xTDUuNCA3LjdjLS4yLS4yLS4yLS42IDAtLjguMi0uMi42LS4yLjggMEw4IDguNmwzLjgtNC41Yy4yLS4yLjYtLjIuOSAweiIvPiA8L3N2Zz4=",
+      "{{ image }}",
+      "https://flagcdn.com/w160/us.png",
+      "https://flagcdn.com/w160/au.png"
+    ]
+  },
+  {
+    "brand": "Channel Islands",
+    "source": "channel_islands_model_page",
+    "slug": "the-m4",
+    "model_name": "",
+    "model_key": "the-m4",
+    "product_url": "https://cisurfboards.com/products/the-m4",
+    "region": "global",
+    "description": "From 2004 to 2007 the M4 was a favorite with surfers on tour for riding small to medium waves: Flat entry rocker, increased tail kick, full rail, and single concave. The M-4 has a wider nose and tail, so ride this one an inch shorter and a hair wider if you surf mostly in small waves. The M-4 is considered one of the m",
+    "constructions": [
+      "PU",
+      "ECT",
+      "Spine-Tek",
+      "Carbon"
+    ],
+    "fin_setups": [
+      "Single Fin",
+      "Twin",
+      "Quad"
+    ],
+    "sizes": [],
+    "official_image_url": "http://cisurfboards.com/cdn/shop/products/M4-280x800.jpg?v=1646513440",
+    "images": [
+      "http://cisurfboards.com/cdn/shop/products/M4-280x800.jpg?v=1646513440",
+      "https://cisurfboards.com/cdn/shop/t/32/assets/dragdrop.png?v=42517194733940736251703193779",
+      "https://cisurfboards.com/cdn/shop/products/m4_grande.jpg?v=1646513441",
+      "https://cisurfboards.com/cdn/shop/products/M4-280x800.jpg?v=1646513440",
       "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxNCI+IDxzdHlsZT4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRn0uc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2Rn0uc3Qye2ZpbGw6I0ZGRn0uc3Qze2ZpbGw6IzA2Rn08L3N0eWxlPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNy40IDEyLjhoNi44bDMuMS0xMS42SDcuNEM0LjIgMS4yIDEuNiAzLjggMS42IDdzMi42IDUuOCA1LjggNS44eiIvPiA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjIuNiAwSDcuNEMzLjUgMCAuNCAzLjEuNCA3czMuMSA3IDcgN2gxNS4yYzMuOSAwIDctMy4xIDctN3MtMy4xLTctNy03ek0xLjYgN2MwLTMuMiAyLjYtNS44IDUuOC01LjhoOS45bC0zLjEgMTEuNkg3LjRDNC4yIDEyLjggMS42IDEwLjIgMS42IDd6Ii8+IDxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNC42IDRjLjIuMi4yLjYgMCAuOEwyMi41IDdsMi4yIDIuMmMuMi4yLjIuNiAwIC44LS4yLjItLjYuMi0uOCAwbC0yLjItMi4yTDE5LjUgMTBjLS4yLjItLjYuMi0uOCAwLS4yLS4yLS4yLS42IDAtLjhMMjAuOCA3bC0yLjItMi4yYy0uMi0uMi0uMi0uNiAwLS44LjItLjIuNi0uMi44IDBsMi4yIDIuMkwyMy44IDRjLjItLjIuNi0uMi44IDB6Ii8+IDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xMi43IDQuMWMuMi4yLjMuNi4xLjhMOC42IDkuOGMtLjEuMS0uMi4yLS4zLjItLjIuMS0uNS4xLS43LS4xTDUuNCA3LjdjLS4yLS4yLS4yLS42IDAtLjguMi0uMi42LS4yLjggMEw4IDguNmwzLjgtNC41Yy4yLS4yLjYtLjIuOSAweiIvPiA8L3N2Zz4=",
       "{{ image }}",
       "https://flagcdn.com/w160/us.png",
