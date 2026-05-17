@@ -1,3 +1,8 @@
+﻿from pathlib import Path
+
+path = Path("scrapers/brands/dhd/build_dhd_master_catalogue.py")
+
+content = r'''
 import json
 import re
 import sys
@@ -116,8 +121,8 @@ def canonical_model(raw_model):
     return None
 
 
-def normalise_construction(model, source_title, source_product_title, product_url):
-    text = clean_text(f"{model} {source_title} {source_product_title} {product_url}")
+def normalise_construction(model, source_title):
+    text = clean_text(f"{model} {source_title}")
 
     if "eps" in text:
         return "EPS"
@@ -143,10 +148,7 @@ def main():
 
     for row in data:
         source_title = row.get("model") or ""
-        source_product_title = row.get("source_product_title") or ""
-        product_url = row.get("official_product_url") or ""
-        model_source = " ".join([source_title, source_product_title, product_url])
-        model = canonical_model(model_source)
+        model = canonical_model(source_title)
 
         if not model:
             rejected_models[source_title] = rejected_models.get(source_title, 0) + 1
@@ -154,7 +156,7 @@ def main():
 
         row["model"] = model
         row["model_family"] = model
-        row["construction"] = normalise_construction(model, source_title, source_product_title, product_url)
+        row["construction"] = normalise_construction(model, source_title)
 
         key = (
             row.get("model"),
@@ -204,3 +206,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
+
+path.write_text(content.strip() + "\n", encoding="utf-8")
+print(f"Updated {path}")

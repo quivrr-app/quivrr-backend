@@ -1,8 +1,45 @@
 {
   "brand": "Pyzel",
-  "base_url": "https://pyzelsurfboards.com",
-  "products_seen": 606,
-  "catalogue_rows": 255,
-  "output_file": "scrapers\\brands\\pyzel\\output\\pyzel_master_catalogue_clean.json",
-  "created_at_utc": "2026-05-17T22:13:12.136546+00:00"
+  "rows_after_pyzel_cleanup": 243,
+  "models_after_pyzel_cleanup": [
+    "Astro Pop",
+    "Crisis Twin",
+    "Ghost",
+    "Ghost Pro",
+    "Ghost XL",
+    "Gremlin",
+    "Gromlin",
+    "Highline",
+    "Mid Length Crisis",
+    "Mini Ghost Round",
+    "Mini Ghost Squash",
+    "Next Step",
+    "Padillac",
+    "Phantom",
+    "Phantom XL",
+    "Power Tiger",
+    "Power Tiger XL",
+    "Precious",
+    "Puerto Padi",
+    "Pyzalien 2",
+    "Pyzalien 2 XL",
+    "Radius",
+    "Red Tiger",
+    "Red Tiger XL",
+    "Score Lord",
+    "Tank",
+    "Tiger Twin",
+    "White Tiger",
+    "Wildcat"
+  ],
+  "constructions_after_pyzel_cleanup": [
+    "EPS",
+    "PU"
+  ],
+  "rejected_source_titles": {
+    "Log Single Box": 1,
+    "JJF Downwind Foil Board": 2,
+    "VEIA John John Florence 7' Tour Board Bag": 1
+  },
+  "output_file": "scrapers\\brands\\pyzel\\output\\pyzel_master_catalogue_clean.json"
 }

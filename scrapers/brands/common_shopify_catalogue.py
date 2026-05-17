@@ -296,6 +296,7 @@ def build_catalogue(brand_name, base_url, output_file):
                     "official_product_url": product_url,
                     "official_image_url": image_url,
                     "source": base_url,
+                    "source_product_title": title,
                     "source_product_id": product.get("id"),
                     "source_variant_id": variant.get("id"),
                     "source_variant_title": variant_title,

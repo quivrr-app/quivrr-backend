@@ -1,3 +1,8 @@
+﻿from pathlib import Path
+
+path = Path("scrapers/brands/dhd/build_dhd_master_catalogue.py")
+
+content = r'''
 import json
 import re
 import sys
@@ -13,25 +18,53 @@ from scrapers.brands.common_shopify_catalogue import build_catalogue
 OUTPUT_FILE = Path("scrapers/brands/dhd/output/dhd_master_catalogue_clean.json")
 
 
+MODEL_MAP = {
+    "mf lightning": "MF Lightning",
+    "ee juliette": "EE Juliette",
+    "mf dna": "MF DNA",
+    "sg number 8": "SG Number 8",
+    "40th anniversary": "40th Anniversary",
+    "nexus": "Nexus",
+    "phoenix flight": "Phoenix Flight",
+    "utopia": "Utopia",
+    "black diamond": "Black Diamond",
+    "black diamond soft top": "Black Diamond Soft Top",
+    "interceptor": "Interceptor",
+    "sandman": "Sandman",
+    "ee juliette round tail": "EE Juliette Round Tail",
+    "sweet spot 4.0": "Sweet Spot 4.0",
+    "sweet spot": "Sweet Spot 4.0",
+    "ee juliette eps": "EE Juliette EPS",
+    "ee juliette jnr eps": "EE Juliette Jnr EPS",
+    "nexus eps": "Nexus EPS",
+    "phoenix flight eps": "Phoenix Flight EPS",
+    "black diamond eps": "Black Diamond EPS",
+    "phoenix eps swallow tail": "Phoenix EPS Swallow Tail",
+    "mf twin": "MF Twin",
+    "the twin": "The Twin",
+    "mini twin ii": "Mini Twin II",
+    "mini twin": "Mini Twin",
+    "mf bolt": "MF Bolt",
+    "mf dna jnr": "MF DNA Jnr",
+    "ee juliette jnr": "EE Juliette Jnr",
+}
+
+
 MODEL_PRIORITY = [
     "Black Diamond Soft Top",
     "Black Diamond EPS",
     "Black Diamond",
-    "Phoenix EPS Swallow Tail",
-    "Phoenix Flight EPS",
-    "Phoenix Flight",
-    "Phoenix",
-    "EE Juliette RT Jnr",
-    "EE Juliette RT",
+    "EE Juliette Round Tail",
     "EE Juliette Jnr EPS",
     "EE Juliette Jnr",
     "EE Juliette EPS",
     "EE Juliette",
+    "Phoenix EPS Swallow Tail",
+    "Phoenix Flight EPS",
+    "Phoenix Flight",
     "Sweet Spot 4.0",
-    "DHD 40th Anniversary",
-    "40th Anniversary",
-    "SG No.8",
     "SG Number 8",
+    "40th Anniversary",
     "MF Lightning",
     "MF DNA Jnr",
     "MF DNA",
@@ -48,54 +81,9 @@ MODEL_PRIORITY = [
 ]
 
 
-ALIASES = {
-    "sg no 8": "SG No.8",
-    "sg number 8": "SG No.8",
-    "40th anniversary": "DHD 40th Anniversary",
-    "dhd 40th anniversary": "DHD 40th Anniversary",
-    "ee juliette round tail": "EE Juliette RT",
-    "ee juliette rt": "EE Juliette RT",
-    "ee juliette rt jnr": "EE Juliette RT Jnr",
-    "ee juliette jnr eps": "EE Juliette Jnr EPS",
-    "ee juliette junior eps": "EE Juliette Jnr EPS",
-    "ee juliette jnr": "EE Juliette Jnr",
-    "ee juliette junior": "EE Juliette Jnr",
-    "ee juliette eps": "EE Juliette EPS",
-    "ee juliette": "EE Juliette",
-    "mf lightning": "MF Lightning",
-    "mf dna jnr": "MF DNA Jnr",
-    "mf dna junior": "MF DNA Jnr",
-    "mf dna": "MF DNA",
-    "mf bolt": "MF Bolt",
-    "mf twin": "MF Twin",
-    "the twin": "The Twin",
-    "mini twin ii": "Mini Twin II",
-    "mini twin 2": "Mini Twin II",
-    "mini twin": "Mini Twin",
-    "phoenix eps swallow tail": "Phoenix EPS Swallow Tail",
-    "phoenix flight eps": "Phoenix Flight EPS",
-    "phoenix flight": "Phoenix Flight",
-    "phoenix": "Phoenix",
-    "nexus eps": "Nexus EPS",
-    "nexus": "Nexus",
-    "black diamond soft top": "Black Diamond Soft Top",
-    "black diamond eps": "Black Diamond EPS",
-    "black diamond": "Black Diamond",
-    "sweet spot 4 0": "Sweet Spot 4.0",
-    "sweet spot": "Sweet Spot 4.0",
-    "utopia": "Utopia",
-    "interceptor": "Interceptor",
-    "sandman": "Sandman",
-}
-
-
 def clean_text(value):
     value = str(value or "")
-    value = value.replace("&amp;", "and")
-    value = re.sub(r"\((round tail|rt)\)", " rt ", value, flags=re.I)
-    value = re.sub(r"\bno\.\s*8\b", "no 8", value, flags=re.I)
     value = re.sub(r"[^a-z0-9.]+", " ", value.lower())
-    value = value.replace(".", " ")
     value = re.sub(r"\s+", " ", value).strip()
     return value
 
@@ -106,18 +94,17 @@ def canonical_model(raw_model):
     for model in MODEL_PRIORITY:
         key = clean_text(model)
         if key in text:
-            canonical = ALIASES.get(key)
-            return canonical or model
+            return model
 
-    for key, model in ALIASES.items():
+    for key, model in MODEL_MAP.items():
         if key in text:
             return model
 
     return None
 
 
-def normalise_construction(model, source_title, source_product_title, product_url):
-    text = clean_text(f"{model} {source_title} {source_product_title} {product_url}")
+def normalise_construction(model, source_title):
+    text = clean_text(f"{model} {source_title}")
 
     if "eps" in text:
         return "EPS"
@@ -139,22 +126,17 @@ def main():
 
     cleaned = []
     seen = set()
-    rejected_models = {}
 
     for row in data:
         source_title = row.get("model") or ""
-        source_product_title = row.get("source_product_title") or ""
-        product_url = row.get("official_product_url") or ""
-        model_source = " ".join([source_title, source_product_title, product_url])
-        model = canonical_model(model_source)
+        model = canonical_model(source_title)
 
         if not model:
-            rejected_models[source_title] = rejected_models.get(source_title, 0) + 1
             continue
 
         row["model"] = model
         row["model_family"] = model
-        row["construction"] = normalise_construction(model, source_title, source_product_title, product_url)
+        row["construction"] = normalise_construction(model, source_title)
 
         key = (
             row.get("model"),
@@ -185,7 +167,6 @@ def main():
                 "rows_after_dhd_cleanup": len(cleaned),
                 "models_after_dhd_cleanup": sorted(set(row["model"] for row in cleaned)),
                 "constructions_after_dhd_cleanup": sorted(set(row["construction"] for row in cleaned)),
-                "rejected_source_titles": rejected_models,
                 "output_file": str(OUTPUT_FILE),
             },
             indent=2,
@@ -204,3 +185,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
+
+path.write_text(content.strip() + "\n", encoding="utf-8")
+print(f"Updated {path}")

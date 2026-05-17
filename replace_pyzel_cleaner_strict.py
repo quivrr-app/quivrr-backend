@@ -1,3 +1,8 @@
+﻿from pathlib import Path
+
+path = Path("scrapers/brands/pyzel/build_pyzel_master_catalogue.py")
+
+content = r'''
 import json
 import re
 import sys
@@ -135,12 +140,7 @@ def canonical_model(source_title, source_product_title, product_url):
 def normalise_construction(source_title, source_product_title, product_url):
     text = clean_text(" ".join([source_title or "", source_product_title or "", product_url or ""]))
 
-    if (
-        "electralite" in text
-        or "electralite plus" in text
-        or "eps" in text
-        or "epoxy" in text
-    ):
+    if "electralite" in text or "eps" in text:
         return "EPS"
 
     return "PU"
@@ -222,3 +222,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
+
+path.write_text(content.strip() + "\n", encoding="utf-8")
+print(f"Updated {path}")

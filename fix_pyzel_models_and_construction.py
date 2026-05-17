@@ -1,3 +1,8 @@
+﻿from pathlib import Path
+
+path = Path("scrapers/brands/pyzel/build_pyzel_master_catalogue.py")
+
+content = r'''
 import json
 import re
 import sys
@@ -14,8 +19,17 @@ OUTPUT_FILE = Path("scrapers/brands/pyzel/output/pyzel_master_catalogue_clean.js
 
 
 MODEL_PRIORITY = [
+    "Pyzalien 2 XL Electralite",
+    "Pyzalien 2 Electralite",
+    "Phantom XL Electralite",
+    "Phantom Electralite",
     "Mini Ghost Round",
     "Mini Ghost Squash",
+    "Ghost Swallow",
+    "Ghost 5 Fin",
+    "Ghost Pro",
+    "Ghost XL",
+    "Ghost",
     "Pyzalien 2 XL",
     "Pyzalien 2",
     "Pyzalien",
@@ -23,17 +37,11 @@ MODEL_PRIORITY = [
     "Phantom Squash",
     "Phantom XL",
     "Phantom",
-    "Ghost Swallow",
-    "Ghost 5 Fin",
-    "Ghost Pro",
-    "Ghost XL",
-    "Ghost",
     "Astro Glider",
     "Astro Pop XL",
     "Astro Pop",
     "Gremlin XL",
     "Gremlin",
-    "Gromlin",
     "Happy Twin",
     "Precious",
     "Tiger Twin",
@@ -58,89 +66,60 @@ MODEL_PRIORITY = [
     "Red Tiger",
     "Shadow XL",
     "Shadow",
+    "Electralite",
 ]
-
-
-ALIASES = {
-    "mini ghost round": "Mini Ghost Round",
-    "mini ghost squash": "Mini Ghost Squash",
-    "pyzalien 2 xl": "Pyzalien 2 XL",
-    "pyzalien 2": "Pyzalien 2",
-    "pyzalien": "Pyzalien",
-    "phantom round": "Phantom Round",
-    "phantom squash": "Phantom Squash",
-    "phantom xl": "Phantom XL",
-    "phantom": "Phantom",
-    "ghost swallow": "Ghost Swallow",
-    "ghost 5 fin": "Ghost 5 Fin",
-    "ghost pro": "Ghost Pro",
-    "ghost xl": "Ghost XL",
-    "ghost": "Ghost",
-    "astro glider": "Astro Glider",
-    "astro pop xl": "Astro Pop XL",
-    "astro pop": "Astro Pop",
-    "gremlin xl": "Gremlin XL",
-    "gremlin": "Gremlin",
-    "gromlin": "Gromlin",
-    "grom lin": "Gromlin",
-    "happy twin": "Happy Twin",
-    "precious": "Precious",
-    "tiger twin": "Tiger Twin",
-    "white tiger": "White Tiger",
-    "wildcat": "Wildcat",
-    "next step": "Next Step",
-    "tank": "Tank",
-    "padillac": "Padillac",
-    "puerto padi": "Puerto Padi",
-    "mini padillac": "Mini Padillac",
-    "mid length crisis": "Mid Length Crisis",
-    "crisis twin": "Crisis Twin",
-    "score lord": "Score Lord",
-    "highline": "Highline",
-    "radius prime round": "Radius Prime Round",
-    "radius prime squash": "Radius Prime Squash",
-    "radius": "Radius",
-    "power tiger grom": "Power Tiger Grom",
-    "power tiger xl": "Power Tiger XL",
-    "power tiger": "Power Tiger",
-    "red tiger xl": "Red Tiger XL",
-    "red tiger": "Red Tiger",
-    "shadow xl": "Shadow XL",
-    "shadow": "Shadow",
-}
 
 
 def clean_text(value):
     value = str(value or "")
-    value = value.replace("&amp;", "and")
+    value = value.replace("GROMlin", "Gromlin")
     value = re.sub(r"\((round|squash|swallow)\)", r" \1 ", value, flags=re.I)
     value = re.sub(r"[^a-z0-9]+", " ", value.lower())
-    value = re.sub(r"\b(ca|hi|au)\b", " ", value, flags=re.I)
-    value = re.sub(r"\b(id|new|used|board|factory|second|2nd)\b", " ", value, flags=re.I)
     value = re.sub(r"\s+", " ", value).strip()
     return value
 
 
-def canonical_model(source_title, source_product_title, product_url):
-    text = clean_text(" ".join([source_title or "", source_product_title or "", product_url or ""]))
+def title_case_model(model):
+    replacements = {
+        "XL": "XL",
+        "EPS": "EPS",
+        "PU": "PU",
+    }
+
+    words = model.split()
+    output = []
+
+    for word in words:
+        upper = word.upper()
+        if upper in replacements:
+            output.append(replacements[upper])
+        else:
+            output.append(word.capitalize())
+
+    return " ".join(output)
+
+
+def canonical_model(raw_model):
+    text = clean_text(raw_model)
 
     for model in MODEL_PRIORITY:
         key = clean_text(model)
         if key in text:
-            return ALIASES.get(key, model)
+            return model
 
-    return None
+    text = re.sub(r"\b(electralite|eps|pu)\b", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    if not text:
+        return None
+
+    return title_case_model(text)
 
 
-def normalise_construction(source_title, source_product_title, product_url):
-    text = clean_text(" ".join([source_title or "", source_product_title or "", product_url or ""]))
+def normalise_construction(model, source_title):
+    text = clean_text(f"{model} {source_title}")
 
-    if (
-        "electralite" in text
-        or "electralite plus" in text
-        or "eps" in text
-        or "epoxy" in text
-    ):
+    if "eps" in text or "electralite" in text:
         return "EPS"
 
     return "PU"
@@ -157,22 +136,17 @@ def main():
 
     cleaned = []
     seen = set()
-    rejected = {}
 
     for row in data:
         source_title = row.get("model") or ""
-        source_product_title = row.get("source_product_title") or ""
-        product_url = row.get("official_product_url") or ""
-
-        model = canonical_model(source_title, source_product_title, product_url)
+        model = canonical_model(source_title)
 
         if not model:
-            rejected[source_title] = rejected.get(source_title, 0) + 1
             continue
 
         row["model"] = model
         row["model_family"] = model
-        row["construction"] = normalise_construction(source_title, source_product_title, product_url)
+        row["construction"] = normalise_construction(model, source_title)
 
         key = (
             row.get("model"),
@@ -203,7 +177,6 @@ def main():
                 "rows_after_pyzel_cleanup": len(cleaned),
                 "models_after_pyzel_cleanup": sorted(set(row["model"] for row in cleaned)),
                 "constructions_after_pyzel_cleanup": sorted(set(row["construction"] for row in cleaned)),
-                "rejected_source_titles": rejected,
                 "output_file": str(OUTPUT_FILE),
             },
             indent=2,
@@ -222,3 +195,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
+
+path.write_text(content.strip() + "\n", encoding="utf-8")
+print(f"Updated {path}")
