@@ -64,36 +64,6 @@
     "source": "retailer_detection_pipeline"
   },
   {
-    "primary_name": "Slimes Boardstore",
-    "website": "https://slimes.com.au",
-    "website_key": "https://slimes.com.au",
-    "country": "Australia",
-    "platform": "ecwid",
-    "status": "active",
-    "priority": 1,
-    "locations": [
-      {
-        "name": "Slimes Boardstore",
-        "states": [
-          "NSW"
-        ],
-        "region_clusters": [
-          "Central Coast",
-          "Newcastle"
-        ],
-        "retailer_types": [
-          "multi_brand"
-        ],
-        "hardboards": true,
-        "verification_statuses": [
-          "prefilled",
-          "seed_verified"
-        ]
-      }
-    ],
-    "source": "retailer_detection_pipeline"
-  },
-  {
     "primary_name": "Empire Ave",
     "website": "https://empireave.com",
     "website_key": "https://empireave.com",
@@ -768,26 +738,6 @@
       },
       {
         "name": "Surf Culture Australia",
-        "states": [],
-        "region_clusters": [],
-        "retailer_types": [],
-        "hardboards": true,
-        "verification_statuses": []
-      }
-    ],
-    "source": "retailer_detection_pipeline"
-  },
-  {
-    "primary_name": "Surf Dive n Ski",
-    "website": "https://sds.com.au",
-    "website_key": "https://sds.com.au",
-    "country": "Australia",
-    "platform": "shopify",
-    "status": "active",
-    "priority": 2,
-    "locations": [
-      {
-        "name": "Surf Dive n Ski",
         "states": [],
         "region_clusters": [],
         "retailer_types": [],
@@ -1575,6 +1525,49 @@
           "manual_verified",
           "shopify_products_verified",
           "surfboards_collection_verified"
+        ]
+      }
+    ],
+    "source": "manual_final_retailer_onboarding"
+  },
+  {
+    "primary_name": "Surfection Mosman",
+    "website": "https://surfectionmosman.com",
+    "website_key": "https://surfectionmosman.com",
+    "country": "Australia",
+    "platform": "shopify",
+    "status": "active",
+    "priority": 1,
+    "collection_handles": [
+      "js-industries",
+      "dhd",
+      "sharpeye",
+      "channel-islands",
+      "haydenshapes",
+      "tolhurst-x-harley-ingleby",
+      "chilli",
+      "lost",
+      "volume",
+      "global-surf-industries",
+      "ocean-soul"
+    ],
+    "locations": [
+      {
+        "name": "Surfection Mosman",
+        "states": [
+          "NSW"
+        ],
+        "region_clusters": [
+          "Mosman",
+          "Sydney"
+        ],
+        "retailer_types": [
+          "multi_brand"
+        ],
+        "hardboards": true,
+        "verification_statuses": [
+          "manual_verified",
+          "shopify_brand_collections_verified"
         ]
       }
     ],

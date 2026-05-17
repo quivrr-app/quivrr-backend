@@ -76,36 +76,139 @@ def extract_products(products, retailer):
     return output
 
 
-def scrape_shopify(retailer):
+def fetch_shopify_products_from_url(url):
+    try:
+        response = requests.get(
+            url,
+            timeout=30,
+            headers=HEADERS,
+        )
+
+        if response.status_code != 200:
+            return {
+                "products": [],
+                "failed": True,
+                "status_code": response.status_code,
+                "error": None,
+            }
+
+        data = response.json()
+
+        return {
+            "products": data.get("products", []),
+            "failed": False,
+            "status_code": response.status_code,
+            "error": None,
+        }
+
+    except Exception as exc:
+        return {
+            "products": [],
+            "failed": True,
+            "status_code": None,
+            "error": str(exc),
+        }
+
+
+def scrape_shopify_endpoint(base, page):
+    url = f"{base}/products.json?limit={PAGE_LIMIT}&page={page}"
+    return fetch_shopify_products_from_url(url)
+
+
+def scrape_shopify_collection(base, handle, page):
+    url = (
+        f"{base}/collections/{handle}/products.json"
+        f"?limit={PAGE_LIMIT}&page={page}"
+    )
+    return fetch_shopify_products_from_url(url)
+
+
+def dedupe_products(products):
+    seen = set()
+    deduped = []
+
+    for product in products:
+        product_id = product.get("id")
+        handle = product.get("handle")
+        key = product_id or handle
+
+        if not key:
+            deduped.append(product)
+            continue
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        deduped.append(product)
+
+    return deduped
+
+
+def scrape_standard_shopify(retailer):
     base = retailer["website"].rstrip("/")
     page = 1
     all_products = []
     failed = False
 
-    print(f"Scraping: {retailer['primary_name']}")
-
     while page <= MAX_PAGES:
-        url = f"{base}/products.json?limit={PAGE_LIMIT}&page={page}"
+        result = scrape_shopify_endpoint(base, page)
 
-        try:
-            response = requests.get(
-                url,
-                timeout=30,
-                headers=HEADERS,
+        if result["failed"]:
+            print(
+                f"  FAILED page {page}: "
+                f"{result.get('status_code') or result.get('error')}"
             )
+            failed = True
+            break
 
-            if response.status_code != 200:
-                print(f"  FAILED page {page}: {response.status_code}")
+        products = result["products"]
+
+        if not products:
+            break
+
+        print(f"  Page {page}: {len(products)} products")
+        all_products.extend(products)
+
+        if len(products) < PAGE_LIMIT:
+            break
+
+        page += 1
+
+    return {
+        "products": all_products,
+        "failed": failed,
+    }
+
+
+def scrape_collection_shopify(retailer):
+    base = retailer["website"].rstrip("/")
+    handles = retailer.get("collection_handles") or []
+    all_products = []
+    failed = False
+
+    for handle in handles:
+        page = 1
+
+        print(f"  Collection: {handle}")
+
+        while page <= MAX_PAGES:
+            result = scrape_shopify_collection(base, handle, page)
+
+            if result["failed"]:
+                print(
+                    f"    FAILED page {page}: "
+                    f"{result.get('status_code') or result.get('error')}"
+                )
                 failed = True
                 break
 
-            data = response.json()
-            products = data.get("products", [])
+            products = result["products"]
 
             if not products:
                 break
 
-            print(f"  Page {page}: {len(products)} products")
+            print(f"    Page {page}: {len(products)} products")
             all_products.extend(products)
 
             if len(products) < PAGE_LIMIT:
@@ -113,10 +216,23 @@ def scrape_shopify(retailer):
 
             page += 1
 
-        except Exception as exc:
-            print(f"  ERROR page {page}: {exc}")
-            failed = True
-            break
+    all_products = dedupe_products(all_products)
+
+    return {
+        "products": all_products,
+        "failed": failed,
+    }
+
+
+def scrape_shopify(retailer):
+    print(f"Scraping: {retailer['primary_name']}")
+
+    if retailer.get("collection_handles"):
+        result = scrape_collection_shopify(retailer)
+    else:
+        result = scrape_standard_shopify(retailer)
+
+    all_products = result["products"]
 
     print(f"  Total products: {len(all_products)}")
 
@@ -124,7 +240,7 @@ def scrape_shopify(retailer):
 
     return {
         "products": extracted,
-        "failed": failed,
+        "failed": result["failed"],
         "raw_product_count": len(all_products),
     }
 
