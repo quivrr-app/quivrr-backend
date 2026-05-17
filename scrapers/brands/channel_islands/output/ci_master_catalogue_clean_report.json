@@ -1,0 +1,233 @@
+{
+  "input_models": 105,
+  "clean_models": 60,
+  "removed_models": 45,
+  "total_sizes": 651,
+  "removed": [
+    {
+      "slug": "big-willy",
+      "model_name": "big-willy",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "black-flag-whip",
+      "model_name": "black-flag-whip",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "ci-log",
+      "model_name": "ci-log",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "ci-noserider",
+      "model_name": "ci-noserider",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "dfr",
+      "model_name": "dfr",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "k-board",
+      "model_name": "k-board",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "k-small",
+      "model_name": "k-small",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "k-step-up",
+      "model_name": "k-step-up",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "mbm",
+      "model_name": "mbm",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "mbm-plus",
+      "model_name": "mbm-plus",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "mtf-altered",
+      "model_name": "mtf-altered",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "proton-step-up",
+      "model_name": "proton-step-up",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "single-fin",
+      "model_name": "single-fin",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "skinny-fish",
+      "model_name": "skinny-fish",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "sperm-whale",
+      "model_name": "sperm-whale",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-bisquit",
+      "model_name": "the-bisquit",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-caddi",
+      "model_name": "the-caddi",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-cheese-stick",
+      "model_name": "the-cheese-stick",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-even-keel",
+      "model_name": "the-even-keel",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-fishcuit",
+      "model_name": "the-fishcuit",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-flyer",
+      "model_name": "the-flyer",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-flyer-ii",
+      "model_name": "the-flyer-ii",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-fort-knox",
+      "model_name": "the-fort-knox",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-gravy",
+      "model_name": "the-gravy",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-h4000",
+      "model_name": "the-h4000",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-m13",
+      "model_name": "the-m13",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-mg",
+      "model_name": "the-mg",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-motor-boat",
+      "model_name": "the-motor-boat",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-msf-g2",
+      "model_name": "the-msf-g2",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-msg",
+      "model_name": "the-msg",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-mx",
+      "model_name": "the-mx",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-performer",
+      "model_name": "the-performer",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-performer-2",
+      "model_name": "the-performer-2",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-pod",
+      "model_name": "the-pod",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-quong",
+      "model_name": "the-quong",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-red-beauty",
+      "model_name": "the-red-beauty",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-remix",
+      "model_name": "the-remix",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-robber",
+      "model_name": "the-robber",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-rookie",
+      "model_name": "the-rookie",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-semi-pro",
+      "model_name": "the-semi-pro",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-strange",
+      "model_name": "the-strange",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-tangent",
+      "model_name": "the-tangent",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-warp",
+      "model_name": "the-warp",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "the-whip",
+      "model_name": "the-whip",
+      "reason": "no active stock dimensions"
+    },
+    {
+      "slug": "wizard-sleeve",
+      "model_name": "wizard-sleeve",
+      "reason": "no active stock dimensions"
+    }
+  ]
+}

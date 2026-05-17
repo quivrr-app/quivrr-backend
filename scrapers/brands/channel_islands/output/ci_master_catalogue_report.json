@@ -1,0 +1,25 @@
+{
+  "models_input": 108,
+  "models_scraped": 105,
+  "failures": 3,
+  "models_with_sizes": 60,
+  "models_with_images": 105,
+  "total_sizes": 651,
+  "failure_details": [
+    {
+      "slug": "neckbeard-3",
+      "product_url": "https://cisurfboards.com/products/neckbeard-3",
+      "error": "503 Server Error: Service Unavailable for url: https://cisurfboards.com/products/neckbeard-3"
+    },
+    {
+      "slug": "og-flyer",
+      "product_url": "https://cisurfboards.com/products/og-flyer",
+      "error": "503 Server Error: Service Unavailable for url: https://cisurfboards.com/products/og-flyer"
+    },
+    {
+      "slug": "the-m4",
+      "product_url": "https://cisurfboards.com/products/the-m4",
+      "error": "503 Server Error: Service Unavailable for url: https://cisurfboards.com/products/the-m4"
+    }
+  ]
+}

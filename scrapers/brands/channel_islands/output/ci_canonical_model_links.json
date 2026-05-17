@@ -1,0 +1,765 @@
+[
+  {
+    "slug": "4",
+    "model_name": "#4",
+    "product_url": "https://cisurfboards.com/products/4",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "average-joe",
+    "model_name": "Average Joe",
+    "product_url": "https://cisurfboards.com/products/average-joe",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "better-everyday",
+    "model_name": "Better Everyday",
+    "product_url": "https://cisurfboards.com/products/better-everyday",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "big-happy",
+    "model_name": "Big Happy",
+    "product_url": "https://cisurfboards.com/products/big-happy",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "big-willy",
+    "model_name": "Big Willy",
+    "product_url": "https://cisurfboards.com/products/big-willy",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "biscuit-bonzer",
+    "model_name": "Biscuit Bonzer",
+    "product_url": "https://cisurfboards.com/products/biscuit-bonzer",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "black-and-white",
+    "model_name": "Black and White",
+    "product_url": "https://cisurfboards.com/products/black-and-white",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "black-flag-whip",
+    "model_name": "Black Flag Whip",
+    "product_url": "https://cisurfboards.com/products/black-flag-whip",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "bobby-quad",
+    "model_name": "Bobby Quad",
+    "product_url": "https://cisurfboards.com/products/bobby-quad",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "bonzer-3d",
+    "model_name": "Bonzer 3D",
+    "product_url": "https://cisurfboards.com/products/bonzer-3d",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "bonzer-shelter",
+    "model_name": "Bonzer Shelter",
+    "product_url": "https://cisurfboards.com/products/bonzer-shelter",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "bunny-chow",
+    "model_name": "Bunny Chow",
+    "product_url": "https://cisurfboards.com/products/bunny-chow",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "chancho",
+    "model_name": "Chancho",
+    "product_url": "https://cisurfboards.com/products/chancho",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-2-pro",
+    "model_name": "CI 2.Pro",
+    "product_url": "https://cisurfboards.com/products/ci-2-pro",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-fish",
+    "model_name": "CI Fish",
+    "product_url": "https://cisurfboards.com/products/ci-fish",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-log",
+    "model_name": "CI Log",
+    "product_url": "https://cisurfboards.com/products/ci-log",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-mid",
+    "model_name": "CI Mid",
+    "product_url": "https://cisurfboards.com/products/ci-mid",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-mid-twin",
+    "model_name": "CI Mid Twin",
+    "product_url": "https://cisurfboards.com/products/ci-mid-twin",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-mid-twin-1",
+    "model_name": "CI Mid Twin",
+    "product_url": "https://cisurfboards.com/products/ci-mid-twin-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-noserider",
+    "model_name": "CI Noserider",
+    "product_url": "https://cisurfboards.com/products/ci-noserider",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-pro",
+    "model_name": "CI Pro",
+    "product_url": "https://cisurfboards.com/products/ci-pro",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-2-pro-step-up",
+    "model_name": "CI Pro Step Up",
+    "product_url": "https://shop-au.cisurfboards.com/products/ci-2-pro-step-up",
+    "region": "au",
+    "source": "board-models"
+  },
+  {
+    "slug": "ci-pro-step-up",
+    "model_name": "CI Pro Step Up",
+    "product_url": "https://cisurfboards.com/products/ci-pro-step-up",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "dfr",
+    "model_name": "DFR",
+    "product_url": "https://cisurfboards.com/products/dfr",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "dumpster-diver",
+    "model_name": "Dumpster Diver",
+    "product_url": "https://cisurfboards.com/products/dumpster-diver",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "dumpster-diver-2",
+    "model_name": "Dumpster Diver 2",
+    "product_url": "https://cisurfboards.com/products/dumpster-diver-2",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "febs-fish",
+    "model_name": "Feb's Fish",
+    "product_url": "https://cisurfboards.com/products/febs-fish",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "fever",
+    "model_name": "Fever",
+    "product_url": "https://cisurfboards.com/products/fever",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "fishbeard",
+    "model_name": "FishBeard",
+    "product_url": "https://cisurfboards.com/products/fishbeard",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "free-scrubber-1",
+    "model_name": "Free Scrubber",
+    "product_url": "https://cisurfboards.com/products/free-scrubber-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "g-skate",
+    "model_name": "G Skate",
+    "product_url": "https://cisurfboards.com/products/g-skate",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "girabbit",
+    "model_name": "Girabbit",
+    "product_url": "https://cisurfboards.com/products/girabbit",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "goldie",
+    "model_name": "Goldie",
+    "product_url": "https://cisurfboards.com/products/goldie",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "happy",
+    "model_name": "Happy",
+    "product_url": "https://cisurfboards.com/products/happy",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "happy-everyday",
+    "model_name": "Happy Everyday",
+    "product_url": "https://cisurfboards.com/products/happy-everyday",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "happy-traveler-1",
+    "model_name": "Happy Traveler",
+    "product_url": "https://cisurfboards.com/products/happy-traveler-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "high-5",
+    "model_name": "High 5",
+    "product_url": "https://cisurfboards.com/products/high-5",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "hoglet",
+    "model_name": "Hoglet",
+    "product_url": "https://cisurfboards.com/products/hoglet",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "k-board",
+    "model_name": "K Board",
+    "product_url": "https://cisurfboards.com/products/k-board",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "k-small",
+    "model_name": "K Small",
+    "product_url": "https://cisurfboards.com/products/k-small",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "k-step-up",
+    "model_name": "K Step-Up",
+    "product_url": "https://cisurfboards.com/products/k-step-up",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "m-23",
+    "model_name": "M-23",
+    "product_url": "https://cisurfboards.com/products/m-23",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "mavs-gun",
+    "model_name": "Mavs Gun",
+    "product_url": "https://cisurfboards.com/products/mavs-gun",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "mbm",
+    "model_name": "MBM",
+    "product_url": "https://cisurfboards.com/products/mbm",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "mbm-plus",
+    "model_name": "MBM Plus",
+    "product_url": "https://cisurfboards.com/products/mbm-plus",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "mini-eco-hybrid",
+    "model_name": "Mini Eco-hybrid",
+    "product_url": "https://cisurfboards.com/products/mini-eco-hybrid",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "mtf-altered",
+    "model_name": "MTF Altered",
+    "product_url": "https://cisurfboards.com/products/mtf-altered",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "neckbeard-2",
+    "model_name": "Neckbeard 2",
+    "product_url": "https://cisurfboards.com/products/neckbeard-2",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "neckbeard-3",
+    "model_name": "NeckBeard 3",
+    "product_url": "https://cisurfboards.com/products/neckbeard-3",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "og-flyer",
+    "model_name": "OG Flyer",
+    "product_url": "https://cisurfboards.com/products/og-flyer",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "pod-mod-1",
+    "model_name": "Pod Mod",
+    "product_url": "https://cisurfboards.com/products/pod-mod-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "proton-step-up",
+    "model_name": "Proton Step-Up",
+    "product_url": "https://cisurfboards.com/products/proton-step-up",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "rocket-9",
+    "model_name": "Rocket 9",
+    "product_url": "https://shop-au.cisurfboards.com/products/rocket-9",
+    "region": "au",
+    "source": "board-models"
+  },
+  {
+    "slug": "rocket-wide",
+    "model_name": "Rocket Wide",
+    "product_url": "https://cisurfboards.com/products/rocket-wide",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "rocket-wide-squash",
+    "model_name": "Rocket Wide Squash",
+    "product_url": "https://cisurfboards.com/products/rocket-wide-squash",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "rook-15",
+    "model_name": "Rook 15",
+    "product_url": "https://cisurfboards.com/products/rook-15",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "sampler",
+    "model_name": "Sampler",
+    "product_url": "https://cisurfboards.com/products/sampler",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "semi-pro-12",
+    "model_name": "Semi Pro 12",
+    "product_url": "https://cisurfboards.com/products/semi-pro-12",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "single-fin",
+    "model_name": "Single Fin",
+    "product_url": "https://cisurfboards.com/products/single-fin",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "skinny-fish",
+    "model_name": "Skinny Fish",
+    "product_url": "https://cisurfboards.com/products/skinny-fish",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "sperm-whale",
+    "model_name": "Sperm Whale",
+    "product_url": "https://cisurfboards.com/products/sperm-whale",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "t-low",
+    "model_name": "T-Low",
+    "product_url": "https://cisurfboards.com/products/t-low",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "taco-grinder-1",
+    "model_name": "Taco Grinder",
+    "product_url": "https://cisurfboards.com/products/taco-grinder-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-bisquit",
+    "model_name": "The Bisquit",
+    "product_url": "https://cisurfboards.com/products/the-bisquit",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-black-beauty",
+    "model_name": "The Black Beauty",
+    "product_url": "https://cisurfboards.com/products/the-black-beauty",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-caddi",
+    "model_name": "The Caddi",
+    "product_url": "https://cisurfboards.com/products/the-caddi",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-cheese-stick",
+    "model_name": "The Cheese Stick",
+    "product_url": "https://cisurfboards.com/products/the-cheese-stick",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-even-keel",
+    "model_name": "The Even Keel",
+    "product_url": "https://cisurfboards.com/products/the-even-keel",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-fishcuit",
+    "model_name": "The Fishcuit",
+    "product_url": "https://cisurfboards.com/products/the-fishcuit",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-flyer",
+    "model_name": "The Flyer",
+    "product_url": "https://cisurfboards.com/products/the-flyer",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-flyer-ii",
+    "model_name": "The Flyer II",
+    "product_url": "https://cisurfboards.com/products/the-flyer-ii",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-fort-knox",
+    "model_name": "The Fort Knox",
+    "product_url": "https://cisurfboards.com/products/the-fort-knox",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-gravy",
+    "model_name": "The Gravy",
+    "product_url": "https://cisurfboards.com/products/the-gravy",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-h4000",
+    "model_name": "The H4000",
+    "product_url": "https://cisurfboards.com/products/the-h4000",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-m13",
+    "model_name": "The M13",
+    "product_url": "https://cisurfboards.com/products/the-m13",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-m4",
+    "model_name": "The M4",
+    "product_url": "https://cisurfboards.com/products/the-m4",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-mg",
+    "model_name": "The MG",
+    "product_url": "https://cisurfboards.com/products/the-mg",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-motor-boat",
+    "model_name": "The Motor Boat",
+    "product_url": "https://cisurfboards.com/products/the-motor-boat",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-msf-g2",
+    "model_name": "The MSF G2",
+    "product_url": "https://cisurfboards.com/products/the-msf-g2",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-msg",
+    "model_name": "The MSG",
+    "product_url": "https://cisurfboards.com/products/the-msg",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-mx",
+    "model_name": "The MX",
+    "product_url": "https://cisurfboards.com/products/the-mx",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "neckbeard",
+    "model_name": "The Neckbeard",
+    "product_url": "https://shop-au.cisurfboards.com/products/neckbeard",
+    "region": "au",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-new-flyer",
+    "model_name": "The New Flyer",
+    "product_url": "https://cisurfboards.com/products/the-new-flyer",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-peregrine",
+    "model_name": "The Peregrine",
+    "product_url": "https://cisurfboards.com/products/the-peregrine",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-performer",
+    "model_name": "The Performer",
+    "product_url": "https://cisurfboards.com/products/the-performer",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-performer-2",
+    "model_name": "The Performer 2",
+    "product_url": "https://cisurfboards.com/products/the-performer-2",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-pod",
+    "model_name": "The Pod",
+    "product_url": "https://cisurfboards.com/products/the-pod",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-proton",
+    "model_name": "The Proton",
+    "product_url": "https://cisurfboards.com/products/the-proton",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-quong",
+    "model_name": "The Quong",
+    "product_url": "https://cisurfboards.com/products/the-quong",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-red-beauty",
+    "model_name": "The Red Beauty",
+    "product_url": "https://cisurfboards.com/products/the-red-beauty",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-remix",
+    "model_name": "The Remix",
+    "product_url": "https://cisurfboards.com/products/the-remix",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-robber",
+    "model_name": "The Robber",
+    "product_url": "https://cisurfboards.com/products/the-robber",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-rookie",
+    "model_name": "The Rookie",
+    "product_url": "https://cisurfboards.com/products/the-rookie",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-semi-pro",
+    "model_name": "The Semi Pro",
+    "product_url": "https://cisurfboards.com/products/the-semi-pro",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-strange",
+    "model_name": "The Strange",
+    "product_url": "https://cisurfboards.com/products/the-strange",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-tangent",
+    "model_name": "The Tangent",
+    "product_url": "https://cisurfboards.com/products/the-tangent",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-warp",
+    "model_name": "The Warp",
+    "product_url": "https://cisurfboards.com/products/the-warp",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-water-hog",
+    "model_name": "The Water Hog",
+    "product_url": "https://cisurfboards.com/products/the-water-hog",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-whip",
+    "model_name": "The Whip",
+    "product_url": "https://cisurfboards.com/products/the-whip",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "tph-single-fin-1",
+    "model_name": "TPH Single",
+    "product_url": "https://cisurfboards.com/products/tph-single-fin-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "twin-fin",
+    "model_name": "Twin Fin",
+    "product_url": "https://cisurfboards.com/products/twin-fin",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "twin-pin",
+    "model_name": "Twin Pin",
+    "product_url": "https://cisurfboards.com/products/twin-pin",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "two-happy",
+    "model_name": "Two Happy",
+    "product_url": "https://cisurfboards.com/products/two-happy",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "ultra-joe-1",
+    "model_name": "Ultra Joe",
+    "product_url": "https://cisurfboards.com/products/ultra-joe-1",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "mikey-february-shorty",
+    "model_name": "Videos",
+    "product_url": "https://cisurfboards.com/products/mikey-february-shorty",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "the-solution",
+    "model_name": "Videos",
+    "product_url": "https://cisurfboards.com/products/the-solution",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "weirdo-ripper",
+    "model_name": "Weirdo Ripper",
+    "product_url": "https://cisurfboards.com/products/weirdo-ripper",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "wizard-sleeve",
+    "model_name": "Wizard Sleeve",
+    "product_url": "https://cisurfboards.com/products/wizard-sleeve",
+    "region": "global",
+    "source": "board-models"
+  },
+  {
+    "slug": "zeus",
+    "model_name": "Zeus",
+    "product_url": "https://cisurfboards.com/products/zeus",
+    "region": "global",
+    "source": "board-models"
+  }
+]
