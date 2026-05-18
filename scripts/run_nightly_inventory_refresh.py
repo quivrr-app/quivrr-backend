@@ -253,6 +253,15 @@ def main():
             ],
             "retry_count": 2,
         },
+    {
+        "name": "Import Slimes Newcastle dedicated inventory",
+        "command": [
+            PYTHON,
+            "scripts/import_slimes_newcastle_inventory.py",
+        ],
+        "required": False,
+        "attempts": 2,
+    },
         {
             "name": "Build retailer scrape health report",
             "command": [
