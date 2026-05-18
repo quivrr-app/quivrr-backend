@@ -1,11 +1,13 @@
 import os
 import re
+import time
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, text
+from sqlalchemy.exc import OperationalError
 
 
 load_dotenv()
@@ -42,13 +44,15 @@ def build_connection_string() -> str:
 engine = create_engine(
     build_connection_string(),
     pool_pre_ping=True,
-    pool_recycle=180
+    pool_recycle=120,
+    pool_size=5,
+    max_overflow=10
 )
 
 
 app = FastAPI(
     title="Quivrr API",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 
@@ -59,6 +63,52 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def execute_with_retry(query, params=None, attempts=3):
+    last_error = None
+
+    for attempt in range(1, attempts + 1):
+        try:
+            with engine.connect() as connection:
+                return list(
+                    connection.execute(
+                        query,
+                        params or {}
+                    )
+                )
+
+        except OperationalError as exc:
+            last_error = exc
+
+            if attempt == attempts:
+                raise
+
+            time.sleep(0.4 * attempt)
+
+    raise last_error
+
+
+def fetch_one_with_retry(query, params=None, attempts=3):
+    last_error = None
+
+    for attempt in range(1, attempts + 1):
+        try:
+            with engine.connect() as connection:
+                return connection.execute(
+                    query,
+                    params or {}
+                ).fetchone()
+
+        except OperationalError as exc:
+            last_error = exc
+
+            if attempt == attempts:
+                raise
+
+            time.sleep(0.4 * attempt)
+
+    raise last_error
 
 
 def clean_text(value):
@@ -145,6 +195,39 @@ def model_name_matches(title, normalised_title, model_name):
     )
 
 
+def title_has_length(title, normalised_title, length):
+
+    if not length:
+        return False
+
+    combined_title = clean_text(
+        f"{title or ''} {normalised_title or ''}"
+    )
+
+    normalised_length = clean_text(length)
+
+    return normalised_length in combined_title
+
+
+def length_to_inches(length):
+
+    if not length:
+        return None
+
+    match = re.search(
+        r"(?P<feet>\d+)'\s*(?P<inches>\d+)?",
+        str(length)
+    )
+
+    if not match:
+        return None
+
+    feet = int(match.group("feet"))
+    inches = int(match.group("inches") or 0)
+
+    return feet * 12 + inches
+
+
 def format_volume(value):
 
     if value is None:
@@ -180,7 +263,7 @@ def format_price(value):
 
 def retailer_result(row, result_type):
 
-    return {
+    result = {
         "resultType": result_type,
         "inventoryId": row.InventoryId,
         "retailerName": row.RetailerName,
@@ -200,6 +283,25 @@ def retailer_result(row, result_type):
             row.VolumeLitres
         )
     }
+
+    if hasattr(row, "MatchScore"):
+        result["matchScore"] = int(row.MatchScore)
+
+    if hasattr(row, "VolumeDelta"):
+        result["volumeDelta"] = (
+            float(row.VolumeDelta)
+            if row.VolumeDelta is not None
+            else None
+        )
+
+    if hasattr(row, "LengthDelta"):
+        result["lengthDelta"] = (
+            int(row.LengthDelta)
+            if row.LengthDelta is not None
+            else None
+        )
+
+    return result
 
 
 @app.get("/")
@@ -223,16 +325,15 @@ def get_brands():
         ORDER BY BrandName
     """)
 
-    with engine.connect() as connection:
-        results = connection.execute(query)
+    results = execute_with_retry(query)
 
-        brands = [
-            {
-                "brandId": row.BrandId,
-                "brandName": row.BrandName
-            }
-            for row in results
-        ]
+    brands = [
+        {
+            "brandId": row.BrandId,
+            "brandName": row.BrandName
+        }
+        for row in results
+    ]
 
     return brands
 
@@ -250,21 +351,20 @@ def get_models(brand_id: int):
         ORDER BY ModelName
     """)
 
-    with engine.connect() as connection:
-        results = connection.execute(
-            query,
-            {
-                "brand_id": brand_id
-            }
-        )
+    results = execute_with_retry(
+        query,
+        {
+            "brand_id": brand_id
+        }
+    )
 
-        models = [
-            {
-                "modelId": row.BoardModelId,
-                "modelName": row.ModelName
-            }
-            for row in results
-        ]
+    models = [
+        {
+            "modelId": row.BoardModelId,
+            "modelName": row.ModelName
+        }
+        for row in results
+    ]
 
     return models
 
@@ -281,20 +381,19 @@ def get_constructions(model_id: int):
         ORDER BY Construction
     """)
 
-    with engine.connect() as connection:
-        results = connection.execute(
-            query,
-            {
-                "model_id": model_id
-            }
-        )
+    results = execute_with_retry(
+        query,
+        {
+            "model_id": model_id
+        }
+    )
 
-        constructions = [
-            {
-                "construction": row.Construction
-            }
-            for row in results
-        ]
+    constructions = [
+        {
+            "construction": row.Construction
+        }
+        for row in results
+    ]
 
     return constructions
 
@@ -329,31 +428,30 @@ def get_sizes(
             Thickness
     """)
 
-    with engine.connect() as connection:
-        results = connection.execute(
-            query,
-            {
-                "model_id": model_id,
-                "construction": construction
-            }
+    results = execute_with_retry(
+        query,
+        {
+            "model_id": model_id,
+            "construction": construction
+        }
+    )
+
+    sizes = []
+
+    for row in results:
+        volume = format_volume(
+            row.VolumeLitres
         )
 
-        sizes = []
-
-        for row in results:
-            volume = format_volume(
-                row.VolumeLitres
-            )
-
-            sizes.append({
-                "boardSizeId": row.BoardSizeId,
-                "label": format_size_label(row),
-                "length": row.LengthFeetInches,
-                "width": row.Width,
-                "thickness": row.Thickness,
-                "volumeLitres": volume,
-                "construction": row.Construction
-            })
+        sizes.append({
+            "boardSizeId": row.BoardSizeId,
+            "label": format_size_label(row),
+            "length": row.LengthFeetInches,
+            "width": row.Width,
+            "thickness": row.Thickness,
+            "volumeLitres": volume,
+            "construction": row.Construction
+        })
 
     return sizes
 
@@ -406,7 +504,53 @@ def search_inventory(boardSizeId: int):
                     CAST(ri.VolumeLitres AS float)
                     - CAST(:volume AS float)
                 )
-            END AS VolumeDelta
+            END AS VolumeDelta,
+            CASE
+                WHEN ri.RawProductTitle LIKE :model_match
+                    OR ri.NormalisedProductTitle LIKE :model_match
+                    THEN 60
+                ELSE 35
+            END
+            +
+            CASE
+                WHEN ri.Construction IS NOT NULL
+                    AND :construction IS NOT NULL
+                    AND LOWER(ri.Construction) = LOWER(:construction)
+                    THEN 25
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.FinSetup IS NOT NULL
+                    AND :fin_setup IS NOT NULL
+                    AND LOWER(ri.FinSetup) = LOWER(:fin_setup)
+                    THEN 10
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.VolumeLitres IS NOT NULL
+                    AND ABS(
+                        CAST(ri.VolumeLitres AS float)
+                        - CAST(:volume AS float)
+                    ) <= 0.25
+                    THEN 25
+                WHEN ri.VolumeLitres IS NOT NULL
+                    AND ABS(
+                        CAST(ri.VolumeLitres AS float)
+                        - CAST(:volume AS float)
+                    ) <= 0.75
+                    THEN 15
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.Width IS NOT NULL THEN 5 ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.Thickness IS NOT NULL THEN 5 ELSE 0
+            END AS MatchScore
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
@@ -420,7 +564,16 @@ def search_inventory(boardSizeId: int):
                 'true'
             )
         )
-        AND ri.LengthFeetInches = :length
+        AND (
+            ri.LengthFeetInches = :length
+            OR (
+                ri.LengthFeetInches IS NULL
+                AND (
+                    ri.RawProductTitle LIKE :length_title_match
+                    OR ri.NormalisedProductTitle LIKE :length_title_match
+                )
+            )
+        )
         AND (
             ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
@@ -435,6 +588,7 @@ def search_inventory(boardSizeId: int):
             ) <= 0.75
         )
         ORDER BY
+            MatchScore DESC,
             CASE
                 WHEN ri.VolumeLitres IS NULL THEN 1
                 ELSE 0
@@ -445,7 +599,7 @@ def search_inventory(boardSizeId: int):
     """)
 
     close_query = text("""
-        SELECT TOP 200
+        SELECT TOP 300
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -468,7 +622,71 @@ def search_inventory(boardSizeId: int):
                     CAST(ri.VolumeLitres AS float)
                     - CAST(:volume AS float)
                 )
-            END AS VolumeDelta
+            END AS VolumeDelta,
+            CASE
+                WHEN ri.LengthFeetInches IS NULL THEN NULL
+                ELSE ABS(
+                    CAST(:target_length_inches AS int)
+                    - CAST(:target_length_inches AS int)
+                )
+            END AS LengthDelta,
+            CASE
+                WHEN ri.RawProductTitle LIKE :model_match
+                    OR ri.NormalisedProductTitle LIKE :model_match
+                    THEN 70
+                WHEN ri.RawProductTitle LIKE :model_family_match
+                    OR ri.NormalisedProductTitle LIKE :model_family_match
+                    THEN 45
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.LengthFeetInches = :length THEN 25
+                WHEN ri.LengthFeetInches IN (:one_down_length, :one_up_length) THEN 15
+                WHEN ri.LengthFeetInches IS NULL
+                    AND (
+                        ri.RawProductTitle LIKE :length_title_match
+                        OR ri.NormalisedProductTitle LIKE :length_title_match
+                    )
+                    THEN 10
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.Construction IS NOT NULL
+                    AND :construction IS NOT NULL
+                    AND LOWER(ri.Construction) = LOWER(:construction)
+                    THEN 20
+                WHEN ri.Construction IS NOT NULL
+                    THEN 8
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.VolumeLitres IS NOT NULL
+                    AND ABS(
+                        CAST(ri.VolumeLitres AS float)
+                        - CAST(:volume AS float)
+                    ) <= 0.75
+                    THEN 25
+                WHEN ri.VolumeLitres IS NOT NULL
+                    AND ABS(
+                        CAST(ri.VolumeLitres AS float)
+                        - CAST(:volume AS float)
+                    ) <= 2.0
+                    THEN 15
+                WHEN ri.VolumeLitres IS NULL
+                    THEN 3
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.Width IS NOT NULL THEN 4 ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.Thickness IS NOT NULL THEN 4 ELSE 0
+            END AS MatchScore
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
@@ -482,19 +700,33 @@ def search_inventory(boardSizeId: int):
                 'true'
             )
         )
-        AND ri.LengthFeetInches = :length
         AND (
-            ri.RawProductTitle LIKE :model_family_match
+            ri.RawProductTitle LIKE :model_match
+            OR ri.NormalisedProductTitle LIKE :model_match
+            OR ri.RawProductTitle LIKE :model_family_match
             OR ri.NormalisedProductTitle LIKE :model_family_match
+        )
+        AND (
+            ri.LengthFeetInches = :length
+            OR ri.LengthFeetInches = :one_down_length
+            OR ri.LengthFeetInches = :one_up_length
+            OR (
+                ri.LengthFeetInches IS NULL
+                AND (
+                    ri.RawProductTitle LIKE :length_title_match
+                    OR ri.NormalisedProductTitle LIKE :length_title_match
+                )
+            )
         )
         AND (
             ri.VolumeLitres IS NULL
             OR ABS(
                 CAST(ri.VolumeLitres AS float)
                 - CAST(:volume AS float)
-            ) <= 1.75
+            ) <= 2.0
         )
         ORDER BY
+            MatchScore DESC,
             CASE
                 WHEN ri.VolumeLitres IS NULL THEN 1
                 ELSE 0
@@ -504,113 +736,147 @@ def search_inventory(boardSizeId: int):
             r.RetailerName ASC
     """)
 
-    with engine.connect() as connection:
-        official = connection.execute(
-            official_query,
-            {
-                "board_size_id": boardSizeId
-            }
-        ).fetchone()
+    official = fetch_one_with_retry(
+        official_query,
+        {
+            "board_size_id": boardSizeId
+        }
+    )
 
-        if not official:
-            return {
-                "manufacturer": None,
-                "exactRetailerMatches": [],
-                "closeRetailerMatches": []
-            }
+    if not official:
+        return {
+            "manufacturer": None,
+            "exactRetailerMatches": [],
+            "closeRetailerMatches": []
+        }
 
-        model_match = f"%{official.ModelName}%"
-        model_family_match = f"%{model_family_name(official.ModelName)}%"
+    target_length_inches = length_to_inches(
+        official.LengthFeetInches
+    )
 
-        official_result = {
-            "resultType": "manufacturer",
-            "brandName": official.BrandName,
-            "modelName": official.ModelName,
-            "productUrl": official.OfficialProductUrl,
-            "label": format_size_label(official),
+    one_down_length = None
+    one_up_length = None
+
+    if target_length_inches is not None:
+        one_down_length = (
+            f"{target_length_inches // 12}'"
+            f"{target_length_inches % 12 - 1}"
+        )
+
+        one_up_length = (
+            f"{target_length_inches // 12}'"
+            f"{target_length_inches % 12 + 1}"
+        )
+
+        one_down_inches = target_length_inches - 1
+        one_up_inches = target_length_inches + 1
+
+        one_down_length = (
+            f"{one_down_inches // 12}'"
+            f"{one_down_inches % 12}"
+        )
+
+        one_up_length = (
+            f"{one_up_inches // 12}'"
+            f"{one_up_inches % 12}"
+        )
+
+    model_match = f"%{official.ModelName}%"
+    model_family_match = f"%{model_family_name(official.ModelName)}%"
+    length_title_match = f"%{official.LengthFeetInches}%"
+
+    official_result = {
+        "resultType": "manufacturer",
+        "brandName": official.BrandName,
+        "modelName": official.ModelName,
+        "productUrl": official.OfficialProductUrl,
+        "label": format_size_label(official),
+        "length": official.LengthFeetInches,
+        "width": official.Width,
+        "thickness": official.Thickness,
+        "volumeLitres": format_volume(
+            official.VolumeLitres
+        ),
+        "construction": official.Construction,
+        "finSetup": official.FinSetup,
+        "tailShape": official.TailShape
+    }
+
+    exact_rows = execute_with_retry(
+        exact_query,
+        {
+            "model_match": model_match,
+            "model_family_match": model_family_match,
             "length": official.LengthFeetInches,
-            "width": official.Width,
-            "thickness": official.Thickness,
-            "volumeLitres": format_volume(
-                official.VolumeLitres
-            ),
+            "length_title_match": length_title_match,
+            "volume": official.VolumeLitres,
             "construction": official.Construction,
-            "finSetup": official.FinSetup,
-            "tailShape": official.TailShape
+            "fin_setup": official.FinSetup
         }
+    )
 
-        exact_results = connection.execute(
-            exact_query,
-            {
-                "model_match": model_match,
-                "model_family_match": model_family_match,
-                "length": official.LengthFeetInches,
-                "volume": official.VolumeLitres
-            }
-        )
+    exact_matches = []
 
-        exact_matches = []
+    for row in exact_rows:
+        if not model_name_matches(
+            row.RawProductTitle,
+            row.NormalisedProductTitle,
+            official.ModelName
+        ):
+            continue
 
-        for row in exact_results:
-            if not model_name_matches(
-                row.RawProductTitle,
-                row.NormalisedProductTitle,
-                official.ModelName
-            ):
-                continue
-
-            exact_matches.append(
-                retailer_result(
-                    row,
-                    "retailerExact"
-                )
+        exact_matches.append(
+            retailer_result(
+                row,
+                "retailerExact"
             )
-
-            if len(exact_matches) >= 50:
-                break
-
-        exact_ids = {
-            row["inventoryId"]
-            for row in exact_matches
-        }
-
-        close_results = connection.execute(
-            close_query,
-            {
-                "model_family_match": model_family_match,
-                "length": official.LengthFeetInches,
-                "volume": official.VolumeLitres
-            }
         )
 
-        close_matches = []
+        if len(exact_matches) >= 50:
+            break
 
-        for row in close_results:
-            if row.InventoryId in exact_ids:
-                continue
+    exact_ids = {
+        row["inventoryId"]
+        for row in exact_matches
+    }
 
-            if not model_family_matches(
-                row.RawProductTitle,
-                row.NormalisedProductTitle,
-                official.ModelName
-            ):
-                continue
+    close_rows = execute_with_retry(
+        close_query,
+        {
+            "model_match": model_match,
+            "model_family_match": model_family_match,
+            "length": official.LengthFeetInches,
+            "one_down_length": one_down_length,
+            "one_up_length": one_up_length,
+            "length_title_match": length_title_match,
+            "volume": official.VolumeLitres,
+            "construction": official.Construction,
+            "target_length_inches": target_length_inches or 0
+        }
+    )
 
-            item = retailer_result(
+    close_matches = []
+
+    for row in close_rows:
+        if row.InventoryId in exact_ids:
+            continue
+
+        if not model_family_matches(
+            row.RawProductTitle,
+            row.NormalisedProductTitle,
+            official.ModelName
+        ):
+            continue
+
+        close_matches.append(
+            retailer_result(
                 row,
                 "retailerClose"
             )
+        )
 
-            item["volumeDelta"] = (
-                float(row.VolumeDelta)
-                if row.VolumeDelta is not None
-                else None
-            )
-
-            close_matches.append(item)
-
-            if len(close_matches) >= 50:
-                break
+        if len(close_matches) >= 50:
+            break
 
     return {
         "manufacturer": official_result,
@@ -622,16 +888,11 @@ def search_inventory(boardSizeId: int):
 @app.get("/api/test-db")
 def test_database_connection():
 
-    with engine.connect() as connection:
-        result = connection.execute(
-            text(
-                "SELECT DB_NAME() AS database_name;"
-            )
-        )
-
-        database_name = result.scalar()
+    result = fetch_one_with_retry(
+        text("SELECT DB_NAME() AS database_name;")
+    )
 
     return {
         "status": "connected",
-        "database": database_name
+        "database": result.database_name
     }
