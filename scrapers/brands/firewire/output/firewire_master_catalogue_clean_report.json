@@ -1,0 +1,20 @@
+{
+  "brand": "Firewire",
+  "source": "https://www.firewiresurfboards.com",
+  "collection": "prestige-surfboards",
+  "products_seen": 32,
+  "rows": 268,
+  "models": 29,
+  "constructions": [
+    "G-Flex",
+    "Helium",
+    "I-Bolic",
+    "I-Bolic 2.0",
+    "I-Bolic Volcanic",
+    "Proflex",
+    "Volcanic"
+  ],
+  "failures": [],
+  "failure_count": 0,
+  "output_file": "scrapers\\brands\\firewire\\output\\firewire_master_catalogue_clean.json"
+}

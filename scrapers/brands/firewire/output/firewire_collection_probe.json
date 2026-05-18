@@ -1,0 +1,347 @@
+[
+  {
+    "collection": "prestige-surfboards",
+    "url": "https://www.firewiresurfboards.com/collections/prestige-surfboards/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 10,
+    "samples": [
+      {
+        "title": "DRK",
+        "handle": "drk",
+        "variant_count": 11,
+        "variant_titles": [
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'5\" x 18\" x 2 1/8\" x 21.4L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'6\" x 18 1/8\" x 2 3/16\" x 22.5L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'7\" x 18 1/4\" x 2 1/4\" x 23.7L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'8\" x 18 3/8\" x 2 5/16\" x 24.9L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'9\" x 18 7/16\" x 2 3/8\" x 26.1L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'10\" x 18 1/2\" x 2 7/16\" x 27.2L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'11\" x 18 11/16\" x 2 1/2\" x 29.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'0\" x 18 13/16\" x 2 5/8\" x 31.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'2\" x 19\" x 2 11/16\" x 32.6L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'4\" x 19 1/4\" x 2 3/4\" x 34.7L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'6\" x 19 1/2\" x 2 3/4\" x 36.3L"
+        ]
+      },
+      {
+        "title": "Spaceship",
+        "handle": "spaceship",
+        "variant_count": 22,
+        "variant_titles": [
+          "Black / Proflex Technology / 5'6\" x 18 1/8 x 2 1/4 x 22.5L",
+          "Black / Proflex Technology / 5'7\" x 18 1/4 x 2 5/16 x 23.7L",
+          "Black / Proflex Technology / 5'8\" x 18 3/8 x 2 3/8 x 25.0L",
+          "Black / Proflex Technology / 5'9\" x 18 1/2 x 2 7/16 x 26.3L",
+          "Black / Proflex Technology / 5'10\" x 18 3/4 x 2 1/2 x 27.5L",
+          "Black / Proflex Technology / 5'11\" x 19 x 2 9/16 x 28.7L",
+          "Black / Proflex Technology / 6' x 19 1/4 x 2 5/8 x 30.0L",
+          "Black / Proflex Technology / 6'2\" x 19 3/4 x 2 11/16 x 33.0L",
+          "Black / Proflex Technology / 6'4\" x 20 1/4 x 2 3/4 x 36.0L",
+          "Black / Proflex Technology / 6'6\" x 20 3/4 x 2 15/16 x 40.0L",
+          "Black / Proflex Technology / 6'8\" x 21 1/4 x 3 1/16 x 44.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'6\" x 18 1/8 x 2 1/4 x 22.5L"
+        ]
+      },
+      {
+        "title": "Boss Up",
+        "handle": "boss-up-2026",
+        "variant_count": 7,
+        "variant_titles": [
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'6\" x 20 1/8\" x 2 7/8\" x 39.5L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'8\" x 20 1/4\" x 2 7/8\" x 40.8L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'10\" x 20 3/8\" x 2 15/16\" x 43.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'0\" x 20 7/16\" x 2 15/16\" x 44.3L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'2\" x 20 1/2\" x 3\" x 46.4L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'4\" x 20 7/16\" x 3 1/16\" x 48.4L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'6\" x 20 5/8\"L x 3 1/8\" x 51.1L"
+        ]
+      },
+      {
+        "title": "Groove",
+        "handle": "groove-2026",
+        "variant_count": 11,
+        "variant_titles": [
+          "Black / Helium Core with Fiberglass Lamination / 5'4\" x 19\" x 2 3/16\" x 25.8L",
+          "Black / Helium Core with Fiberglass Lamination / 5'6\" x 19 1/4\" x 2 1/4\" x 27.7L",
+          "Black / Helium Core with Fiberglass Lamination / 5'7\" x 19 1/2\" x 2 5/16\" x 29.2L",
+          "Black / Helium Core with Fiberglass Lamination / 5'8\" x 19 3/4\" x 2 3/8\" x 31.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'9\" x 20\" x 2 7/16\" x 32.5L",
+          "Black / Helium Core with Fiberglass Lamination / 5'10\" x 20 1/8\" x 2 1/2\" x 34.0L",
+          "Black / Helium Core with Fiberglass Lamination / 5'11\" x 20 1/4\" x 2 9/16\" x 35.6L",
+          "Black / Helium Core with Fiberglass Lamination / 6'0\" x 20 3/8\" x 2 5/8\" x 37.2L",
+          "Black / Helium Core with Fiberglass Lamination / 6'1\" x 20 1/2\" x 2 11/16\" x 38.8L",
+          "Black / Helium Core with Fiberglass Lamination / 6'2\" x 20 5/8\" x 2 3/4\" x 40.5L",
+          "Black / Helium Core with Fiberglass Lamination / 6'4\" x 21\" x 2 13/16\" x 43.4L"
+        ]
+      },
+      {
+        "title": "Sci-Fi 2.0",
+        "handle": "sci-fi-2-0",
+        "variant_count": 12,
+        "variant_titles": [
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'6\" x 18 5/8\" x 2 7/16\" x 26.0L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'7\" x 18 7/8\" x 2 3/8\" x 27.5L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'8\" x 19 1/8\" x 2 7/16\" x 29.0L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'9\" x 19 3/8\" x 2 1/2\" x 30.0L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'10\" x 19 5/8\" x 2 9/16\" x 32.2L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'11\" x 19 7/8\" x 2 5/8\" x 33.8L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'0\" x 20 1/8\" x 2 11/16\" x 35.4L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'1\" x 20 3/8\" x 2 3/4\" x 37.1L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'2\" x 20 5/8\" x 2 13/16\" x 38.9L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'3\" x 20 7/8\" x 2 7/8\" x 40.8L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'4\" x 21 1/8\" x 2 15/16\" x 42.7L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'6\" x 21 5/8\" x 3\" x 45.8L"
+        ]
+      },
+      {
+        "title": "Mindcraft",
+        "handle": "mindcraft",
+        "variant_count": 18,
+        "variant_titles": [
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'4\" x 18 1/8\" x 2 1/4\" x 23.7L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'5\" x 18 3/8\" x 2 5/16\" x 25.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'6\" x 18 5/8\" x 2 3/8\" x 26.5L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'7\" x 18 7/8\" x 2 7/16\" x 27.9L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'8\" x 19 1/8\" x 2 1/2\" x 29.5L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'9\" x 19 3/8\" x 2 9/16\" x 31.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'10\" x 19 5/8\" x 2 5/8\" x 32.6L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'11\" x 19 7/8\" x 2 11/16\" x 34.3L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'0\" x 20 1/8\" x 2 3/4\" x 36.1L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'1\" x 20 3/8\" x 2 13/16\" x 37.9L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'2\" x 20 5/8\" x 2 7/8\" x 39.7L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'3\" x 20 7/8\" x 2 15/16\" x 41.6L"
+        ]
+      },
+      {
+        "title": "Mashup",
+        "handle": "mashup-2026",
+        "variant_count": 11,
+        "variant_titles": [
+          "Black / Helium Core with Fiberglass Lamination / 5'4\" x 19 9/16\" x 2 7/16\" x 27.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'5\" x 19 9/16\" x 2 1/2\" x 28.7L",
+          "Black / Helium Core with Fiberglass Lamination / 5'6\" x 19 5/8\" x 2 9/16\" x 30.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'7\" x 19 11/16\" x 2 5/8\" x 31.4L",
+          "Black / Helium Core with Fiberglass Lamination / 5'8\" x 19 7/8\" x 2 11/16\" x 32.8L",
+          "Black / Helium Core with Fiberglass Lamination / 5'9\" x 19 15/16\" x 2 3/4\" x 34.2L",
+          "Black / Helium Core with Fiberglass Lamination / 5'10\" x 20 1/16\" x 2 3/4\" x 35.8L",
+          "Black / Helium Core with Fiberglass Lamination / 6'0\" x 20 3/8\" x 2 7/8\" x 38.5L",
+          "Black / Helium Core with Fiberglass Lamination / 6'2\" x 20 3/4\" x 3\" x 41.6L",
+          "Black / Helium Core with Fiberglass Lamination / 6'4\" x 21\" x 3 1/8\" x 44.1L",
+          "Black / Helium Core with Fiberglass Lamination / 6'6\" x 21 1/8\" x 3 3/16\" x 47.4L"
+        ]
+      },
+      {
+        "title": "FRK Swallow",
+        "handle": "frk-swallow-2026",
+        "variant_count": 10,
+        "variant_titles": [
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'6\" x 18 1/2\" x 2 3/8\" x 25.7L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'7\" x 18 9/16\" x 2 3/8\" x 26.3L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'8\" x 18 5/8\" x 2 7/16\" x 27.4L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'9\" x 18 7/8\" x 2 1/2\" x 29L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'10\" x 19 1/16\" x 2 9/16\" x 30.2L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 5'11\" x 19 1/4\" x 2 5/8\" x 31.94L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'x 19 3/8\" x 2 11/16\" x 33.25L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'1\" x 19 9/16\" x 2 11/16\" x 34.6L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'2\" x 19 11/16\" x 2 3/4\" x 36.1L",
+          "Grey / I-Bolic 2.0 Core with Fiberglass Lamination / 6'4\" x 20 1/8\" x 2 13/16\" x 38.7L"
+        ]
+      },
+      {
+        "title": "Dominator 2.0",
+        "handle": "dominator-2-0-2026",
+        "variant_count": 13,
+        "variant_titles": [
+          "Black / Helium Core with Fiberglass Lamination / 5'6\" x 19 3/4\" x 2 5/16\" x 28.0L",
+          "Black / Helium Core with Fiberglass Lamination / 5'7\" x 19 7/8\" x 2 3/8\" x 29.4L",
+          "Black / Helium Core with Fiberglass Lamination / 5'8\" x 20\" x 2 3/8\" x 30.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'9\" x 20 1/8\" x 2 7/16\" x 31.5L",
+          "Black / Helium Core with Fiberglass Lamination / 5'10\" x 20 1/4\" x 2 1/2\" x 33.0L",
+          "Black / Helium Core with Fiberglass Lamination / 5'11\" x 20 3/8\" x 2 1/2\" x 33.9L",
+          "Black / Helium Core with Fiberglass Lamination / 6'0\" x 20 1/2\" x 2 1/2\" x 34.9L",
+          "Black / Helium Core with Fiberglass Lamination / 6'1\" x 20 5/8\" x 2 9/16\" x 36.0L",
+          "Black / Helium Core with Fiberglass Lamination / 6'2\" x 20 3/4\" x 2 5/8\" x 37.8L",
+          "Black / Helium Core with Fiberglass Lamination / 6'4\" x 21\" x 2 3/4\" x 40.9L",
+          "Black / Helium Core with Fiberglass Lamination / 6'6\" x 21 1/4\" x 2 7/8\" x 44.4L",
+          "Black / Helium Core with Fiberglass Lamination / 6'8\" x 21 3/4\" x 3\" x 48.6L"
+        ]
+      },
+      {
+        "title": "Seaside",
+        "handle": "seaside",
+        "variant_count": 12,
+        "variant_titles": [
+          "Black / Helium Core with Fiberglass Lamination / 5'2\" x 20\" x 2 5/16\" x 26.5L",
+          "Black / Helium Core with Fiberglass Lamination / 5'3\" x 20 5/16\" x 2 3/8\" x 28.2L",
+          "Black / Helium Core with Fiberglass Lamination / 5'4\" x 20 5/8\" x 2 7/16\" x 29.8L",
+          "Black / Helium Core with Fiberglass Lamination / 5'5\" x 20 15/16\" x 2 1/2\" x 31.5L",
+          "Black / Helium Core with Fiberglass Lamination / 5'6\" x 21 1/4\" x 2 1/2\" x 32.7L",
+          "Black / Helium Core with Fiberglass Lamination / 5'7\" x 21 5/8\" x 2 1/2\" x 33.6L",
+          "Black / Helium Core with Fiberglass Lamination / 5'8\" x 21 15/16\" x 2 9/16\" x 35.4L",
+          "Black / Helium Core with Fiberglass Lamination / 5'9\" x 22 1/4\" x 2 5/8\" x 37.3L",
+          "Black / Helium Core with Fiberglass Lamination / 5'10\" x 22 5/8\" x 2 11/16\" x 39.4L",
+          "Black / Helium Core with Fiberglass Lamination / 5'11\" x 22 3/4\" x 2 3/4\" x 41.1L",
+          "Black / Helium Core with Fiberglass Lamination / 6'0\" x 22 7/8\" x 2 15/16\" x 44.8L",
+          "Black / Helium Core with Fiberglass Lamination / 6'1\" x 22 15/16\" x 3\" x 46.5L"
+        ]
+      }
+    ]
+  },
+  {
+    "collection": "surfboards",
+    "url": "https://www.firewiresurfboards.com/collections/surfboards/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "samples": []
+  },
+  {
+    "collection": "all",
+    "url": "https://www.firewiresurfboards.com/collections/all/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 10,
+    "samples": [
+      {
+        "title": "Boss Up",
+        "handle": "boss-up-2026",
+        "variant_count": 7,
+        "variant_titles": [
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'6\" x 20 1/8\" x 2 7/8\" x 39.5L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'8\" x 20 1/4\" x 2 7/8\" x 40.8L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'10\" x 20 3/8\" x 2 15/16\" x 43.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'0\" x 20 7/16\" x 2 15/16\" x 44.3L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'2\" x 20 1/2\" x 3\" x 46.4L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'4\" x 20 7/16\" x 3 1/16\" x 48.4L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 7'6\" x 20 5/8\"L x 3 1/8\" x 51.1L"
+        ]
+      },
+      {
+        "title": "Boss Up 2025",
+        "handle": "prestige-boss-up",
+        "variant_count": 14,
+        "variant_titles": [
+          "I-Bolic Core with Fiberglass Lamination / Grey / 6'6\" x 20 1/8\" x 2 7/8\" x 39.5L",
+          "I-Bolic Core with Volcanic Lamination / Volcanic / 6'6\" x 20 1/8\" x 2 7/8\" x 39.5L",
+          "I-Bolic Core with Fiberglass Lamination / Grey / 6'8\" x 20 1/4\" x 2 7/8\" x 40.8L",
+          "I-Bolic Core with Volcanic Lamination / Volcanic / 6'8\" x 20 1/4\" x 2 7/8\" x 40.8L",
+          "I-Bolic Core with Fiberglass Lamination / Grey / 6'10\" x 20 3/8\" x 2 15/16\" x 43.0L",
+          "I-Bolic Core with Volcanic Lamination / Volcanic / 6'10\" x 20 3/8\" x 2 15/16\" x 43.0L",
+          "I-Bolic Core with Fiberglass Lamination / Grey / 7'0\" x 20 7/16\" x 2 15/16\" x 44.3L",
+          "I-Bolic Core with Volcanic Lamination / Volcanic / 7'0\" x 20 7/16\" x 2 15/16\" x 44.3L",
+          "I-Bolic Core with Fiberglass Lamination / Grey / 7'2\" x 20 1/2\" x 3\" x 46.4L",
+          "I-Bolic Core with Volcanic Lamination / Volcanic / 7'2\" x 20 1/2\" x 3\" x 46.4L",
+          "I-Bolic Core with Fiberglass Lamination / Grey / 7'4\" x 20 7/16\" x 3 1/16\" x 48.4L",
+          "I-Bolic Core with Volcanic Lamination / Volcanic / 7'4\" x 20 7/16\" x 3 1/16\" x 48.4L"
+        ]
+      },
+      {
+        "title": "Dominator 2.0",
+        "handle": "dominator-2-0-2026",
+        "variant_count": 13,
+        "variant_titles": [
+          "Black / Helium Core with Fiberglass Lamination / 5'6\" x 19 3/4\" x 2 5/16\" x 28.0L",
+          "Black / Helium Core with Fiberglass Lamination / 5'7\" x 19 7/8\" x 2 3/8\" x 29.4L",
+          "Black / Helium Core with Fiberglass Lamination / 5'8\" x 20\" x 2 3/8\" x 30.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'9\" x 20 1/8\" x 2 7/16\" x 31.5L",
+          "Black / Helium Core with Fiberglass Lamination / 5'10\" x 20 1/4\" x 2 1/2\" x 33.0L",
+          "Black / Helium Core with Fiberglass Lamination / 5'11\" x 20 3/8\" x 2 1/2\" x 33.9L",
+          "Black / Helium Core with Fiberglass Lamination / 6'0\" x 20 1/2\" x 2 1/2\" x 34.9L",
+          "Black / Helium Core with Fiberglass Lamination / 6'1\" x 20 5/8\" x 2 9/16\" x 36.0L",
+          "Black / Helium Core with Fiberglass Lamination / 6'2\" x 20 3/4\" x 2 5/8\" x 37.8L",
+          "Black / Helium Core with Fiberglass Lamination / 6'4\" x 21\" x 2 3/4\" x 40.9L",
+          "Black / Helium Core with Fiberglass Lamination / 6'6\" x 21 1/4\" x 2 7/8\" x 44.4L",
+          "Black / Helium Core with Fiberglass Lamination / 6'8\" x 21 3/4\" x 3\" x 48.6L"
+        ]
+      },
+      {
+        "title": "Dominator Pro",
+        "handle": "dominator-pro",
+        "variant_count": 10,
+        "variant_titles": [
+          "Black / Helium Core with Fiberglass Lamination / 5'6\" x 18 3/4\" x 2 5/16\" x 25.9L",
+          "Black / Helium Core with Fiberglass Lamination / 5'7\" x 18 7/8\" x 2 3/8\" x 27.2L",
+          "Black / Helium Core with Fiberglass Lamination / 5'8\" x 19\" x 2 3/8\" x 28.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'9\" x 19 1/4\" x 2 7/16\" x 29.3L",
+          "Black / Helium Core with Fiberglass Lamination / 5'10\" x 19 1/2\" x 2 1/2\" x 30.1L",
+          "Black / Helium Core with Fiberglass Lamination / 5'11\" x 19 3/4\" x 2 1/2\" x 31.7L",
+          "Black / Helium Core with Fiberglass Lamination / 6'0\" x 20\" x 2 9/16\" x 33.3L",
+          "Black / Helium Core with Fiberglass Lamination / 6'2\" x 20 1/4\" x 2 5/8\" x 35.5L",
+          "Black / Helium Core with Fiberglass Lamination / 6'4\" x 20 1/2\" x 2 3/4\" x 38.5L",
+          "Black / Helium Core with Fiberglass Lamination / 6'6\" x 20 5/8\" x 2 7/8\" x 41.6L"
+        ]
+      },
+      {
+        "title": "DRK",
+        "handle": "drk",
+        "variant_count": 11,
+        "variant_titles": [
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'5\" x 18\" x 2 1/8\" x 21.4L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'6\" x 18 1/8\" x 2 3/16\" x 22.5L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'7\" x 18 1/4\" x 2 1/4\" x 23.7L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'8\" x 18 3/8\" x 2 5/16\" x 24.9L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'9\" x 18 7/16\" x 2 3/8\" x 26.1L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'10\" x 18 1/2\" x 2 7/16\" x 27.2L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 5'11\" x 18 11/16\" x 2 1/2\" x 29.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'0\" x 18 13/16\" x 2 5/8\" x 31.0L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'2\" x 19\" x 2 11/16\" x 32.6L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'4\" x 19 1/4\" x 2 3/4\" x 34.7L",
+          "White / I-Bolic 2.0 Core with Fiberglass Lamination / 6'6\" x 19 1/2\" x 2 3/4\" x 36.3L"
+        ]
+      },
+      {
+        "title": "Endorfins KS1 Fin Set",
+        "handle": "prestige-endorfins-ks1-fin-set",
+        "variant_count": 10,
+        "variant_titles": [
+          "5 Fin Set / Single Tab / Large",
+          "5 Fin Set / Dual Tab / Large",
+          "5 Fin Set / Single Tab / Medium",
+          "5 Fin Set / Dual Tab / Medium",
+          "3 Fin Set / Single Tab / Large",
+          "3 Fin Set / Dual Tab / Large",
+          "3 Fin Set / Single Tab / Medium",
+          "3 Fin Set / Dual Tab / Medium",
+          "3 Fin Set / Single Tab / Small",
+          "3 Fin Set / Dual Tab / Small"
+        ]
+      },
+      {
+        "title": "Endorfins KSR Fin Set",
+        "handle": "endorfins-ksr-fin-set",
+        "variant_count": 4,
+        "variant_titles": [
+          "5 Fin Set / Large",
+          "5 Fin Set / Medium",
+          "3 Fin Set / Large",
+          "3 Fin Set / Medium"
+        ]
+      },
+      {
+        "title": "Endorfins Twin + 2 Fin Set",
+        "handle": "prestige-endorfins-twin-2-fin-set",
+        "variant_count": 2,
+        "variant_titles": [
+          "Single Tab",
+          "Dual Tab"
+        ]
+      },
+      {
+        "title": "Firewire 2+1 Flat Traction Pad",
+        "handle": "prestige-firewire-2-1-flat-traction-pad",
+        "variant_count": 2,
+        "variant_titles": [
+          "Charcoal/Black",
+          "Black/Charcoal"
+        ]
+      },
+      {
+        "title": "Firewire 3 Piece Lowrider Arch Traction Pad",
+        "handle": "prestige-firewire-3-piece-lowrider-arch-traction-pad",
+        "variant_count": 2,
+        "variant_titles": [
+          "Black/Chacoal",
+          "Charcoal/Black"
+        ]
+      }
+    ]
+  }
+]

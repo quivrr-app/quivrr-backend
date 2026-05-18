@@ -32,6 +32,10 @@ STEPS = [
         "name": "Rusty",
         "command": [PYTHON, "scripts/run_rusty_pipeline.py"],
     },
+    {
+        "name": "Firewire",
+        "command": [PYTHON, "scripts/run_firewire_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")
