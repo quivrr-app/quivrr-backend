@@ -1,0 +1,99 @@
+{
+  "url": "https://lostsurfboards.net/surfboards/speed-demon/",
+  "title": "Speed Demon",
+  "description": "The SPEED DEMON! The SPEED DEMON was an original …Lost Surfboards model—a model synonymous with full-on, pedal-to-the-metal, furiously fast, small-wave surfing. Originally developed with feedback from San Clemente Mafia maestro, Dino Andino, in the mid-1990s, it became one of our early, well-known models. Tuned at the long, sloping, flattish-faced waves of Trestles, with design details",
+  "hero_image": "https://lostsurfboards.net/wp-content/uploads/2026/04/speed-demon-lost-surfboards.jpg",
+  "dimension_count": 15,
+  "dimensions": [
+    {
+      "length": "5'4",
+      "width": "18.25",
+      "thickness": "2.20",
+      "volume_litres": "23.50"
+    },
+    {
+      "length": "5'5",
+      "width": "18.38",
+      "thickness": "2.24",
+      "volume_litres": "24.65"
+    },
+    {
+      "length": "5'6",
+      "width": "18.50",
+      "thickness": "2.28",
+      "volume_litres": "25.65"
+    },
+    {
+      "length": "5'7",
+      "width": "18.75",
+      "thickness": "2.30",
+      "volume_litres": "26.75"
+    },
+    {
+      "length": "5'8",
+      "width": "19.00",
+      "thickness": "2.34",
+      "volume_litres": "27.75"
+    },
+    {
+      "length": "5'9",
+      "width": "19.25",
+      "thickness": "2.38",
+      "volume_litres": "29.00"
+    },
+    {
+      "length": "5'10",
+      "width": "19.50",
+      "thickness": "2.42",
+      "volume_litres": "30.50"
+    },
+    {
+      "length": "5'11",
+      "width": "19.75",
+      "thickness": "2.45",
+      "volume_litres": "31.50"
+    },
+    {
+      "length": "6'0",
+      "width": "20.00",
+      "thickness": "2.50",
+      "volume_litres": "33.00"
+    },
+    {
+      "length": "6'1",
+      "width": "20.25",
+      "thickness": "2.54",
+      "volume_litres": "34.60"
+    },
+    {
+      "length": "6'2",
+      "width": "20.50",
+      "thickness": "2.60",
+      "volume_litres": "36.10"
+    },
+    {
+      "length": "6'3",
+      "width": "20.75",
+      "thickness": "2.63",
+      "volume_litres": "37.50"
+    },
+    {
+      "length": "6'4",
+      "width": "21.00",
+      "thickness": "2.67",
+      "volume_litres": "39.00"
+    },
+    {
+      "length": "6'5",
+      "width": "21.25",
+      "thickness": "2.75",
+      "volume_litres": "41.00"
+    },
+    {
+      "length": "6'6",
+      "width": "21.50",
+      "thickness": "2.80",
+      "volume_litres": "42.75"
+    }
+  ]
+}

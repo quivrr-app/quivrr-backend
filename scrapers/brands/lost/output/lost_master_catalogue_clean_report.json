@@ -1,0 +1,195 @@
+{
+  "brand": "Lost",
+  "board_urls_found": 122,
+  "rows": 3335,
+  "models": 82,
+  "constructions": [
+    "Black Sheep",
+    "Lib Tech",
+    "LightSpeed",
+    "PU"
+  ],
+  "failures": [
+    {
+      "url": "https://lostsurfboards.net/surfboards/3-0-stub/",
+      "reason": "no dimensions found",
+      "model": "3.0 Stub Squash"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/bottom-feeder/",
+      "reason": "no dimensions found",
+      "model": "Bottom Feeder"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/f1-stub/",
+      "reason": "no dimensions found",
+      "model": "F1 Stub"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/f1/",
+      "reason": "no dimensions found",
+      "model": "F1"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/glydra/",
+      "reason": "no dimensions found",
+      "model": "Glydra"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/grocket/",
+      "reason": "no dimensions found",
+      "model": "Grocket"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-crowd-killer/",
+      "reason": "no dimensions found",
+      "model": "Crowd Killer"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-glydra/",
+      "reason": "no dimensions found",
+      "model": "Glydra"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-hydra/",
+      "reason": "no dimensions found",
+      "model": "Hydra"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-little-wing/",
+      "reason": "no dimensions found",
+      "model": "Little Wing"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-mr-x-mayhem-california-pin/",
+      "reason": "no dimensions found",
+      "model": "MR X Mayhem California Pin"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-party-platter/",
+      "reason": "no dimensions found",
+      "model": "Party Platter"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-puddle-jumper/",
+      "reason": "no dimensions found",
+      "model": "Puddle Jumper"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-rad-ripper/",
+      "reason": "no dimensions found",
+      "model": "Rad Ripper"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-rnf-96/",
+      "reason": "no dimensions found",
+      "model": "RNF 96"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-rnf-retro-fish/",
+      "reason": "no dimensions found",
+      "model": "RNF Retro Fish"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-sabo-taj/",
+      "reason": "no dimensions found",
+      "model": "Sabo Taj"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/lib-tech-super-smooth-operator/",
+      "reason": "no dimensions found",
+      "model": "Super Smooth Operator"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/libtech-micks-tape/",
+      "reason": "no dimensions found",
+      "model": "Micks Tape"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-1979-retro-single-fin/",
+      "reason": "no dimensions found",
+      "model": "MR 1979 Retro Single Fin"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-1980-retro-pro/",
+      "reason": "no dimensions found",
+      "model": "MR 1980 Retro Pro"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-bumble-bee-2/",
+      "reason": "no dimensions found",
+      "model": "MR Bumble Bee"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-bush-ranger-step-up/",
+      "reason": "no dimensions found",
+      "model": "MR Bush Ranger Step Up"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-flying-fish/",
+      "reason": "no dimensions found",
+      "model": "MR Flying Fish"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-super-twin-2/",
+      "reason": "no dimensions found",
+      "model": "MR Super Twin 2"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/mr-turbo-channel-twin-1/",
+      "reason": "no dimensions found",
+      "model": "MR Turbo Channel Twin + 1"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/pelagic/",
+      "reason": "no dimensions found",
+      "model": "Pelagic"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/quiver-killer/",
+      "reason": "no dimensions found",
+      "model": "Quiver Killer '25"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/rnf-96-kingfish/",
+      "reason": "no dimensions found",
+      "model": "RNF '96 Kingfish"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/rocket/",
+      "reason": "no dimensions found",
+      "model": "Rocket"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/scorcher/",
+      "reason": "no dimensions found",
+      "model": "Scorcher"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/short-round/",
+      "reason": "no dimensions found",
+      "model": "Short Round"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/sub-blasterr/",
+      "reason": "no dimensions found",
+      "model": "Sub Blaster"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/sub-scorcher-2-hip-squash/",
+      "reason": "no dimensions found",
+      "model": "Sub Scorcher 2 (Hip Squash)"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/sub-scorcher/",
+      "reason": "no dimensions found",
+      "model": "Sub Scorcher"
+    },
+    {
+      "url": "https://lostsurfboards.net/surfboards/tb-whiplash/",
+      "reason": "no dimensions found",
+      "model": "TB Whiplash"
+    }
+  ],
+  "output_file": "scrapers\\brands\\lost\\output\\lost_master_catalogue_clean.json"
+}

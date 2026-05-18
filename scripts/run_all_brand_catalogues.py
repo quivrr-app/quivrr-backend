@@ -24,6 +24,10 @@ STEPS = [
         "name": "DHD",
         "command": [PYTHON, "scripts/run_dhd_pipeline.py"],
     },
+    {
+        "name": "Lost",
+        "command": [PYTHON, "scripts/run_lost_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")
