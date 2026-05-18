@@ -1,0 +1,572 @@
+[
+  {
+    "handle": "1984",
+    "title": "1984",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/1984"
+  },
+  {
+    "handle": "419-fish",
+    "title": "419 FIsh",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/419-fish"
+  },
+  {
+    "handle": "421-fish",
+    "title": "421 Fish",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/421-fish"
+  },
+  {
+    "handle": "accessories",
+    "title": "Accessories",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/accessories"
+  },
+  {
+    "handle": "all-alternatives",
+    "title": "All Alternatives",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/all-alternatives"
+  },
+  {
+    "handle": "all-big-boards",
+    "title": "All Big Boards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/all-big-boards"
+  },
+  {
+    "handle": "all-products-excluding-route",
+    "title": "All Products Excluding Route",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/all-products-excluding-route"
+  },
+  {
+    "handle": "all-shortboards",
+    "title": "All Shortboards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/all-shortboards"
+  },
+  {
+    "handle": "all-boards",
+    "title": "All Surfboards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/all-boards"
+  },
+  {
+    "handle": "alternatives",
+    "title": "Alternatives",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/alternatives"
+  },
+  {
+    "handle": "bali-single",
+    "title": "Bali Single",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/bali-single"
+  },
+  {
+    "handle": "barking-spider",
+    "title": "Barking Spider",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/barking-spider"
+  },
+  {
+    "handle": "beginner-surfboards",
+    "title": "Beginner Surfboards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/beginner-surfboards"
+  },
+  {
+    "handle": "best-sellers",
+    "title": "Best Sellers",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/best-sellers"
+  },
+  {
+    "handle": "big-boards",
+    "title": "Big Boards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/big-boards"
+  },
+  {
+    "handle": "big-cat",
+    "title": "Big Cat",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/big-cat"
+  },
+  {
+    "handle": "blackbird",
+    "title": "Blackbird",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/blackbird"
+  },
+  {
+    "handle": "blade",
+    "title": "Blade",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/blade"
+  },
+  {
+    "handle": "chew-toy",
+    "title": "Chew Toy",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/chew-toy"
+  },
+  {
+    "handle": "chupacabra",
+    "title": "Chupacabra",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/chupacabra"
+  },
+  {
+    "handle": "custom",
+    "title": "Custom",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/custom"
+  },
+  {
+    "handle": "custom-1",
+    "title": "Custom",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/custom-1"
+  },
+  {
+    "handle": "d-min",
+    "title": "D Min",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/d-min"
+  },
+  {
+    "handle": "dark-arts",
+    "title": "Dark Arts",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/dark-arts"
+  },
+  {
+    "handle": "desert-island",
+    "title": "Desert Island",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/desert-island"
+  },
+  {
+    "handle": "discount-code-surf-collection",
+    "title": "Discount Code Surf Collection",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/discount-code-surf-collection"
+  },
+  {
+    "handle": "dozer",
+    "title": "Dozer",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/dozer"
+  },
+  {
+    "handle": "dwart",
+    "title": "Dwart",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/dwart"
+  },
+  {
+    "handle": "dwart-too",
+    "title": "Dwart Too",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/dwart-too"
+  },
+  {
+    "handle": "egg",
+    "title": "Egg",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/egg"
+  },
+  {
+    "handle": "egg-not",
+    "title": "Egg Not",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/egg-not"
+  },
+  {
+    "handle": "el-dorado",
+    "title": "El Dorado",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/el-dorado"
+  },
+  {
+    "handle": "enough-said",
+    "title": "Enough Said",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/enough-said"
+  },
+  {
+    "handle": "express",
+    "title": "Express",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/express"
+  },
+  {
+    "handle": "factory-seconds",
+    "title": "Factory Seconds",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/factory-seconds"
+  },
+  {
+    "handle": "featured-boards-in-stock",
+    "title": "Featured Boards In Stock",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/featured-boards-in-stock"
+  },
+  {
+    "handle": "fins",
+    "title": "Fins",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/fins"
+  },
+  {
+    "handle": "fish-quatro",
+    "title": "Fish Quatro",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/fish-quatro"
+  },
+  {
+    "handle": "flat-deck-collection",
+    "title": "Flat Deck Collection",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/flat-deck-collection"
+  },
+  {
+    "handle": "grom-surfboards",
+    "title": "Grom Surfboards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/grom-surfboards"
+  },
+  {
+    "handle": "hatchet",
+    "title": "Hatchet",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/hatchet"
+  },
+  {
+    "handle": "heckler",
+    "title": "Heckler",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/heckler"
+  },
+  {
+    "handle": "hustler",
+    "title": "Hustler",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/hustler"
+  },
+  {
+    "handle": "illuminati",
+    "title": "Illuminati",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/illuminati"
+  },
+  {
+    "handle": "keg",
+    "title": "Keg",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/keg"
+  },
+  {
+    "handle": "longboards",
+    "title": "Longboards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/longboards"
+  },
+  {
+    "handle": "lowrider",
+    "title": "Lowrider",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/lowrider"
+  },
+  {
+    "handle": "made-to-order",
+    "title": "Made to Order",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/made-to-order"
+  },
+  {
+    "handle": "mi-amigo",
+    "title": "Mi Amigo",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/mi-amigo"
+  },
+  {
+    "handle": "mid-lengths",
+    "title": "Mids",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/mid-lengths"
+  },
+  {
+    "handle": "mini-tanker",
+    "title": "Mini Tanker",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/mini-tanker"
+  },
+  {
+    "handle": "miso",
+    "title": "Miso",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/miso"
+  },
+  {
+    "handle": "moby-fish",
+    "title": "Moby Fish",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/moby-fish"
+  },
+  {
+    "handle": "model-8",
+    "title": "Model 8",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/model-8"
+  },
+  {
+    "handle": "muffin-top",
+    "title": "Muffin Top",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/muffin-top"
+  },
+  {
+    "handle": "neil",
+    "title": "Neil",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/neil"
+  },
+  {
+    "handle": "new-traveler",
+    "title": "New Traveler",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/new-traveler"
+  },
+  {
+    "handle": "not-so-moby-fish",
+    "title": "Not So Moby Fish",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/not-so-moby-fish"
+  },
+  {
+    "handle": "other",
+    "title": "Other",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/other"
+  },
+  {
+    "handle": "panda",
+    "title": "Panda",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/panda"
+  },
+  {
+    "handle": "quad-fin-sets",
+    "title": "Quad Fin Sets",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/quad-fin-sets"
+  },
+  {
+    "handle": "r-tired",
+    "title": "R.TIRED",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/r-tired"
+  },
+  {
+    "handle": "rapid-entry",
+    "title": "Rapid Entry",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/rapid-entry"
+  },
+  {
+    "handle": "rick-hamon-designs",
+    "title": "Rick Hamon Designs",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/rick-hamon-designs"
+  },
+  {
+    "handle": "rustydelmar",
+    "title": "Rusty Del Mar",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/rustydelmar"
+  },
+  {
+    "handle": "in-stock",
+    "title": "Rusty Stock Room",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/in-stock"
+  },
+  {
+    "handle": "sd",
+    "title": "SD",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/sd"
+  },
+  {
+    "handle": "sd-rt-re",
+    "title": "SD RT RE",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/sd-rt-re"
+  },
+  {
+    "handle": "shiv",
+    "title": "Shiv",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/shiv"
+  },
+  {
+    "handle": "shortboards",
+    "title": "Shortboards",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/shortboards"
+  },
+  {
+    "handle": "sista-brotha",
+    "title": "Sista Brotha",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/sista-brotha"
+  },
+  {
+    "handle": "slayer",
+    "title": "Slayer",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/slayer"
+  },
+  {
+    "handle": "slayer-2",
+    "title": "Slayer 2",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/slayer-2"
+  },
+  {
+    "handle": "smoothie",
+    "title": "Smoothie",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/smoothie"
+  },
+  {
+    "handle": "snaggle-tooth-2-0",
+    "title": "Snaggle Tooth 2.0",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/snaggle-tooth-2-0"
+  },
+  {
+    "handle": "so-fuunnn",
+    "title": "So Fuunnn!",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/so-fuunnn"
+  },
+  {
+    "handle": "step-ups",
+    "title": "Step Ups",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/step-ups"
+  },
+  {
+    "handle": "the-deuce",
+    "title": "The Deuce",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/the-deuce"
+  },
+  {
+    "handle": "the-rooster",
+    "title": "The Rooster",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/the-rooster"
+  },
+  {
+    "handle": "thruster-fin-sets",
+    "title": "Thruster Fin Sets",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/thruster-fin-sets"
+  },
+  {
+    "handle": "traction-pads",
+    "title": "Traction Pads",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/traction-pads"
+  },
+  {
+    "handle": "tri-quad-5-fin-sets",
+    "title": "Tri-Quad 5 Fin Sets",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/tri-quad-5-fin-sets"
+  },
+  {
+    "handle": "twin-fin",
+    "title": "Twin Fin",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/twin-fin"
+  },
+  {
+    "handle": "twin-fin-sets",
+    "title": "Twin Fin Sets",
+    "likely_board_collection": true,
+    "url": "https://rustysurfboards.com/collections/twin-fin-sets"
+  },
+  {
+    "handle": "underdog",
+    "title": "Underdog",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/underdog"
+  },
+  {
+    "handle": "upgrades",
+    "title": "Upgrades",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/upgrades"
+  },
+  {
+    "handle": "utility",
+    "title": "Utility",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/utility"
+  },
+  {
+    "handle": "wakesurf-boards",
+    "title": "Wake",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/wakesurf-boards"
+  },
+  {
+    "handle": "wake-accessories",
+    "title": "Wake Accessories",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/wake-accessories"
+  },
+  {
+    "handle": "wakesurf-fins",
+    "title": "Wakesurf Fins",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/wakesurf-fins"
+  },
+  {
+    "handle": "wakesurf-boards-on-sale",
+    "title": "Wakesurf Sale",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/wakesurf-boards-on-sale"
+  },
+  {
+    "handle": "what",
+    "title": "What?",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/what"
+  },
+  {
+    "handle": "yes-thanks",
+    "title": "Yes Thanks",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/yes-thanks"
+  },
+  {
+    "handle": "yeti",
+    "title": "Yeti",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/yeti"
+  },
+  {
+    "handle": "zeppelin",
+    "title": "Zeppelin",
+    "likely_board_collection": false,
+    "url": "https://rustysurfboards.com/collections/zeppelin"
+  }
+]

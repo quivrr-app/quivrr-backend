@@ -1,0 +1,119 @@
+[
+  {
+    "collection": "all-shortboards",
+    "url": "https://rustysurfboards.com/collections/all-shortboards/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 10,
+    "sample_titles": [
+      "Smoothie 6'4\" x 21.2 X 2.7 - 39.90L, Round, 5x  Futures Fin Boxes, PU - ID:1030533",
+      "1984 6'2\" x 20.0 X 2.3 - 33.80L, Squash, 3x  Futures Fin Boxes, PU - ID:1036266",
+      "SD RT RE 6'0\" x 19.0 X 2.4 - 29.51L, Round, 5x  Futures Fin Boxes, PU - ID:1101432",
+      "SD RT RE 6'1\" x 19.05 X 2.5 - 31.51L, Round, 5x  Futures Fin Boxes, PU - ID:1101436",
+      "1984 6'2\" x 20.25 X 2.3125 - 34.10L, Squash, 3x  Futures Fin Boxes, PU - ID:1082629",
+      "1984 6'5\" x 20.37 X 2.46 - 38.40L, Squash, 3x  Futures Fin Boxes, EPS - ID:1040658",
+      "SD 6'3\" x 19.9 X 2.7 - 36.00L, Squash, 3x  Futures Fin Boxes, PU - ID:1082616",
+      "SD 5'6\" x 19.0 X 2.34 - 27.30L, Squash, 3x  Futures Fin Boxes, PU - ID:1082614",
+      "1984 6'0\" x 19.75 X 2.1875 - 30.60L, Squash, 3x  Futures Fin Boxes, PU - ID:1078408",
+      "SD RT RE 6'4\" x 19.75 X 2.65 - 36.00L, Round, 3x  Futures Fin Boxes, PU - ID:1082058"
+    ]
+  },
+  {
+    "collection": "all-alternatives",
+    "url": "https://rustysurfboards.com/collections/all-alternatives/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 10,
+    "sample_titles": [
+      "421 Fish 5'10\" x 21.0 X 2.38 - 34.00L, Dove, 4x  Futures Fin Boxes, PU - ID:926331",
+      "419 Fish 5'2\" x 20.0 X 2.12 - 27.40L, Swallow, 2x  Futures Fin Boxes, PU - ID:1063764",
+      "Illuminati 5'10\" x 20.2 X 2.5 - 33.70L, Triple Wing Swallow, 5x  Futures Fin Boxes, PU - ID:1055493",
+      "Illuminati 5'10\" x 20.2 X 2.5 - 33.70L, Triple Wing Swallow, x  Futures Fin Box, PU - ID:1042656",
+      "Illuminati 6'0\" x 20.5 X 2.6 - 36.80L, Triple Wing Swallow, 5x  Futures Fin Boxes, PU - ID:1055526",
+      "419 Fish 5'6\" x 20.50 X 2.05 - 30.00L, Swallow, 2x   Fin Boxes, PU [Average] - ID:941556",
+      "The Deuce 6'0\" x 20.0 X 2.45 - 33.00L, Wing Swallow, 2x  Futures Fin Boxes, PU - ID:1044954",
+      "Illuminati 6'4\" x 21.0 X 2.8 - 41.70L, Triple Wing Swallow, 5x  Futures Fin Boxes, EPS - ID:1033113",
+      "Dwart 5'8\" x 20.5 X 2.42 - 32.00L, Double Wing Round, 5x  Futures Fin Boxes, PU - ID:998330",
+      "Bali Single 6'2\" x 20.15 X 2.3 - 31.00L, Wing Swallow, 1x  Futures Fin Box, PU - ID:984676"
+    ]
+  },
+  {
+    "collection": "surfboards",
+    "url": "https://rustysurfboards.com/collections/surfboards/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "shortboards",
+    "url": "https://rustysurfboards.com/collections/shortboards/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 10,
+    "sample_titles": [
+      "Smoothie 6'4\" x 21.2 X 2.7 - 39.90L, Round, 5x  Futures Fin Boxes, PU - ID:1030533",
+      "1984 6'2\" x 20.0 X 2.3 - 33.80L, Squash, 3x  Futures Fin Boxes, PU - ID:1036266",
+      "SD RT RE 6'0\" x 19.0 X 2.4 - 29.51L, Round, 5x  Futures Fin Boxes, PU - ID:1101432",
+      "SD RT RE 6'1\" x 19.05 X 2.5 - 31.51L, Round, 5x  Futures Fin Boxes, PU - ID:1101436",
+      "1984 6'2\" x 20.25 X 2.3125 - 34.10L, Squash, 3x  Futures Fin Boxes, PU - ID:1082629",
+      "1984 6'5\" x 20.37 X 2.46 - 38.40L, Squash, 3x  Futures Fin Boxes, EPS - ID:1040658",
+      "SD 6'3\" x 19.9 X 2.7 - 36.00L, Squash, 3x  Futures Fin Boxes, PU - ID:1082616",
+      "SD 5'6\" x 19.0 X 2.34 - 27.30L, Squash, 3x  Futures Fin Boxes, PU - ID:1082614",
+      "1984 6'0\" x 19.75 X 2.1875 - 30.60L, Squash, 3x  Futures Fin Boxes, PU - ID:1078408",
+      "SD RT RE 6'4\" x 19.75 X 2.65 - 36.00L, Round, 3x  Futures Fin Boxes, PU - ID:1082058"
+    ]
+  },
+  {
+    "collection": "fish",
+    "url": "https://rustysurfboards.com/collections/fish/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "mid-length",
+    "url": "https://rustysurfboards.com/collections/mid-length/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "step-up",
+    "url": "https://rustysurfboards.com/collections/step-up/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "guns",
+    "url": "https://rustysurfboards.com/collections/guns/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "twins",
+    "url": "https://rustysurfboards.com/collections/twins/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "performance",
+    "url": "https://rustysurfboards.com/collections/performance/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "hybrids",
+    "url": "https://rustysurfboards.com/collections/hybrids/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  },
+  {
+    "collection": "boards",
+    "url": "https://rustysurfboards.com/collections/boards/products.json?limit=10",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": []
+  }
+]

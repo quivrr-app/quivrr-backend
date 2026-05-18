@@ -1,0 +1,29 @@
+[
+  {
+    "brand": "SharpEye",
+    "url": "https://www.sharpeyesurfboards.com",
+    "status_code": 403,
+    "final_url": "https://www.sharpeyesurfboards.com/",
+    "platform": "Unknown",
+    "title": "DNS points to prohibited IP | www.sharpeyesurfboards.com | Cloudflare",
+    "products_json": false,
+    "wp_content": false,
+    "shopify": false
+  },
+  {
+    "brand": "SharpEye",
+    "url": "https://au.sharpeyesurfboards.com",
+    "error": "HTTPSConnectionPool(host='au.sharpeyesurfboards.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='au.sharpeyesurfboards.com', port=443): Failed to resolve 'au.sharpeyesurfboards.com' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "brand": "Chilli",
+    "url": "https://www.chillisurfboards.com",
+    "status_code": 200,
+    "final_url": "https://www.chillisurfboards.com/regionselector.php",
+    "platform": "Unknown",
+    "title": "Chilli Surfboards",
+    "products_json": false,
+    "wp_content": false,
+    "shopify": false
+  }
+]
