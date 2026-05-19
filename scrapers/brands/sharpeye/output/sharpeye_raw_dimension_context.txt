@@ -1,0 +1,746 @@
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+</div>
+          -->
+        </div>
+      </li>
+    
+      
+      
+      
+      <li class="fl-variants" id="std_2145622">
+        <div class="surfboard_product_item m-10">
+          <div class="fl-product-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145622"
+              class="surfboard_product_item__input"
+              data-length="5'10""
+              data-width="19.0"
+              data-thickness="2.5"
+              value="1778.0##482.6##63.5"
+            >
+            <span class="surfboard_product_item--title">
+              5'10" x 19.0 x 2.5 28.15 L
+            </span>
+            
+          </div>
+          <!--
+            <div class="stock-status-wrapper">
+              <span class="stock-loader-wrapper"><div class="fl-loader shopify-product-stock-loader"></div></span>
+            </div>
+          -->
+        </div>
+ 
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+uct-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145622"
+              class="surfboard_product_item__input"
+              data-length="5'10""
+              data-width="19.0"
+              data-thickness="2.5"
+              value="1778.0##482.6##63.5"
+            >
+            <span class="surfboard_product_item--title">
+              5'10" x 19.0 x 2.5 28.15 L
+            </span>
+            
+          </div>
+          <!--
+            <div class="stock-status-wrapper">
+              <span class="stock-loader-wrapper"><div class="fl-loader shopify-product-stock-loader"></div></span>
+            </div>
+          -->
+        </div>
+      </li>
+    
+      
+      
+      
+      <li class="fl-variants" id="std_2145624">
+        <div class="surfboard_product_item m-10">
+          <div class="fl-product-stock-radio-container surfboard_p
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+</div>
+          -->
+        </div>
+      </li>
+    
+      
+      
+      
+      <li class="fl-variants" id="std_2145624">
+        <div class="surfboard_product_item m-10">
+          <div class="fl-product-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145624"
+              class="surfboard_product_item__input"
+              data-length="5'10""
+              data-width="19.25"
+              data-thickness="2.6"
+              value="1778.0##488.95##66.04"
+            >
+            <span class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </span>
+            
+          </div>
+          <!--
+            <div class="stock-status-wrapper">
+              <span class="stock-loader-wrapper"><div class="fl-loader shopify-product-stock-loader"></div></span>
+            </div>
+          -->
+        </di
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145624"
+              class="surfboard_product_item__input"
+              data-length="5'10""
+              data-width="19.25"
+              data-thickness="2.6"
+              value="1778.0##488.95##66.04"
+            >
+            <span class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </span>
+            
+          </div>
+          <!--
+            <div class="stock-status-wrapper">
+              <span class="stock-loader-wrapper"><div class="fl-loader shopify-product-stock-loader"></div></span>
+            </div>
+          -->
+        </div>
+      </li>
+    
+      
+      
+      
+      <li class="fl-variants" id="std_2145623">
+        <div class="surfboard_product_item m-10">
+          <div class="fl-product-stock-radio-container surfboard_
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+</div>
+          -->
+        </div>
+      </li>
+    
+      
+      
+      
+      <li class="fl-variants" id="std_2145623">
+        <div class="surfboard_product_item m-10">
+          <div class="fl-product-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145623"
+              class="surfboard_product_item__input"
+              data-length="5'10""
+              data-width="20.0"
+              data-thickness="2.7"
+              value="1778.0##508.0##68.58"
+            >
+            <span class="surfboard_product_item--title">
+              5'10" x 20.0 x 2.7 32.10 L
+            </span>
+            
+              <img
+                class="surfboard_product_item--hv"
+                src="//sharpeyesurfboards.com/cdn/shop/files/HV_large.png?v=8819556337313205867"
+                height="30"
+                width="60"
+              >
+    
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+ct-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145623"
+              class="surfboard_product_item__input"
+              data-length="5'10""
+              data-width="20.0"
+              data-thickness="2.7"
+              value="1778.0##508.0##68.58"
+            >
+            <span class="surfboard_product_item--title">
+              5'10" x 20.0 x 2.7 32.10 L
+            </span>
+            
+              <img
+                class="surfboard_product_item--hv"
+                src="//sharpeyesurfboards.com/cdn/shop/files/HV_large.png?v=8819556337313205867"
+                height="30"
+                width="60"
+              >
+            
+          </div>
+          <!--
+            <div class="stock-status-wrapper">
+              <span class="stock-loader-wrapper"><div class="fl-loader shopify-product-stock-loader"></div></span>
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+ ORDER</span>
+      </button>
+    
+  </div>
+</div>
+
+<script> 
+  
+  document.addEventListener("DOMContentLoaded", async function(event) {
+ 
+        const optionGroups = [{"name":"fin_options","displayName":"Fin Options","matchAgainst":"fin_system_option","options":[{"name":"FCS 2","extraCostInCents":0},{"name":"Futures","extraCostInCents":0}]}];
+        const _availableProducts = [{"id":"FCS 2##","productDetails":{"id":"8451747217561","variantId":"45484190892185","handle":"sb1006563","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"Futures##","productDetails":{"id":"8562398036121","variantId":"45848416649369","handle":"sb1045339","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"Futures##","productDetails":{"id":"8624527376537","variantId":"46101677867161","handle":"sb1066690","lengthIn":"5'9\"","widthIn":"19.25","thicknessIn":"2.5"},"dimensionId":"2145621"},{"id":"FCS 2##","productDetails":{"id":"865670712540
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+},{"id":"Futures##","productDetails":{"id":"8562398036121","variantId":"45848416649369","handle":"sb1045339","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"Futures##","productDetails":{"id":"8624527376537","variantId":"46101677867161","handle":"sb1066690","lengthIn":"5'9\"","widthIn":"19.25","thicknessIn":"2.5"},"dimensionId":"2145621"},{"id":"FCS 2##","productDetails":{"id":"8656707125401","variantId":"46184619245721","handle":"sb1075018","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"FCS 2##","productDetails":{"id":"8656841474201","variantId":"46184879653017","handle":"sb1075022","lengthIn":"6'0\"","widthIn":"19.38","thicknessIn":"2.6"},"dimensionId":"2145628"},{"id":"FCS 2##","productDetails":{"id":"8703609766041","variantId":"46933369880729","handle":"sb1113973","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8703703744665",
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+5621"},{"id":"FCS 2##","productDetails":{"id":"8656707125401","variantId":"46184619245721","handle":"sb1075018","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"FCS 2##","productDetails":{"id":"8656841474201","variantId":"46184879653017","handle":"sb1075022","lengthIn":"6'0\"","widthIn":"19.38","thicknessIn":"2.6"},"dimensionId":"2145628"},{"id":"FCS 2##","productDetails":{"id":"8703609766041","variantId":"46933369880729","handle":"sb1113973","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8703703744665","variantId":"46933702901913","handle":"sb1108947","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8703703810201","variantId":"46933702967449","handle":"sb1106207","lengthIn":"5'11\"","widthIn":"20.13","thicknessIn":"2.75"},"dimensionId":"2145626"},{"id":"Futures##","productDetails":{"id":"87107262875
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+22"},{"id":"FCS 2##","productDetails":{"id":"8656841474201","variantId":"46184879653017","handle":"sb1075022","lengthIn":"6'0\"","widthIn":"19.38","thicknessIn":"2.6"},"dimensionId":"2145628"},{"id":"FCS 2##","productDetails":{"id":"8703609766041","variantId":"46933369880729","handle":"sb1113973","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8703703744665","variantId":"46933702901913","handle":"sb1108947","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8703703810201","variantId":"46933702967449","handle":"sb1106207","lengthIn":"5'11\"","widthIn":"20.13","thicknessIn":"2.75"},"dimensionId":"2145626"},{"id":"Futures##","productDetails":{"id":"8710726287513","variantId":"46955243765913","handle":"sb1104287","lengthIn":"6'0\"","widthIn":"20.25","thicknessIn":"2.8"},"dimensionId":"2145629"},{"id":"FCS 2##","productDetails":{"id":"8711526776985
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+6"},{"id":"Futures##","productDetails":{"id":"8710726287513","variantId":"46955243765913","handle":"sb1104287","lengthIn":"6'0\"","widthIn":"20.25","thicknessIn":"2.8"},"dimensionId":"2145629"},{"id":"FCS 2##","productDetails":{"id":"8711526776985","variantId":"46958303543449","handle":"sb1106205","lengthIn":"5'9\"","widthIn":"19.88","thicknessIn":"2.63"},"dimensionId":"2145620"},{"id":"FCS 2##","productDetails":{"id":"8717610844313","variantId":"46982344867993","handle":"sb1114513","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8717702627481","variantId":"46982551666841","handle":"sb1115760","lengthIn":"5'6\"","widthIn":"18.5","thicknessIn":"2.37"},"dimensionId":"2145613"},{"id":"Futures##","productDetails":{"id":"8726347874457","variantId":"47021401079961","handle":"sb1118067","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"FCS 2##","productDetails":{"id":"873403881896
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+},{"id":"Futures##","productDetails":{"id":"8717702627481","variantId":"46982551666841","handle":"sb1115760","lengthIn":"5'6\"","widthIn":"18.5","thicknessIn":"2.37"},"dimensionId":"2145613"},{"id":"Futures##","productDetails":{"id":"8726347874457","variantId":"47021401079961","handle":"sb1118067","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"FCS 2##","productDetails":{"id":"8734038818969","variantId":"47073666236569","handle":"sb1100394","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8734043144345","variantId":"47073672593561","handle":"sb1108912","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8736908312729","variantId":"47160443240601","handle":"sb1122742","lengthIn":"5'5\"","widthIn":"18.38","thicknessIn":"2.32"},"dimensionId":"2145612"},{"id":"Futures##","productDetails":{"id":"873739547458
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+},{"id":"Futures##","productDetails":{"id":"8726347874457","variantId":"47021401079961","handle":"sb1118067","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"FCS 2##","productDetails":{"id":"8734038818969","variantId":"47073666236569","handle":"sb1100394","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8734043144345","variantId":"47073672593561","handle":"sb1108912","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8736908312729","variantId":"47160443240601","handle":"sb1122742","lengthIn":"5'5\"","widthIn":"18.38","thicknessIn":"2.32"},"dimensionId":"2145612"},{"id":"Futures##","productDetails":{"id":"8737395474585","variantId":"47176418689177","handle":"sb1122802","lengthIn":"5'11\"","widthIn":"19.25","thicknessIn":"2.5"},"dimensionId":"2145625"},{"id":"Futures##","productDetails":{"id":"87439037564
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+"length":"1752.6","length_inches":"5'9\"","length_complete":69,"width":504.952,"width_inches":"19.88","thickness":66.802,"thickness_inches":"2.63","volume":"30.50","baseprice":"775","ref":"","order":"13","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145622","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":482.6,"width_inches":"19.0","thickness":63.5,"thickness_inches":"2.5","volume":"28.15","baseprice":"775","ref":"","order":"15","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145624","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":488.95,
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+622","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":482.6,"width_inches":"19.0","thickness":63.5,"thickness_inches":"2.5","volume":"28.15","baseprice":"775","ref":"","order":"15","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145624","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":488.95,"width_inches":"19.25","thickness":66.04,"thickness_inches":"2.6","volume":"29.90","baseprice":"775","ref":"","order":"17","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":0,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145623","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":508,
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":488.95,"width_inches":"19.25","thickness":66.04,"thickness_inches":"2.6","volume":"29.90","baseprice":"775","ref":"","order":"17","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":0,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145623","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":508,"width_inches":"20.0","thickness":68.58,"thickness_inches":"2.7","volume":"32.10","baseprice":"775","ref":"","order":"16","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145625","length":"1803.4","length_inches":"5'11\"","length_complete":71,"width":488.95,"
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+inches":"5'4\"1/2"},{"mm":1651.0000000000014,"inches":"5'5\""},{"mm":1663.7000000000014,"inches":"5'5\"1/2"},{"mm":1676.4000000000015,"inches":"5'6\""},{"mm":1689.1000000000015,"inches":"5'6\"1/2"},{"mm":1701.8000000000015,"inches":"5'7\""},{"mm":1714.5000000000016,"inches":"5'7\"1/2"},{"mm":1727.2000000000016,"inches":"5'8\""},{"mm":1739.9000000000017,"inches":"5'8\"1/2"},{"mm":1752.6000000000017,"inches":"5'9\""},{"mm":1765.3000000000018,"inches":"5'9\"1/2"},{"mm":1778.0000000000018,"inches":"5'10\""},{"mm":1790.7000000000019,"inches":"5'10\"1/2"},{"mm":1803.400000000002,"inches":"5'11\""},{"mm":1816.100000000002,"inches":"5'11\"1/2"},{"mm":1828.800000000002,"inches":"6'0\""},{"mm":1841.500000000002,"inches":"6'0\"1/2"},{"mm":1854.200000000002,"inches":"6'1\""},{"mm":1866.9000000000021,"inches":"6'1\"1/2"},{"mm":1879.6000000000022,"inches":"6'2\""},{"mm":1892.3000000000022,"inches":"6'2\"1/2"},{"mm":1905.0000000000023,"inches":"6'3\""},{"mm":1917.7000000000023,"inches":"6'3\"1/2"},{"mm":
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+,"inches":"5'5\""},{"mm":1663.7000000000014,"inches":"5'5\"1/2"},{"mm":1676.4000000000015,"inches":"5'6\""},{"mm":1689.1000000000015,"inches":"5'6\"1/2"},{"mm":1701.8000000000015,"inches":"5'7\""},{"mm":1714.5000000000016,"inches":"5'7\"1/2"},{"mm":1727.2000000000016,"inches":"5'8\""},{"mm":1739.9000000000017,"inches":"5'8\"1/2"},{"mm":1752.6000000000017,"inches":"5'9\""},{"mm":1765.3000000000018,"inches":"5'9\"1/2"},{"mm":1778.0000000000018,"inches":"5'10\""},{"mm":1790.7000000000019,"inches":"5'10\"1/2"},{"mm":1803.400000000002,"inches":"5'11\""},{"mm":1816.100000000002,"inches":"5'11\"1/2"},{"mm":1828.800000000002,"inches":"6'0\""},{"mm":1841.500000000002,"inches":"6'0\"1/2"},{"mm":1854.200000000002,"inches":"6'1\""},{"mm":1866.9000000000021,"inches":"6'1\"1/2"},{"mm":1879.6000000000022,"inches":"6'2\""},{"mm":1892.3000000000022,"inches":"6'2\"1/2"},{"mm":1905.0000000000023,"inches":"6'3\""},{"mm":1917.7000000000023,"inches":"6'3\"1/2"},{"mm":1930.4000000000024,"inches":"6'4\""},{"mm":1
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+l-1.513,6.322l-1.132,4.556l-0.426,1.677l-1.603,6.137l-1.648,6.033l-1.692,5.924l-1.737,5.807l-1.781,5.684l-1.825,5.554l-1.869,5.418l-1.912,5.276l-1.955,5.128l-1.999,4.973l-2.041,4.812l-2.084,4.645l-2.127,4.471l-2.169,4.293l-2.211,4.109l-2.253,3.917l-2.294,3.721l-2.336,3.519l-2.377,3.312l-2.419,3.098l-2.459,2.879l-2.499,2.656l-2.541,2.425l-2.58,2.191l-2.621,1.951l-2.66,1.705l-2.7,1.455l-2.739,1.199l-2.778,0.939l-2.818,0.672l-1.187,0.201l-0.737,0.1l-0.432,0.05l-0.5,0.05l-2.468,0","outline_length":"5'10\"","outline_wide":"20 "},{"id":"3","name":"Squash","type":"1","type_name":"Recomended","outline":"M120,695.481l-18.243,0l-0.396,-0.033l-0.265,-0.033l-0.4,-0.067l-0.591,-0.133l-1.689,-0.6l-1.722,-0.924l-1.749,-1.237l-1.776,-1.541l-1.799,-1.834l-1.82,-2.119l-1.839,-2.393l-1.855,-2.659l-1.87,-2.914l-1.881,-3.16l-1.888,-3.397l-1.893,-3.625l-1.896,-3.843l-1.896,-4.053l-1.892,-4.253l-1.887,-4.443l-1.879,-4.627l-1.868,-4.799l-1.854,-4.963l-1.838,-5.119l-1.82,-5.266l-1.799,-5.403l-1.774,-5.533l-1.749,-
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+65l-2.076,9.329l-1.495,6.259l-1.14,4.619l-0.398,1.58l-1.58,6.128l-1.618,6.05l-1.655,5.964l-1.688,5.869l-1.72,5.765l-1.749,5.654l-1.774,5.533l-1.799,5.403l-1.82,5.266l-1.838,5.119l-1.854,4.963l-1.868,4.799l-1.879,4.627l-1.887,4.443l-1.892,4.253l-1.896,4.053l-1.896,3.843l-1.893,3.625l-1.888,3.397l-1.881,3.16l-1.87,2.914l-1.855,2.659l-1.839,2.393l-1.82,2.119l-1.799,1.834l-1.776,1.541l-1.749,1.237l-1.722,0.924l-1.689,0.6l-0.591,0.133l-0.4,0.067l-0.265,0.033l-0.396,0.033l-18.243,0","outline_length":"5'10\"","outline_wide":"20 "},{"id":"8","name":"Swallow","type":"1","type_name":"Recomended","outline":"M120,684.392l-30.502,11.22l-0.208,-0.313l-0.202,-0.313l-0.388,-0.627l-0.735,-1.252l-1.86,-3.445l-2.115,-4.258l-2.311,-4.955l-2.451,-5.542l-2.543,-6.03l-2.593,-6.426l-2.608,-6.736l-2.591,-6.967l-2.547,-7.127l-2.482,-7.219l-2.399,-7.252l-2.301,-7.229l-2.192,-7.155l-2.075,-7.037l-1.952,-6.874l-1.825,-6.677l-1.696,-6.443l-1.567,-6.18l-1.44,-5.888l-1.314,-5.573l-1.734,-7.773l-1.641,-7.951l-1.551,-8.112
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+984l-0.781,8.95l-0.863,8.907l-0.944,8.85l-1.028,8.784l-1.113,8.705l-1.198,8.613l-1.284,8.508l-1.373,8.391l-1.461,8.258l-1.551,8.112l-1.641,7.951l-1.734,7.773l-1.314,5.573l-1.44,5.888l-1.567,6.18l-1.696,6.443l-1.825,6.677l-1.952,6.874l-2.075,7.037l-2.192,7.155l-2.301,7.229l-2.399,7.252l-2.482,7.219l-2.547,7.127l-2.591,6.967l-2.607,6.736l-2.594,6.426l-2.543,6.03l-2.451,5.542l-2.311,4.955l-2.115,4.258l-1.86,3.445l-0.735,1.252l-0.388,0.627l-0.202,0.313l-0.208,0.313l-30.502,-11.22","outline_length":"5'10\"","outline_wide":"20 "}],"websiteurl":"","shops":null,"surfboardtecnologyimages":[],"glassglobal":[{"id":"1155","glass":"Standard 4x4x4","svgtop":"","svgbottom":""},{"id":"1157","glass":"Medium 5x4x4","svgtop":"","svgbottom":""},{"id":"1159","glass":"Team Light 4x4x3/4","svgtop":"","svgbottom":""},{"id":"1161","glass":"Strong 4x6x6","svgtop":"","svgbottom":""}],"tailpatch":[{"id":"28239","tailpatch":"White carbon","svgfile":"https://www.shaperbuddy.com/img/surfplant/paint/142/656656245654a1.sv
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+ class="surfboard_product_item--title">
+              5'9" x 19.88 x 2.63 30.50 L
+            </div>
+            
+              <img class="surfboard_product_item--hv" src="//sharpeyesurfboards.com/cdn/shop/files/HV_large.png?v=8819556337313205867" height="30" width="60"/>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145622"
+            value="1778.0##482.6##63.5"
+            data-length="5'10""
+            data-width="19.0"
+            data-thickness="2.5"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.0 x 2.5 28.15 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145624"
+            value="1778.0##488.95##66.04"
+            data-length="5'10""
+            data-width="19.25"
+            data-thickness="2.6"
+       
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+oduct_item--hv" src="//sharpeyesurfboards.com/cdn/shop/files/HV_large.png?v=8819556337313205867" height="30" width="60"/>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145622"
+            value="1778.0##482.6##63.5"
+            data-length="5'10""
+            data-width="19.0"
+            data-thickness="2.5"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.0 x 2.5 28.15 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145624"
+            value="1778.0##488.95##66.04"
+            data-length="5'10""
+            data-width="19.25"
+            data-thickness="2.6"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </div>
+            
+          </div>
+
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+2145622"
+            value="1778.0##482.6##63.5"
+            data-length="5'10""
+            data-width="19.0"
+            data-thickness="2.5"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.0 x 2.5 28.15 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145624"
+            value="1778.0##488.95##66.04"
+            data-length="5'10""
+            data-width="19.25"
+            data-thickness="2.6"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145623"
+            value="1778.0##508.0##68.58"
+            data-length="5'10""
+            data-width="20.0"
+            data-thickness="2.7"
+       
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+ >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.0 x 2.5 28.15 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145624"
+            value="1778.0##488.95##66.04"
+            data-length="5'10""
+            data-width="19.25"
+            data-thickness="2.6"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145623"
+            value="1778.0##508.0##68.58"
+            data-length="5'10""
+            data-width="20.0"
+            data-thickness="2.7"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 20.0 x 2.7 32.10 L
+            </div>
+            
+              <img 
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+5624"
+            value="1778.0##488.95##66.04"
+            data-length="5'10""
+            data-width="19.25"
+            data-thickness="2.6"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145623"
+            value="1778.0##508.0##68.58"
+            data-length="5'10""
+            data-width="20.0"
+            data-thickness="2.7"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 20.0 x 2.7 32.10 L
+            </div>
+            
+              <img class="surfboard_product_item--hv" src="//sharpeyesurfboards.com/cdn/shop/files/HV_large.png?v=8819556337313205867" height="30" width="60"/>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+ 
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+  >
+            <div class="surfboard_product_item--title">
+              5'10" x 19.25 x 2.6 29.90 L
+            </div>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145623"
+            value="1778.0##508.0##68.58"
+            data-length="5'10""
+            data-width="20.0"
+            data-thickness="2.7"
+          >
+            <div class="surfboard_product_item--title">
+              5'10" x 20.0 x 2.7 32.10 L
+            </div>
+            
+              <img class="surfboard_product_item--hv" src="//sharpeyesurfboards.com/cdn/shop/files/HV_large.png?v=8819556337313205867" height="30" width="60"/>
+            
+          </div>
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145625"
+            value="1803.4##488.95##63.5"
+            data-length="5'11""
+            data-width="19.25"
+            data-thi
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+div>
+</div>
+
+<script> 
+  
+  document.addEventListener("DOMContentLoaded", async function(event) {
+
+    //if ($(window).innerWidth() <= 7680) {
+      const optionGroups = [{"name":"fin_options","displayName":"Fin Options","matchAgainst":"fin_system_option","options":[{"name":"FCS 2","extraCostInCents":0},{"name":"Futures","extraCostInCents":0}]}];
+      const _availableProducts = [{"id":"FCS 2##","productDetails":{"id":"8451747217561","variantId":"45484190892185","handle":"sb1006563","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"Futures##","productDetails":{"id":"8562398036121","variantId":"45848416649369","handle":"sb1045339","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"Futures##","productDetails":{"id":"8624527376537","variantId":"46101677867161","handle":"sb1066690","lengthIn":"5'9\"","widthIn":"19.25","thicknessIn":"2.5"},"dimensionId":"2145621"},{"id":"FCS 2##","productDetails":{"id":"865670712540
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+},{"id":"Futures##","productDetails":{"id":"8562398036121","variantId":"45848416649369","handle":"sb1045339","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"Futures##","productDetails":{"id":"8624527376537","variantId":"46101677867161","handle":"sb1066690","lengthIn":"5'9\"","widthIn":"19.25","thicknessIn":"2.5"},"dimensionId":"2145621"},{"id":"FCS 2##","productDetails":{"id":"8656707125401","variantId":"46184619245721","handle":"sb1075018","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"FCS 2##","productDetails":{"id":"8656841474201","variantId":"46184879653017","handle":"sb1075022","lengthIn":"6'0\"","widthIn":"19.38","thicknessIn":"2.6"},"dimensionId":"2145628"},{"id":"FCS 2##","productDetails":{"id":"8703609766041","variantId":"46933369880729","handle":"sb1113973","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8703703744665",
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+5621"},{"id":"FCS 2##","productDetails":{"id":"8656707125401","variantId":"46184619245721","handle":"sb1075018","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"FCS 2##","productDetails":{"id":"8656841474201","variantId":"46184879653017","handle":"sb1075022","lengthIn":"6'0\"","widthIn":"19.38","thicknessIn":"2.6"},"dimensionId":"2145628"},{"id":"FCS 2##","productDetails":{"id":"8703609766041","variantId":"46933369880729","handle":"sb1113973","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8703703744665","variantId":"46933702901913","handle":"sb1108947","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8703703810201","variantId":"46933702967449","handle":"sb1106207","lengthIn":"5'11\"","widthIn":"20.13","thicknessIn":"2.75"},"dimensionId":"2145626"},{"id":"Futures##","productDetails":{"id":"87107262875
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+22"},{"id":"FCS 2##","productDetails":{"id":"8656841474201","variantId":"46184879653017","handle":"sb1075022","lengthIn":"6'0\"","widthIn":"19.38","thicknessIn":"2.6"},"dimensionId":"2145628"},{"id":"FCS 2##","productDetails":{"id":"8703609766041","variantId":"46933369880729","handle":"sb1113973","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8703703744665","variantId":"46933702901913","handle":"sb1108947","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8703703810201","variantId":"46933702967449","handle":"sb1106207","lengthIn":"5'11\"","widthIn":"20.13","thicknessIn":"2.75"},"dimensionId":"2145626"},{"id":"Futures##","productDetails":{"id":"8710726287513","variantId":"46955243765913","handle":"sb1104287","lengthIn":"6'0\"","widthIn":"20.25","thicknessIn":"2.8"},"dimensionId":"2145629"},{"id":"FCS 2##","productDetails":{"id":"8711526776985
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+6"},{"id":"Futures##","productDetails":{"id":"8710726287513","variantId":"46955243765913","handle":"sb1104287","lengthIn":"6'0\"","widthIn":"20.25","thicknessIn":"2.8"},"dimensionId":"2145629"},{"id":"FCS 2##","productDetails":{"id":"8711526776985","variantId":"46958303543449","handle":"sb1106205","lengthIn":"5'9\"","widthIn":"19.88","thicknessIn":"2.63"},"dimensionId":"2145620"},{"id":"FCS 2##","productDetails":{"id":"8717610844313","variantId":"46982344867993","handle":"sb1114513","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8717702627481","variantId":"46982551666841","handle":"sb1115760","lengthIn":"5'6\"","widthIn":"18.5","thicknessIn":"2.37"},"dimensionId":"2145613"},{"id":"Futures##","productDetails":{"id":"8726347874457","variantId":"47021401079961","handle":"sb1118067","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"FCS 2##","productDetails":{"id":"873403881896
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+},{"id":"Futures##","productDetails":{"id":"8717702627481","variantId":"46982551666841","handle":"sb1115760","lengthIn":"5'6\"","widthIn":"18.5","thicknessIn":"2.37"},"dimensionId":"2145613"},{"id":"Futures##","productDetails":{"id":"8726347874457","variantId":"47021401079961","handle":"sb1118067","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"FCS 2##","productDetails":{"id":"8734038818969","variantId":"47073666236569","handle":"sb1100394","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8734043144345","variantId":"47073672593561","handle":"sb1108912","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8736908312729","variantId":"47160443240601","handle":"sb1122742","lengthIn":"5'5\"","widthIn":"18.38","thicknessIn":"2.32"},"dimensionId":"2145612"},{"id":"Futures##","productDetails":{"id":"873739547458
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+},{"id":"Futures##","productDetails":{"id":"8726347874457","variantId":"47021401079961","handle":"sb1118067","lengthIn":"5'8\"","widthIn":"18.75","thicknessIn":"2.37"},"dimensionId":"2145618"},{"id":"FCS 2##","productDetails":{"id":"8734038818969","variantId":"47073666236569","handle":"sb1100394","lengthIn":"5'10\"","widthIn":"19.0","thicknessIn":"2.5"},"dimensionId":"2145622"},{"id":"Futures##","productDetails":{"id":"8734043144345","variantId":"47073672593561","handle":"sb1108912","lengthIn":"5'10\"","widthIn":"20.0","thicknessIn":"2.7"},"dimensionId":"2145623"},{"id":"FCS 2##","productDetails":{"id":"8736908312729","variantId":"47160443240601","handle":"sb1122742","lengthIn":"5'5\"","widthIn":"18.38","thicknessIn":"2.32"},"dimensionId":"2145612"},{"id":"Futures##","productDetails":{"id":"8737395474585","variantId":"47176418689177","handle":"sb1122802","lengthIn":"5'11\"","widthIn":"19.25","thicknessIn":"2.5"},"dimensionId":"2145625"},{"id":"Futures##","productDetails":{"id":"87439037564
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+"length":"1752.6","length_inches":"5'9\"","length_complete":69,"width":504.952,"width_inches":"19.88","thickness":66.802,"thickness_inches":"2.63","volume":"30.50","baseprice":"775","ref":"","order":"13","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145622","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":482.6,"width_inches":"19.0","thickness":63.5,"thickness_inches":"2.5","volume":"28.15","baseprice":"775","ref":"","order":"15","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145624","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":488.95,
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+622","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":482.6,"width_inches":"19.0","thickness":63.5,"thickness_inches":"2.5","volume":"28.15","baseprice":"775","ref":"","order":"15","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145624","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":488.95,"width_inches":"19.25","thickness":66.04,"thickness_inches":"2.6","volume":"29.90","baseprice":"775","ref":"","order":"17","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":0,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145623","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":508,
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":488.95,"width_inches":"19.25","thickness":66.04,"thickness_inches":"2.6","volume":"29.90","baseprice":"775","ref":"","order":"17","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":0,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145623","length":"1778.0","length_inches":"5'10\"","length_complete":70,"width":508,"width_inches":"20.0","thickness":68.58,"thickness_inches":"2.7","volume":"32.10","baseprice":"775","ref":"","order":"16","id_surfboardconstructiontype":"47","surfboardconstructiontype":"PU","shopavailable":1,"customorder":true,"weight_range":"","tail":"Squash","fin_options":"FCS II / Futures","tier":"","currentavailability":1,"id_art":"0","id_finsystemcolor":"0"},{"id":"2145625","length":"1803.4","length_inches":"5'11\"","length_complete":71,"width":488.95,"
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+inches":"5'4\"1/2"},{"mm":1651.0000000000014,"inches":"5'5\""},{"mm":1663.7000000000014,"inches":"5'5\"1/2"},{"mm":1676.4000000000015,"inches":"5'6\""},{"mm":1689.1000000000015,"inches":"5'6\"1/2"},{"mm":1701.8000000000015,"inches":"5'7\""},{"mm":1714.5000000000016,"inches":"5'7\"1/2"},{"mm":1727.2000000000016,"inches":"5'8\""},{"mm":1739.9000000000017,"inches":"5'8\"1/2"},{"mm":1752.6000000000017,"inches":"5'9\""},{"mm":1765.3000000000018,"inches":"5'9\"1/2"},{"mm":1778.0000000000018,"inches":"5'10\""},{"mm":1790.7000000000019,"inches":"5'10\"1/2"},{"mm":1803.400000000002,"inches":"5'11\""},{"mm":1816.100000000002,"inches":"5'11\"1/2"},{"mm":1828.800000000002,"inches":"6'0\""},{"mm":1841.500000000002,"inches":"6'0\"1/2"},{"mm":1854.200000000002,"inches":"6'1\""},{"mm":1866.9000000000021,"inches":"6'1\"1/2"},{"mm":1879.6000000000022,"inches":"6'2\""},{"mm":1892.3000000000022,"inches":"6'2\"1/2"},{"mm":1905.0000000000023,"inches":"6'3\""},{"mm":1917.7000000000023,"inches":"6'3\"1/2"},{"mm":
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+,"inches":"5'5\""},{"mm":1663.7000000000014,"inches":"5'5\"1/2"},{"mm":1676.4000000000015,"inches":"5'6\""},{"mm":1689.1000000000015,"inches":"5'6\"1/2"},{"mm":1701.8000000000015,"inches":"5'7\""},{"mm":1714.5000000000016,"inches":"5'7\"1/2"},{"mm":1727.2000000000016,"inches":"5'8\""},{"mm":1739.9000000000017,"inches":"5'8\"1/2"},{"mm":1752.6000000000017,"inches":"5'9\""},{"mm":1765.3000000000018,"inches":"5'9\"1/2"},{"mm":1778.0000000000018,"inches":"5'10\""},{"mm":1790.7000000000019,"inches":"5'10\"1/2"},{"mm":1803.400000000002,"inches":"5'11\""},{"mm":1816.100000000002,"inches":"5'11\"1/2"},{"mm":1828.800000000002,"inches":"6'0\""},{"mm":1841.500000000002,"inches":"6'0\"1/2"},{"mm":1854.200000000002,"inches":"6'1\""},{"mm":1866.9000000000021,"inches":"6'1\"1/2"},{"mm":1879.6000000000022,"inches":"6'2\""},{"mm":1892.3000000000022,"inches":"6'2\"1/2"},{"mm":1905.0000000000023,"inches":"6'3\""},{"mm":1917.7000000000023,"inches":"6'3\"1/2"},{"mm":1930.4000000000024,"inches":"6'4\""},{"mm":1
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+l-1.513,6.322l-1.132,4.556l-0.426,1.677l-1.603,6.137l-1.648,6.033l-1.692,5.924l-1.737,5.807l-1.781,5.684l-1.825,5.554l-1.869,5.418l-1.912,5.276l-1.955,5.128l-1.999,4.973l-2.041,4.812l-2.084,4.645l-2.127,4.471l-2.169,4.293l-2.211,4.109l-2.253,3.917l-2.294,3.721l-2.336,3.519l-2.377,3.312l-2.419,3.098l-2.459,2.879l-2.499,2.656l-2.541,2.425l-2.58,2.191l-2.621,1.951l-2.66,1.705l-2.7,1.455l-2.739,1.199l-2.778,0.939l-2.818,0.672l-1.187,0.201l-0.737,0.1l-0.432,0.05l-0.5,0.05l-2.468,0","outline_length":"5'10\"","outline_wide":"20 "},{"id":"3","name":"Squash","type":"1","type_name":"Recomended","outline":"M120,695.481l-18.243,0l-0.396,-0.033l-0.265,-0.033l-0.4,-0.067l-0.591,-0.133l-1.689,-0.6l-1.722,-0.924l-1.749,-1.237l-1.776,-1.541l-1.799,-1.834l-1.82,-2.119l-1.839,-2.393l-1.855,-2.659l-1.87,-2.914l-1.881,-3.16l-1.888,-3.397l-1.893,-3.625l-1.896,-3.843l-1.896,-4.053l-1.892,-4.253l-1.887,-4.443l-1.879,-4.627l-1.868,-4.799l-1.854,-4.963l-1.838,-5.119l-1.82,-5.266l-1.799,-5.403l-1.774,-5.533l-1.749,-
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+65l-2.076,9.329l-1.495,6.259l-1.14,4.619l-0.398,1.58l-1.58,6.128l-1.618,6.05l-1.655,5.964l-1.688,5.869l-1.72,5.765l-1.749,5.654l-1.774,5.533l-1.799,5.403l-1.82,5.266l-1.838,5.119l-1.854,4.963l-1.868,4.799l-1.879,4.627l-1.887,4.443l-1.892,4.253l-1.896,4.053l-1.896,3.843l-1.893,3.625l-1.888,3.397l-1.881,3.16l-1.87,2.914l-1.855,2.659l-1.839,2.393l-1.82,2.119l-1.799,1.834l-1.776,1.541l-1.749,1.237l-1.722,0.924l-1.689,0.6l-0.591,0.133l-0.4,0.067l-0.265,0.033l-0.396,0.033l-18.243,0","outline_length":"5'10\"","outline_wide":"20 "},{"id":"8","name":"Swallow","type":"1","type_name":"Recomended","outline":"M120,684.392l-30.502,11.22l-0.208,-0.313l-0.202,-0.313l-0.388,-0.627l-0.735,-1.252l-1.86,-3.445l-2.115,-4.258l-2.311,-4.955l-2.451,-5.542l-2.543,-6.03l-2.593,-6.426l-2.608,-6.736l-2.591,-6.967l-2.547,-7.127l-2.482,-7.219l-2.399,-7.252l-2.301,-7.229l-2.192,-7.155l-2.075,-7.037l-1.952,-6.874l-1.825,-6.677l-1.696,-6.443l-1.567,-6.18l-1.44,-5.888l-1.314,-5.573l-1.734,-7.773l-1.641,-7.951l-1.551,-8.112
+
+====================================================================================================
+PATTERN: 5'10
+====================================================================================================
+984l-0.781,8.95l-0.863,8.907l-0.944,8.85l-1.028,8.784l-1.113,8.705l-1.198,8.613l-1.284,8.508l-1.373,8.391l-1.461,8.258l-1.551,8.112l-1.641,7.951l-1.734,7.773l-1.314,5.573l-1.44,5.888l-1.567,6.18l-1.696,6.443l-1.825,6.677l-1.952,6.874l-2.075,7.037l-2.192,7.155l-2.301,7.229l-2.399,7.252l-2.482,7.219l-2.547,7.127l-2.591,6.967l-2.607,6.736l-2.594,6.426l-2.543,6.03l-2.451,5.542l-2.311,4.955l-2.115,4.258l-1.86,3.445l-0.735,1.252l-0.388,0.627l-0.202,0.313l-0.208,0.313l-30.502,-11.22","outline_length":"5'10\"","outline_wide":"20 "}],"websiteurl":"","shops":null,"surfboardtecnologyimages":[],"glassglobal":[{"id":"1155","glass":"Standard 4x4x4","svgtop":"","svgbottom":""},{"id":"1157","glass":"Medium 5x4x4","svgtop":"","svgbottom":""},{"id":"1159","glass":"Team Light 4x4x3/4","svgtop":"","svgbottom":""},{"id":"1161","glass":"Strong 4x6x6","svgtop":"","svgbottom":""}],"tailpatch":[{"id":"28239","tailpatch":"White carbon","svgfile":"https://www.shaperbuddy.com/img/surfplant/paint/142/656656245654a1.sv
+
+====================================================================================================
+PATTERN: Stock Dimensions
+====================================================================================================
+/pages/custom-order-v2" title="Custom Order v2">Click Here</a><br/><strong>Volume Calculator: </strong><a href="#volume-calculator-section" title="#volume-calculator-section">Click Here</a></p>
+                  
+                </div>
+                <!--
+                  <div class="cmn_data">
+                    <ul class="product-option-grp surfboard_product_option_container">
+                      
+                        <li class="fl-option fl-option-selected"><a class="stock_dimension">STOCK DIMENSIONS</a></li>
+
+                        
+                          <li class="fl-option">
+                            <a href="/pages/custom-order?id_surfboardmodel=13959"
+                              ><span class="button-scroll-in add-to-cart__text add-to-cart__text">CUSTOM ORDERS</span></a
+                            >
+                          </li>
+                        
+                      
+                    </ul>
+                    
+                      <p class="note-para">
+          
+
+====================================================================================================
+PATTERN: Stock Dimensions
+====================================================================================================
+0"
+        >
+          <span class="button-scroll-in">
+            FCS 2
+          </span>
+        </button>
+      
+        <button
+          class="fl-option-selector fl-option-selector--fin_options  fl-option "
+          data-option-type="fin_options"
+          data-option-value="Futures"
+          data-excess-cost="0"
+        >
+          <span class="button-scroll-in">
+            Futures
+          </span>
+        </button>
+      
+    </div>
+  
+
+  <h4 class="surfboard_option" id="size_range">Stock Dimensions</h4>
+
+  <ul class="surfboard_product_container">
+    
+      
+      
+      
+      <li class="fl-variants" id="std_2145608">
+        <div class="surfboard_product_item m-10">
+          <div class="fl-product-stock-radio-container surfboard_product_item_container">
+            <input
+              type="radio"
+              name="surfboard_standard_dimensions_radio"
+              disabled
+              id="radio_2145608"
+              class="surfboard_product_item__input"
+              data-length
+
+====================================================================================================
+PATTERN: Stock Dimensions
+====================================================================================================
+ustom-options">
+          
+            <div
+              class="custom-option"
+              value="FCS 2"
+              
+                selected
+              
+            >
+              <div>FCS 2</div>
+            </div>
+          
+            <div
+              class="custom-option"
+              value="Futures"
+              
+            >
+              <div>Futures</div>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  
+
+  <div class="model-dimensions">
+    <label>Stock Dimensions</label>
+    <div class="custom-select-wrapper" tabindex="1">
+      <div class="custom-select-trigger">
+        <span>SELECT</span>
+        <img src="//sharpeyesurfboards.com/cdn/shop/t/9/assets/dropdown_down_arrow.svg?v=29462545454484404611754327959" height="15px" width="15px">
+      </div>
+      <div class="custom-options">
+        
+          
+          
+          
+          <div
+            class="custom-option dimensions"
+            id="mob_2145608"
+            value="1473.2##425.45##48.26"

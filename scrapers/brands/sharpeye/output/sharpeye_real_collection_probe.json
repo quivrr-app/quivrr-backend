@@ -1,0 +1,97 @@
+[
+  {
+    "collection": "performance-range",
+    "url": "https://sharpeyesurfboards.com/collections/performance-range/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 18,
+    "titles": [
+      "INFERNO 72",
+      "INFERNO 72 (E3 LITE)",
+      "INFERNO 72 YTH",
+      "DISCO II",
+      "DISCO II (E3 LITE)",
+      "DISCO II (C1 LITE)",
+      "FILE FIFTY",
+      "FILE FIFTY (E3 LITE)",
+      "SYNERGY",
+      "SYNERGY YTH",
+      "STORMS",
+      "CHEAT CODE",
+      "CHEAT CODE  (E3 LITE)",
+      "CHEAT CODE (C1 LITE)",
+      "DISCO",
+      "DISCO INFERNO",
+      "OKAY",
+      "SB-1"
+    ]
+  },
+  {
+    "collection": "pro-range",
+    "url": "https://sharpeyesurfboards.com/collections/pro-range/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 8,
+    "titles": [
+      "#77",
+      "#77 (E3 LITE)",
+      "INFERNO FT",
+      "HT2.5",
+      "HT2",
+      "HT2 YTH",
+      "HOLY TOLEDO",
+      "INFERNO FT (E3 LITE)"
+    ]
+  },
+  {
+    "collection": "hv-range",
+    "url": "https://sharpeyesurfboards.com/collections/hv-range/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 4,
+    "titles": [
+      "INFERNO 72",
+      "INFERNO FT",
+      "SYNERGY",
+      "FILE FIFTY"
+    ]
+  },
+  {
+    "collection": "xl-range",
+    "url": "https://sharpeyesurfboards.com/collections/xl-range/products.json?limit=250",
+    "status_code": 403,
+    "product_count": 0,
+    "titles": []
+  },
+  {
+    "collection": "alternate-range",
+    "url": "https://sharpeyesurfboards.com/collections/alternate-range/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 15,
+    "titles": [
+      "RADAR",
+      "CHEAT CODE",
+      "CHEAT CODE  (E3 LITE)",
+      "CHEAT CODE (C1 LITE)",
+      "MIDGICIAN",
+      "MIDGICIAN (E3 LITE)",
+      "TWIN TURBO",
+      "TWIN TURBO (E3 LITE)",
+      "TWIN TURBO (C1 LITE)",
+      "MODERN 2",
+      "MODERN 2 (E3-LITE)",
+      "MODERN 2.5",
+      "MAGURO",
+      "ZIPPER (E3 LITE)",
+      "ZIPPER"
+    ]
+  },
+  {
+    "collection": "youth-range",
+    "url": "https://sharpeyesurfboards.com/collections/youth-range/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 3,
+    "titles": [
+      "SYNERGY YTH",
+      "INFERNO 72 YTH",
+      "HT2 YTH"
+    ]
+  }
+]

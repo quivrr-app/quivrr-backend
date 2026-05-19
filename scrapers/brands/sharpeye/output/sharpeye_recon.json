@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://sharpeyesurfboards.com",
+    "status_code": 200,
+    "final_url": "https://sharpeyesurfboards.com/",
+    "platform": "Shopify",
+    "title": "SHARP EYE Surfboards / High Performance Surfboards – Sharp Eye Surfboards"
+  },
+  {
+    "url": "https://www.sharpeyesurfboards.com",
+    "status_code": 403,
+    "final_url": "https://www.sharpeyesurfboards.com/",
+    "platform": "Unknown",
+    "title": "DNS points to prohibited IP | www.sharpeyesurfboards.com | Cloudflare"
+  },
+  {
+    "url": "https://sharpeyesurfboards.com/collections/surfboards",
+    "status_code": 404,
+    "final_url": "https://sharpeyesurfboards.com/collections/surfboards",
+    "platform": "Shopify",
+    "title": "404 Not Found – Sharp Eye Surfboards"
+  },
+  {
+    "url": "https://www.sharpeyesurfboards.com/collections/surfboards",
+    "status_code": 403,
+    "final_url": "https://www.sharpeyesurfboards.com/collections/surfboards",
+    "platform": "Unknown",
+    "title": "DNS points to prohibited IP | www.sharpeyesurfboards.com | Cloudflare"
+  }
+]

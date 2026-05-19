@@ -1,0 +1,74 @@
+[
+  {
+    "collection": "all",
+    "url": "https://sharpeyesurfboards.com/collections/all/products.json?limit=250",
+    "status_code": 500,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "surfboards",
+    "url": "https://sharpeyesurfboards.com/collections/surfboards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "boards",
+    "url": "https://sharpeyesurfboards.com/collections/boards/products.json?limit=250",
+    "status_code": 403,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "stock-boards",
+    "url": "https://sharpeyesurfboards.com/collections/stock-boards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "models",
+    "url": "https://sharpeyesurfboards.com/collections/models/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "surfboard-models",
+    "url": "https://sharpeyesurfboards.com/collections/surfboard-models/products.json?limit=250",
+    "status_code": 403,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "performance",
+    "url": "https://sharpeyesurfboards.com/collections/performance/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "high-performance",
+    "url": "https://sharpeyesurfboards.com/collections/high-performance/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "shortboards",
+    "url": "https://sharpeyesurfboards.com/collections/shortboards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  }
+]
