@@ -1,0 +1,1538 @@
+[
+  {
+    "collection": "surfboard-models",
+    "url": "https://www.haydenshapes.com/collections/surfboard-models/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 14,
+    "sample_titles": [
+      "Hypto Krypto FutureFlex",
+      "Holy Hypto FutureFlex",
+      "Nova FutureFlex",
+      "Holy Grail FutureFlex",
+      "Cannon - Single Fin",
+      "Plunder FutureFlex",
+      "Love Buzz FutureFlex",
+      "Merlot FutureFlex",
+      "Psychedelic Germ FutureFlex",
+      "Shred Sled Futureflex",
+      "Shred Sled King FutureFlex",
+      "Untitled V2",
+      "Holy Hypto FutureFlex Cobalt Blue",
+      "Untitled FutureFlex"
+    ],
+    "sample_variants": [
+      {
+        "product_title": "Hypto Krypto FutureFlex",
+        "handle": "hypto-krypto-futureflex",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=0;-25.4;-76.2;-101.6;",
+          "abilityvolume=0.42;0.4;0.38;0.38;",
+          "Beginner Boards",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "board-model-Hypto Krypto",
+          "customlink=https://www.haydenshapes.com/hsstudio?activeLocationUid=au&activeBoardUid=hypto-krypto",
+          "Demand Planning",
+          "FCS",
+          "fcsfin",
+          "fin-system-FCS Fins",
+          "FREEFINSBOARD",
+          "FREEGRIP",
+          "FutureFlex",
+          "Global Sales",
+          "HKCLEAR",
+          "hypto",
+          "Hypto Krypto",
+          "hyptokrypto",
+          "Latest Arrival",
+          "MADE_STANDARD",
+          "NZ",
+          "Ready",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "technology-FutureFlex"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'3\" 19 3/8\" 2 5/16\" - 25.9L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3503"
+          },
+          {
+            "title": "Futures 5 / 5'4\" 19 1/2\" 2 3/8\" - 27.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3504A"
+          },
+          {
+            "title": "Futures 5 / 5'4\" 19 1/2\" 2 1/4\" - 26.24L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5504"
+          },
+          {
+            "title": "Futures 5 / 5'5\" 19 5/8\" 2 7/16\" - 28.5L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" 19 3/4\" 2 1/2\" - 29.9L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3506A"
+          },
+          {
+            "title": "Futures 5 / 5'6\" 19 3/4\" 2 3/8\" - 28.62L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" 19 7/8\" 2 9/16\" - 31.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3507A"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 7/8\" x 2 7/16\" - 29.86L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" 20\" 2 5/8\" - 32.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3508A"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 20\" x 2 1/2\" - 31.03L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 20 1/8\" x 2 9/16\" - 32.3L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 20 1/4\" x 2 5/8\" - 33.73L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5510"
+          },
+          {
+            "title": "Futures 5 / 5'11\" x 20 3/8\" x 2 11/16\" - 34.72L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5511"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 1/2\" x 2 3/4\" - 36.33L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'1\" x 20 5/8\" x 2 3/4\" - 37.71L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5601"
+          },
+          {
+            "title": "Futures 5 / 6'2\" x 20 3/4\" x 2 3/4\" - 38.39L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5602"
+          },
+          {
+            "title": "Futures 5 / 6'3\" x 20 7/8\" x 2 7/8\" - 40.76L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5603"
+          },
+          {
+            "title": "Futures 5 / 6'4\" x 21\" x 3\" - 43.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5604"
+          },
+          {
+            "title": "Futures 5 / 6'6\" x 21 1/2\" x 3\" - 45.52L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5606"
+          },
+          {
+            "title": "Futures 5 / 6'8\" x 22\" x 3 1/4\" - 51.42L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5608"
+          }
+        ]
+      },
+      {
+        "product_title": "Holy Hypto FutureFlex",
+        "handle": "holy-hypto-futureflex-clear",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=50.8;0;-25.4;-50.8",
+          "abilityvolume=0.41;0.38;0.359;0.348",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "customlink=https://hsstudio.haydenshapes.com/hsstudio/?activeLocationUid=us&activeBoardUid=holy-hypto&activeVolume=0&activePOS=false&activeShippingWeight=20&dev=false&isMobile=false&minimizeSectionsOnClose=false&minimizeSectionView=true",
+          "Demand Planning",
+          "Distributor",
+          "FCS",
+          "FREEGRIP",
+          "FutureFlex",
+          "futures",
+          "Global Sales",
+          "HHCLEAR",
+          "Holy Hypto",
+          "MADE_STANDARD",
+          "Ready",
+          "Ready To Ship",
+          "RTS",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "Wholesale"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'4\" x 19\" x 2 3/16\" - 23.61L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5504"
+          },
+          {
+            "title": "Futures 5 / 5'5\" x 19 1/8\" x 2 1/4\" - 24.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" x 19 5/16\" x 2 5/16\" - 25.68L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 7/16\" x 2 5/16\" - 26.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 19 9/16\" x 2 3/8\" - 27.86L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 19 11/16\" x 2 7/16 - 29.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 19 7/8\" x 2 7/16\" - 30.24L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5510"
+          },
+          {
+            "title": "Futures 5 / 5'11\" x 20\" x 2 1/2\" - 31.3L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5511"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 1/8\" x 2 9/16\" - 32.46L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'1\" x 20 1/4\" x 2 9/16\" - 33.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5601"
+          },
+          {
+            "title": "Futures 5 / 6'2\" x 20 7/16\" x 2 5/8\" - 35.09L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5602"
+          },
+          {
+            "title": "Futures 5 / 6'3\" x 20 9/16\" x 2 11/16\" - 36.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5603"
+          },
+          {
+            "title": "Futures 5 / 6'4\" x 20 11/16\" x 2 11/16\" - 37.75L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5604"
+          },
+          {
+            "title": "Futures 5 / 6'5\" x 20 13/16\" x 2 3/4\" - 39.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5605"
+          },
+          {
+            "title": "Futures 5 / 6'6\" x 21\" x 2 13/16\" - 40.52L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5606"
+          },
+          {
+            "title": "Futures 5 / 6'7\" x 21 1/8\" x 2 13/16\" - 41.9L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5607"
+          },
+          {
+            "title": "Futures 5 / 6'8\" x 21 1/4\" x 2 7/8\" - 43.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5608"
+          },
+          {
+            "title": "FCSII 5 / 5'4\" x 19\" x 2 3/16\" - 23.61L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFC5504"
+          },
+          {
+            "title": "FCSII 5 / 5'5\" x 19 1/8\" x 2 1/4\" - 24.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFC5505"
+          },
+          {
+            "title": "FCSII 5 / 5'6\" x 19 5/16\" x 2 5/16\" - 25.68L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFC5506"
+          }
+        ]
+      },
+      {
+        "product_title": "Nova FutureFlex",
+        "handle": "nova-futureflex",
+        "product_type": "FutureFlex",
+        "tags": [
+          "Beginner Boards",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "Demand Planning",
+          "Distributor",
+          "FutureFlex",
+          "Global Sales",
+          "International",
+          "Latest Arrival",
+          "MADE_STANDARD",
+          "NOVA",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "technology-FutureFlex",
+          "Wholesale"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'3\" x 19 x 2 5/16 - 25.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5503"
+          },
+          {
+            "title": "Futures 5 / 5'4\" x 19 1/4\" x 2 7/16\" - 27.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5504"
+          },
+          {
+            "title": "Futures 5 / 5'5\" x 19 3/8\" x 2 7/16\" - 28.5L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" x 19 1/2\" x 2 1/2\" - 30L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 5/8\" x 2 1/2\" - 31L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 19 3/4\" x 2 9/16\" - 32.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 19 7/8\" x 2 9/16\" - 33.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 20\" x 2 5/8\" - 34.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5510"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 1/4\" x 2 11/16\" - 36.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'2 x 20 1/2\" x 2 3/4\" - 38.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5602"
+          },
+          {
+            "title": "Futures 5 / 6'4 x 20 3/4\" x 2 13/16\" - 41.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5604"
+          },
+          {
+            "title": "Futures 5 / 6'6\" x 21\" x 2 7/8\" - 43.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5606"
+          },
+          {
+            "title": "Futures 5 / 6'8\" x 21 1/4\" x 3\" - 47.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5608"
+          },
+          {
+            "title": "FCSII 5 / 5'3\" x 19 x 2 5/16 - 25.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5503"
+          },
+          {
+            "title": "FCSII 5 / 5'4\" x 19 1/4\" x 2 7/16\" - 27.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5504"
+          },
+          {
+            "title": "FCSII 5 / 5'5\" x 19 3/8\" x 2 7/16\" - 28.5L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5505"
+          },
+          {
+            "title": "FCSII 5 / 5'6\" x 19 1/2\" x 2 1/2\" - 30L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5506"
+          },
+          {
+            "title": "FCSII 5 / 5'7\" x 19 5/8\" x 2 1/2\" - 31L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5507"
+          },
+          {
+            "title": "FCSII 5 / 5'8\" x 19 3/4\" x 2 9/16\" - 32.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5508"
+          },
+          {
+            "title": "FCSII 5 / 5'9\" x 19 7/8\" x 2 9/16\" - 33.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5509"
+          }
+        ]
+      },
+      {
+        "product_title": "Holy Grail FutureFlex",
+        "handle": "holy-grail-futureflex",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=50.8;0;-50.8;-76.2;",
+          "abilityvolume=0.41;0.38;0.38;0.37;",
+          "board-model-Holy Grail",
+          "customlink=https://www.haydenshapes.com/hsstudio?activeL",
+          "FCS",
+          "FREEGRIP",
+          "Future Demand Planning",
+          "FutureFlex",
+          "Global Sales",
+          "Holy Grail",
+          "Latest Arrival",
+          "Legacy",
+          "MADE_STANDARD",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Surfboard"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'5\" x 19 1/2\" x 2 1/4\" - 24.49L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" x 19 5/8\" x 2 5/16\" - 25.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 3/4\" x 2 3/8\" - 26.91L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 19 7/8\" x 2 7/16\" - 28.19L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 20\" x 2 1/2\" - 29.51L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 20 1/8\" x 2 9/16\" - 30.87L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5510"
+          },
+          {
+            "title": "Futures 5 / 5'11\" x 20 1/4\" x 2 5/8\" - 32.25L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5511"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 3/8\" x 2 11/16\" - 33.66L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'1\" x 20 1/2\" x 2 3/4\" - 34.97L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5601"
+          },
+          {
+            "title": "Futures 5 / 6'3\" x 20 3/4\" x 2 3/4\" - 36.94L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFU5603"
+          },
+          {
+            "title": "FCSII 5 / 5'5\" x 19 1/2\" x 2 1/4\" - 24.49L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5505"
+          },
+          {
+            "title": "FCSII 5 / 5'6\" x 19 5/8\" x 2 5/16\" - 25.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5506"
+          },
+          {
+            "title": "FCSII 5 / 5'7\" x 19 3/4\" x 2 3/8\" - 26.91L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5507"
+          },
+          {
+            "title": "FCSII 5 / 5'8\" x 19 7/8\" x 2 7/16\" - 28.19L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5508"
+          },
+          {
+            "title": "FCSII 5 / 5'9\" x 20\" x 2 1/2\" - 29.51L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5509"
+          },
+          {
+            "title": "FCSII 5 / 5'10\" x 20 1/8\" x 2 9/16\" - 30.87L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5510"
+          },
+          {
+            "title": "FCSII 5 / 5'11\" x 20 1/4\" x 2 5/8\" - 32.25L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5511"
+          },
+          {
+            "title": "FCSII 5 / 6'0\" x 20 3/8\" x 2 11/16\" - 33.66L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5600"
+          },
+          {
+            "title": "FCSII 5 / 6'1\" x 20 1/2\" x 2 3/4\" - 34.97L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5601"
+          },
+          {
+            "title": "FCSII 5 / 6'3\" x 20 3/4\" x 2 3/4\" - 36.94L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHGFC5603"
+          }
+        ]
+      },
+      {
+        "product_title": "Cannon - Single Fin",
+        "handle": "cannon-pe-single-fin",
+        "product_type": "ALT Series",
+        "tags": [
+          "abilitylength=101.6;76.2;50.8;25.4;",
+          "abilityvolume=0.48;0.46;0.45;0.44;",
+          "board-model-Cannon",
+          "cannon",
+          "customlink=https://www.haydenshapes.com/hsstudio?activeLocationUid=au&activeBoardUid=cannon",
+          "fin-system-Single",
+          "futuresfin",
+          "HYBRID",
+          "MADE_STANDARD",
+          "MTO",
+          "pe",
+          "PE Construction",
+          "Ready To Ship",
+          "Surfboard",
+          "technology-PE",
+          "tolerance=10"
+        ],
+        "variants": [
+          {
+            "title": "5'8\" x 19 1/2\" x 2 5/8\" - 30.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1508"
+          },
+          {
+            "title": "5'9\" x 19 5/8\" x 2 3/4\" - 32.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1509"
+          },
+          {
+            "title": "5'10\" x 19 3/4\" x 2 3/4\" - 32.77L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1510"
+          },
+          {
+            "title": "5'11\" x 19 7/8\" x 2 3/4\" - 33.91L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1511"
+          },
+          {
+            "title": "6'0\" x 20\" x 2 3/4\" - 34.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1600"
+          },
+          {
+            "title": "6'1\" x 20 1/2\" x 2 3/4\" - 35.16L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1601"
+          },
+          {
+            "title": "6'2\" x 20 1/4\" x 2 3/4\" - 35.93L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1602"
+          },
+          {
+            "title": "6'3\" x 20 1/4\" x 2 7/8\" - 37.97L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1603"
+          },
+          {
+            "title": "6'4\" x 20 1/4\" x 2 7/8\" - 38.53L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1604"
+          },
+          {
+            "title": "6'5\" x 20 1/2\" - 2 7/8\" - 39.52L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1605"
+          },
+          {
+            "title": "6'6\" x 20 3/4\" x 2 7/8\" - 40.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1606"
+          },
+          {
+            "title": "6'7\" x 21\" x 3\" - 43.79L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1607"
+          },
+          {
+            "title": "6'8\" x 21 1/4\" x 3\" - 42.86L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1608"
+          },
+          {
+            "title": "6'9\" x 21 1/2\" x 3 1/8\" - 44.44L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1609"
+          },
+          {
+            "title": "6'10\" x 22 3/4\" x 3 1/4\" - 48.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "PECNFU1610"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "collection": "surfboards",
+    "url": "https://www.haydenshapes.com/collections/surfboards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 135,
+    "sample_titles": [
+      "Hypto Krypto FutureFlex",
+      "Holy Hypto FutureFlex",
+      "Nova FutureFlex",
+      "Cohort II Futureflex - MiG Edition",
+      "Hypto Krypto FutureFlex - Zephyr Blue",
+      "Hypto Krypto FutureFlex - Black",
+      "Hypto Krypto FutureFlex - Violet Grunge",
+      "Hypto Krypto FutureFlex - Sultry Red Grunge",
+      "Hypto Krypto Twin FutureFlex",
+      "Misc FutureFlex",
+      "Untitled FutureFlex",
+      "Holy Grail FutureFlex",
+      "Performance Cruiser",
+      "Performance Cruiser Salmon",
+      "Performance Cruiser Blue Moss",
+      "Cruiser",
+      "Cruiser Teal",
+      "Cruiser Bone",
+      "Hypto Krypto Softboard - Blue Tile - Futures 3",
+      "Hypto Krypto Softboard - Clay - Futures 3",
+      "Hypto Krypto Softboard - Moonscape Black Rail - Futures 3",
+      "Hypto Krypto Softboard - Inverted - Futures 3",
+      "Holy Grail FutureFlex - Herringbone",
+      "Hypto Krypto FutureFlex - Kelp Grunge",
+      "Holy Hypto FutureFlex Oxy",
+      "Holy Hypto FutureFlex - Black",
+      "Hypto Krypto Step Up FutureFlex",
+      "New Wave Mid FutureFlex - Blue",
+      "New Wave Mid FutureFlex - Black",
+      "Hypto Krypto FutureFlex Yellow Flame"
+    ],
+    "sample_variants": [
+      {
+        "product_title": "Hypto Krypto FutureFlex",
+        "handle": "hypto-krypto-futureflex",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=0;-25.4;-76.2;-101.6;",
+          "abilityvolume=0.42;0.4;0.38;0.38;",
+          "Beginner Boards",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "board-model-Hypto Krypto",
+          "customlink=https://www.haydenshapes.com/hsstudio?activeLocationUid=au&activeBoardUid=hypto-krypto",
+          "Demand Planning",
+          "FCS",
+          "fcsfin",
+          "fin-system-FCS Fins",
+          "FREEFINSBOARD",
+          "FREEGRIP",
+          "FutureFlex",
+          "Global Sales",
+          "HKCLEAR",
+          "hypto",
+          "Hypto Krypto",
+          "hyptokrypto",
+          "Latest Arrival",
+          "MADE_STANDARD",
+          "NZ",
+          "Ready",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "technology-FutureFlex"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'3\" 19 3/8\" 2 5/16\" - 25.9L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3503"
+          },
+          {
+            "title": "Futures 5 / 5'4\" 19 1/2\" 2 3/8\" - 27.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3504A"
+          },
+          {
+            "title": "Futures 5 / 5'4\" 19 1/2\" 2 1/4\" - 26.24L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5504"
+          },
+          {
+            "title": "Futures 5 / 5'5\" 19 5/8\" 2 7/16\" - 28.5L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" 19 3/4\" 2 1/2\" - 29.9L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3506A"
+          },
+          {
+            "title": "Futures 5 / 5'6\" 19 3/4\" 2 3/8\" - 28.62L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" 19 7/8\" 2 9/16\" - 31.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3507A"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 7/8\" x 2 7/16\" - 29.86L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" 20\" 2 5/8\" - 32.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU3508A"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 20\" x 2 1/2\" - 31.03L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 20 1/8\" x 2 9/16\" - 32.3L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 20 1/4\" x 2 5/8\" - 33.73L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5510"
+          },
+          {
+            "title": "Futures 5 / 5'11\" x 20 3/8\" x 2 11/16\" - 34.72L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5511"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 1/2\" x 2 3/4\" - 36.33L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'1\" x 20 5/8\" x 2 3/4\" - 37.71L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5601"
+          },
+          {
+            "title": "Futures 5 / 6'2\" x 20 3/4\" x 2 3/4\" - 38.39L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5602"
+          },
+          {
+            "title": "Futures 5 / 6'3\" x 20 7/8\" x 2 7/8\" - 40.76L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5603"
+          },
+          {
+            "title": "Futures 5 / 6'4\" x 21\" x 3\" - 43.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5604"
+          },
+          {
+            "title": "Futures 5 / 6'6\" x 21 1/2\" x 3\" - 45.52L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5606"
+          },
+          {
+            "title": "Futures 5 / 6'8\" x 22\" x 3 1/4\" - 51.42L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHKFU5608"
+          }
+        ]
+      },
+      {
+        "product_title": "Holy Hypto FutureFlex",
+        "handle": "holy-hypto-futureflex-clear",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=50.8;0;-25.4;-50.8",
+          "abilityvolume=0.41;0.38;0.359;0.348",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "customlink=https://hsstudio.haydenshapes.com/hsstudio/?activeLocationUid=us&activeBoardUid=holy-hypto&activeVolume=0&activePOS=false&activeShippingWeight=20&dev=false&isMobile=false&minimizeSectionsOnClose=false&minimizeSectionView=true",
+          "Demand Planning",
+          "Distributor",
+          "FCS",
+          "FREEGRIP",
+          "FutureFlex",
+          "futures",
+          "Global Sales",
+          "HHCLEAR",
+          "Holy Hypto",
+          "MADE_STANDARD",
+          "Ready",
+          "Ready To Ship",
+          "RTS",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "Wholesale"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'4\" x 19\" x 2 3/16\" - 23.61L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5504"
+          },
+          {
+            "title": "Futures 5 / 5'5\" x 19 1/8\" x 2 1/4\" - 24.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" x 19 5/16\" x 2 5/16\" - 25.68L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 7/16\" x 2 5/16\" - 26.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 19 9/16\" x 2 3/8\" - 27.86L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 19 11/16\" x 2 7/16 - 29.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 19 7/8\" x 2 7/16\" - 30.24L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5510"
+          },
+          {
+            "title": "Futures 5 / 5'11\" x 20\" x 2 1/2\" - 31.3L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5511"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 1/8\" x 2 9/16\" - 32.46L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'1\" x 20 1/4\" x 2 9/16\" - 33.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5601"
+          },
+          {
+            "title": "Futures 5 / 6'2\" x 20 7/16\" x 2 5/8\" - 35.09L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5602"
+          },
+          {
+            "title": "Futures 5 / 6'3\" x 20 9/16\" x 2 11/16\" - 36.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5603"
+          },
+          {
+            "title": "Futures 5 / 6'4\" x 20 11/16\" x 2 11/16\" - 37.75L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5604"
+          },
+          {
+            "title": "Futures 5 / 6'5\" x 20 13/16\" x 2 3/4\" - 39.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5605"
+          },
+          {
+            "title": "Futures 5 / 6'6\" x 21\" x 2 13/16\" - 40.52L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5606"
+          },
+          {
+            "title": "Futures 5 / 6'7\" x 21 1/8\" x 2 13/16\" - 41.9L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5607"
+          },
+          {
+            "title": "Futures 5 / 6'8\" x 21 1/4\" x 2 7/8\" - 43.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFU5608"
+          },
+          {
+            "title": "FCSII 5 / 5'4\" x 19\" x 2 3/16\" - 23.61L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFC5504"
+          },
+          {
+            "title": "FCSII 5 / 5'5\" x 19 1/8\" x 2 1/4\" - 24.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFC5505"
+          },
+          {
+            "title": "FCSII 5 / 5'6\" x 19 5/16\" x 2 5/16\" - 25.68L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFHHFC5506"
+          }
+        ]
+      },
+      {
+        "product_title": "Nova FutureFlex",
+        "handle": "nova-futureflex",
+        "product_type": "FutureFlex",
+        "tags": [
+          "Beginner Boards",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "Demand Planning",
+          "Distributor",
+          "FutureFlex",
+          "Global Sales",
+          "International",
+          "Latest Arrival",
+          "MADE_STANDARD",
+          "NOVA",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "technology-FutureFlex",
+          "Wholesale"
+        ],
+        "variants": [
+          {
+            "title": "Futures 5 / 5'3\" x 19 x 2 5/16 - 25.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5503"
+          },
+          {
+            "title": "Futures 5 / 5'4\" x 19 1/4\" x 2 7/16\" - 27.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5504"
+          },
+          {
+            "title": "Futures 5 / 5'5\" x 19 3/8\" x 2 7/16\" - 28.5L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5505"
+          },
+          {
+            "title": "Futures 5 / 5'6\" x 19 1/2\" x 2 1/2\" - 30L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5506"
+          },
+          {
+            "title": "Futures 5 / 5'7\" x 19 5/8\" x 2 1/2\" - 31L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5507"
+          },
+          {
+            "title": "Futures 5 / 5'8\" x 19 3/4\" x 2 9/16\" - 32.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5508"
+          },
+          {
+            "title": "Futures 5 / 5'9\" x 19 7/8\" x 2 9/16\" - 33.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5509"
+          },
+          {
+            "title": "Futures 5 / 5'10\" x 20\" x 2 5/8\" - 34.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5510"
+          },
+          {
+            "title": "Futures 5 / 6'0\" x 20 1/4\" x 2 11/16\" - 36.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5600"
+          },
+          {
+            "title": "Futures 5 / 6'2 x 20 1/2\" x 2 3/4\" - 38.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5602"
+          },
+          {
+            "title": "Futures 5 / 6'4 x 20 3/4\" x 2 13/16\" - 41.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5604"
+          },
+          {
+            "title": "Futures 5 / 6'6\" x 21\" x 2 7/8\" - 43.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5606"
+          },
+          {
+            "title": "Futures 5 / 6'8\" x 21 1/4\" x 3\" - 47.4L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFU5608"
+          },
+          {
+            "title": "FCSII 5 / 5'3\" x 19 x 2 5/16 - 25.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5503"
+          },
+          {
+            "title": "FCSII 5 / 5'4\" x 19 1/4\" x 2 7/16\" - 27.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5504"
+          },
+          {
+            "title": "FCSII 5 / 5'5\" x 19 3/8\" x 2 7/16\" - 28.5L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5505"
+          },
+          {
+            "title": "FCSII 5 / 5'6\" x 19 1/2\" x 2 1/2\" - 30L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5506"
+          },
+          {
+            "title": "FCSII 5 / 5'7\" x 19 5/8\" x 2 1/2\" - 31L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5507"
+          },
+          {
+            "title": "FCSII 5 / 5'8\" x 19 3/4\" x 2 9/16\" - 32.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5508"
+          },
+          {
+            "title": "FCSII 5 / 5'9\" x 19 7/8\" x 2 9/16\" - 33.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFNOFC5509"
+          }
+        ]
+      },
+      {
+        "product_title": "Cohort II Futureflex - MiG Edition",
+        "handle": "cohort-ii-futureflex-clear",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=50.8;0;-50.8;-76.2;",
+          "abilityvolume=0.41;0.38;0.38;0.37;",
+          "BFCM2025INSTOCK",
+          "board-model-Cohort II",
+          "Cohort-II",
+          "customlink=https://www.haydenshapes.com/hsstudio?",
+          "Demand Planning",
+          "FACTORYSECONDS",
+          "FCS",
+          "fin-system-Futures Fins",
+          "Future",
+          "FutureFlex",
+          "MADE_STANDARD",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Surfboard",
+          "technology-FutureFlex"
+        ],
+        "variants": [
+          {
+            "title": "Futures 3 / 5'6\" x 18 3/8\" x 2 5/16\" x 25.01L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3506"
+          },
+          {
+            "title": "Futures 3 / 5'7\" x 18 11/16\" x 2 5/16\" x 26.17L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3507"
+          },
+          {
+            "title": "Futures 3 / 5'8\" x 18 15/16\" x 2 3/8\" x 27.36L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3508"
+          },
+          {
+            "title": "Futures 3 / 5'9\" x 19 1/4\" x 2 3/8\" x 28.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3509"
+          },
+          {
+            "title": "Futures 3 / 5'10\" x 19 1/2\" x 2 7/16\" x 29.84L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3510"
+          },
+          {
+            "title": "Futures 3 / 5'11\" x 19 3/4\" x 2 1/2\" x 31.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3511"
+          },
+          {
+            "title": "Futures 3 / 6'0\" x 20 1/16\" x 2 1/2\" x 32.48L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3600"
+          },
+          {
+            "title": "Futures 3 / 6'1\" x 20 5/16 x 2 9/16\" x 33.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3601"
+          },
+          {
+            "title": "Futures 3 / 6'2\" x 20 5/8\" x 2 9/16\" x 35.26L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3602"
+          },
+          {
+            "title": "Futures 3 / 6'3\" x 20 7/8 x 2 5/8\" x 36.7L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3603"
+          },
+          {
+            "title": "Futures 3 / 6'4\" x 21 3/16\" x 2 5/8\" x 38.2L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFU3604"
+          },
+          {
+            "title": "FCSII 3 / 5'6\" x 18 3/8\" x 2 5/16\" x 25.01L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3506"
+          },
+          {
+            "title": "FCSII 3 / 5'7\" x 18 11/16\" x 2 5/16\" x 26.17L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3507"
+          },
+          {
+            "title": "FCSII 3 / 5'8\" x 18 15/16\" x 2 3/8\" x 27.36L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3508"
+          },
+          {
+            "title": "FCSII 3 / 5'9\" x 19 1/4\" x 2 3/8\" x 28.6L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3509"
+          },
+          {
+            "title": "FCSII 3 / 5'10\" x 19 1/2\" x 2 7/16\" x 29.84L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3510"
+          },
+          {
+            "title": "FCSII 3 / 5'11\" x 19 3/4\" x 2 1/2\" x 31.1L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3511"
+          },
+          {
+            "title": "FCSII 3 / 6'0\" x 20 1/16\" x 2 1/2\" x 32.48L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3600"
+          },
+          {
+            "title": "FCSII 3 / 6'1\" x 20 5/16 x 2 9/16\" x 33.8L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3601"
+          },
+          {
+            "title": "FCSII 3 / 6'2\" x 20 5/8\" x 2 9/16\" x 35.26L",
+            "price": "849.00",
+            "available": true,
+            "sku": "FFCIIFC3602"
+          }
+        ]
+      },
+      {
+        "product_title": "Hypto Krypto FutureFlex - Zephyr Blue",
+        "handle": "hypto-krypto-futureflex-zephyr-blue",
+        "product_type": "FutureFlex",
+        "tags": [
+          "abilitylength=50.8;0;-50.8;-76.2;",
+          "abilityvolume=0.41;0.38;0.38;0.37;",
+          "best seller",
+          "BFCM2025INSTOCK",
+          "board-model-Hypto Krypto",
+          "customlink=https://www.haydenshapes.com/hsstudio?",
+          "Demand Planning",
+          "Distributor",
+          "FCS",
+          "FREEGRIP",
+          "FutureFlex",
+          "Global Sales",
+          "Hypto Krypto",
+          "International",
+          "Latest Arrival",
+          "MADE_STANDARD",
+          "Ready To Ship",
+          "STOCK_AVAILABLE",
+          "Wholesale"
+        ],
+        "variants": [
+          {
+            "title": "Futures 3 / 5'4\" x 19 1/2\" x 2 1/4\" x 26.24L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3504"
+          },
+          {
+            "title": "Futures 3 / 5'6\" x 19 3/4\" x 2 3/8\" x 28.62L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3506"
+          },
+          {
+            "title": "Futures 3 / 5'7\" x 19 7/8\" x 2 7/16\" x 29.86L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3507"
+          },
+          {
+            "title": "Futures 3 / 5'8\" x 20\" x 2 1/2\" x 31.1L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3508"
+          },
+          {
+            "title": "Futures 3 / 5'9\" x 20 1/8\" x 2 9/16\" x 32.3L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3509"
+          },
+          {
+            "title": "Futures 3 / 5'10\" x 20 1/4\" x 2 5/8\" x 33.73L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3510"
+          },
+          {
+            "title": "Futures 3 / 5'11\" x 20 3/8\" x 2 11/16\" x 34.72L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3511"
+          },
+          {
+            "title": "Futures 3 / 6'0\" x 20 1/2\" x 2 3/4\" x 36.33L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3600"
+          },
+          {
+            "title": "Futures 3 / 6'1\" x 20 5/8\" x 2 3/4\" - 37.71L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3601"
+          },
+          {
+            "title": "Futures 3 / 6'2\" x 20 3/4\" x 2 3/4\" x 38.39L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3602"
+          },
+          {
+            "title": "Futures 3 / 6'3\" x 20 7/8\" x 2 7/8\" - 40.76L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3603"
+          },
+          {
+            "title": "Futures 3 / 6'4\" x 21\" x 3\" x 43.2L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3604"
+          },
+          {
+            "title": "Futures 3 / 6'6\" x 21 1/2\" x 3\" x 45.52L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3606"
+          },
+          {
+            "title": "Futures 3 / 6'8\" x 22\" x 3 1/4\" x 51.42L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3608"
+          },
+          {
+            "title": "Futures 3 / 6'10\" x 22 1/2\" x 3 1/4\" x 53.95L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3610"
+          },
+          {
+            "title": "Futures 3 / 7'0\" x 23\" x 3 3/8\" x 59.58L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFU3700"
+          },
+          {
+            "title": "FCSII 3 / 5'4\" x 19 1/2\" x 2 1/4\" x 26.24L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFC3504"
+          },
+          {
+            "title": "FCSII 3 / 5'6\" x 19 3/4\" x 2 3/8\" x 28.62L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFC3506"
+          },
+          {
+            "title": "FCSII 3 / 5'7\" x 19 7/8\" x 2 7/16\" x 29.86L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFC3507"
+          },
+          {
+            "title": "FCSII 3 / 5'8\" x 20\" x 2 1/2\" x 31.1L",
+            "price": "875.00",
+            "available": true,
+            "sku": "FFHKPZBFC3508"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "collection": "all-surfboards",
+    "url": "https://www.haydenshapes.com/collections/all-surfboards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  },
+  {
+    "collection": "boards",
+    "url": "https://www.haydenshapes.com/collections/boards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "sample_titles": [],
+    "sample_variants": []
+  }
+]

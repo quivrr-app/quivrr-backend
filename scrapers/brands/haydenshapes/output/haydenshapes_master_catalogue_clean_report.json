@@ -1,0 +1,46 @@
+{
+  "brand": "Haydenshapes",
+  "source": "https://www.haydenshapes.com",
+  "collection": "surfboard-models",
+  "products_seen": 14,
+  "products_skipped": 0,
+  "rows": 300,
+  "models": 14,
+  "constructions": [
+    "FutureFlex",
+    "PE",
+    "PU"
+  ],
+  "failures": [
+    {
+      "model": "Merlot",
+      "title": "Merlot FutureFlex",
+      "variant_title": "Futures 3 / Custom Dimensions - Haydenshapes will reach out for desired sizing",
+      "reason": "could not parse length",
+      "product_url": "https://www.haydenshapes.com/products/merlot-futureflex"
+    },
+    {
+      "model": "Merlot",
+      "title": "Merlot FutureFlex",
+      "variant_title": "FCSII 3 / Custom Dimensions - Haydenshapes will reach out for desired sizing",
+      "reason": "could not parse length",
+      "product_url": "https://www.haydenshapes.com/products/merlot-futureflex"
+    },
+    {
+      "model": "Untitled V2",
+      "title": "Untitled V2",
+      "variant_title": "Futures 3 / Custom Dimensions - Haydenshapes will reach out for desired sizing",
+      "reason": "could not parse length",
+      "product_url": "https://www.haydenshapes.com/products/untitled-v2-pu"
+    },
+    {
+      "model": "Untitled V2",
+      "title": "Untitled V2",
+      "variant_title": "FCSII 3 / Custom Dimensions - Haydenshapes will reach out for desired sizing",
+      "reason": "could not parse length",
+      "product_url": "https://www.haydenshapes.com/products/untitled-v2-pu"
+    }
+  ],
+  "failure_count": 4,
+  "output_file": "scrapers\\brands\\haydenshapes\\output\\haydenshapes_master_catalogue_clean.json"
+}

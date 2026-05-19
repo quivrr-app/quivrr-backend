@@ -36,6 +36,10 @@ STEPS = [
         "name": "Firewire",
         "command": [PYTHON, "scripts/run_firewire_pipeline.py"],
     },
+    {
+        "name": "Haydenshapes",
+        "command": [PYTHON, "scripts/run_haydenshapes_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")

@@ -96,7 +96,7 @@ def build_models(catalogue):
     models = {}
 
     for item in catalogue:
-        model_name = clean(item.get("model"))
+        model_name = clean(item.get("model") or item.get("model_name"))
 
         if not model_name:
             continue
@@ -104,7 +104,7 @@ def build_models(catalogue):
         if model_name not in models:
             models[model_name] = {
                 "model_name": model_name,
-                "model_family": clean(item.get("model_family")) or model_name,
+                "model_family": clean(item.get("model_family") or item.get("model_name")) or model_name,
                 "board_category": clean(item.get("board_category")),
                 "official_product_url": clean(item.get("official_product_url")),
                 "official_image_url": clean(item.get("official_image_url")),
@@ -118,13 +118,13 @@ def build_size_rows(catalogue, model_cache):
     rows = []
 
     for item in catalogue:
-        model_name = clean(item.get("model"))
+        model_name = clean(item.get("model") or item.get("model_name"))
         model_id = model_cache.get(model_name)
 
         if not model_id:
             continue
 
-        length = clean(item.get("length"))
+        length = clean(item.get("length") or item.get("length_feet_inches"))
         volume = item.get("volume_litres")
 
         if not length or volume is None:
@@ -137,7 +137,7 @@ def build_size_rows(catalogue, model_cache):
             "thickness": clean(item.get("thickness")),
             "volume": volume,
             "construction": clean(item.get("construction")),
-            "fin_setup": clean(item.get("fin_system")),
+            "fin_setup": clean(item.get("fin_system") or item.get("fin_setup")),
             "tail_shape": clean(item.get("tail_shape")),
         })
 
