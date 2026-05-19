@@ -5,6 +5,8 @@ import sys
 import time
 from datetime import datetime, timezone
 
+PYTHON = sys.executable
+
 
 OUTPUT_DIR = Path("scrapers/products/output")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
