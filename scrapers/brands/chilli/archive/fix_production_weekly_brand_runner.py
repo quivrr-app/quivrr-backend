@@ -1,4 +1,43 @@
-import subprocess
+﻿from pathlib import Path
+
+root = Path("scrapers/brands")
+
+wrappers = {
+    "run_pyzel_pipeline.py": "scripts/run_pyzel_pipeline.py",
+    "run_dhd_pipeline.py": "scripts/run_dhd_pipeline.py",
+    "run_lost_pipeline.py": "scripts/run_lost_pipeline.py",
+    "run_rusty_pipeline.py": "scripts/run_rusty_pipeline.py",
+    "run_firewire_pipeline.py": "scripts/run_firewire_pipeline.py",
+    "run_haydenshapes_pipeline.py": "scripts/run_haydenshapes_pipeline.py",
+    "run_sharpeye_pipeline.py": "scripts/run_sharpeye_pipeline.py",
+    "run_chilli_pipeline.py": "scripts/run_chilli_pipeline.py",
+}
+
+for wrapper_name, target in wrappers.items():
+    wrapper_path = root / wrapper_name
+    wrapper_path.write_text(
+        f'''import subprocess
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+result = subprocess.run(
+    [sys.executable, "{target}"],
+    cwd=ROOT,
+    text=True,
+)
+
+sys.exit(result.returncode)
+''',
+        encoding="utf-8",
+    )
+
+runner = root / "run_all_brand_catalogues.py"
+
+runner.write_text(
+    '''import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -169,3 +208,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+''',
+    encoding="utf-8",
+)
+
+print("Production weekly brand runner rebuilt")

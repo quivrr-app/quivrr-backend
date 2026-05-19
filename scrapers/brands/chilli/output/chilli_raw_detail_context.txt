@@ -1,0 +1,2891 @@
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+						 
+								<li class="dropdown-header" style="font-size:18px;margin-top:20px;">Mid Length</li>	
+														<li>
+								<a href="/surfboards/detail.php?id=18457&direct=1&region=aus">Full Strength</a>
+							</li>
+														<li>
+								<a href="/surfboards/detail.php?id=7234&direct=1&region=aus">Mid Strength</a>
+							</li>
+														
+							<li role="separator" class="divider"></li>
+							 
+								<li class="dropdown-header" style="font-size:18px;margin-top:20px;">Archive</li>	
+														<li>
+								<a href="/surfboards/detail.php?id=8777&direct=1&region=aus">BV2</a>
+							</li>
+														<li>
+								<a href="/surfboards/detail.php?id=6624&direct=1&region=aus">Volume II</a>
+							</li>
+														
+							<li role="separator" class="divider"></li>
+							
+
+							<li role="separator" class="divider"></li>
+						</ul>																			
+						<!--/mobile menu-->
+		            </li>
+		            		            <li><a href="/customorder_v2?direct=1&region=aus">Custom Order</a></li>
+		            		            
+		            
+		            		            <li><a href="/shop/appointment/?direct=1&region=aus">Custom Consult</a></li>
+		            		            
+		            <!--<li><a href="/shop">Shop</a></li>-->
+		            		            <li class="dropdown">
+						<a href="#" class="dropdown-toggle hasVerticalMenu" data-toggle="dropdown" role="button" 
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+														<li><a href="/shop/surfboards/index.php?id_usedstate=3&direct=1&region=aus">Factory 2nd Boards</a></li>
+							<li><a href="/shop/accessories/?direct=1&region=aus">Accessories</a></li>
+							<li><a href="/shop/apparel/?direct=1&region=aus">Apparel</a></li>
+													</ul>
+						<!--/mobile menu-->
+		            </li>
+		            		           <!--  <li><a href="/technology?direct=1&region=aus">Technology</a></li> -->
+					                      
+                       <li><a href="/technology/carbonblackspice.php?direct=1&region=aus">Carbon Tech</a></li>
+		            <li><a href="/team?direct=1&region=aus">Team</a></li>
+		            
+		            					<!-- <li><a href="/volume-finder?direct=1&region=aus">Volume</a></li>-->
+												            <li><a href="/blog?direct=1&region=aus">Reviews</a></li>
+		            
+		          </ul>
+		        </div>
+		      </div>
+		    </nav>
+
+		    <div class="row megamenu_wrapper hidden-xs">
+	    		<!-- MegaMenu Surfboards -->
+	    		<div id="megamenu_surfboards" class="megamenu" style="height: 0px;">
+	    			<div class="megamenu_inner">
+		    			<div class="container">
+		    			 	
+							<div class="row"> 
+		    				<div class="col-xs-2">
+								<h6 class="mmenu_surfboardstitle">
+									Grom Youth																	</h6>
+																<ul>
+																		<li>
+										<a href="/surfboards/detail.php?id=25279&direct=1
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+rfboards/index.php?id_usedstate=3&direct=1&region=aus">Factory 2nd Boards</a></li>
+							<li><a href="/shop/accessories/?direct=1&region=aus">Accessories</a></li>
+							<li><a href="/shop/apparel/?direct=1&region=aus">Apparel</a></li>
+													</ul>
+						<!--/mobile menu-->
+		            </li>
+		            		           <!--  <li><a href="/technology?direct=1&region=aus">Technology</a></li> -->
+					                      
+                       <li><a href="/technology/carbonblackspice.php?direct=1&region=aus">Carbon Tech</a></li>
+		            <li><a href="/team?direct=1&region=aus">Team</a></li>
+		            
+		            					<!-- <li><a href="/volume-finder?direct=1&region=aus">Volume</a></li>-->
+												            <li><a href="/blog?direct=1&region=aus">Reviews</a></li>
+		            
+		          </ul>
+		        </div>
+		      </div>
+		    </nav>
+
+		    <div class="row megamenu_wrapper hidden-xs">
+	    		<!-- MegaMenu Surfboards -->
+	    		<div id="megamenu_surfboards" class="megamenu" style="height: 0px;">
+	    			<div class="megamenu_inner">
+		    			<div class="container">
+		    			 	
+							<div class="row"> 
+		    				<div class="col-xs-2">
+								<h6 class="mmenu_surfboardstitle">
+									Grom Youth																	</h6>
+																<ul>
+																		<li>
+										<a href="/surfboards/detail.php?id=25279&direct=1&region=aus" data-boardimg="" data-
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+	<h6 class="mmenu_surfboardstitle">
+									Archive																	</h6>
+																<ul>
+																		<li>
+										<a href="/surfboards/detail.php?id=8777&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/706224835fd28e_lt__rotate_420.png" data-min_price="1,100" data-currencyiso="AUD" data-currencysymbol="From $" data-model="BV2">BV2</a>
+									</li>
+									
+																		<li>
+										<a href="/surfboards/detail.php?id=6624&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/13117457605fca_lt__rotate_420.png" data-min_price="1,100" data-currencyiso="AUD" data-currencysymbol="From $" data-model="Volume II">Volume II</a>
+									</li>
+									
+																	</ul>
+							</div>
+		    				 
+							<div class="col-xs-4 allsurfboards_clmn">
+								<h6>&nbsp;</h6>
+								<ul><!-- 
+									<li>
+										<a href="/surfboards/?direct=1&region=aus">All Surfboards</a>
+									</li>
+									-->
+								</ul>
+							</div>
+						</div>
+								    			<!-- </div> -->
+		    			</div>
+		    			
+		    			<a href="/surfboards" class="megamenu_footer_allsurfboards">
+		    				<p class="megamenu_footer_allsurfboards_text2">All Surfboards</p>
+		    				<!-- <p class="megamenu_footer_text2">Order Here</p> -->
+		    			</a>
+		    			
+		    					    			<a href="/customorder_v2?direct=1&region=aus" cla
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+"mmenu_surfboardstitle">
+									Archive																	</h6>
+																<ul>
+																		<li>
+										<a href="/surfboards/detail.php?id=8777&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/706224835fd28e_lt__rotate_420.png" data-min_price="1,100" data-currencyiso="AUD" data-currencysymbol="From $" data-model="BV2">BV2</a>
+									</li>
+									
+																		<li>
+										<a href="/surfboards/detail.php?id=6624&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/13117457605fca_lt__rotate_420.png" data-min_price="1,100" data-currencyiso="AUD" data-currencysymbol="From $" data-model="Volume II">Volume II</a>
+									</li>
+									
+																	</ul>
+							</div>
+		    				 
+							<div class="col-xs-4 allsurfboards_clmn">
+								<h6>&nbsp;</h6>
+								<ul><!-- 
+									<li>
+										<a href="/surfboards/?direct=1&region=aus">All Surfboards</a>
+									</li>
+									-->
+								</ul>
+							</div>
+						</div>
+								    			<!-- </div> -->
+		    			</div>
+		    			
+		    			<a href="/surfboards" class="megamenu_footer_allsurfboards">
+		    				<p class="megamenu_footer_allsurfboards_text2">All Surfboards</p>
+		    				<!-- <p class="megamenu_footer_text2">Order Here</p> -->
+		    			</a>
+		    			
+		    					    			<a href="/customorder_v2?direct=1&region=aus" class="megamen
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+		});
+					</script>
+							
+							</div>
+		</div>
+	</div>
+
+    <!--
+	<div class="bf_sep">&nbsp;</div>
+    -->
+
+	<div class="container-fluid boardbottomfeatures">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="boardbottomfeatures_imgwrapper">
+									</div>
+			</div>
+		</div>
+		<p class="bbf_disclaimer"></p>
+	</div>
+</section>
+
+
+
+<div class="standarddimensions"   style="border-top: solid 0px #CCC;padding-top:0px !important;" >
+	<h1><span class="sd_boardname">Blueprint Grom</span> Standard Dimensions</h1>
+	<div class="container table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Size</th>
+					<th>Width</th>
+					<th>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thic
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+									
+						</div>																				
+		      		</div>	
+				 
+					<div class="col-xs-2">																		
+		      			<div class="os_imgwrapper">																
+			      			<a href="/surfboards/detail.php?id=6624&direct=1&region=aus">						
+								<div class="board_img">															
+									<img src="https://d3iswawdztsslu.cloudfront.net/62/surfboards/13117457605fca_227.png" class="img-responsive">									
+								</div>																			
+								<div class="board_shadow">														
+									<img src="/images/boardswidget_shadow.png" class="img-responsive">			
+								</div>																			
+								<div class="board_info">														
+									<span class="board_name">Volume II</span>							
+									<span class="board_price">$1,100 AUD</span>							
+								</div>																			
+							</a>																			
+						</div>																				
+		      		</div>	
+				 
+					<div class="col-xs-2">																		
+		      			<div class="os_imgwrapper">																
+			      			<a href="/surfboards/detail.php?id=18457&direct=1&region=aus">						
+								<div class="board_img">															
+									<img src="https://d3iswawdztsslu.cloudfront.net/62/surfboards/21222888806670_227.png" class="img-responsive">									
+								</div>																			
+								<div class="board_shadow">														
+									<img src="/images/boardswidget_shadow.png" class="i
+
+====================================================================================================
+PATTERN: volume
+====================================================================================================
+    				<p class="fcol_subtitle">
+								Mid Length							</p>
+							<ul class="fcol_list">
+										    					<li>
+									<a href="/surfboards/detail.php?id=18457&direct=1&region=aus">Full Strength</a>
+								</li>
+		    							    					<li>
+									<a href="/surfboards/detail.php?id=7234&direct=1&region=aus">Mid Strength</a>
+								</li>
+		    													
+							</ul>
+		    				 
+		    				<p class="fcol_subtitle">
+								Archive							</p>
+							<ul class="fcol_list">
+										    					<li>
+									<a href="/surfboards/detail.php?id=8777&direct=1&region=aus">BV2</a>
+								</li>
+		    							    					<li>
+									<a href="/surfboards/detail.php?id=6624&direct=1&region=aus">Volume II</a>
+								</li>
+		    													
+							</ul>
+		    											
+					</div>
+
+					</div>
+					<div class="col-sm-2 col-xs-6">
+											<p class="fcol_title">
+							Shop						</p>
+						<ul class="fcol_list">
+													<li>
+								<a href="/shop/surfboards?direct=1&region=aus">Surfboards</a>
+							</li>
+							<li>
+								<a href="/shop/accessories?direct=1&region=aus">Accessories</a>
+							</li>
+							<li>
+								<a href="/shop/apparel?direct=1&region=aus">Apparel</a>
+							</li>
+							                            <!--
+							<li>
+								<a href="#">Sale</a>
+							</li>
+							-->
+						</ul>
+											</div>
+
+					<div class="col-sm-2 col-xs-6">
+						<p class="fcol
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+ded 2.0 Gun</a>
+							</li>
+														<li>
+								<a href="/surfboards/detail.php?id=7912&direct=1&region=aus">Faded 2.0 Step Up</a>
+							</li>
+														
+							<li role="separator" class="divider"></li>
+							 
+								<li class="dropdown-header" style="font-size:18px;margin-top:20px;">Twin Fins</li>	
+														<li>
+								<a href="/surfboards/detail.php?id=12841&direct=1&region=aus">Peppa Twin</a>
+							</li>
+														<li>
+								<a href="/surfboards/detail.php?id=4050&direct=1&region=aus">Sugar</a>
+							</li>
+														
+							<li role="separator" class="divider"></li>
+							 
+								<li class="dropdown-header" style="font-size:18px;margin-top:20px;">Mid Length</li>	
+														<li>
+								<a href="/surfboards/detail.php?id=18457&direct=1&region=aus">Full Strength</a>
+							</li>
+														<li>
+								<a href="/surfboards/detail.php?id=7234&direct=1&region=aus">Mid Strength</a>
+							</li>
+														
+							<li role="separator" class="divider"></li>
+							 
+								<li class="dropdown-header" style="font-size:18px;margin-top:20px;">Archive</li>	
+														<li>
+								<a href="/surfboards/detail.php?id=8777&direct=1&region=aus">BV2</a>
+							</li>
+														<li>
+								<a href="/surfboards/detail.php?id=6624&direct=1&region=aus">Volume II</a>
+							</li>
+														
+							<li role="separator" class="divider"></li>
+		
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/9541600986351b_lt__rotate_420.png" data-min_price="1,100" data-currencyiso="AUD" data-currencysymbol="From $" data-model="Peppa Twin">Peppa Twin</a>
+									</li>
+									
+																		<li>
+										<a href="/surfboards/detail.php?id=4050&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/5585960585fca1_lt__rotate_420.png" data-min_price="1,100" data-currencyiso="AUD" data-currencysymbol="From $" data-model="Sugar">Sugar</a>
+									</li>
+									
+																	</ul>
+							</div>
+		    				 
+		    				<div class="col-xs-2">
+								<h6 class="mmenu_surfboardstitle">
+									Mid Length																	</h6>
+																<ul>
+																		<li>
+										<a href="/surfboards/detail.php?id=18457&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/21222888806670_lt__rotate_420.png" data-min_price="1,200" data-currencyiso="AUD" data-currencysymbol="From $" data-model="Full Strength">Full Strength</a>
+									</li>
+									
+																		<li>
+										<a href="/surfboards/detail.php?id=7234&direct=1&region=aus" data-boardimg="https://d3iswawdztsslu.cloudfront.net/62/surfboards/20080914125fca_lt__rotate_420.png" data-min_price="1,250" data-currencyiso="AUD" data-currencysymbol="From $" data-model="Mid Strength">Mid Strength</a>
+
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+	
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+						<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>												
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+	<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>													
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+	<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>											
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+	<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>											
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>														
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+		<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>															
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+		<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>															
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+			<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+					<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+								
+			</tbody>
+		</table>
+		<strong>* Standard Tail</strong>
+	</div>
+</div>
+
+
+<div class="container-fluid">
+
+    <div class="links_destaque ld_sbdetail row">
+
+	
+        <div class="col-sm-6">
+            <div class="ld_item ld_1">
+                <a href="/shop/surfboards/?model=25279&direct=1&region=aus">
+                    <div class="lditem_toplayer">
+                        <p>
+                            Shop<br>Online                        </p>
+                    </div>
+                    <img src="/images/shoponline_bd_bg_2019.jpg" class="img-responsive">
+         
+
+====================================================================================================
+PATTERN: length
+====================================================================================================
+ref="/surfboards/detail.php?id=7917&direct=1&region=aus">Faded 2.0 Gun</a>
+								</li>
+		    							    					<li>
+									<a href="/surfboards/detail.php?id=7912&direct=1&region=aus">Faded 2.0 Step Up</a>
+								</li>
+		    													
+							</ul>
+		    				 
+		    				<p class="fcol_subtitle">
+								Twin Fins							</p>
+							<ul class="fcol_list">
+										    					<li>
+									<a href="/surfboards/detail.php?id=12841&direct=1&region=aus">Peppa Twin</a>
+								</li>
+		    							    					<li>
+									<a href="/surfboards/detail.php?id=4050&direct=1&region=aus">Sugar</a>
+								</li>
+		    													
+							</ul>
+		    				 
+		    				<p class="fcol_subtitle">
+								Mid Length							</p>
+							<ul class="fcol_list">
+										    					<li>
+									<a href="/surfboards/detail.php?id=18457&direct=1&region=aus">Full Strength</a>
+								</li>
+		    							    					<li>
+									<a href="/surfboards/detail.php?id=7234&direct=1&region=aus">Mid Strength</a>
+								</li>
+		    													
+							</ul>
+		    				 
+		    				<p class="fcol_subtitle">
+								Archive							</p>
+							<ul class="fcol_list">
+										    					<li>
+									<a href="/surfboards/detail.php?id=8777&direct=1&region=aus">BV2</a>
+								</li>
+		    							    					<li>
+									<a href="/surfboards/detail.php?id=6624&direct=1&region=aus">Volume II</a>
+								</li>
+		    													
+				
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+<!doctype html>
+<html>
+<head>
+	
+	
+	<meta charset="utf-8">
+	
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="Chilli Surfboards">
+	<meta name="keywords" content="Chilli Surfboards, chilli, surf">
+	
+	<meta name="google-site-verification" content="_NLBv1i_XFtxpRcMqD_BDj3xOHQ5X7NfIBSHTQpCQIo" />
+	
+	<title>Chilli Surfboards</title>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+<!doctype html>
+<html>
+<head>
+	
+	
+	<meta charset="utf-8">
+	
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="Chilli Surfboards">
+	<meta name="keywords" content="Chilli Surfboards, chilli, surf">
+	
+	<meta name="google-site-verification" content="_NLBv1i_XFtxpRcMqD_BDj3xOHQ5X7NfIBSHTQpCQIo" />
+	
+	<title>Chilli Surfboards</title>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-7
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+ss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+
+	<!-- Facebook Pixel Code -->
+	<script>
+		!function(f,b,e,v,n,t,s) {
+			if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+		n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+		if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+		n.queue=[];t=b.createElement(e);t.async=!0;
+		t.src=v;s=b.getElementsByTagName(e)[0];
+		s.parentNode.insertBefore(t,s)}(window,document,'script',
+		'https://connect.facebook.net/en_US/fbevents.js');
+		fbq('init', '1886716251642069'); 
+		fbq('track', 'PageView');
+	</script>
+
+	<noscript>
+		<img height="1" width="1" src="https://www.facebook.com/tr?id=1886716251642069&ev=PageView&noscript=1"/>
+	</noscript>
+	<!-- End Facebook Pixel Code -->
+
+
+
+
+
+
+
+    
+	
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CVZGW3VR87"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-CVZGW3VR87');
+    </script>
+
+
+
+    
+
+
+	
+	
+	 
+		<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "buhy6xos5q");
+</script>
+		</head>
+
+<body>
+	<div class="topNotification_widget">
+		<div class="tn_overridestyle">
+			<style>
+				.megamenu_wrapper {
+					top: 137px;
+				}
+			</style>
+		</div>
+		<style>
+			.topNotification_widget {
+				display: block;
+				background: #000;
+				color:#fff;
+				border-style: none;
+				margin: auto;
+				padding-top: 0px;
+				border-radius: 0px;
+				height: 43px;
+				overflow:hidden;
+			}
+			.tn_wrapper {
+				width:100%;
+				height:100%;
+
+				positition:relative;
+				display:flex;
+				justify-content: center;
+				align-items: center;
+
+			}
+			.tn_center {
+				color:#fff;
+				text-transform:uppercase;
+				font-family: 'Gotham-Medium';
+				font-size:10px;
+			}
+			.tn_close {
+				background-color: hsla(0,0%,100%,.6);
+				border: 0;
+				border-radius: 50%;
+				color: #525151;
+				cursor: pointer;
+				font-family: 'Gotham-Medium';
+				font-size: 17px;
+				font-weight: 400;
+				height: 20px;
+				line-height: 1;
+				outline: none;
+				padding: 0;
+				position: absolute;
+				right: 15px;
+				text-align: center;
+				top: 10px;
+				transition: transform .2s ease-in-out,background-color .2s ease-in-out;
+				widt
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+idth:100%;
+				height:100%;
+
+				positition:relative;
+				display:flex;
+				justify-content: center;
+				align-items: center;
+
+			}
+			.tn_center {
+				color:#fff;
+				text-transform:uppercase;
+				font-family: 'Gotham-Medium';
+				font-size:10px;
+			}
+			.tn_close {
+				background-color: hsla(0,0%,100%,.6);
+				border: 0;
+				border-radius: 50%;
+				color: #525151;
+				cursor: pointer;
+				font-family: 'Gotham-Medium';
+				font-size: 17px;
+				font-weight: 400;
+				height: 20px;
+				line-height: 1;
+				outline: none;
+				padding: 0;
+				position: absolute;
+				right: 15px;
+				text-align: center;
+				top: 10px;
+				transition: transform .2s ease-in-out,background-color .2s ease-in-out;
+				width: 20px;
+				z-index: 1;
+			}
+			.tn_close:hover {
+				background-color: #fff;
+    			transform: scale(1.2);
+			}
+		</style>
+
+		<!-- 
+		<div class="tn_wrapper">
+			<div class="tn_center">FLAT RATE EXPRESS SURFBOARD SHIPPING AUS WIDE<sup>*</sup> </div>
+			<div class="tn_close">x</div>
+		</div>
+		 -->
+
+		<script>
+			$(function(){
+				$(document).on('click', '.tn_close', function(e){
+					e.preventDefault();
+					$(this).hide();
+					$('.topNotification_widget').animate({ 'height': 0 }, 300, function(){
+						$('.topNotification_widget .tn_overridestyle').remove();
+					});
+				});
+			});
+		</script>
+	</div>
+	
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalStartRegion" role="dialog" style="b
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+ansform: scale(1.2);
+			}
+		</style>
+
+		<!-- 
+		<div class="tn_wrapper">
+			<div class="tn_center">FLAT RATE EXPRESS SURFBOARD SHIPPING AUS WIDE<sup>*</sup> </div>
+			<div class="tn_close">x</div>
+		</div>
+		 -->
+
+		<script>
+			$(function(){
+				$(document).on('click', '.tn_close', function(e){
+					e.preventDefault();
+					$(this).hide();
+					$('.topNotification_widget').animate({ 'height': 0 }, 300, function(){
+						$('.topNotification_widget .tn_overridestyle').remove();
+					});
+				});
+			});
+		</script>
+	</div>
+	
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalStartRegion" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+	    	<div class="modal-dialog modal-sm" style="width: 350px; margin-top: 17%;">
+	      	<div class="modal-content" style="width: 350px;">
+	        		<div class="modal-header" style="text-align: center; padding-top: 35px; padding-bottom: 15px; border-bottom: none;">	          			
+	          			<img src="/images/chilli_black.png" alt="logo chilli" style="width: 50px; margin-top: -10px; margin-bottom: 15px;">
+	          			<h3 class="modal-title">WELCOME TO CHILLI</h3>
+	          			<small>SELECT YOUR REGION</small>
+	        		</div>
+	        		<div class="modal-body" style="padding-bottom: 0px; padding-left: 0px; padding-right: 0px; font-size: 12px; font-family: 'Gotham-Bold';">
+	          			<a id="set_region_aus" 	class="set_region" 	data-reg
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+	<div class="tn_center">FLAT RATE EXPRESS SURFBOARD SHIPPING AUS WIDE<sup>*</sup> </div>
+			<div class="tn_close">x</div>
+		</div>
+		 -->
+
+		<script>
+			$(function(){
+				$(document).on('click', '.tn_close', function(e){
+					e.preventDefault();
+					$(this).hide();
+					$('.topNotification_widget').animate({ 'height': 0 }, 300, function(){
+						$('.topNotification_widget .tn_overridestyle').remove();
+					});
+				});
+			});
+		</script>
+	</div>
+	
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalStartRegion" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+	    	<div class="modal-dialog modal-sm" style="width: 350px; margin-top: 17%;">
+	      	<div class="modal-content" style="width: 350px;">
+	        		<div class="modal-header" style="text-align: center; padding-top: 35px; padding-bottom: 15px; border-bottom: none;">	          			
+	          			<img src="/images/chilli_black.png" alt="logo chilli" style="width: 50px; margin-top: -10px; margin-bottom: 15px;">
+	          			<h3 class="modal-title">WELCOME TO CHILLI</h3>
+	          			<small>SELECT YOUR REGION</small>
+	        		</div>
+	        		<div class="modal-body" style="padding-bottom: 0px; padding-left: 0px; padding-right: 0px; font-size: 12px; font-family: 'Gotham-Bold';">
+	          			<a id="set_region_aus" 	class="set_region" 	data-region="aus" href="#" ><div class="region_set_modal">AUSTRALIA</div></a>
+	    
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+ntDefault();
+					$(this).hide();
+					$('.topNotification_widget').animate({ 'height': 0 }, 300, function(){
+						$('.topNotification_widget .tn_overridestyle').remove();
+					});
+				});
+			});
+		</script>
+	</div>
+	
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalStartRegion" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+	    	<div class="modal-dialog modal-sm" style="width: 350px; margin-top: 17%;">
+	      	<div class="modal-content" style="width: 350px;">
+	        		<div class="modal-header" style="text-align: center; padding-top: 35px; padding-bottom: 15px; border-bottom: none;">	          			
+	          			<img src="/images/chilli_black.png" alt="logo chilli" style="width: 50px; margin-top: -10px; margin-bottom: 15px;">
+	          			<h3 class="modal-title">WELCOME TO CHILLI</h3>
+	          			<small>SELECT YOUR REGION</small>
+	        		</div>
+	        		<div class="modal-body" style="padding-bottom: 0px; padding-left: 0px; padding-right: 0px; font-size: 12px; font-family: 'Gotham-Bold';">
+	          			<a id="set_region_aus" 	class="set_region" 	data-region="aus" href="#" ><div class="region_set_modal">AUSTRALIA</div></a>
+	          			<a  id="set_region_usa" 	class="set_region" 	data-region="usa" href="#" ><div class="region_set_modal">USA</div></a>
+	          			<a id="set_region_eur"	class="set_region" 	data-region="eur" href="#" ><div class="region_set
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+/li>
+		      			<li>
+		      				<a href="/dealers.php?direct=1&region=aus">Dealers</a>
+		      			</li>
+		      					      			<li>|</li>
+		      			<li>
+		      				<a href="/legal/shipping.php?direct=1&region=aus">Shipping</a>
+		      			</li>
+		      					      			<li>|</li>
+		      			<li>
+		      				<a href="/contacts.php?direct=1&region=aus">Contact</a>
+		      			</li>
+						<li>|</li>
+						<li>
+		      				<a href="/about.php?direct=1&region=aus">About</a>
+		      			</li>
+		      					      			<li>|</li>
+		      			<li>
+		      				<a href="/technology/?direct=1&region=aus">Construction</a>
+		      			</li>
+		      			
+		      			<li>|</li>
+		      			<li style="margin-left: 10px;width: 73px;">
+		      			
+							<div class='lang'>
+								<div id="lang_sel">
+									<ul>
+										<li>
+										
+											<a id="region_selected" href="#" data-region="aus" data-ola="oo" class="lang_sel_sel icl-en"></a>
+											<ul id="select_region">
+												<li class="region_seta"><img src="/images/mcc_toparrow.png" alt="seta"></li>
+												<li class="padding-bottom">&nbsp;</li>
+													<li class="icl-eu region">
+														<a id="region_aus" data-region="aus" href="https://www.chillisurfboards.com/?region=aus&direct=1">
+															<div class="col-xs-3 height0">
+																<img class="region_flag" src="/images/aus.svg" alt="aus flag">
+															</div>
+
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+					<a href="#" class="btn_mycart_small visible-xs -hidden-sm" style="margin-right: -15px;">
+
+	                        <i class="glyphicon glyphicon-shopping-cart"></i>
+
+	                    </a>
+
+	                    <!-- choose your region -->
+	                    <div class='lang mob visible-xs -hidden-sm' style="float: right; margin-right: 10px; width: 60px; height: 50px; padding-top: 19px;">
+						<div id="lang_sel">
+							<ul>
+								<li>
+									<a id="region_selected" href="#" data-region="aus" class="lang_sel_sel icl-en"></a>
+									<ul id="select_region" style="right: -35px;">
+										<li class="region_seta"><img src="/images/mcc_toparrow.png" alt="seta"></li>
+										<li class="padding-bottom">&nbsp;</li>
+											<li class="icl-eu region">
+												<a id="region_aus" data-region="aus" href="https://www.chillisurfboards.com/?region=aus&direct=1" >
+													<div class="col-xs-3 height0">
+														<img class="region_flag" src="/images/aus.svg" alt="">
+													</div>
+													<div class="col-xs-9">AUST
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+');
+					shape3dpage.attr('src', '').attr('src', tSrc).addClass('loaded');
+				}
+			}
+		});
+	});
+</script>
+
+<div class="surfboarddetail_carousel_wrapper">
+	<div class="surfboarddetail_carousel noscrollscript">
+        <div id="surfboarddetail_slider" class="carousel slide carousel-fade" data-ride="carousel" data-interval="1115000">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="carousel-inner" role="listbox">
+						 
+								<div class="item active isShape3d">
+									<iframe class="shape3dpage" src="https://www.shape3d.com/Viewers/Viewer3D.aspx?Account=115036618&BoardName=JF-MASTER-Blueprint" style="border-style:none; overflow:hidden; width:100%; height:859px;background-color: #FFFFFF;" webkitallowfullscreen mozallowfullscreen allowfullscreen  allowtransparency="true"></iframe>
+								</div>
+												
+
+						
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <ol class="carousel-indicators">
+												<li data-target="#surfboarddetail_slider" data-slide-to="0"  class=" active " >		
+							<div class="carouselindicator_inner">										
+								<img src="/images/shape3dthumb.png" class="img-responsive">							
+								<div class="board_shadow">												
+									<img src="/images/boardswidget_shadow.png">							
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+-sm-6 col-xs-12 no-padding">
+                        	                            <a class="btn btn-default btn-block" id="surfboard-buy-stock-btn" style="display:block" href="/shop/surfboards/?model=25279&direct=1&region=aus">buy stock</a>
+                                                    </div>
+						                        <div class="col-lg-4 col-sm-6 col-xs-12 no-padding">
+                            <a class="btn btn-default btn-block" id="surfboard-custom-order-btn" href="/custom-order?model=25279&direct=1&region=aus">custom order</a>
+                        </div>
+                        
+                                                
+					</div>
+					
+					<br>
+					<div style="width:210px;">
+											</div>
+
+
+
+                    <!--
+					<div class="bdp_priceinfo">
+
+						<div class="bdp_price">
+
+							<p class="bdp_pricevalue">
+
+								<span class="bdp_pv_currencysymbol"></span><span class="bdp_pv_price"></span>
+
+							</p>
+
+							<p class="bdp_pricecurrency bdp_pv_currencyiso"></p>
+
+						</div>
+
+						<div class="bdp_pricelinks">
+
+							<a class="bdppl_shop" href="#">Buy Stock</a>
+							<a class="bdppl_customorder" href="#">Custom Order</a>
+
+						</div>
+
+						<div class="clear_both">&nbsp;</div>
+
+					</div>
+					-->
+										<div class="getsocial_links">
+												
+						<ul class="social-share-list">
+							
+							<li>
+								<a href="https://www.
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+dle').css({'fill':'#000'});
+									});
+					});
+					</script>
+							
+							</div>
+		</div>
+	</div>
+
+    <!--
+	<div class="bf_sep">&nbsp;</div>
+    -->
+
+	<div class="container-fluid boardbottomfeatures">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="boardbottomfeatures_imgwrapper">
+									</div>
+			</div>
+		</div>
+		<p class="bbf_disclaimer"></p>
+	</div>
+</section>
+
+
+
+<div class="standarddimensions"   style="border-top: solid 0px #CCC;padding-top:0px !important;" >
+	<h1><span class="sd_boardname">Blueprint Grom</span> Standard Dimensions</h1>
+	<div class="container table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Size</th>
+					<th>Width</th>
+					<th>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-orde
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+	
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+lass="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+"standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</t
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+"standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						<
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+"standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						<
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+tandard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+s="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+
+
+====================================================================================================
+PATTERN: width
+====================================================================================================
+ass="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+								
+			</tbody>
+		</table>
+		<strong>* Standard Tail</strong>
+	</div>
+</div>
+
+
+<div class="container-fluid">
+
+    <div class="links_destaque ld_sbdetail row">
+
+	
+        <div class="col-sm-6">
+            <div class="ld_item ld_1">
+                <a href="/shop/surfboards/?model=25279&direct=1&region=aus">
+                    <div class="lditem_toplayer">
+                        <p>
+                            Shop<br>Online                        </p>
+                    </div>
+                    <img src="/images/shoponline_bd_bg_2019.jpg" class="img-responsive">
+                </a>
+ 
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+000'});
+									});
+					});
+					</script>
+							
+							</div>
+		</div>
+	</div>
+
+    <!--
+	<div class="bf_sep">&nbsp;</div>
+    -->
+
+	<div class="container-fluid boardbottomfeatures">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="boardbottomfeatures_imgwrapper">
+									</div>
+			</div>
+		</div>
+		<p class="bbf_disclaimer"></p>
+	</div>
+</section>
+
+
+
+<div class="standarddimensions"   style="border-top: solid 0px #CCC;padding-top:0px !important;" >
+	<h1><span class="sd_boardname">Blueprint Grom</span> Standard Dimensions</h1>
+	<div class="container table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Size</th>
+					<th>Width</th>
+					<th>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=144
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+lume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>		
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+rd-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+				
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+nsions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<t
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+ensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+				
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+nsions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+nsions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+ensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+mensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+mensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+								
+			</tbod
+
+====================================================================================================
+PATTERN: thickness
+====================================================================================================
+d-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+								
+			</tbody>
+		</table>
+		<strong>* Standard Tail</strong>
+	</div>
+</div>
+
+
+<div class="container-fluid">
+
+    <div class="links_destaque ld_sbdetail row">
+
+	
+        <div class="col-sm-6">
+            <div class="ld_item ld_1">
+                <a href="/shop/surfboards/?model=25279&direct=1&region=aus">
+                    <div class="lditem_toplayer">
+                        <p>
+                            Shop<br>Online                        </p>
+                    </div>
+                    <img src="/images/shoponline_bd_bg_2019.jpg" class="img-responsive">
+                </a>
+                <
+
+====================================================================================================
+PATTERN: stock
+====================================================================================================
+s-12">
+                    <div class="row">
+                                            <div class="col-lg-8 col-sm-12">
+                                                    <p class="bdp_pricevalue">
+                                <span class="bdp_pv_currencysymbol">$</span><span class="bdp_pv_price">950 </span>
+                            </p>
+                            <p class="bdp_pricecurrency bdp_pv_currencyiso" style="margin-left: 1px;">AUD</p>
+                        </div>
+                        
+                        <div class="col-lg-3 col-sm-6 col-xs-12 no-padding">
+                        	                            <a class="btn btn-default btn-block" id="surfboard-buy-stock-btn" style="display:block" href="/shop/surfboards/?model=25279&direct=1&region=aus">buy stock</a>
+                                                    </div>
+						                        <div class="col-lg-4 col-sm-6 col-xs-12 no-padding">
+                            <a class="btn btn-default btn-block" id="surfboard-custom-order-btn" href="/custom-order?model=25279&direct=1&region=aus">custom order</a>
+                        </div>
+                        
+                                                
+					</div>
+					
+					<br>
+					<div style="width:210px;">
+											</div>
+
+
+
+                    <!--
+					<div class="bdp_priceinfo">
+
+						<div class="bdp_price">
+
+							<p class=
+
+====================================================================================================
+PATTERN: stock
+====================================================================================================
+class="col-lg-8 col-sm-12">
+                                                    <p class="bdp_pricevalue">
+                                <span class="bdp_pv_currencysymbol">$</span><span class="bdp_pv_price">950 </span>
+                            </p>
+                            <p class="bdp_pricecurrency bdp_pv_currencyiso" style="margin-left: 1px;">AUD</p>
+                        </div>
+                        
+                        <div class="col-lg-3 col-sm-6 col-xs-12 no-padding">
+                        	                            <a class="btn btn-default btn-block" id="surfboard-buy-stock-btn" style="display:block" href="/shop/surfboards/?model=25279&direct=1&region=aus">buy stock</a>
+                                                    </div>
+						                        <div class="col-lg-4 col-sm-6 col-xs-12 no-padding">
+                            <a class="btn btn-default btn-block" id="surfboard-custom-order-btn" href="/custom-order?model=25279&direct=1&region=aus">custom order</a>
+                        </div>
+                        
+                                                
+					</div>
+					
+					<br>
+					<div style="width:210px;">
+											</div>
+
+
+
+                    <!--
+					<div class="bdp_priceinfo">
+
+						<div class="bdp_price">
+
+							<p class="bdp_pricevalue">
+
+								<span class="bdp_pv_currencysymbol"></span><span class="bdp_pv_pric
+
+====================================================================================================
+PATTERN: stock
+====================================================================================================
+class="btn btn-default btn-block" id="surfboard-custom-order-btn" href="/custom-order?model=25279&direct=1&region=aus">custom order</a>
+                        </div>
+                        
+                                                
+					</div>
+					
+					<br>
+					<div style="width:210px;">
+											</div>
+
+
+
+                    <!--
+					<div class="bdp_priceinfo">
+
+						<div class="bdp_price">
+
+							<p class="bdp_pricevalue">
+
+								<span class="bdp_pv_currencysymbol"></span><span class="bdp_pv_price"></span>
+
+							</p>
+
+							<p class="bdp_pricecurrency bdp_pv_currencyiso"></p>
+
+						</div>
+
+						<div class="bdp_pricelinks">
+
+							<a class="bdppl_shop" href="#">Buy Stock</a>
+							<a class="bdppl_customorder" href="#">Custom Order</a>
+
+						</div>
+
+						<div class="clear_both">&nbsp;</div>
+
+					</div>
+					-->
+										<div class="getsocial_links">
+												
+						<ul class="social-share-list">
+							
+							<li>
+								<a href="https://www.facebook.com/sharer/sharer.php?u=http://www.chillisurfboards.com/surfboards/detail.php?id=25279&direct=1&region=aus" target="_blank">
+									<div class="badge fb-count"></div>
+									<img src="/images/social_fb.png" alt="facebook">
+								</a>
+							</li>							
+							
+							<li>
+								<a href="https://twitter.com/intent/tweet?text=Check+out+this+awesome+Chilli+surfboard+http%3A%2F%2Fwww.chillisurfboa
+
+====================================================================================================
+PATTERN: stock
+====================================================================================================
+/a>
+							</li>
+							                            <!--
+							<li>
+								<a href="#">Sale</a>
+							</li>
+							-->
+						</ul>
+											</div>
+
+					<div class="col-sm-2 col-xs-6">
+						<p class="fcol_title">
+							Site Map						</p>
+						<ul class="fcol_list">
+							<li>
+								<a href="/surfboards?direct=1&region=aus">Surfboards</a>
+							</li>
+							<li>
+								<a href="/customorder_v2?direct=1&region=aus">Custom Order</a>
+							</li>
+														<li>
+								<a href="/shop?direct=1&region=aus">Shop</a>
+							</li>
+														<li>
+								<a href="/technology?direct=1&region=aus">Technology</a>
+							</li>
+							<li>
+								<a href="/sprays?direct=1&region=aus">Stock Sprays</a>
+							</li>
+							<li>
+								<a href="/team?direct=1&region=aus">Team</a>
+							</li>
+							<li>
+								<a href="/blog?direct=1&region=aus">Reviews</a>
+							</li>
+							<li>
+								<a href="/about.php?direct=1&region=aus">About</a>
+							</li>
+							<li>
+								<a href="/dealers.php?direct=1&region=aus">Dealers</a>
+							</li>
+							<li>
+								<a href="/chilli-tv.php?direct=1&region=aus">Chilli Tv</a>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="col-sm-2 col-xs-6">
+						<p class="fcol_title">
+							Support						</p>
+						<ul class="fcol_list">
+							<li>
+								<a href="/contacts.php?direct=1&region=aus">Contact Us</a>
+							</li>
+							<li
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+							Snap('#wave-size-placeholder').append(data);
+							 $('#wave-size #size-3').css({'fill':'#000'}); 
+		 $('#wave-size #size-4').css({'fill':'#000'}); 
+		 $('#wave-size #size-5').css({'fill':'#000'}); 
+		 $('#wave-size #size-6').css({'fill':'#000'}); 
+		 $('#wave-size #pointer-middle').css({'fill':'#000'});
+									});
+					});
+					</script>
+							
+							</div>
+		</div>
+	</div>
+
+    <!--
+	<div class="bf_sep">&nbsp;</div>
+    -->
+
+	<div class="container-fluid boardbottomfeatures">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="boardbottomfeatures_imgwrapper">
+									</div>
+			</div>
+		</div>
+		<p class="bbf_disclaimer"></p>
+	</div>
+</section>
+
+
+
+<div class="standarddimensions"   style="border-top: solid 0px #CCC;padding-top:0px !important;" >
+	<h1><span class="sd_boardname">Blueprint Grom</span> Standard Dimensions</h1>
+	<div class="container table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Size</th>
+					<th>Width</th>
+					<th>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>														
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+ll':'#000'}); 
+		 $('#wave-size #size-5').css({'fill':'#000'}); 
+		 $('#wave-size #size-6').css({'fill':'#000'}); 
+		 $('#wave-size #pointer-middle').css({'fill':'#000'});
+									});
+					});
+					</script>
+							
+							</div>
+		</div>
+	</div>
+
+    <!--
+	<div class="bf_sep">&nbsp;</div>
+    -->
+
+	<div class="container-fluid boardbottomfeatures">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="boardbottomfeatures_imgwrapper">
+									</div>
+			</div>
+		</div>
+		<p class="bbf_disclaimer"></p>
+	</div>
+</section>
+
+
+
+<div class="standarddimensions"   style="border-top: solid 0px #CCC;padding-top:0px !important;" >
+	<h1><span class="sd_boardname">Blueprint Grom</span> Standard Dimensions</h1>
+	<div class="container table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Size</th>
+					<th>Width</th>
+					<th>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td clas
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+d">
+			<thead>
+				<tr>
+					<th>Size</th>
+					<th>Width</th>
+					<th>Thickness</th>
+					<th>Volume</th>
+					<!-- <th class="hidden-xs">Weight Range</th> -->
+					<th class="hidden-xs">Tail</th>
+					<th class="hidden-xs">Fin Options</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			 
+					<tr>																					
+							<td>4'9"</td>																	
+							<td>16 3/4"</td>																	
+							<td>2"</td>																
+							<td>16.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+		
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1447.8&width=425.45&thickness=50.8&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'10"</td>																	
+							<td>17"</td>																	
+							<td>2 1/16"</td>																
+							<td>17.14</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickn
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+					<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1473.2&width=431.8&thickness=52.3875&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>4'11"</td>																	
+							<td>17 1/8"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.08</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickne
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+					<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1498.6&width=434.975&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'0"</td>																	
+							<td>17 1/4"</td>																	
+							<td>2 1/8"</td>																
+							<td>18.62</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickn
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+					<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1524.0&width=438.15&thickness=53.975&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'1"</td>																	
+							<td>17 3/8"</td>																	
+							<td>2 3/16"</td>																
+							<td>19.57</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickn
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+			<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1549.4&width=441.325&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'2"</td>																	
+							<td>17 1/2"</td>																	
+							<td>2 3/16"</td>																
+							<td>20.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickne
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+						<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1574.8&width=444.5&thickness=55.5625&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'3"</td>																	
+							<td>17 5/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.05</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thicknes
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+						<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1600.2&width=447.675&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'4"</td>																	
+							<td>17 3/4"</td>																	
+							<td>2 1/4"</td>																
+							<td>21.55</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thicknes
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1625.6&width=450.85&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'5"</td>																	
+							<td>17 7/8"</td>																	
+							<td>2 1/4"</td>																
+							<td>22.63</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58
+
+====================================================================================================
+PATTERN: dimensions
+====================================================================================================
+	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1651.0&width=454.025&thickness=57.15&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+					 
+					<tr>																					
+							<td>5'6"</td>																	
+							<td>18"</td>																	
+							<td>2 5/16"</td>																
+							<td>23.17</td>																	
+							<!--  <td class="hidden-xs"></td>-->															
+							<td class="hidden-xs">Round Square</td>																	
+							<td class="hidden-xs">FCS II / Futures</td>																
+							<td><a class="standard-dimensions-table-btn btn-custom-order" href="/custom-order?model=25279&length=1676.4&width=457.2&thickness=58.7375&direct=1&region=aus">Custom Order</div></td>																
+						</tr>	
+								
+			</tbody>
+		</table>
+		<strong>* Standard Tail</strong>
+	</div>
+</div>
+
+
+<div class="container-fluid">
+
+    <div class="links_destaque ld_sbdetail row">
+
+	
+        <div class="col-sm-6">
+            <div class="ld_item ld_1">
+                <a href="/shop/surfboards/?model=25279&direct=1&region=aus">
+                    <div class="lditem_toplayer">
+                        <p>
+                            Shop<br>Online                        </p>
+                    </div>
+                    <img src="/
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+<!doctype html>
+<html>
+<head>
+	
+	
+	<meta charset="utf-8">
+	
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="Chilli Surfboards">
+	<meta name="keywords" content="Chilli Surfboards, chilli, surf">
+	
+	<meta name="google-site-verification" content="_NLBv1i_XFtxpRcMqD_BDj3xOHQ5X7NfIBSHTQpCQIo" />
+	
+	<title>Chilli Surfboards</title>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/asset
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+<!doctype html>
+<html>
+<head>
+	
+	
+	<meta charset="utf-8">
+	
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="Chilli Surfboards">
+	<meta name="keywords" content="Chilli Surfboards, chilli, surf">
+	
+	<meta name="google-site-verification" content="_NLBv1i_XFtxpRcMqD_BDj3xOHQ5X7NfIBSHTQpCQIo" />
+	
+	<title>Chilli Surfboards</title>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-touch-icon-114x114.png">
+    <l
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+<!doctype html>
+<html>
+<head>
+	
+	
+	<meta charset="utf-8">
+	
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="Chilli Surfboards">
+	<meta name="keywords" content="Chilli Surfboards, chilli, surf">
+	
+	<meta name="google-site-verification" content="_NLBv1i_XFtxpRcMqD_BDj3xOHQ5X7NfIBSHTQpCQIo" />
+	
+	<title>Chilli Surfboards</title>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="1
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+: 'Gotham-Medium';
+				font-size:10px;
+			}
+			.tn_close {
+				background-color: hsla(0,0%,100%,.6);
+				border: 0;
+				border-radius: 50%;
+				color: #525151;
+				cursor: pointer;
+				font-family: 'Gotham-Medium';
+				font-size: 17px;
+				font-weight: 400;
+				height: 20px;
+				line-height: 1;
+				outline: none;
+				padding: 0;
+				position: absolute;
+				right: 15px;
+				text-align: center;
+				top: 10px;
+				transition: transform .2s ease-in-out,background-color .2s ease-in-out;
+				width: 20px;
+				z-index: 1;
+			}
+			.tn_close:hover {
+				background-color: #fff;
+    			transform: scale(1.2);
+			}
+		</style>
+
+		<!-- 
+		<div class="tn_wrapper">
+			<div class="tn_center">FLAT RATE EXPRESS SURFBOARD SHIPPING AUS WIDE<sup>*</sup> </div>
+			<div class="tn_close">x</div>
+		</div>
+		 -->
+
+		<script>
+			$(function(){
+				$(document).on('click', '.tn_close', function(e){
+					e.preventDefault();
+					$(this).hide();
+					$('.topNotification_widget').animate({ 'height': 0 }, 300, function(){
+						$('.topNotification_widget .tn_overridestyle').remove();
+					});
+				});
+			});
+		</script>
+	</div>
+	
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalStartRegion" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+	    	<div class="modal-dialog modal-sm" style="width: 350px; margin-top: 17%;">
+	      	<div class="modal-content" style="width: 350px;">
+	        		<div class="modal-header
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+3 class="modal-title">WELCOME TO CHILLI</h3>
+	          			<small>SELECT YOUR REGION</small>
+	        		</div>
+	        		<div class="modal-body" style="padding-bottom: 0px; padding-left: 0px; padding-right: 0px; font-size: 12px; font-family: 'Gotham-Bold';">
+	          			<a id="set_region_aus" 	class="set_region" 	data-region="aus" href="#" ><div class="region_set_modal">AUSTRALIA</div></a>
+	          			<a  id="set_region_usa" 	class="set_region" 	data-region="usa" href="#" ><div class="region_set_modal">USA</div></a>
+	          			<a id="set_region_eur"	class="set_region" 	data-region="eur" href="#" ><div class="region_set_modal">EUROPE</div></a>
+	          			<a href="https://www.chillisurfboards.jp/" ><div class="region_set_modal">JAPAN</div></a>
+	          			<!-- <a id="set_region_bali"	class="set_region" 	data-region="bali" href="#" ><div class="region_set_modal">BALI</div></a>-->
+	          			<a href="https://www.chillisurfboardsbali.com/" ><div class="region_set_modal">BALI - INDONESIA</div></a>
+	          			<a href="https://www.chillisurfboards.com.br/" ><div class="region_set_modal">BRASIL</div></a>
+	          			<a id="set_region_chl"	class="set_region" 	data-region="chl" href="#" ><div class="region_set_modal">CHILE</div></a>
+	          			
+				</div>
+	      	</div>
+	    	</div>
+	</div>
+	
+	
+	
+	<div class="main-wrapper" id="top">
+		<div class="mainnav_wrapper">
+			<nav c
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+Gotham-Bold';">
+	          			<a id="set_region_aus" 	class="set_region" 	data-region="aus" href="#" ><div class="region_set_modal">AUSTRALIA</div></a>
+	          			<a  id="set_region_usa" 	class="set_region" 	data-region="usa" href="#" ><div class="region_set_modal">USA</div></a>
+	          			<a id="set_region_eur"	class="set_region" 	data-region="eur" href="#" ><div class="region_set_modal">EUROPE</div></a>
+	          			<a href="https://www.chillisurfboards.jp/" ><div class="region_set_modal">JAPAN</div></a>
+	          			<!-- <a id="set_region_bali"	class="set_region" 	data-region="bali" href="#" ><div class="region_set_modal">BALI</div></a>-->
+	          			<a href="https://www.chillisurfboardsbali.com/" ><div class="region_set_modal">BALI - INDONESIA</div></a>
+	          			<a href="https://www.chillisurfboards.com.br/" ><div class="region_set_modal">BRASIL</div></a>
+	          			<a id="set_region_chl"	class="set_region" 	data-region="chl" href="#" ><div class="region_set_modal">CHILE</div></a>
+	          			
+				</div>
+	      	</div>
+	    	</div>
+	</div>
+	
+	
+	
+	<div class="main-wrapper" id="top">
+		<div class="mainnav_wrapper">
+			<nav class="navbar">
+		      <div class="container">
+		      	<div class="navbar-top hidden-xs">
+		      		<ul class="nbtop_right">
+		      			<li>
+		      				<a href="/?direct=1&region=aus">Home</a>
+		      			</li>
+		      			<li>|</li>
+		      		
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+_set_modal">AUSTRALIA</div></a>
+	          			<a  id="set_region_usa" 	class="set_region" 	data-region="usa" href="#" ><div class="region_set_modal">USA</div></a>
+	          			<a id="set_region_eur"	class="set_region" 	data-region="eur" href="#" ><div class="region_set_modal">EUROPE</div></a>
+	          			<a href="https://www.chillisurfboards.jp/" ><div class="region_set_modal">JAPAN</div></a>
+	          			<!-- <a id="set_region_bali"	class="set_region" 	data-region="bali" href="#" ><div class="region_set_modal">BALI</div></a>-->
+	          			<a href="https://www.chillisurfboardsbali.com/" ><div class="region_set_modal">BALI - INDONESIA</div></a>
+	          			<a href="https://www.chillisurfboards.com.br/" ><div class="region_set_modal">BRASIL</div></a>
+	          			<a id="set_region_chl"	class="set_region" 	data-region="chl" href="#" ><div class="region_set_modal">CHILE</div></a>
+	          			
+				</div>
+	      	</div>
+	    	</div>
+	</div>
+	
+	
+	
+	<div class="main-wrapper" id="top">
+		<div class="mainnav_wrapper">
+			<nav class="navbar">
+		      <div class="container">
+		      	<div class="navbar-top hidden-xs">
+		      		<ul class="nbtop_right">
+		      			<li>
+		      				<a href="/?direct=1&region=aus">Home</a>
+		      			</li>
+		      			<li>|</li>
+		      			<li>
+		      				<a href="/dealers.php?direct=1&region=aus">Dealers</a>
+		      			</li>
+		      					      			<li>|</l
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+
+		      			<li>
+		      				<a href="/technology/?direct=1&region=aus">Construction</a>
+		      			</li>
+		      			
+		      			<li>|</li>
+		      			<li style="margin-left: 10px;width: 73px;">
+		      			
+							<div class='lang'>
+								<div id="lang_sel">
+									<ul>
+										<li>
+										
+											<a id="region_selected" href="#" data-region="aus" data-ola="oo" class="lang_sel_sel icl-en"></a>
+											<ul id="select_region">
+												<li class="region_seta"><img src="/images/mcc_toparrow.png" alt="seta"></li>
+												<li class="padding-bottom">&nbsp;</li>
+													<li class="icl-eu region">
+														<a id="region_aus" data-region="aus" href="https://www.chillisurfboards.com/?region=aus&direct=1">
+															<div class="col-xs-3 height0">
+																<img class="region_flag" src="/images/aus.svg" alt="aus flag">
+															</div>
+															<div class="col-xs-9">AUSTRALIA</div>
+														</a>
+													</li>
+													<li class="icl-pt region">
+														<a  id="region_usa" data-region="usa" href="https://www.chillisurfboards.com/?region=usa&direct=1" >
+															<div class="col-xs-3 height0">
+																<img class="region_flag" src="/images/usa.svg" alt="usa flag">
+															</div>
+															<div class="col-xs-9">USA</div> 
+														</a>
+													</li>
+													<li class="icl-es region">
+					
+
+====================================================================================================
+PATTERN: surfboard
+====================================================================================================
+_sel icl-en"></a>
+											<ul id="select_region">
+												<li class="region_seta"><img src="/images/mcc_toparrow.png" alt="seta"></li>
+												<li class="padding-bottom">&nbsp;</li>
+													<li class="icl-eu region">
+														<a id="region_aus" data-region="aus" href="https://www.chillisurfboards.com/?region=aus&direct=1">
+															<div class="col-xs-3 height0">
+																<img class="region_flag" src="/images/aus.svg" alt="aus flag">
+															</div>
+															<div class="col-xs-9">AUSTRALIA</div>
+														</a>
+													</li>
+													<li class="icl-pt region">
+														<a  id="region_usa" data-region="usa" href="https://www.chillisurfboards.com/?region=usa&direct=1" >
+															<div class="col-xs-3 height0">
+																<img class="region_flag" src="/images/usa.svg" alt="usa flag">
+															</div>
+															<div class="col-xs-9">USA</div> 
+														</a>
+													</li>
+													<li class="icl-es region">
+														<a id="region_eur" data-region="eur" href="https://www.chillisurfboards.com/?region=eur&direct=1" >
+															<div class="col-xs-3 height0">
+																<img class="region_flag" src="/images/eur.svg" alt="eur flag">
+															</div>
+															<div class="col-xs-9">EUROPE</div>
+														</a>
+													</li>
+													<!-- 
+													<li class="icl-e

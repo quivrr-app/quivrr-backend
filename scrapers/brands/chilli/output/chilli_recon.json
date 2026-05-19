@@ -1,0 +1,35 @@
+[
+  {
+    "url": "https://www.chillisurfboards.com",
+    "status_code": 200,
+    "final_url": "https://www.chillisurfboards.com/regionselector.php",
+    "platform": "Unknown",
+    "title": "Chilli Surfboards"
+  },
+  {
+    "url": "https://chillisurfboards.com",
+    "error": "HTTPSConnectionPool(host='chillisurfboards.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'chillisurfboards.com'. (_ssl.c:1028)\")))"
+  },
+  {
+    "url": "https://www.chillisurfboards.com/collections/surfboards",
+    "status_code": 200,
+    "final_url": "https://www.chillisurfboards.com/regionselector.php",
+    "platform": "Unknown",
+    "title": "Chilli Surfboards"
+  },
+  {
+    "url": "https://chillisurfboards.com/collections/surfboards",
+    "error": "HTTPSConnectionPool(host='chillisurfboards.com', port=443): Max retries exceeded with url: /collections/surfboards (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'chillisurfboards.com'. (_ssl.c:1028)\")))"
+  },
+  {
+    "url": "https://www.chillisurfboards.com/collections/all",
+    "status_code": 200,
+    "final_url": "https://www.chillisurfboards.com/regionselector.php",
+    "platform": "Unknown",
+    "title": "Chilli Surfboards"
+  },
+  {
+    "url": "https://chillisurfboards.com/collections/all",
+    "error": "HTTPSConnectionPool(host='chillisurfboards.com', port=443): Max retries exceeded with url: /collections/all (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'chillisurfboards.com'. (_ssl.c:1028)\")))"
+  }
+]

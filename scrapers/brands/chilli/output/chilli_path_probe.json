@@ -1,0 +1,122 @@
+{
+  "results": [
+    {
+      "url": "https://www.chillisurfboards.com/regionselector.php",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/au/",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/australia/",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/surfboards/",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/au/surfboards/",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/surfboards.php",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/boards/",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/models/",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/regionselector.php",
+      "title": "Chilli Surfboards",
+      "links": [
+        "https://www.chillisurfboards.com/changeregion.php?region=aus",
+        "https://www.chillisurfboards.com/changeregion.php?region=usa",
+        "https://www.chillisurfboards.com/changeregion.php?region=eur",
+        "https://www.chillisurfboards.com.br/",
+        "https://www.chillisurfboards.com/changeregion.php?region=chl"
+      ]
+    },
+    {
+      "url": "https://www.chillisurfboards.com/sitemap.xml",
+      "status_code": 200,
+      "final_url": "https://www.chillisurfboards.com/sitemap.xml",
+      "title": null,
+      "links": []
+    }
+  ],
+  "interesting_links": [
+    "https://www.chillisurfboards.com.br/",
+    "https://www.chillisurfboards.com/changeregion.php?region=aus",
+    "https://www.chillisurfboards.com/changeregion.php?region=chl",
+    "https://www.chillisurfboards.com/changeregion.php?region=eur",
+    "https://www.chillisurfboards.com/changeregion.php?region=usa"
+  ]
+}

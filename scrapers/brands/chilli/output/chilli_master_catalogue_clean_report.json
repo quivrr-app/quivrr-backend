@@ -1,0 +1,19 @@
+{
+  "brand": "Chilli",
+  "source": "https://chilli.shaperbuddy.com/api/v1/surfboardmodels",
+  "models_seen": 25,
+  "catalogue_rows": 272,
+  "models_with_rows": 24,
+  "constructions": [
+    "Standard"
+  ],
+  "failures": [
+    {
+      "id_surfboardmodel": "574",
+      "model_name": "Project Black",
+      "reason": "no standard dimensions"
+    }
+  ],
+  "failure_count": 1,
+  "output_file": "scrapers\\brands\\chilli\\output\\chilli_master_catalogue_clean.json"
+}
