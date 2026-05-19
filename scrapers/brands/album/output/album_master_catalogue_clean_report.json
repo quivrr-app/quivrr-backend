@@ -1,0 +1,141 @@
+{
+  "brand": "Album",
+  "candidate_pages": 26,
+  "catalogue_rows": 162,
+  "models_with_rows": 19,
+  "page_results": [
+    {
+      "url": "https://albumsurf.com/collections/aaron-poritz",
+      "rows": 0,
+      "model": null
+    },
+    {
+      "url": "https://albumsurf.com/collections/bom-dia-concept",
+      "rows": 11,
+      "model": "Bom Dia"
+    },
+    {
+      "url": "https://albumsurf.com/collections/bullet",
+      "rows": 7,
+      "model": "Bullet"
+    },
+    {
+      "url": "https://albumsurf.com/collections/darkness-1",
+      "rows": 0,
+      "model": null
+    },
+    {
+      "url": "https://albumsurf.com/collections/dboa-1",
+      "rows": 7,
+      "model": "D'boa"
+    },
+    {
+      "url": "https://albumsurf.com/collections/delma",
+      "rows": 5,
+      "model": "Delma"
+    },
+    {
+      "url": "https://albumsurf.com/collections/disorder",
+      "rows": 8,
+      "model": "Disorder"
+    },
+    {
+      "url": "https://albumsurf.com/collections/fascination",
+      "rows": 8,
+      "model": "Fascination"
+    },
+    {
+      "url": "https://albumsurf.com/collections/freewing",
+      "rows": 9,
+      "model": "Freewing"
+    },
+    {
+      "url": "https://albumsurf.com/collections/insanity-1",
+      "rows": 11,
+      "model": "Insanity"
+    },
+    {
+      "url": "https://albumsurf.com/collections/korua-album",
+      "rows": 0,
+      "model": null
+    },
+    {
+      "url": "https://albumsurf.com/collections/ledge-1",
+      "rows": 0,
+      "model": null
+    },
+    {
+      "url": "https://albumsurf.com/collections/lightbender",
+      "rows": 12,
+      "model": "Lightbender"
+    },
+    {
+      "url": "https://albumsurf.com/collections/moonstone",
+      "rows": 8,
+      "model": "Moonstone"
+    },
+    {
+      "url": "https://albumsurf.com/collections/plasmic-concept",
+      "rows": 14,
+      "model": "Plasmic"
+    },
+    {
+      "url": "https://albumsurf.com/collections/proto-a-typical-1",
+      "rows": 6,
+      "model": "ProtoAtypical"
+    },
+    {
+      "url": "https://albumsurf.com/collections/sunstone",
+      "rows": 8,
+      "model": "Sunstone"
+    },
+    {
+      "url": "https://albumsurf.com/collections/symphony-1",
+      "rows": 0,
+      "model": null
+    },
+    {
+      "url": "https://albumsurf.com/collections/the-end",
+      "rows": 6,
+      "model": "The End"
+    },
+    {
+      "url": "https://albumsurf.com/collections/townsend",
+      "rows": 7,
+      "model": "Townsend"
+    },
+    {
+      "url": "https://albumsurf.com/collections/twinsman-concept",
+      "rows": 14,
+      "model": "Twinsman"
+    },
+    {
+      "url": "https://albumsurf.com/collections/vb-secret-menu-1",
+      "rows": 6,
+      "model": "VBSM"
+    },
+    {
+      "url": "https://albumsurf.com/collections/veebee-1",
+      "rows": 9,
+      "model": "Veebee"
+    },
+    {
+      "url": "https://albumsurf.com/collections/vesper",
+      "rows": 0,
+      "model": null
+    },
+    {
+      "url": "https://albumsurf.com/collections/warp-twin-1",
+      "rows": 6,
+      "model": "Warp Twin"
+    },
+    {
+      "url": "https://albumsurf.com/collections/whale-shark",
+      "rows": 0,
+      "model": null
+    }
+  ],
+  "failures": [],
+  "failure_count": 0,
+  "output_file": "scrapers\\brands\\album\\output\\album_master_catalogue_clean.json"
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://christensonsurfboards.com",
+    "status_code": 200,
+    "final_url": "https://christensonsurfboards.com/",
+    "platform": "Unknown",
+    "title": "Christenson surfboards"
+  },
+  {
+    "url": "https://christensonsurfboards.com/collections/surfboards",
+    "status_code": 404,
+    "final_url": "https://christensonsurfboards.com/collections/surfboards",
+    "platform": "Unknown",
+    "title": "Christenson surfboards"
+  },
+  {
+    "url": "https://christensonsurfboards.com/collections/all",
+    "status_code": 404,
+    "final_url": "https://christensonsurfboards.com/collections/all",
+    "platform": "Unknown",
+    "title": "Christenson surfboards"
+  }
+]

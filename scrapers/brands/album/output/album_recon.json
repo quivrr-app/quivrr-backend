@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://albumsurf.com",
+    "status_code": 200,
+    "final_url": "https://albumsurf.com/",
+    "platform": "Shopify",
+    "title": "Album Surf"
+  },
+  {
+    "url": "https://albumsurf.com/collections/surfboards",
+    "status_code": 404,
+    "final_url": "https://albumsurf.com/collections/surfboards",
+    "platform": "Shopify",
+    "title": "404 Not Found – Album Surf"
+  },
+  {
+    "url": "https://albumsurf.com/collections/all",
+    "status_code": 200,
+    "final_url": "https://albumsurf.com/collections/all",
+    "platform": "Shopify",
+    "title": "Products – Album Surf"
+  }
+]

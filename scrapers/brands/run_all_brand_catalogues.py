@@ -78,6 +78,24 @@ PIPELINES = [
             "scrapers/brands/run_chilli_pipeline.py",
         ],
     },
+
+    {
+        "name": "Album",
+        "command": [
+            sys.executable,
+            "scrapers/brands/run_album_pipeline.py",
+        ],
+    },
+
+    {
+        "name": "Christenson",
+        "command": [
+            sys.executable,
+            "scrapers/brands/run_christenson_pipeline.py",
+        ],
+    },
+
+
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")

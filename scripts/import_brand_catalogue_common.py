@@ -127,7 +127,7 @@ def build_size_rows(catalogue, model_cache):
         length = clean(item.get("length") or item.get("length_feet_inches"))
         volume = item.get("volume_litres")
 
-        if not length or volume is None:
+        if not length:
             continue
 
         rows.append({

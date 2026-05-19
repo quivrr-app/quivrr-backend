@@ -1,0 +1,93 @@
+[
+  {
+    "collection": "all",
+    "url": "https://albumsurf.com/collections/all/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 250,
+    "titles": [
+      "12.25\" Vase // Aaron Poritz",
+      "2mm Feral x Album Wetsuit top",
+      "2mm Full",
+      "3mm2",
+      "4'10\" Disorder (Used)",
+      "4'10\" Seaskate (Used)",
+      "4'10\" Seaskate (Used)",
+      "4'11\" Fascination (Used)",
+      "4mm3",
+      "5' 4\" Prototype (Used) (Goofy)",
+      "5' 7\" Bom Dia (Regular) (Used) (Carbon/Varial)",
+      "5'0\" Plasmic (Used)",
+      "5'0\" Symphony (Used)",
+      "5'1\" Lightbender",
+      "5'1\" Plasmic",
+      "5'1\" Sunstone (Hovercraft) (Used)",
+      "5'10 Vesper (Hovercraft) (Used)",
+      "5'10\" Bom Dia (Goofy) (Used)",
+      "5'10\" Bom Dia (Goofy) (Used)",
+      "5'10\" Bom Dia (Regular)",
+      "5'10\" Bom Dia (Regular) (Used)",
+      "5'10\" Bom Dia (Regular) (Used)",
+      "5'10\" Bom Dia (Regular) (Varial) (Used)",
+      "5'10\" Bom Dia (Used) (Regular)",
+      "5'10\" Darkness Twinzer (Used)",
+      "5'10\" Darksting (Used)",
+      "5'10\" Darksting (Used)",
+      "5'10\" Delma (Used)",
+      "5'10\" Disaster (Regular) (Used)",
+      "5'10\" Disc (Used)",
+      "5'10\" Disorder (Goofy) (Used)",
+      "5'10\" Disorder (Goofy) (Used)",
+      "5'10\" Disorder (Regular) (Used)",
+      "5'10\" Disorder (Regular) (Used)",
+      "5'10\" Disorder (Used) (Regular)",
+      "5'10\" Disorder (Used) (Regular)",
+      "5'10\" Fascination (Bat) (Regular)",
+      "5'10\" Freewing (Used)",
+      "5'10\" Insanity",
+      "5'10\" Insanity (Used)"
+    ]
+  },
+  {
+    "collection": "surfboards",
+    "url": "https://albumsurf.com/collections/surfboards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "titles": []
+  },
+  {
+    "collection": "boards",
+    "url": "https://albumsurf.com/collections/boards/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "titles": []
+  },
+  {
+    "collection": "asymmetricals",
+    "url": "https://albumsurf.com/collections/asymmetricals/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "titles": []
+  },
+  {
+    "collection": "twins",
+    "url": "https://albumsurf.com/collections/twins/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 7,
+    "titles": [
+      "Album x NVS Upright Twin",
+      "Album x NVS Fascination Twin",
+      "Album x Futures Twin",
+      "5.3\" Album Gemini Twin",
+      "Album Twinzer Canard",
+      "Captain Fin Keel",
+      "Album x NVS VB Thruster"
+    ]
+  },
+  {
+    "collection": "fish",
+    "url": "https://albumsurf.com/collections/fish/products.json?limit=250",
+    "status_code": 200,
+    "product_count": 0,
+    "titles": []
+  }
+]
