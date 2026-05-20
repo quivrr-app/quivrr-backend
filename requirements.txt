@@ -9,7 +9,8 @@ gunicorn
 sqlalchemy
 pymssql
 lxml
-playwright`npypdf`n
+playwright
+pypdf
 rapidocr-onnxruntime
 opencv-python-headless
 pillow
