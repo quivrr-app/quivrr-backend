@@ -56,6 +56,14 @@ STEPS = [
         "name": "DMS Surfboards",
         "command": [PYTHON, "scripts/run_dms_pipeline.py"],
     },
+    {
+        "name": "Pukas",
+        "command": [PYTHON, "scripts/run_pukas_pipeline.py"],
+    },
+    {
+        "name": "Simon Anderson",
+        "command": [PYTHON, "scripts/run_simon_anderson_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")

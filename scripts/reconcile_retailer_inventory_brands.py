@@ -23,6 +23,8 @@ BRAND_ALIASES = {
     "Misfit Shapes": ["Misfit", "Misfit Shapes"],
     "Chemistry Surfboards": ["Chemistry", "Chemistry Surfboards"],
     "DMS Surfboards": ["DMS", "DMS Surfboards"],
+    "Pukas": ["Pukas"],
+    "Simon Anderson": ["Simon Anderson", "Simon Anderson Surfboards"],
 }
 
 cs = (

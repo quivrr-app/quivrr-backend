@@ -10,3 +10,7 @@ sqlalchemy
 pymssql
 lxml
 playwright`npypdf`n
+rapidocr-onnxruntime
+opencv-python-headless
+pillow
+numpy
