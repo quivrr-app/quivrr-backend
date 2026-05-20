@@ -8,7 +8,7 @@
     "normalisedProductTitle": "Custom Order: 2026 - 21 - 20 JS Monsta Easy Rider - 6'0\"1/2 X 19 7/8\" X 2 5/8\" Swallow, 3x FCS Fin Boxes, PU (804658)",
     "productUrl": "https://jsindustries.com/products/custom-order-2026-21-20",
     "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/148504996969c4_5b29e025-cd22-4827-969d-d190670f7842.jpg?v=1779248439",
-    "lengthFeetInches": "6'01",
+    "lengthFeetInches": "6'0 1/2",
     "width": "19 7/8",
     "thickness": "2 5/8",
     "volumeLitres": null,
@@ -28,6 +28,6 @@
       "inventory_quantity": null,
       "sku": "SB-353901-804658"
     },
-    "scrapedAtUtc": "2026-05-20T21:50:04.987010+00:00"
+    "scrapedAtUtc": "2026-05-20T21:57:37.708345+00:00"
   }
 ]

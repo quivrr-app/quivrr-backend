@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import sys
 from pathlib import Path
@@ -105,6 +105,16 @@ def main():
                           OR ABS(CAST(VolumeLitres AS FLOAT) - CAST(:volume AS FLOAT)) <= 0.75
                       )
                       AND (
+                          :width IS NULL
+                          OR Width IS NULL
+                          OR REPLACE(REPLACE(Width, '"', ''), ' ', '') = REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                      )
+                      AND (
+                          :thickness IS NULL
+                          OR Thickness IS NULL
+                          OR REPLACE(REPLACE(Thickness, '"', ''), ' ', '') = REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                      )
+                      AND (
                           :construction IS NULL
                           OR Construction IS NULL
                           OR Construction = :construction
@@ -116,11 +126,19 @@ def main():
                             WHEN :volume IS NOT NULL AND VolumeLitres IS NOT NULL
                             THEN ABS(CAST(VolumeLitres AS FLOAT) - CAST(:volume AS FLOAT))
                             ELSE 999
+                        END,
+                        CASE
+                            WHEN :width IS NOT NULL AND Width IS NOT NULL THEN 0 ELSE 1
+                        END,
+                        CASE
+                            WHEN :thickness IS NOT NULL AND Thickness IS NOT NULL THEN 0 ELSE 1
                         END
                 """), {
                     "board_model_id": board_model_id,
                     "length": length,
                     "volume": volume,
+                    "width": clean(row.get("width")),
+                    "thickness": clean(row.get("thickness")),
                     "construction": construction,
                 }).scalar()
 

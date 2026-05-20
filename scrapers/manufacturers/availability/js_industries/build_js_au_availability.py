@@ -75,6 +75,7 @@ def normalise_volume(value):
 
 
 
+
 def extract_js_model_name(value):
     value = clean(value) or ""
 
@@ -90,23 +91,44 @@ def extract_js_model_name(value):
     return None
 
 
+def normalise_length_token(value):
+    value = clean(value) or ""
+    value = value.replace("?", "'")
+    value = value.replace('"', "")
+    value = value.replace(" ", "")
+
+    half_match = re.search(r"([4-9])'(\d{1,2})1/2", value)
+
+    if half_match:
+        return f"{half_match.group(1)}'{half_match.group(2)} 1/2"
+
+    match = re.search(r"([4-9])'(\d{1,2})", value)
+
+    if match:
+        inches = str(int(match.group(2)))
+        return f"{match.group(1)}'{inches}"
+
+    return None
+
+
 def extract_dimension_parts(value):
     value = clean(value) or ""
 
-    match = re.search(
-        r"([4-9]['?]\s*\d{1,2}(?:\"?1/2)?)\s*[xX]\s*"
-        r"(\d{1,2}(?:\s+\d{1,2}/\d{1,2})?)\"?\s*[xX]\s*"
-        r"(\d(?:\s+\d{1,2}/\d{1,2})?)\"?",
-        value,
+    pattern = re.compile(
+        r"(?P<length>[4-9]['?]\s*\d{1,2}(?:\"?\s*1/2)?)\s*[xX]\s*"
+        r"(?P<width>\d{1,2}(?:\s+\d{1,2}/\d{1,2})?)\"?\s*[xX]\s*"
+        r"(?P<thickness>\d(?:\s+\d{1,2}/\d{1,2})?)\"?",
         re.IGNORECASE,
     )
+
+    match = pattern.search(value)
 
     if not match:
         return None, None, None
 
-    length = normalise_length(match.group(1))
-    width = clean(match.group(2))
-    thickness = clean(match.group(3))
+    length = normalise_length_token(match.group("length"))
+    width = clean(match.group("width"))
+    thickness = clean(match.group("thickness"))
 
     return length, width, thickness
 
@@ -277,6 +299,9 @@ def main():
             row = parse_variant(product, variant)
 
             if not row["lengthFeetInches"] and not row["volumeLitres"]:
+                continue
+
+            if row["modelName"] == product.get("title") and row["rawProductTitle"].endswith("Default Title"):
                 continue
 
             rows.append(row)
