@@ -44,6 +44,10 @@ STEPS = [
         "name": "Sharp Eye",
         "command": [PYTHON, "scripts/run_sharpeye_pipeline.py"],
     },
+    {
+        "name": "Misfit Shapes",
+        "command": [PYTHON, "scripts/run_misfit_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")

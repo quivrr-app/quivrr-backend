@@ -66,7 +66,10 @@ def get_or_create_brand(connection, brand_name):
             FROM dbo.Brands
             WHERE BrandName = :brand_name;
         """),
-        {"brand_name": brand_name},
+        {
+            "brand_name": brand_name,
+            "official_website_url": "https://misfitshapes.com" if brand_name == "Misfit Shapes" else f"https://{brand_name.lower().replace(" ", "").replace("industries", "").replace("surfboards", "")}.com",
+        },
     ).fetchone()
 
     if row:
@@ -76,17 +79,22 @@ def get_or_create_brand(connection, brand_name):
         text("""
             INSERT INTO dbo.Brands (
                 BrandName,
+                OfficialWebsiteUrl,
                 IsActive,
                 CreatedAtUtc
             )
             OUTPUT INSERTED.BrandId
             VALUES (
                 :brand_name,
+                :official_website_url,
                 1,
                 GETUTCDATE()
             );
         """),
-        {"brand_name": brand_name},
+        {
+            "brand_name": brand_name,
+            "official_website_url": "https://misfitshapes.com" if brand_name == "Misfit Shapes" else f"https://{brand_name.lower().replace(" ", "").replace("industries", "").replace("surfboards", "")}.com",
+        },
     ).fetchone()
 
     return inserted.BrandId

@@ -1,0 +1,22 @@
+{
+  "brand": "Misfit Shapes",
+  "collection_url": "https://misfitshapes.com/collections/current-models",
+  "products_seen": 12,
+  "catalogue_rows": 80,
+  "models": [
+    "(NEO) SPEED EGG",
+    "BEACH CLOUD",
+    "BEACH METALL",
+    "BEACH METALL RND",
+    "BULL DOVE 2",
+    "DOPE MACHINE",
+    "DRIB",
+    "ERASER HEAD",
+    "FUNGZETTI",
+    "LONGUS",
+    "SPEED EGG - DIAMOND TWIN",
+    "YANDINA SPEEDWAY"
+  ],
+  "output_file": "scrapers\\brands\\misfit\\output\\misfit_master_catalogue_clean.json",
+  "created_at_utc": "2026-05-20T13:28:59.920603+00:00"
+}
