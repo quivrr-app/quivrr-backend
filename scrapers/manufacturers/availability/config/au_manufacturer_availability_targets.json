@@ -1,0 +1,11 @@
+[
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "countryScope": "Australia",
+    "baseUrl": "https://jsindustries.com",
+    "platform": "shopify",
+    "currency": "AUD",
+    "enabled": true
+  }
+]
