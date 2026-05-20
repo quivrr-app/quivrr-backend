@@ -505,10 +505,12 @@ def search_inventory(boardSizeId: int):
             CASE
                 WHEN mi.BoardSizeId = :board_size_id THEN 0
                 WHEN mi.BoardModelId = :board_model_id
-                  AND mi.LengthFeetInches = :length THEN 1
-                WHEN mi.BoardModelId = :board_model_id THEN 2
-                WHEN mi.ModelName = :model_name THEN 3
-                WHEN mi.ModelName LIKE :model_match THEN 4
+                  AND mi.LengthFeetInches = :length
+                  AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                      REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                  AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                      REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                  THEN 1
                 ELSE 9
             END AS MatchRank
         FROM dbo.ManufacturerInventory mi
@@ -516,20 +518,34 @@ def search_inventory(boardSizeId: int):
           AND mi.RegionCode = 'AU'
           AND mi.AvailabilitySource = 'manufacturer_direct'
           AND mi.BrandId = :brand_id
+          AND mi.BoardModelId = :board_model_id
           AND (
                 mi.BoardSizeId = :board_size_id
-             OR mi.BoardModelId = :board_model_id
-             OR mi.ModelName = :model_name
-             OR mi.ModelName LIKE :model_match
-             OR :model_name LIKE '%' + mi.ModelName + '%'
+             OR (
+                    mi.LengthFeetInches = :length
+                AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                    REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                    REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                AND (
+                       :volume IS NULL
+                    OR mi.VolumeLitres IS NULL
+                    OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                )
+                AND (
+                       :construction IS NULL
+                    OR mi.Construction IS NULL
+                    OR LOWER(mi.Construction) = LOWER(:construction)
+                    OR LOWER(:construction) LIKE '%' + LOWER(mi.Construction) + '%'
+                    OR LOWER(mi.Construction) LIKE '%' + LOWER(:construction) + '%'
+                )
+             )
           )
         ORDER BY
             CASE WHEN mi.IsAvailable = 1 THEN 0 ELSE 1 END,
             MatchRank ASC,
-            CASE
-                WHEN mi.LengthFeetInches = :length THEN 0
-                ELSE 1
-            END,
+            CASE WHEN mi.BoardSizeId = :board_size_id THEN 0 ELSE 1 END,
+            mi.PriceAmount ASC,
             mi.ManufacturerInventoryId ASC
     """)
 
@@ -863,7 +879,11 @@ def search_inventory(boardSizeId: int):
             "brand_id": official.BrandId,
             "model_name": official.ModelName,
             "model_match": model_match,
-            "length": official.LengthFeetInches
+            "length": official.LengthFeetInches,
+            "width": official.Width,
+            "thickness": official.Thickness,
+            "volume": official.VolumeLitres,
+            "construction": official.Construction
         }
     )
 
