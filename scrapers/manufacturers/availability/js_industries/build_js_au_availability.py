@@ -188,8 +188,8 @@ def is_board_product(product):
         "deck grip",
         "traction",
         "pad",
-        "fins",
-        "fin",
+        "fins set",
+        "fin set",
         "leash",
         "cover",
         "bag",
@@ -197,6 +197,9 @@ def is_board_product(product):
         "sticker",
         "gift card",
     ]
+
+    if re.search(r"[4-9]['?]\s*\d{1,2}", combined):
+        return True
 
     if any(term in combined for term in reject_terms):
         return False
@@ -217,14 +220,62 @@ def is_board_product(product):
     return any(term in combined for term in board_terms)
 
 
+
+def parse_js_stock_title(value):
+    value = clean(value) or ""
+
+    pattern = re.compile(
+        r"^(?P<model>.+?)\s+"
+        r"(?P<length>[4-9]['?]\s*\d{1,2}\"?)\s*[xX]\s*"
+        r"(?P<width>\d{1,2}(?:\s+\d{1,2}/\d{1,2})?)\"?\s*[xX]\s*"
+        r"(?P<thickness>\d(?:\s+\d{1,2}/\d{1,2})?)\"?\s*-\s*"
+        r"(?P<volume>\d{2}(?:\.\d+)?)\s*[lL]",
+        re.IGNORECASE,
+    )
+
+    match = pattern.search(value)
+
+    if not match:
+        return None
+
+    model = clean(match.group("model"))
+    length = normalise_length_token(match.group("length"))
+    width = clean(match.group("width"))
+    thickness = clean(match.group("thickness"))
+
+    try:
+        volume = float(match.group("volume"))
+    except Exception:
+        volume = None
+
+    return {
+        "model": model,
+        "length": length,
+        "width": width,
+        "thickness": thickness,
+        "volume": volume,
+    }
+
+
+
 def parse_variant(product, variant):
     product_title = clean(product.get("title"))
     variant_title = clean(variant.get("title"))
     combined = " ".join([x for x in [product_title, variant_title] if x])
 
-    parsed_model_name = extract_js_model_name(combined) or product_title
-    length, width, thickness = extract_dimension_parts(combined)
-    volume = normalise_volume(combined)
+    parsed_stock_title = parse_js_stock_title(product_title)
+
+    if parsed_stock_title:
+        parsed_model_name = parsed_stock_title["model"]
+        length = parsed_stock_title["length"]
+        width = parsed_stock_title["width"]
+        thickness = parsed_stock_title["thickness"]
+        volume = parsed_stock_title["volume"]
+    else:
+        parsed_model_name = extract_js_model_name(combined) or product_title
+        length, width, thickness = extract_dimension_parts(combined)
+        volume = normalise_volume(combined)
+
     construction = detect_construction(combined)
 
     available = bool(variant.get("available"))
