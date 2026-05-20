@@ -501,7 +501,16 @@ def search_inventory(boardSizeId: int):
             mi.PriceCurrency,
             mi.StockStatus,
             mi.IsAvailable,
-            mi.RegionCode
+            mi.RegionCode,
+            CASE
+                WHEN mi.BoardSizeId = :board_size_id THEN 0
+                WHEN mi.BoardModelId = :board_model_id
+                  AND mi.LengthFeetInches = :length THEN 1
+                WHEN mi.BoardModelId = :board_model_id THEN 2
+                WHEN mi.ModelName = :model_name THEN 3
+                WHEN mi.ModelName LIKE :model_match THEN 4
+                ELSE 9
+            END AS MatchRank
         FROM dbo.ManufacturerInventory mi
         WHERE mi.IsActive = 1
           AND mi.RegionCode = 'AU'
@@ -510,11 +519,17 @@ def search_inventory(boardSizeId: int):
           AND (
                 mi.BoardSizeId = :board_size_id
              OR mi.BoardModelId = :board_model_id
+             OR mi.ModelName = :model_name
              OR mi.ModelName LIKE :model_match
              OR :model_name LIKE '%' + mi.ModelName + '%'
           )
         ORDER BY
             CASE WHEN mi.IsAvailable = 1 THEN 0 ELSE 1 END,
+            MatchRank ASC,
+            CASE
+                WHEN mi.LengthFeetInches = :length THEN 0
+                ELSE 1
+            END,
             mi.ManufacturerInventoryId ASC
     """)
 
@@ -847,7 +862,8 @@ def search_inventory(boardSizeId: int):
             "board_model_id": official.BoardModelId,
             "brand_id": official.BrandId,
             "model_name": official.ModelName,
-            "model_match": model_match
+            "model_match": model_match,
+            "length": official.LengthFeetInches
         }
     )
 
