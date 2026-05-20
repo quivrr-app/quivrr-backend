@@ -462,6 +462,8 @@ def search_inventory(boardSizeId: int):
     official_query = text("""
         SELECT
             bs.BoardSizeId,
+            bm.BoardModelId,
+            b.BrandId,
             b.BrandName,
             bm.ModelName,
             bm.OfficialProductUrl,
@@ -478,6 +480,42 @@ def search_inventory(boardSizeId: int):
         INNER JOIN dbo.Brands b
             ON bm.BrandId = b.BrandId
         WHERE bs.BoardSizeId = :board_size_id
+    """)
+
+    manufacturer_direct_query = text("""
+        SELECT TOP 20
+            mi.ManufacturerInventoryId,
+            mi.BrandId,
+            mi.BoardModelId,
+            mi.BoardSizeId,
+            mi.BrandName,
+            mi.ModelName,
+            mi.ProductUrl,
+            mi.ProductImageUrl,
+            mi.LengthFeetInches,
+            mi.Width,
+            mi.Thickness,
+            mi.VolumeLitres,
+            mi.Construction,
+            mi.PriceAmount,
+            mi.PriceCurrency,
+            mi.StockStatus,
+            mi.IsAvailable,
+            mi.RegionCode
+        FROM dbo.ManufacturerInventory mi
+        WHERE mi.IsActive = 1
+          AND mi.RegionCode = 'AU'
+          AND mi.AvailabilitySource = 'manufacturer_direct'
+          AND mi.BrandId = :brand_id
+          AND (
+                mi.BoardSizeId = :board_size_id
+             OR mi.BoardModelId = :board_model_id
+             OR mi.ModelName LIKE :model_match
+             OR :model_name LIKE '%' + mi.ModelName + '%'
+          )
+        ORDER BY
+            CASE WHEN mi.IsAvailable = 1 THEN 0 ELSE 1 END,
+            mi.ManufacturerInventoryId ASC
     """)
 
     exact_query = text("""
@@ -801,6 +839,59 @@ def search_inventory(boardSizeId: int):
         "finSetup": official.FinSetup,
         "tailShape": official.TailShape
     }
+
+    manufacturer_direct_rows = execute_with_retry(
+        manufacturer_direct_query,
+        {
+            "board_size_id": official.BoardSizeId,
+            "board_model_id": official.BoardModelId,
+            "brand_id": official.BrandId,
+            "model_name": official.ModelName,
+            "model_match": model_match
+        }
+    )
+
+    direct_matches = []
+
+    for row in manufacturer_direct_rows:
+        direct_matches.append({
+            "resultType": "manufacturerDirect",
+            "manufacturerInventoryId": row.ManufacturerInventoryId,
+            "brandName": row.BrandName,
+            "modelName": row.ModelName,
+            "productUrl": row.ProductUrl,
+            "productImageUrl": row.ProductImageUrl,
+            "imageUrl": row.ProductImageUrl,
+            "length": row.LengthFeetInches,
+            "width": row.Width,
+            "thickness": row.Thickness,
+            "volumeLitres": format_volume(row.VolumeLitres),
+            "construction": row.Construction,
+            "priceAmount": float(row.PriceAmount) if row.PriceAmount is not None else None,
+            "priceCurrency": row.PriceCurrency,
+            "stockStatus": row.StockStatus,
+            "isAvailable": bool(row.IsAvailable),
+            "regionCode": row.RegionCode
+        })
+
+    official_result["directManufacturerMatches"] = direct_matches
+    official_result["hasDirectManufacturerStock"] = len(direct_matches) > 0
+
+    if direct_matches:
+        first_direct = direct_matches[0]
+        official_result["resultType"] = "manufacturerDirect"
+        official_result["manufacturerAvailability"] = {
+            "isAvailable": bool(first_direct.get("isAvailable")),
+            "stockStatus": first_direct.get("stockStatus")
+        }
+        official_result["productUrl"] = first_direct.get("productUrl") or official_result.get("productUrl")
+        official_result["productImageUrl"] = first_direct.get("productImageUrl")
+        official_result["imageUrl"] = first_direct.get("productImageUrl")
+        official_result["priceAmount"] = first_direct.get("priceAmount")
+        official_result["priceCurrency"] = first_direct.get("priceCurrency")
+        official_result["stockStatus"] = first_direct.get("stockStatus")
+        official_result["isAvailable"] = first_direct.get("isAvailable")
+        official_result["manufacturerInventoryId"] = first_direct.get("manufacturerInventoryId")
 
     exact_rows = execute_with_retry(
         exact_query,
