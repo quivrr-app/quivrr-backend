@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 import json
 import subprocess
 import sys
@@ -264,6 +264,15 @@ def main():
         "required": False,
         "attempts": 2,
     },
+        {
+            "name": "Reconcile retailer inventory brands",
+            "command": [
+                sys.executable,
+                "-u",
+                "scripts/reconcile_retailer_inventory_brands.py",
+            ],
+            "retry_count": 1,
+        },
         {
             "name": "Build retailer scrape health report",
             "command": [

@@ -19,7 +19,7 @@ BRAND_ALIASES = {
     "Firewire": ["Firewire", "Slater Designs", "Slater"],
     "Rusty": ["Rusty"],
     "Chilli": ["Chilli"],
-    "Album Surf": ["Album", "Album Surf", "Album Surfboards"],
+    "Album": ["Album", "Album Surf", "Album Surfboards"],
     "Misfit Shapes": ["Misfit", "Misfit Shapes"],
     "Chemistry Surfboards": ["Chemistry", "Chemistry Surfboards"],
     "DMS Surfboards": ["DMS", "DMS Surfboards"],
