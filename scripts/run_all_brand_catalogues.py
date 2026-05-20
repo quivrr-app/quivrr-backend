@@ -48,6 +48,14 @@ STEPS = [
         "name": "Misfit Shapes",
         "command": [PYTHON, "scripts/run_misfit_pipeline.py"],
     },
+    {
+        "name": "Chemistry Surfboards",
+        "command": [PYTHON, "scripts/run_chemistry_pipeline.py"],
+    },
+    {
+        "name": "DMS Surfboards",
+        "command": [PYTHON, "scripts/run_dms_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")
