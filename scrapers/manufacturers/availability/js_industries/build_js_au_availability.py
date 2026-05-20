@@ -115,7 +115,7 @@ def extract_dimension_parts(value):
     value = clean(value) or ""
 
     pattern = re.compile(
-        r"(?P<length>[4-9]['?]\s*\d{1,2}(?:\"?\s*1/2)?)\s*[xX]\s*"
+        r"(?P<length>[4-9]['?]\s*\d{1,2}(?:\"?\s*1/2)?\"?)\s*[xX]\s*"
         r"(?P<width>\d{1,2}(?:\s+\d{1,2}/\d{1,2})?)\"?\s*[xX]\s*"
         r"(?P<thickness>\d(?:\s+\d{1,2}/\d{1,2})?)\"?",
         re.IGNORECASE,
