@@ -11,6 +11,15 @@ from sqlalchemy import create_engine, text
 INPUT_FILE = Path("scrapers/manufacturers/availability/output/js_industries/js_au_manufacturer_inventory.json")
 
 
+def normalise_js_construction(value):
+    value = (value or "").strip()
+
+    if value.upper() == "HYFI":
+        return "HYFI 3.0"
+
+    return value
+
+
 def clean(value):
     if value is None:
         return None
@@ -70,7 +79,7 @@ def main():
             model_name = clean(row.get("modelName"))
             length = clean(row.get("lengthFeetInches"))
             volume = row.get("volumeLitres")
-            construction = clean(row.get("construction"))
+            construction = normalise_js_construction(row.get("construction"))
 
             board_model_id = None
             board_size_id = None
