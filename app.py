@@ -522,7 +522,8 @@ def search_inventory(boardSizeId: int):
           AND (
                 mi.BoardSizeId = :board_size_id
              OR (
-                    mi.LengthFeetInches = :length
+                    mi.BoardModelId = :board_model_id
+                AND mi.LengthFeetInches = :length
                 AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
                     REPLACE(REPLACE(:width, '"', ''), ' ', '')
                 AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
