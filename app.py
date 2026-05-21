@@ -1005,6 +1005,11 @@ def search_inventory(boardSizeId: int):
                     AND BoardModelId = :board_model_id
                     AND LengthFeetInches = :length_feet_inches
                  )
+                 OR (
+                        BoardModelId = :board_model_id
+                    AND LOWER(ISNULL(Construction, '')) = LOWER(ISNULL(:construction, ''))
+                    AND IsAvailable = 1
+                 )
               )
             ORDER BY
                 CASE WHEN IsAvailable = 1 THEN 0 ELSE 1 END,
@@ -1013,7 +1018,8 @@ def search_inventory(boardSizeId: int):
         {
             "board_size_id": official.BoardSizeId,
             "board_model_id": official.BoardModelId,
-            "length_feet_inches": official.LengthFeetInches
+            "length_feet_inches": official.LengthFeetInches,
+            "construction": official.Construction
         }
     )
 
