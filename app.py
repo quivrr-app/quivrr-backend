@@ -998,13 +998,22 @@ def search_inventory(boardSizeId: int):
             WHERE IsActive = 1
               AND RegionCode = 'AU'
               AND AvailabilitySource = 'manufacturer_direct'
-              AND BoardSizeId = :board_size_id
+              AND (
+                    BoardSizeId = :board_size_id
+                 OR (
+                        BoardSizeId IS NULL
+                    AND BoardModelId = :board_model_id
+                    AND LengthFeetInches = :length_feet_inches
+                 )
+              )
             ORDER BY
                 CASE WHEN IsAvailable = 1 THEN 0 ELSE 1 END,
                 ManufacturerInventoryId DESC
         """),
         {
-            "board_size_id": official.BoardSizeId
+            "board_size_id": official.BoardSizeId,
+            "board_model_id": official.BoardModelId,
+            "length_feet_inches": official.LengthFeetInches
         }
     )
 
@@ -1099,6 +1108,24 @@ def search_inventory(boardSizeId: int):
 
         if len(close_matches) >= 50:
             break
+
+    if official_result.get("directManufacturerMatches"):
+        available_direct_matches = [
+            match for match in official_result.get("directManufacturerMatches", [])
+            if match.get("isAvailable") is True
+        ]
+
+        selected_direct_match = (
+            available_direct_matches[0]
+            if available_direct_matches
+            else official_result["directManufacturerMatches"][0]
+        )
+
+        official_result["manufacturerAvailability"] = {
+            "isAvailable": bool(selected_direct_match.get("isAvailable")),
+            "stockStatus": selected_direct_match.get("stockStatus"),
+            "productUrl": selected_direct_match.get("productUrl")
+        }
 
     return {
         "apiBuild": "manufacturer-availability-v3",
