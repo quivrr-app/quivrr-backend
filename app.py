@@ -1101,6 +1101,7 @@ def search_inventory(boardSizeId: int):
             break
 
     return {
+        "apiBuild": "manufacturer-availability-v3",
         "manufacturer": official_result,
         "manufacturerAvailability": official_result.get("manufacturerAvailability"),
         "directManufacturerMatches": official_result.get("directManufacturerMatches", []),
