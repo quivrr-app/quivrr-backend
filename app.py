@@ -1008,6 +1008,8 @@ def search_inventory(boardSizeId: int):
 
     return {
         "manufacturer": official_result,
+        "manufacturerAvailability": official_result.get("manufacturerAvailability"),
+        "directManufacturerMatches": official_result.get("directManufacturerMatches", []),
         "exactRetailerMatches": exact_matches,
         "closeRetailerMatches": close_matches
     }
