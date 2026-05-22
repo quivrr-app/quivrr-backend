@@ -12,6 +12,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_js_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Album AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_album_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 def run_step(name, command):
