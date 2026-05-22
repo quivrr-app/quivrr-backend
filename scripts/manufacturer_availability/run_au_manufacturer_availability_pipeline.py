@@ -19,6 +19,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_album_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Channel Islands AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_ci_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 def run_step(name, command):
