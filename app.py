@@ -523,7 +523,6 @@ def search_inventory(boardSizeId: int):
           AND mi.RegionCode = 'AU'
           AND mi.AvailabilitySource = 'manufacturer_direct'
           AND mi.BrandId = :brand_id
-          AND mi.BoardModelId = :board_model_id
           AND (
                 mi.BoardSizeId = :board_size_id
              OR (
@@ -921,61 +920,6 @@ def search_inventory(boardSizeId: int):
             "isAvailable": bool(row.IsAvailable),
             "regionCode": row.RegionCode
         })
-
-    if not direct_matches:
-        fallback_direct = fetch_one_with_retry(
-            text("""
-                SELECT TOP 1
-                    ManufacturerInventoryId,
-                    BrandName,
-                    ModelName,
-                    ProductUrl,
-                    ProductImageUrl,
-                    LengthFeetInches,
-                    Width,
-                    Thickness,
-                    VolumeLitres,
-                    Construction,
-                    PriceAmount,
-                    PriceCurrency,
-                    StockStatus,
-                    IsAvailable,
-                    RegionCode
-                FROM dbo.ManufacturerInventory
-                WHERE BoardSizeId = :board_size_id
-                  AND IsActive = 1
-                  AND RegionCode = 'AU'
-                  AND AvailabilitySource = 'manufacturer_direct'
-                ORDER BY
-                    CASE WHEN IsAvailable = 1 THEN 0 ELSE 1 END,
-                    ManufacturerInventoryId DESC
-            """),
-            {
-                "board_size_id": official.BoardSizeId
-            }
-        )
-
-        if fallback_direct:
-            direct_matches.append({
-                "resultType": "manufacturerDirect",
-                "manufacturerInventoryId": fallback_direct.ManufacturerInventoryId,
-                "brandName": fallback_direct.BrandName,
-                "modelName": fallback_direct.ModelName,
-                "productUrl": fallback_direct.ProductUrl,
-                "productImageUrl": fallback_direct.ProductImageUrl,
-                "imageUrl": fallback_direct.ProductImageUrl,
-                "length": fallback_direct.LengthFeetInches,
-                "width": fallback_direct.Width,
-                "thickness": fallback_direct.Thickness,
-                "volumeLitres": format_volume(fallback_direct.VolumeLitres),
-                "construction": fallback_direct.Construction,
-                "priceAmount": float(fallback_direct.PriceAmount) if fallback_direct.PriceAmount is not None else None,
-                "priceCurrency": fallback_direct.PriceCurrency,
-                "stockStatus": fallback_direct.StockStatus,
-                "isAvailable": bool(fallback_direct.IsAvailable),
-                "regionCode": fallback_direct.RegionCode
-            })
-
     official_result["directManufacturerMatches"] = direct_matches
     official_result["hasDirectManufacturerStock"] = len(direct_matches) > 0
 
