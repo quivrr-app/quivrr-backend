@@ -5,11 +5,10 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
-SOURCE_URL = "https://albumsurf.com.au/collections/new-boards/products.json?limit=250"
-BASE_URL = "https://albumsurf.com.au"
+SOURCE_URL = "https://albumsurf.com/en-au/collections/new-boards/products.json?limit=250"
 
 OUTPUT_FILE = Path(
-    "scrapers/manufacturers/availability/output/album/album_au_manufacturer_inventory.json"
+    "scrapers/manufacturers/availability/output/album/album_us_manufacturer_inventory.json"
 )
 
 HEADERS = {
@@ -47,13 +46,8 @@ def product_image(product):
 
 def is_board_product(product):
     product_type = clean(product.get("product_type")).lower()
-    title = clean(product.get("title")).lower()
 
-    return (
-        "surfboard" in product_type
-        or "board" in product_type
-        or bool(re.search(r"\d+'\s*\d+", title))
-    )
+    return "surfboard" in product_type
 
 
 def extract_dimensions_from_page(product_url):
@@ -70,7 +64,7 @@ def extract_dimensions_from_page(product_url):
         text_content = soup.get_text(" ", strip=True)
 
         match = re.search(
-            r'(\d+[.]?\d*)\s*[\'"]?\s*x\s*(\d+[.]?\d*)\s*[\'"]?\s*x\s*(\d+[.]?\d*)\s*[\'"]?.*?\((\d+[.]?\d*)\s*Liters?\)',
+            r'(\d+[.]?\d*)\s*[\'"]?\s*x\s*(\d+[.]?\d*)\s*[\'"]?\s*x\s*(\d+[.]?\d*)\s*[\'"]?.*?\((\d+[.]?\d*)\s*Liters\)',
             text_content,
             re.IGNORECASE,
         )
@@ -87,7 +81,7 @@ def extract_dimensions_from_page(product_url):
 
 
 print("")
-print("Building Album AU manufacturer availability")
+print("Building Album US manufacturer availability")
 print(f"Source: {SOURCE_URL}")
 
 response = requests.get(
@@ -113,8 +107,7 @@ for product in products:
             continue
 
         variant = (product.get("variants") or [{}])[0]
-        handle = clean(product.get("handle"))
-        product_url = f"{BASE_URL}/products/{handle}"
+        product_url = f"https://albumsurf.com/en-au/products/{product.get('handle')}"
 
         width, thickness, litres = extract_dimensions_from_page(product_url)
 
@@ -136,7 +129,7 @@ for product in products:
             "productUrl": product_url,
             "productImageUrl": product_image(product),
             "availabilitySource": "manufacturer_direct",
-            "regionCode": "AU",
+            "regionCode": "US",
         })
 
     except Exception as ex:
@@ -155,7 +148,7 @@ available_rows = [
 ]
 
 print("")
-print("Album AU manufacturer availability complete")
+print("Album US manufacturer availability complete")
 print(f"Rows: {len(rows)}")
 print(f"Available rows: {len(available_rows)}")
 print(f"Output: {OUTPUT_FILE}")
