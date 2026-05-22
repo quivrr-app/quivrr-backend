@@ -13,7 +13,10 @@ OUTPUT_FILE = Path(
 )
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.7",
+    "Accept-Language": "en-AU,en;q=0.9",
+    "Referer": "https://albumsurf.com.au/",
 }
 
 
@@ -121,9 +124,33 @@ for product in products:
         available = bool(variant.get("available"))
         price = variant.get("price")
 
+        handle = clean(product.get("handle"))
+
+        model_name = re.sub(r"^\d+'?\d*[- ]*", "", handle)
+        model_name = re.sub(r"-\d+$", "", model_name)
+
+        replacements = {
+            "plasmic": "Plasmic",
+            "lightbender": "Lightbender",
+            "twinsman": "Twinsman",
+            "protoatypical": "ProtoAtypical",
+            "proto-atypical": "ProtoAtypical",
+            "freewing": "Freewing",
+            "sunstone": "Sunstone",
+            "the-end": "The End",
+            "bom-dia": "Bom Dia",
+            "vb-secret-menu": "VBSM",
+            "vbsm": "VBSM",
+        }
+
+        for key, value in replacements.items():
+            if key in model_name:
+                model_name = value
+                break
+
         rows.append({
             "brandName": "Album",
-            "modelName": clean(variant.get("title")) or title,
+            "modelName": model_name,
             "length": normalise_length(title),
             "width": width,
             "thickness": thickness,
