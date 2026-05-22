@@ -995,55 +995,6 @@ def search_inventory(boardSizeId: int):
         official_result["isAvailable"] = first_direct.get("isAvailable")
         official_result["manufacturerInventoryId"] = first_direct.get("manufacturerInventoryId")
 
-    direct_stock = fetch_one_with_retry(
-        text("""
-            SELECT TOP 1
-                ManufacturerInventoryId,
-                ProductUrl,
-                ProductImageUrl,
-                StockStatus,
-                IsAvailable,
-                PriceAmount,
-                PriceCurrency
-            FROM dbo.ManufacturerInventory
-            WHERE IsActive = 1
-              AND RegionCode = 'AU'
-              AND AvailabilitySource = 'manufacturer_direct'
-              AND (
-                    BoardSizeId = :board_size_id
-                 OR (
-                        BoardSizeId IS NULL
-                    AND BoardModelId = :board_model_id
-                    AND LengthFeetInches = :length_feet_inches
-                 )
-              )
-            ORDER BY
-                CASE WHEN IsAvailable = 1 THEN 0 ELSE 1 END,
-                ManufacturerInventoryId DESC
-        """),
-        {
-            "board_size_id": official.BoardSizeId,
-            "board_model_id": official.BoardModelId,
-            "length_feet_inches": official.LengthFeetInches
-        }
-    )
-
-    official_result["manufacturerAvailability"] = {
-        "isAvailable": bool(direct_stock and direct_stock.IsAvailable),
-        "stockStatus": direct_stock.StockStatus if direct_stock else "sold_out",
-        "productUrl": direct_stock.ProductUrl if direct_stock else None
-    }
-
-    if direct_stock:
-        official_result["manufacturerInventoryId"] = direct_stock.ManufacturerInventoryId
-        official_result["isAvailable"] = bool(direct_stock.IsAvailable)
-        official_result["stockStatus"] = direct_stock.StockStatus
-        official_result["productUrl"] = direct_stock.ProductUrl or official_result.get("productUrl")
-        official_result["productImageUrl"] = direct_stock.ProductImageUrl
-        official_result["imageUrl"] = direct_stock.ProductImageUrl
-        official_result["priceAmount"] = float(direct_stock.PriceAmount) if direct_stock.PriceAmount is not None else None
-        official_result["priceCurrency"] = direct_stock.PriceCurrency
-
     exact_rows = execute_with_retry(
         exact_query,
         {
