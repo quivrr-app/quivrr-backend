@@ -502,60 +502,49 @@ def search_inventory(boardSizeId: int):
             mi.StockStatus,
             mi.IsAvailable,
             mi.RegionCode,
+
             CASE
                 WHEN mi.BoardSizeId = :board_size_id THEN 0
+
                 WHEN mi.BrandName = 'Album'
-                  AND mi.BoardModelId = :board_model_id
-                  AND mi.LengthFeetInches = :length
-                  THEN 1
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    THEN 1
 
                 WHEN mi.BoardModelId = :board_model_id
-                  AND mi.LengthFeetInches = :length
-                  AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
-                      REPLACE(REPLACE(:width, '"', ''), ' ', '')
-                  AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
-                      REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
-                  THEN 2
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    THEN 2
+
+                WHEN mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    THEN 3
+
                 ELSE 9
             END AS MatchRank
-        FROM dbo.ManufacturerInventory mi
-        WHERE mi.IsActive = 1
-          AND mi.RegionCode = 'AU'
-          AND mi.AvailabilitySource = 'manufacturer_direct'
-          AND mi.BrandId = :brand_id
-          AND (
-                mi.BoardSizeId = :board_size_id
-             OR (
-                    mi.BrandName = 'Album'
-                AND mi.BoardModelId = :board_model_id
-                AND mi.LengthFeetInches = :length
-             )
 
-             OR (
+        FROM dbo.ManufacturerInventory mi
+
+        WHERE mi.IsActive = 1
+            AND mi.RegionCode = 'AU'
+            AND mi.AvailabilitySource = 'manufacturer_direct'
+            AND mi.BrandId = :brand_id
+
+            AND (
+                mi.BoardSizeId = :board_size_id
+
+                OR (
                     mi.BoardModelId = :board_model_id
-                AND mi.LengthFeetInches = :length
-                AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
-                    REPLACE(REPLACE(:width, '"', ''), ' ', '')
-                AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
-                    REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
-                AND (
-                       :volume IS NULL
-                    OR mi.VolumeLitres IS NULL
-                    OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    AND mi.LengthFeetInches = :length
                 )
-                AND (
-                       :construction IS NULL
-                    OR mi.Construction IS NULL
-                    OR LOWER(mi.Construction) = LOWER(:construction)
-                    OR LOWER(:construction) LIKE '%' + LOWER(mi.Construction) + '%'
-                    OR LOWER(mi.Construction) LIKE '%' + LOWER(:construction) + '%'
-                )
-             )
-          )
+            )
+
         ORDER BY
             CASE WHEN mi.IsAvailable = 1 THEN 0 ELSE 1 END,
             MatchRank ASC,
-            CASE WHEN mi.BoardSizeId = :board_size_id THEN 0 ELSE 1 END,
             mi.PriceAmount ASC,
             mi.ManufacturerInventoryId ASC
     """)
