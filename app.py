@@ -456,6 +456,81 @@ def get_sizes(
     return sizes
 
 
+
+
+SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
+    "JS Industries",
+    "Channel Islands",
+    "Album",
+}
+
+
+def manufacturer_search_policy(brand_name):
+    brand_name = brand_name or ""
+
+    policies = {
+        "JS Industries": {
+            "direct_enabled": True,
+            "manufacturer_mode": "strict",
+            "retailer_exact_construction_mode": "strict",
+            "allow_alternate_manufacturer_construction": True,
+        },
+        "Channel Islands": {
+            "direct_enabled": True,
+            "manufacturer_mode": "strict",
+            "retailer_exact_construction_mode": "strict",
+            "allow_alternate_manufacturer_construction": True,
+        },
+        "Album": {
+            "direct_enabled": True,
+            "manufacturer_mode": "relaxed_album",
+            "retailer_exact_construction_mode": "relaxed",
+            "allow_alternate_manufacturer_construction": False,
+        },
+    }
+
+    return policies.get(
+        brand_name,
+        {
+            "direct_enabled": False,
+            "manufacturer_mode": "retailer_only",
+            "retailer_exact_construction_mode": "relaxed",
+            "allow_alternate_manufacturer_construction": False,
+        }
+    )
+
+
+def normalise_construction_key(value):
+    value = clean_text(value)
+
+    if not value:
+        return ""
+
+    aliases = {
+        "hyfi": "hyfi 3 0",
+        "hyfi 3": "hyfi 3 0",
+        "hyfi 3 0": "hyfi 3 0",
+        "carbotune": "carbotune",
+        "carbon tune": "carbotune",
+        "pu": "pu",
+        "pe": "pe",
+        "poly": "pu",
+        "polyester": "pu",
+        "eps": "eps",
+        "ect": "ect carbon",
+        "ect carbon": "ect carbon",
+        "spine tek": "spine tek",
+        "spinetek": "spine tek",
+        "standard": "standard",
+    }
+
+    return aliases.get(value, value)
+
+
+def constructions_match(left, right):
+    return normalise_construction_key(left) == normalise_construction_key(right)
+
+
 @app.get("/api/search")
 def search_inventory(boardSizeId: int):
 
@@ -504,24 +579,41 @@ def search_inventory(boardSizeId: int):
             mi.RegionCode,
 
             CASE
-                WHEN mi.BoardSizeId = :board_size_id THEN 0
-
-                WHEN mi.BrandName = 'Album'
+                WHEN mi.BrandName = 'JS Industries'
                     AND mi.BoardModelId = :board_model_id
-                    AND mi.LengthFeetInches = :length
-                    THEN 1
-
-                WHEN mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
                         REPLACE(REPLACE(:width, '"', ''), ' ', '')
                     AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
                         REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
-                    THEN 2
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.05
+                    )
+                    AND mi.Construction IS NOT NULL
+                    AND LOWER(LTRIM(RTRIM(mi.Construction))) =
+                        LOWER(LTRIM(RTRIM(:construction)))
+                    THEN 0
 
-                WHEN mi.BoardModelId = :board_model_id
+                WHEN mi.BrandName = 'Channel Islands'
+                    AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
-                    THEN 3
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    THEN 1
+
+                WHEN mi.BrandName = 'Album'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    THEN 2
 
                 ELSE 9
             END AS MatchRank
@@ -532,12 +624,43 @@ def search_inventory(boardSizeId: int):
             AND mi.RegionCode = 'AU'
             AND mi.AvailabilitySource = 'manufacturer_direct'
             AND mi.BrandId = :brand_id
-
             AND (
-                mi.BoardSizeId = :board_size_id
-
-                OR (
-                    mi.BoardModelId = :board_model_id
+                (
+                    mi.BrandName = 'JS Industries'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.05
+                    )
+                    AND mi.Construction IS NOT NULL
+                    AND LOWER(LTRIM(RTRIM(mi.Construction))) =
+                        LOWER(LTRIM(RTRIM(:construction)))
+                )
+                OR
+                (
+                    mi.BrandName = 'Channel Islands'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                )
+                OR
+                (
+                    mi.BrandName = 'Album'
+                    AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                 )
             )
@@ -545,6 +668,54 @@ def search_inventory(boardSizeId: int):
         ORDER BY
             CASE WHEN mi.IsAvailable = 1 THEN 0 ELSE 1 END,
             MatchRank ASC,
+            mi.PriceAmount ASC,
+            mi.ManufacturerInventoryId ASC
+    """)
+
+    alternate_manufacturer_direct_query = text("""
+        SELECT TOP 20
+            mi.ManufacturerInventoryId,
+            mi.BrandId,
+            mi.BoardModelId,
+            mi.BoardSizeId,
+            mi.BrandName,
+            mi.ModelName,
+            mi.ProductUrl,
+            mi.ProductImageUrl,
+            mi.LengthFeetInches,
+            mi.Width,
+            mi.Thickness,
+            mi.VolumeLitres,
+            mi.Construction,
+            mi.PriceAmount,
+            mi.PriceCurrency,
+            mi.StockStatus,
+            mi.IsAvailable,
+            mi.RegionCode
+
+        FROM dbo.ManufacturerInventory mi
+
+        WHERE :direct_enabled = 1
+            AND :allow_alternate_manufacturer_construction = 1
+            AND :construction IS NOT NULL
+            AND mi.IsActive = 1
+            AND mi.RegionCode = 'AU'
+            AND mi.AvailabilitySource = 'manufacturer_direct'
+            AND mi.BrandId = :brand_id
+            AND mi.BoardModelId = :board_model_id
+            AND mi.LengthFeetInches = :length
+            AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                REPLACE(REPLACE(:width, '"', ''), ' ', '')
+            AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+            AND (
+                mi.Construction IS NULL
+                OR LOWER(LTRIM(RTRIM(mi.Construction))) <>
+                    LOWER(LTRIM(RTRIM(:construction)))
+            )
+
+        ORDER BY
+            CASE WHEN mi.IsAvailable = 1 THEN 0 ELSE 1 END,
             mi.PriceAmount ASC,
             mi.ManufacturerInventoryId ASC
     """)
@@ -648,6 +819,24 @@ def search_inventory(boardSizeId: int):
             OR ri.NormalisedProductTitle LIKE :model_match
             OR ri.RawProductTitle LIKE :model_family_match
             OR ri.NormalisedProductTitle LIKE :model_family_match
+        )
+        AND (
+            :retailer_exact_construction_strict = 0
+            OR :construction IS NULL
+            OR (
+                ri.Construction IS NOT NULL
+                AND LOWER(LTRIM(RTRIM(ri.Construction))) =
+                    LOWER(LTRIM(RTRIM(:construction)))
+            )
+        )
+        AND (
+            :brand_name NOT IN ('JS Industries', 'Channel Islands')
+            OR :construction IS NULL
+            OR (
+                ri.Construction IS NOT NULL
+                AND LOWER(LTRIM(RTRIM(ri.Construction))) =
+                    LOWER(LTRIM(RTRIM(:construction)))
+            )
         )
         AND (
             ri.VolumeLitres IS NULL
@@ -819,6 +1008,21 @@ def search_inventory(boardSizeId: int):
             "closeRetailerMatches": []
         }
 
+    policy = manufacturer_search_policy(official.BrandName)
+
+    direct_enabled = 1 if policy.get("direct_enabled") else 0
+    manufacturer_mode = policy.get("manufacturer_mode", "retailer_only")
+    retailer_exact_construction_strict = (
+        1
+        if policy.get("retailer_exact_construction_mode") == "strict"
+        else 0
+    )
+    allow_alternate_manufacturer_construction = (
+        1
+        if policy.get("allow_alternate_manufacturer_construction")
+        else 0
+    )
+
     target_length_inches = length_to_inches(
         official.LengthFeetInches
     )
@@ -883,7 +1087,26 @@ def search_inventory(boardSizeId: int):
             "width": official.Width,
             "thickness": official.Thickness,
             "volume": official.VolumeLitres,
-            "construction": official.Construction
+            "construction": official.Construction,
+            "direct_enabled": direct_enabled,
+            "manufacturer_mode": manufacturer_mode,
+            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction
+        }
+    )
+
+    alternate_manufacturer_direct_rows = execute_with_retry(
+        alternate_manufacturer_direct_query,
+        {
+            "board_size_id": official.BoardSizeId,
+            "board_model_id": official.BoardModelId,
+            "brand_id": official.BrandId,
+            "length": official.LengthFeetInches,
+            "width": official.Width,
+            "thickness": official.Thickness,
+            "construction": official.Construction,
+            "direct_enabled": direct_enabled,
+            "manufacturer_mode": manufacturer_mode,
+            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction
         }
     )
 
@@ -909,7 +1132,31 @@ def search_inventory(boardSizeId: int):
             "isAvailable": bool(row.IsAvailable),
             "regionCode": row.RegionCode
         })
+    alternate_direct_matches = []
+
+    for row in alternate_manufacturer_direct_rows:
+        alternate_direct_matches.append({
+            "resultType": "manufacturerAlternateConstruction",
+            "manufacturerInventoryId": row.ManufacturerInventoryId,
+            "brandName": row.BrandName,
+            "modelName": row.ModelName,
+            "productUrl": row.ProductUrl,
+            "productImageUrl": row.ProductImageUrl,
+            "imageUrl": row.ProductImageUrl,
+            "length": row.LengthFeetInches,
+            "width": row.Width,
+            "thickness": row.Thickness,
+            "volumeLitres": format_volume(row.VolumeLitres),
+            "construction": row.Construction,
+            "priceAmount": float(row.PriceAmount) if row.PriceAmount is not None else None,
+            "priceCurrency": row.PriceCurrency,
+            "stockStatus": row.StockStatus,
+            "isAvailable": bool(row.IsAvailable),
+            "regionCode": row.RegionCode
+        })
+
     official_result["directManufacturerMatches"] = direct_matches
+    official_result["alternateManufacturerMatches"] = alternate_direct_matches
     official_result["hasDirectManufacturerStock"] = len(direct_matches) > 0
 
     if direct_matches:
@@ -937,7 +1184,9 @@ def search_inventory(boardSizeId: int):
             "length_title_match": length_title_match,
             "volume": official.VolumeLitres,
             "construction": official.Construction,
-            "fin_setup": official.FinSetup
+            "fin_setup": official.FinSetup,
+            "brand_name": official.BrandName,
+            "retailer_exact_construction_strict": retailer_exact_construction_strict
         }
     )
 
@@ -1021,12 +1270,28 @@ def search_inventory(boardSizeId: int):
             "stockStatus": selected_direct_match.get("stockStatus"),
             "productUrl": selected_direct_match.get("productUrl")
         }
+    else:
+        official_result["manufacturerAvailability"] = {
+            "isAvailable": False,
+            "stockStatus": "unavailable",
+            "productUrl": official_result.get("productUrl")
+        }
+        official_result["stockStatus"] = "unavailable"
+        official_result["isAvailable"] = False
 
     return {
-        "apiBuild": "manufacturer-availability-v3",
+        "apiBuild": "manufacturer-policy-v1",
+        "manufacturerSearchPolicy": {
+            "brandName": official.BrandName,
+            "manufacturerMode": manufacturer_mode,
+            "directEnabled": bool(direct_enabled),
+            "retailerExactConstructionStrict": bool(retailer_exact_construction_strict),
+            "allowAlternateManufacturerConstruction": bool(allow_alternate_manufacturer_construction)
+        },
         "manufacturer": official_result,
         "manufacturerAvailability": official_result.get("manufacturerAvailability"),
         "directManufacturerMatches": official_result.get("directManufacturerMatches", []),
+        "alternateManufacturerMatches": official_result.get("alternateManufacturerMatches", []),
         "exactRetailerMatches": exact_matches,
         "closeRetailerMatches": close_matches
     }
