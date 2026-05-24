@@ -4,25 +4,20 @@ import os
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-
 import pyodbc
 from dotenv import load_dotenv
 
-INPUT_PATH = Path("scrapers/manufacturers/availability/output/channel_islands/ci_au_manufacturer_inventory.json")
-
+BRAND_NAME = "Chemistry Surfboards"
+INPUT_PATH = Path("scrapers/manufacturers/availability/output/chemistry/chemistry_au_manufacturer_inventory.json")
 
 def now_utc():
     return datetime.now(timezone.utc)
 
-
 def clean(value):
     if value is None:
         return None
-
     value = str(value).replace("\u2019", "'").replace("\u2018", "'").strip()
-
     return value or None
-
 
 def get_connection():
     load_dotenv()
@@ -45,7 +40,6 @@ def get_connection():
                 raise
             time.sleep(10)
 
-
 def get_columns(cursor):
     cursor.execute("""
         SELECT COLUMN_NAME
@@ -53,24 +47,32 @@ def get_columns(cursor):
         WHERE TABLE_SCHEMA = 'dbo'
           AND TABLE_NAME = 'ManufacturerInventory'
     """)
-
     return {row[0] for row in cursor.fetchall()}
-
 
 def get_brand_id(cursor):
     cursor.execute("""
         SELECT BrandId
         FROM dbo.Brands
         WHERE BrandName = ?
-    """, "Channel Islands")
+    """, BRAND_NAME)
 
     row = cursor.fetchone()
-
     return row[0] if row else None
 
+MODEL_MAP = {
+    "b-side": "B Side",
+    "b-side-ex-team": "B Side",
+    "pantera-rosa": "Chemistry Pantera Rosa Surfboard",
+    "summertime-pt-2": "Summertime Pt 2",
+    "the-23": "Chemistry The 23 Surfboard",
+    "the-zen-4": "Zen 4",
+    "the-zen-4-1": "Zen 4 1",
+    "the-zen-4-stock": "Zen 4",
+}
 
 def resolve_catalogue(cursor, brand_id, row):
-    model_name = clean(row.get("modelName"))
+    raw_model_name = clean(row.get("modelName"))
+    model_name = MODEL_MAP.get(raw_model_name, raw_model_name)
     length = clean(row.get("length"))
     construction = clean(row.get("construction"))
 
@@ -82,11 +84,11 @@ def resolve_catalogue(cursor, brand_id, row):
         "VolumeLitres": row.get("volumeLitres"),
     }
 
-    if not brand_id or not model_name or not length:
+    if not brand_id or not model_name:
         return resolved
 
     cursor.execute("""
-        SELECT BoardModelId, ModelName
+        SELECT BoardModelId
         FROM dbo.BoardModels
         WHERE BrandId = ?
           AND LOWER(ModelName) = LOWER(?)
@@ -100,13 +102,15 @@ def resolve_catalogue(cursor, brand_id, row):
     board_model_id = model[0]
     resolved["BoardModelId"] = board_model_id
 
+    if not length:
+        return resolved
+
     cursor.execute("""
         SELECT TOP 1
             BoardSizeId,
             Width,
             Thickness,
-            VolumeLitres,
-            Construction
+            VolumeLitres
         FROM dbo.BoardSizes
         WHERE BoardModelId = ?
           AND LengthFeetInches = ?
@@ -115,16 +119,8 @@ def resolve_catalogue(cursor, brand_id, row):
               OR Construction IS NULL
               OR LOWER(LTRIM(RTRIM(Construction))) = LOWER(LTRIM(RTRIM(?)))
           )
-        ORDER BY
-            CASE
-                WHEN ? IS NOT NULL
-                 AND Construction IS NOT NULL
-                 AND LOWER(LTRIM(RTRIM(Construction))) = LOWER(LTRIM(RTRIM(?)))
-                THEN 0
-                ELSE 1
-            END,
-            BoardSizeId
-    """, board_model_id, length, construction, construction, construction, construction)
+        ORDER BY BoardSizeId
+    """, board_model_id, length, construction, construction)
 
     size = cursor.fetchone()
 
@@ -136,11 +132,10 @@ def resolve_catalogue(cursor, brand_id, row):
 
     return resolved
 
-
 def insert_row(cursor, columns, row, resolved, brand_id):
     values = {
         "BrandId": brand_id,
-        "BrandName": "Channel Islands",
+        "BrandName": BRAND_NAME,
         "ModelName": clean(row.get("modelName")),
         "BoardModelId": resolved.get("BoardModelId"),
         "BoardSizeId": resolved.get("BoardSizeId"),
@@ -159,18 +154,13 @@ def insert_row(cursor, columns, row, resolved, brand_id):
         "AvailabilitySource": "manufacturer_direct",
         "RegionCode": "AU",
         "RawProductTitle": clean(row.get("rawProductTitle")),
-        "Source": clean(row.get("source")) or "ci_au_products_json_paginated",
+        "Source": clean(row.get("source")) or "chemistry_au_products_json",
         "ScrapedAtUtc": clean(row.get("scrapedAtUtc")),
         "UpdatedAtUtc": now_utc(),
         "IsActive": 1,
     }
 
-    insert_cols = [
-        column
-        for column in values.keys()
-        if column in columns
-    ]
-
+    insert_cols = [column for column in values.keys() if column in columns]
     placeholders = ", ".join(["?"] * len(insert_cols))
     col_sql = ", ".join(insert_cols)
 
@@ -179,28 +169,28 @@ def insert_row(cursor, columns, row, resolved, brand_id):
         [values[column] for column in insert_cols],
     )
 
-
 def main():
-    print("Importing Channel Islands AU manufacturer availability")
-    print(f"Input: {INPUT_PATH}")
+    print("Importing Chemistry AU manufacturer availability")
 
     data = json.loads(INPUT_PATH.read_text(encoding="utf-8"))
 
     conn = get_connection()
     cursor = conn.cursor()
-
     columns = get_columns(cursor)
     brand_id = get_brand_id(cursor)
+
+    if brand_id is None:
+        raise RuntimeError("Chemistry Surfboards brand not found")
 
     cursor.execute("""
         UPDATE dbo.ManufacturerInventory
         SET IsActive = 0,
             UpdatedAtUtc = SYSUTCDATETIME()
-        WHERE BrandName = 'Channel Islands'
+        WHERE BrandName = ?
           AND RegionCode = 'AU'
           AND AvailabilitySource = 'manufacturer_direct'
           AND IsActive = 1
-    """)
+    """, BRAND_NAME)
 
     inserted = 0
     linked_models = 0
@@ -230,7 +220,6 @@ def main():
         "LinkedModelRows": linked_models,
         "LinkedSizeRows": linked_sizes,
     })
-
 
 if __name__ == "__main__":
     main()

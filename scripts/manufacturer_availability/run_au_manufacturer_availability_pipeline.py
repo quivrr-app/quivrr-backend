@@ -26,6 +26,14 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_ci_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Chemistry Surfboards AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_chemistry_au_availability_pipeline.py",
+        ],
+    },
+
 ]
 
 def run_step(name, command):

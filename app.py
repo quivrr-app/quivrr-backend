@@ -462,6 +462,7 @@ SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
     "JS Industries",
     "Channel Islands",
     "Album",
+    "Chemistry Surfboards",
 }
 
 
@@ -486,6 +487,12 @@ def manufacturer_search_policy(brand_name):
             "manufacturer_mode": "relaxed_album",
             "retailer_exact_construction_mode": "relaxed",
             "allow_alternate_manufacturer_construction": False,
+        },
+        "Chemistry Surfboards": {
+            "direct_enabled": True,
+            "manufacturer_mode": "relaxed_chemistry",
+            "retailer_exact_construction_mode": "relaxed",
+            "allow_alternate_manufacturer_construction": True,
         },
     }
 
@@ -609,6 +616,23 @@ def search_inventory(boardSizeId: int):
                         OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
                     )
                     THEN 1
+
+
+                WHEN mi.BrandName = 'Chemistry Surfboards'
+                    AND mi.BoardModelId = :board_model_id
+                    AND (
+                        mi.BoardSizeId = :board_size_id
+                        OR (
+                            mi.LengthFeetInches = :length
+                            AND (
+                                :volume IS NULL
+                                OR mi.VolumeLitres IS NULL
+                                OR ABS(CAST(mi.VolumeLitres AS float) -
+                                       CAST(:volume AS float)) <= 1.0
+                            )
+                        )
+                    )
+                    THEN 2
 
                 WHEN mi.BrandName = 'Album'
                     AND mi.BoardModelId = :board_model_id
