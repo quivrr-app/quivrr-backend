@@ -29,3 +29,27 @@ Thumbs.db
 
 # VS Code local settings
 .vscode/
+
+# Temporary investigation scripts
+fix_*.py
+fix_*.ps1
+patch_*.py
+patch_*.ps1
+inspect_*.py
+inspect_*.ps1
+test_*.py
+test_*.ps1
+replace_*.py
+wire_*.py
+
+# Temporary deployment artifacts
+*deploy.zip
+backend-deploy.zip
+quivrr-backend-deploy.zip
+
+# Cleanup quarantine
+_cleanup_quarantine_*
+
+# Python cache
+__pycache__/
+.pytest_cache/
