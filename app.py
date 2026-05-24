@@ -1179,6 +1179,16 @@ def search_inventory(boardSizeId: int):
             "regionCode": row.RegionCode
         })
 
+    if official.BrandName == "Chemistry Surfboards" and not direct_matches and alternate_direct_matches:
+        promoted_matches = []
+
+        for match in alternate_direct_matches:
+            promoted = dict(match)
+            promoted["resultType"] = "manufacturerDirect"
+            promoted_matches.append(promoted)
+
+        direct_matches = promoted_matches
+
     official_result["directManufacturerMatches"] = direct_matches
     official_result["alternateManufacturerMatches"] = alternate_direct_matches
     official_result["hasDirectManufacturerStock"] = len(direct_matches) > 0
