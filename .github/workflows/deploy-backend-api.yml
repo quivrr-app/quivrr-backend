@@ -1,0 +1,44 @@
+﻿name: Deploy backend API to Azure App Service
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - app.py
+      - requirements.txt
+      - startup.sh
+      - runtime.txt
+      - scripts/**
+      - scrapers/**
+      - .github/workflows/deploy-backend-api.yml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remove non runtime files
+        run: |
+          rm -rf .git
+          rm -rf .github
+          rm -rf .vscode
+          rm -rf venv
+          rm -rf __pycache__
+          rm -rf .pytest_cache
+          find . -type d -name "__pycache__" -prune -exec rm -rf {} +
+          find . -type f -name "*.pyc" -delete
+          find . -type f -name "*.pyo" -delete
+          find . -type f -name "*.bak" -delete
+          find . -type f -name "*.zip" -delete
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: quivrr-backend-api
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
