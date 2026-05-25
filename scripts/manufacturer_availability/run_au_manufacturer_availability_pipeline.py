@@ -40,6 +40,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_dhd_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Pyzel AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_pyzel_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 
