@@ -33,8 +33,15 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_chemistry_au_availability_pipeline.py",
         ],
     },
-
+    {
+        "name": "DHD AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_dhd_au_availability_pipeline.py",
+        ],
+    },
 ]
+
 
 def run_step(name, command):
     print("")
@@ -55,6 +62,7 @@ def run_step(name, command):
     print("")
     print(f"Completed: {name}")
     return 0
+
 
 def main():
     print("")
@@ -89,6 +97,7 @@ def main():
             print(f"FAILED: {failure['name']} exitCode={failure['exitCode']}")
 
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
