@@ -463,6 +463,7 @@ SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
     "Channel Islands",
     "Album",
     "Chemistry Surfboards",
+    "DHD",
 }
 
 
@@ -492,6 +493,12 @@ def manufacturer_search_policy(brand_name):
             "direct_enabled": True,
             "manufacturer_mode": "relaxed_chemistry",
             "retailer_exact_construction_mode": "relaxed",
+            "allow_alternate_manufacturer_construction": True,
+        },
+        "DHD": {
+            "direct_enabled": True,
+            "manufacturer_mode": "strict",
+            "retailer_exact_construction_mode": "strict",
             "allow_alternate_manufacturer_construction": True,
         },
     }
@@ -686,6 +693,16 @@ def search_inventory(boardSizeId: int):
                     mi.BrandName = 'Album'
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
+                )
+                OR
+                (
+                    mi.BrandName = 'DHD'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
                 )
             )
 
