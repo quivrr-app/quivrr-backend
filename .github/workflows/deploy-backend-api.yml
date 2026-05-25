@@ -5,14 +5,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - app.py
-      - requirements.txt
-      - startup.sh
-      - runtime.txt
-      - scripts/**
-      - scrapers/**
-      - .github/workflows/deploy-backend-api.yml
 
 jobs:
   deploy:
@@ -36,9 +28,13 @@ jobs:
           find . -type f -name "*.bak" -delete
           find . -type f -name "*.zip" -delete
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: quivrr-backend-api
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
