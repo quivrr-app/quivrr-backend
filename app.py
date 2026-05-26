@@ -688,13 +688,31 @@ def search_inventory(boardSizeId: int):
                     AND mi.LengthFeetInches = :length
                     THEN 2
 
+                WHEN mi.BrandId = :brand_id
+                    AND mi.LengthFeetInches = :length
+                    AND (
+                        mi.BoardModelId = :board_model_id
+                        OR LOWER(LTRIM(RTRIM(mi.ModelName))) =
+                           LOWER(LTRIM(RTRIM(:model_name)))
+                        OR LOWER(LTRIM(RTRIM(mi.ModelName))) LIKE
+                           LOWER(LTRIM(RTRIM(:model_family_match)))
+                        OR LOWER(LTRIM(RTRIM(:model_name))) LIKE
+                           '%' + LOWER(LTRIM(RTRIM(mi.ModelName))) + '%'
+                    )
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    THEN 3
+
                 ELSE 9
             END AS MatchRank
 
         FROM dbo.ManufacturerInventory mi
 
         WHERE mi.IsActive = 1
-            AND mi.RegionCode = 'AU'
+            AND mi.RegionCode = :region_code
             AND mi.AvailabilitySource = 'manufacturer_direct'
             AND mi.BrandId = :brand_id
             AND (
@@ -738,13 +756,32 @@ def search_inventory(boardSizeId: int):
                 )
                 OR
                 (
-                    mi.BrandName IN ('DHD', 'Pyzel', 'Firewire', 'Lost', 'Sharp Eye', 'Haydenshapes', 'Misfit Shapes')
+                    mi.BrandName IN ('DHD', 'Pyzel', 'Firewire', 'Lost', 'Sharp Eye', 'Haydenshapes', 'Misfit Shapes', 'Christenson')
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
                         REPLACE(REPLACE(:width, '"', ''), ' ', '')
                     AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
                         REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                )
+                OR
+                (
+                    mi.BrandId = :brand_id
+                    AND mi.LengthFeetInches = :length
+                    AND (
+                        mi.BoardModelId = :board_model_id
+                        OR LOWER(LTRIM(RTRIM(mi.ModelName))) =
+                           LOWER(LTRIM(RTRIM(:model_name)))
+                        OR LOWER(LTRIM(RTRIM(mi.ModelName))) LIKE
+                           LOWER(LTRIM(RTRIM(:model_family_match)))
+                        OR LOWER(LTRIM(RTRIM(:model_name))) LIKE
+                           '%' + LOWER(LTRIM(RTRIM(mi.ModelName))) + '%'
+                    )
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
                 )
             )
 
@@ -782,7 +819,7 @@ def search_inventory(boardSizeId: int):
             AND :allow_alternate_manufacturer_construction = 1
             AND :construction IS NOT NULL
             AND mi.IsActive = 1
-            AND mi.RegionCode = 'AU'
+            AND mi.RegionCode = :region_code
             AND mi.AvailabilitySource = 'manufacturer_direct'
             AND mi.BrandId = :brand_id
             AND mi.BoardModelId = :board_model_id
@@ -1173,7 +1210,8 @@ def search_inventory(boardSizeId: int):
             "construction": official.Construction,
             "direct_enabled": direct_enabled,
             "manufacturer_mode": manufacturer_mode,
-            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction
+            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
+            "region_code": "AU"
         }
     )
 
@@ -1189,7 +1227,8 @@ def search_inventory(boardSizeId: int):
             "construction": official.Construction,
             "direct_enabled": direct_enabled,
             "manufacturer_mode": manufacturer_mode,
-            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction
+            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
+            "region_code": "AU"
         }
     )
 
