@@ -695,7 +695,7 @@ def search_inventory(boardSizeId: int):
                         OR LOWER(LTRIM(RTRIM(mi.ModelName))) =
                            LOWER(LTRIM(RTRIM(:model_name)))
                         OR LOWER(LTRIM(RTRIM(mi.ModelName))) LIKE
-                           LOWER(LTRIM(RTRIM(:model_family_match)))
+                           LOWER(LTRIM(RTRIM(:model_match)))
                         OR LOWER(LTRIM(RTRIM(:model_name))) LIKE
                            '%' + LOWER(LTRIM(RTRIM(mi.ModelName))) + '%'
                     )
@@ -773,7 +773,7 @@ def search_inventory(boardSizeId: int):
                         OR LOWER(LTRIM(RTRIM(mi.ModelName))) =
                            LOWER(LTRIM(RTRIM(:model_name)))
                         OR LOWER(LTRIM(RTRIM(mi.ModelName))) LIKE
-                           LOWER(LTRIM(RTRIM(:model_family_match)))
+                           LOWER(LTRIM(RTRIM(:model_match)))
                         OR LOWER(LTRIM(RTRIM(:model_name))) LIKE
                            '%' + LOWER(LTRIM(RTRIM(mi.ModelName))) + '%'
                     )
@@ -937,8 +937,8 @@ def search_inventory(boardSizeId: int):
         AND (
             ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
-            OR ri.RawProductTitle LIKE :model_family_match
-            OR ri.NormalisedProductTitle LIKE :model_family_match
+            OR ri.RawProductTitle LIKE :model_match
+            OR ri.NormalisedProductTitle LIKE :model_match
         )
         AND (
             :retailer_exact_construction_strict = 0
@@ -1012,8 +1012,8 @@ def search_inventory(boardSizeId: int):
                 WHEN ri.RawProductTitle LIKE :model_match
                     OR ri.NormalisedProductTitle LIKE :model_match
                     THEN 70
-                WHEN ri.RawProductTitle LIKE :model_family_match
-                    OR ri.NormalisedProductTitle LIKE :model_family_match
+                WHEN ri.RawProductTitle LIKE :model_match
+                    OR ri.NormalisedProductTitle LIKE :model_match
                     THEN 45
                 ELSE 0
             END
@@ -1081,8 +1081,8 @@ def search_inventory(boardSizeId: int):
         AND (
             ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
-            OR ri.RawProductTitle LIKE :model_family_match
-            OR ri.NormalisedProductTitle LIKE :model_family_match
+            OR ri.RawProductTitle LIKE :model_match
+            OR ri.NormalisedProductTitle LIKE :model_match
         )
         AND (
             ri.LengthFeetInches = :length
