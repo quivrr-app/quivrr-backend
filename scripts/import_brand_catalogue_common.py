@@ -1,13 +1,19 @@
-import json
+﻿import json
 import os
+import time
 from pathlib import Path
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, event, text
+from sqlalchemy.exc import OperationalError
 
 
 load_dotenv()
+
+
+MAX_SQL_ATTEMPTS = 4
+SQL_RETRY_DELAYS_SECONDS = [0, 5, 10, 20]
 
 
 def build_connection_string():
@@ -26,12 +32,18 @@ def build_connection_string():
         "Encrypt=yes;"
         "TrustServerCertificate=no;"
         "Connection Timeout=30;"
+        "ConnectRetryCount=3;"
+        "ConnectRetryInterval=5;"
     )
 
     return "mssql+pyodbc:///?odbc_connect=" + quote_plus(odbc_string)
 
 
-engine = create_engine(build_connection_string())
+engine = create_engine(
+    build_connection_string(),
+    pool_pre_ping=True,
+    pool_recycle=1800,
+)
 
 
 @event.listens_for(engine, "before_cursor_execute")
@@ -59,7 +71,23 @@ def load_catalogue(path):
     return data
 
 
+def get_default_brand_url(brand_name):
+    if brand_name == "Misfit Shapes":
+        return "https://misfitshapes.com"
+
+    normalised = (
+        brand_name.lower()
+        .replace(" ", "")
+        .replace("industries", "")
+        .replace("surfboards", "")
+    )
+
+    return f"https://{normalised}.com"
+
+
 def get_or_create_brand(connection, brand_name):
+    official_website_url = get_default_brand_url(brand_name)
+
     row = connection.execute(
         text("""
             SELECT BrandId
@@ -68,7 +96,6 @@ def get_or_create_brand(connection, brand_name):
         """),
         {
             "brand_name": brand_name,
-            "official_website_url": "https://misfitshapes.com" if brand_name == "Misfit Shapes" else f"https://{brand_name.lower().replace(" ", "").replace("industries", "").replace("surfboards", "")}.com",
         },
     ).fetchone()
 
@@ -93,7 +120,7 @@ def get_or_create_brand(connection, brand_name):
         """),
         {
             "brand_name": brand_name,
-            "official_website_url": "https://misfitshapes.com" if brand_name == "Misfit Shapes" else f"https://{brand_name.lower().replace(" ", "").replace("industries", "").replace("surfboards", "")}.com",
+            "official_website_url": official_website_url,
         },
     ).fetchone()
 
@@ -152,18 +179,7 @@ def build_size_rows(catalogue, model_cache):
     return rows
 
 
-def import_catalogue(brand_name, catalogue_path):
-    print("")
-    print(f"Importing {brand_name} catalogue into SQL")
-    print(f"Input: {catalogue_path}")
-    print("")
-
-    catalogue = load_catalogue(catalogue_path)
-    models = build_models(catalogue)
-
-    print(f"Catalogue rows loaded: {len(catalogue)}")
-    print(f"Models prepared: {len(models)}")
-
+def run_import_transaction(brand_name, catalogue, models):
     with engine.begin() as connection:
         brand_id = get_or_create_brand(connection, brand_name)
 
@@ -264,7 +280,58 @@ def import_catalogue(brand_name, catalogue_path):
                 size_rows,
             )
 
-    print(f"Models imported: {len(model_cache)}")
-    print(f"Rows inserted: {len(size_rows)}")
-    print("Import complete")
+    return model_cache, size_rows
+
+
+def import_catalogue(brand_name, catalogue_path):
     print("")
+    print(f"Importing {brand_name} catalogue into SQL")
+    print(f"Input: {catalogue_path}")
+    print("")
+
+    catalogue = load_catalogue(catalogue_path)
+    models = build_models(catalogue)
+
+    print(f"Catalogue rows loaded: {len(catalogue)}")
+    print(f"Models prepared: {len(models)}")
+
+    last_error = None
+
+    for attempt in range(1, MAX_SQL_ATTEMPTS + 1):
+        delay = SQL_RETRY_DELAYS_SECONDS[attempt - 1]
+
+        if delay:
+            print(f"Waiting {delay} seconds before SQL retry")
+            time.sleep(delay)
+
+        try:
+            print(f"SQL import attempt {attempt} of {MAX_SQL_ATTEMPTS}")
+
+            model_cache, size_rows = run_import_transaction(
+                brand_name,
+                catalogue,
+                models,
+            )
+
+            print(f"Models imported: {len(model_cache)}")
+            print(f"Rows inserted: {len(size_rows)}")
+            print("Import complete")
+            print("")
+            return
+
+        except OperationalError as exc:
+            last_error = exc
+
+            print("")
+            print(f"SQL operational error on attempt {attempt}")
+            print(str(exc))
+            print("")
+
+            if attempt == MAX_SQL_ATTEMPTS:
+                raise
+
+        except Exception:
+            raise
+
+    if last_error:
+        raise last_error

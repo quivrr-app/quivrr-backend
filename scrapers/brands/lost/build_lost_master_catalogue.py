@@ -1,54 +1,34 @@
 ﻿import json
 import re
-import time
+from html import unescape
 from pathlib import Path
-from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
 
 
 BRAND_NAME = "Lost"
-BASE_URLS = [
-    "https://lostsurfboards.net/product-category/surfboards/",
-    "https://lostsurfboards.net/boards/",
-    "https://lostsurfboards.net/surfboards/",
-]
-
-CONSTRUCTION_COLLECTIONS = {
-    "LightSpeed": "https://lostsurfboards.com.au/collections/lightspeed",
-    "Black Sheep": "https://lostsurfboards.com.au/collections/black-sheep",
-    "Lib Tech": "https://lostsurfboards.com.au/collections/lib-tech",
-}
+REGION_CODE = "AU"
+SOURCE_NAME = "lostsurfboards.com.au"
+SITE_BASE_URL = "https://lostsurfboards.com.au"
+SHOP_ALL_URL = "https://lostsurfboards.com.au/collections/shop-all/products.json?limit=250"
 
 OUTPUT_DIR = Path("scrapers/brands/lost/output")
-BOARD_URLS_FILE = OUTPUT_DIR / "lost_board_urls.json"
-CONSTRUCTION_MATRIX_FILE = OUTPUT_DIR / "lost_construction_matrix.json"
 CATALOGUE_FILE = OUTPUT_DIR / "lost_master_catalogue_clean.json"
 REPORT_FILE = OUTPUT_DIR / "lost_master_catalogue_clean_report.json"
+RAW_PRODUCTS_FILE = OUTPUT_DIR / "lost_au_shopify_products_raw.json"
+VARIANT_SUMMARY_FILE = OUTPUT_DIR / "lost_au_variant_summary.json"
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)",
+    "Accept": "application/json,text/html;q=0.9,*/*;q=0.8",
 }
 
-SKIP_TERMS = [
-    "/product-category/",
-    "/category/",
-    "/tag/",
-    "/cart",
-    "/checkout",
-    "/account",
-    "/technology",
-    "/team",
-    "/blog",
-    "/video",
-    "/videos",
-    "/news",
-    "/dealer",
-    "/retailer",
-    "/contact",
+SKIP_PRODUCT_TERMS = [
+    "fin", "fins", "leash", "pad", "tail pad", "traction",
+    "wax", "bag", "cover", "hat", "tee", "shirt", "hoodie", "sticker",
 ]
 
 
@@ -56,338 +36,389 @@ def clean(value):
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
-def title_from_slug(url):
-    slug = url.rstrip("/").split("/")[-1]
-    slug = slug.replace("-", " ")
-    return clean(slug.title())
+def strip_html(value):
+    if not value:
+        return None
+    soup = BeautifulSoup(value, "html.parser")
+    return clean(unescape(soup.get_text(" ", strip=True))) or None
+
+
+def fetch_json(url):
+    response = requests.get(url, headers=HEADERS, timeout=(10, 60))
+    response.raise_for_status()
+    return response.json()
+
+
+def is_surfboard_product(product):
+    title = clean(product.get("title")).lower()
+    product_type = clean(product.get("product_type")).lower()
+    vendor = clean(product.get("vendor")).lower()
+    tags = [clean(tag).lower() for tag in product.get("tags", [])]
+    tag_text = " ".join(tags)
+
+    if product_type != "surfboards":
+        return False
+
+    if vendor not in ["lost", "lib tech"]:
+        return False
+
+    if any(term in title for term in SKIP_PRODUCT_TERMS):
+        return False
+
+    return (
+        "level 2:surfboards" in tag_text
+        or "surfboards" in tags
+        or product_type == "surfboards"
+    )
+
+
+def infer_construction(product):
+    title = clean(product.get("title")).lower()
+    vendor = clean(product.get("vendor")).lower()
+    tags = [clean(tag).lower() for tag in product.get("tags", [])]
+    tag_text = " ".join(tags)
+
+    if vendor == "lib tech" or "lib tech" in title or "lib tech" in tag_text:
+        return "Lib Tech"
+
+    if "black sheep" in title or "blacksheep" in title or "black sheep" in tag_text or "blacksheep" in tag_text:
+        return "Black Sheep"
+
+    if "light speed" in title or "lightspeed" in title or "light speed" in tag_text or "lightspeed" in tag_text:
+        return "LightSpeed"
+
+    if "stringered epoxy" in title or " eps" in title or title.endswith("eps"):
+        return "Epoxy"
+
+    return "PU"
 
 
 def normalise_model_name(value):
     value = clean(value)
 
-    value = re.sub(r"\bLib\s*Tech\b", "", value, flags=re.I)
-    value = re.sub(r"\bLight\s*Speed\s*II\b", "", value, flags=re.I)
-    value = re.sub(r"\bLightSpeed\s*II\b", "", value, flags=re.I)
-    value = re.sub(r"\bLightspeed\s*II\b", "", value, flags=re.I)
-    value = re.sub(r"\bLightSpeed\b", "", value, flags=re.I)
-    value = re.sub(r"\bLightspeed\b", "", value, flags=re.I)
+    replacements = [
+        (r"\bLib\s*Tech\s*[-:]\s*Lost\b", ""),
+        (r"\bLib\s*Tech\b", ""),
+        (r"\bLost\b", ""),
+        (r"\bSurfboards?\b", ""),
+        (r"\bLight\s*Speed\s*II\b", ""),
+        (r"\bLightSpeed\s*II\b", ""),
+        (r"\bLightspeed\s*II\b", ""),
+        (r"\bLight\s*Speed\b", ""),
+        (r"\bLightSpeed\b", ""),
+        (r"\bLightspeed\b", ""),
+        (r"\bBlack\s*Sheep\b", ""),
+        (r"\bBlacksheep\b", ""),
+        (r"\bStringered\s*Epoxy\b", ""),
+        (r"\bWhite\s*Ice\b", ""),
+        (r"\bPinline\b", ""),
+        (r"\bNew\s*Look\b", ""),
+        (r"\bOG\s*Art\b", ""),
+        (r"\bNo\s*Tint\b", ""),
+        (r"\bWith\s*Tint\b", ""),
+        (r"\bWith\s+[^)]*Spray\b", ""),
+        (r"\bWith\s*Spray\b", ""),
+        (r"\bSpray\b", ""),
+        (r"\bEPS\b", ""),
+        (r"\bPU\b", ""),
+        (r"\bEpoxy\b", ""),
+    ]
+
+    for pattern, replacement in replacements:
+        value = re.sub(pattern, replacement, value, flags=re.I)
+
     value = value.replace("’", "'")
     value = value.replace("Formula-1", "Formula 1")
     value = value.replace("El Patroń", "El Patron")
+    value = value.replace("[", "").replace("]", "")
+    value = value.replace("(", "").replace(")", "")
+    value = value.replace("Sub Driver", "Sub-Driver")
+    value = value.replace("Puddle Jummper", "Puddle Jumper")
 
-    replacements = {
+    value = re.sub(r"[-_/]+", " ", value)
+    value = re.sub(r"\s+", " ", value).strip()
+    value = value.title()
+
+    title_replacements = {
         "Rnf": "RNF",
         "Hp": "HP",
         "Xl": "XL",
         "Mr": "MR",
         "Ka": "KA",
         "F1": "F1",
-        "3 0": "3.0",
-        "2 0": "2.0",
+        "V3": "V3",
+        "Rv": "RV",
     }
 
-    for old, new in replacements.items():
+    for old, new in title_replacements.items():
         value = re.sub(rf"\b{old}\b", new, value)
 
-    value = value.replace("[", "").replace("]", "")
-    value = value.replace("Sub Driver", "Sub-Driver")
-    value = value.replace("Puddle Jummper", "Puddle Jumper")
-    value = value.replace("Sabotaj", "Sabo Taj")
+    value = value.replace("3 0", "3.0")
+    value = value.replace("2 0", "2.0")
+    value = value.replace("RNF '96", "RNF 96")
+    value = value.replace("RNF 96Er", "RNF 96er")
 
-    value = re.sub(r"[-_/]+", " ", value)
-    value = re.sub(r"\s+", " ", value).strip()
     return clean(value)
 
 
-def normalise_collection_model_name(value):
-    value = clean(value)
+def get_product_image(product, variant=None):
+    if variant:
+        featured = variant.get("featured_image") or {}
+        if featured.get("src"):
+            return featured.get("src")
 
-    value = re.sub(r"\bLost\b", "", value, flags=re.I)
-    value = re.sub(r"\bSurfboards?\b", "", value, flags=re.I)
-    value = re.sub(r"\bLightSpeed\s*II\b", "", value, flags=re.I)
-    value = re.sub(r"\bLightSpeed\b", "", value, flags=re.I)
-    value = re.sub(r"\bBlack Sheep\b", "", value, flags=re.I)
-    value = re.sub(r"\bLib Tech\b", "", value, flags=re.I)
-    value = re.sub(r"\bPU\b", "", value, flags=re.I)
-    value = re.sub(r"\bEpoxy\b", "", value, flags=re.I)
+    images = product.get("images") or []
+    if images and images[0].get("src"):
+        return images[0].get("src")
 
-    value = re.sub(r"[-|_/]+", " ", value)
-    value = re.sub(r"\s+", " ", value).strip()
-
-    return normalise_model_name(value)
+    image = product.get("image") or {}
+    return image.get("src")
 
 
-def fetch(url):
-    response = requests.get(url, headers=HEADERS, timeout=(10, 30))
-    response.raise_for_status()
-    return response
+def get_option_map(product, variant):
+    option_map = {}
+
+    for option in product.get("options") or []:
+        position = option.get("position")
+        name = clean(option.get("name")).lower()
+        if position and name:
+            option_map[name] = variant.get(f"option{position}")
+
+    return option_map
 
 
-def discover_board_urls():
-    all_links = set()
+def extract_dimension_text(product, variant):
+    option_map = get_option_map(product, variant)
 
-    for url in BASE_URLS:
-        response = fetch(url)
-        soup = BeautifulSoup(response.text, "html.parser")
+    for key in ["size", "dimensions", "dimension"]:
+        value = option_map.get(key)
+        if value and "'" in value and "L" in value.upper():
+            return clean(value)
 
-        for link in soup.find_all("a", href=True):
-            href = link["href"].strip()
-            full_url = urljoin(response.url, href).split("?")[0]
-            lowered = full_url.lower()
+    for index in range(1, 4):
+        value = variant.get(f"option{index}")
+        if value and "'" in value and "L" in value.upper():
+            return clean(value)
 
-            if "lostsurfboards.net/surfboards/" not in lowered:
+    title = clean(variant.get("title"))
+    if "'" in title and "L" in title.upper():
+        return title
+
+    return None
+
+
+def parse_dimension(value):
+    if not value:
+        return None
+
+    text = clean(value)
+    text = text.replace("’", "'")
+    text = text.replace("“", '"').replace("”", '"')
+    text = text.replace("×", "x")
+    text = re.sub(r"\s*/\s*(FCS\s*II|FCS|Futures?)\b.*$", "", text, flags=re.I)
+    text = re.sub(r"^(FCS\s*II|FCS|Futures?)\s*/\s*", "", text, flags=re.I)
+    text = text.replace("=", " x ")
+    text = re.sub(r"\s+x\s+", " x ", text, flags=re.I)
+    text = re.sub(r"(\d+'\s*\d+)", lambda m: m.group(1).replace(" ", ""), text)
+    text = re.sub(r"(\d+'\d+)\"", r"\1", text)
+    text = re.sub(r"(\d+)'\s+(\d+)", r"\1'\2", text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    volume_match = re.search(r"(\d+(?:\.\d+)?)\s*L\b", text, flags=re.I)
+    if not volume_match:
+        return None
+
+    volume_litres = float(volume_match.group(1))
+    before_volume = text[:volume_match.start()].strip()
+    before_volume = re.sub(r"\s+x\s*$", "", before_volume, flags=re.I)
+
+    length_match = re.search(r"(\d+'\d+)", before_volume)
+    if not length_match:
+        return None
+
+    length = length_match.group(1)
+    remaining = before_volume[length_match.end():].strip()
+    remaining = remaining.replace('"', "")
+    remaining = re.sub(r"\s+x\s+", " ", remaining, flags=re.I)
+    remaining = re.sub(r"\s+", " ", remaining).strip()
+
+    tokens = remaining.split(" ")
+    dims = []
+    index = 0
+
+    while index < len(tokens):
+        token = tokens[index]
+
+        if re.fullmatch(r"\d+", token):
+            if index + 1 < len(tokens) and re.fullmatch(r"\d+/\d+", tokens[index + 1]):
+                dims.append(f"{token} {tokens[index + 1]}")
+                index += 2
                 continue
 
-            if lowered.rstrip("/") == "https://lostsurfboards.net/surfboards":
-                continue
-
-            if any(skip in lowered for skip in SKIP_TERMS):
-                continue
-
-            all_links.add(full_url.rstrip("/") + "/")
-
-    urls = sorted(all_links)
-
-    BOARD_URLS_FILE.write_text(
-        json.dumps(urls, indent=2),
-        encoding="utf-8",
-    )
-
-    return urls
-
-
-def discover_construction_matrix():
-    matrix = {}
-
-    for construction, url in CONSTRUCTION_COLLECTIONS.items():
-        response = fetch(url)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        for link in soup.find_all("a", href=True):
-            href = link["href"].strip()
-            full_url = urljoin(response.url, href).split("?")[0]
-            text = clean(link.get_text(" ", strip=True))
-
-            if not text:
-                continue
-
-            lowered_url = full_url.lower()
-
-            if "/products/" not in lowered_url and "/collections/" not in lowered_url:
-                continue
-
-            if any(skip in lowered_url for skip in [
-                "/cart",
-                "/account",
-                "/checkout",
-                "/policies",
-                "/pages",
-                "/blogs",
-            ]):
-                continue
-
-            model = normalise_collection_model_name(text)
-
-            if not model or len(model) < 3:
-                continue
-
-            if model.lower() in [
-                "view",
-                "view all",
-                "quick view",
-                "add to cart",
-                "sale",
-                "sold out",
-                "skip to content",
-                "proformance",
-            ]:
-                continue
-
-            matrix.setdefault(model.lower(), {
-                "model": model,
-                "constructions": set(),
-                "sources": [],
-            })
-
-            matrix[model.lower()]["constructions"].add(construction)
-            matrix[model.lower()]["sources"].append({
-                "construction": construction,
-                "source_text": text,
-                "source_url": full_url,
-                "collection_url": url,
-            })
-
-    output = []
-
-    for item in matrix.values():
-        output.append({
-            "model": item["model"],
-            "constructions": sorted(item["constructions"]),
-            "sources": item["sources"],
-        })
-
-    output = sorted(output, key=lambda row: row["model"].lower())
-
-    CONSTRUCTION_MATRIX_FILE.write_text(
-        json.dumps(output, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
-
-    return {row["model"].lower(): row["constructions"] for row in output}
-
-
-def parse_board_page(url):
-    response = fetch(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    html = str(soup)
-
-    h1 = soup.find("h1")
-    title = normalise_model_name(clean(h1.get_text(" ", strip=True))) if h1 else title_from_slug(url)
-
-    og_desc = soup.find("meta", attrs={"property": "og:description"})
-    description = clean(og_desc.get("content")) if og_desc else None
-
-    og_image = soup.find("meta", attrs={"property": "og:image"})
-    image_url = og_image.get("content") if og_image else None
-
-    dimensions = []
-
-    dimension_pattern = re.compile(
-        r"(\d+[’']\d+)\s*</td>\s*<td[^>]*>\s*([\d\.]+)\s*</td>\s*<td[^>]*>\s*([\d\.]+)\s*</td>\s*<td[^>]*>\s*([\d\.]+)",
-        re.I,
-    )
-
-    for match in dimension_pattern.finditer(html):
-        dimensions.append({
-            "length": match.group(1).replace("’", "'"),
-            "width": match.group(2),
-            "thickness": match.group(3),
-            "volume_litres": float(match.group(4)),
-        })
-
-    unique_dimensions = []
-    seen = set()
-
-    for row in dimensions:
-        key = (
-            row["length"],
-            row["width"],
-            row["thickness"],
-            row["volume_litres"],
-        )
-
-        if key in seen:
+            dims.append(token)
+            index += 1
             continue
 
-        seen.add(key)
-        unique_dimensions.append(row)
+        if re.fullmatch(r"\d+\.\d+", token):
+            dims.append(token)
+            index += 1
+            continue
+
+        if re.fullmatch(r"\d+/\d+", token):
+            if dims:
+                dims[-1] = f"{dims[-1]} {token}"
+            index += 1
+            continue
+
+        index += 1
+
+    if len(dims) < 2:
+        return None
+
+    width = clean(dims[0])
+    thickness = clean(dims[1])
 
     return {
-        "model": title,
-        "model_family": title,
-        "board_category": "Surfboard",
-        "description": description,
-        "official_product_url": url,
-        "official_image_url": image_url,
-        "dimensions": unique_dimensions,
+        "length": length,
+        "width": width,
+        "thickness": thickness,
+        "volume_litres": volume_litres,
     }
 
 
 def build_catalogue():
-    board_urls = discover_board_urls()
-    construction_matrix = discover_construction_matrix()
+    print("")
+    print("=" * 80)
+    print("Fetching Lost AU shop all catalogue")
+    print(SHOP_ALL_URL)
+    print("=" * 80)
+
+    data = fetch_json(SHOP_ALL_URL)
+    products = data.get("products", [])
 
     rows = []
     failures = []
+    variant_summary = []
 
-    for index, url in enumerate(board_urls, start=1):
-        print(f"[{index}/{len(board_urls)}] {url}")
+    print(f"Products found: {len(products)}")
 
-        try:
-            board = parse_board_page(url)
+    for product in products:
+        if not is_surfboard_product(product):
+            continue
 
-            if not board["dimensions"]:
+        product_title = clean(product.get("title"))
+        model = normalise_model_name(product_title)
+        construction = infer_construction(product)
+        product_url = f"{SITE_BASE_URL}/products/{product.get('handle')}"
+        description = strip_html(product.get("body_html"))
+
+        for variant in product.get("variants") or []:
+            dimension_text = extract_dimension_text(product, variant)
+            parsed = parse_dimension(dimension_text)
+
+            if not parsed:
                 failures.append({
-                    "url": url,
+                    "product": product_title,
+                    "variant": clean(variant.get("title")),
                     "reason": "no dimensions found",
-                    "model": board["model"],
                 })
                 continue
 
-            compatible_constructions = ["PU"]
-            matrix_constructions = construction_matrix.get(board["model"].lower(), [])
-
-            for construction in matrix_constructions:
-                if construction not in compatible_constructions:
-                    compatible_constructions.append(construction)
-
-            for construction in compatible_constructions:
-                for size in board["dimensions"]:
-                    rows.append({
-                        "brand": BRAND_NAME,
-                        "model": board["model"],
-                        "model_family": board["model_family"],
-                        "board_category": board["board_category"],
-                        "description": board["description"],
-                        "length": size["length"],
-                        "width": size["width"],
-                        "thickness": size["thickness"],
-                        "volume_litres": size["volume_litres"],
-                        "construction": construction,
-                        "fin_system": None,
-                        "tail_shape": None,
-                        "official_product_url": board["official_product_url"],
-                        "official_image_url": board["official_image_url"],
-                        "source": "lostsurfboards.net",
-                        "is_active": True,
-                    })
-
-        except Exception as exc:
-            failures.append({
-                "url": url,
-                "reason": str(exc),
-                "model": None,
+            variant_summary.append({
+                "brand": BRAND_NAME,
+                "model": model,
+                "construction": construction,
+                "length": parsed["length"],
+                "width": parsed["width"],
+                "thickness": parsed["thickness"],
+                "volume_litres": parsed["volume_litres"],
+                "product_title": product_title,
+                "product_url": product_url,
+                "variant_title": clean(variant.get("title")),
+                "variant_id": variant.get("id"),
+                "sku": variant.get("sku"),
+                "available": bool(variant.get("available")),
+                "price": variant.get("price"),
             })
 
-        time.sleep(0.25)
+            rows.append({
+                "brand": BRAND_NAME,
+                "model": model,
+                "model_family": model,
+                "board_category": "Surfboard",
+                "description": description,
+                "length": parsed["length"],
+                "width": parsed["width"],
+                "thickness": parsed["thickness"],
+                "volume_litres": parsed["volume_litres"],
+                "construction": construction,
+                "fin_system": None,
+                "tail_shape": None,
+                "official_product_url": product_url,
+                "official_image_url": get_product_image(product, variant),
+                "source": SOURCE_NAME,
+                "is_active": True,
+            })
 
-    seen = set()
-    deduped = []
+    deduped_by_key = {}
 
     for row in rows:
         key = (
-            row["model"],
+            row["model"].lower(),
+            row["construction"].lower(),
             row["length"],
             row["width"],
             row["thickness"],
             row["volume_litres"],
-            row["construction"],
         )
 
-        if key in seen:
+        existing = deduped_by_key.get(key)
+
+        if existing is None:
+            deduped_by_key[key] = row
             continue
 
-        seen.add(key)
-        deduped.append(row)
+        existing_url = existing.get("official_product_url", "").lower()
+        current_url = row.get("official_product_url", "").lower()
 
-    CATALOGUE_FILE.write_text(
-        json.dumps(deduped, indent=2, ensure_ascii=False),
-        encoding="utf-8",
+        if "spray" in existing_url and "spray" not in current_url:
+            deduped_by_key[key] = row
+
+    deduped = sorted(
+        deduped_by_key.values(),
+        key=lambda row: (
+            row["model"].lower(),
+            row["construction"].lower(),
+            row["length"],
+        ),
     )
+
+    RAW_PRODUCTS_FILE.write_text(json.dumps(products, indent=2, ensure_ascii=False), encoding="utf-8")
+    VARIANT_SUMMARY_FILE.write_text(json.dumps(variant_summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    CATALOGUE_FILE.write_text(json.dumps(deduped, indent=2, ensure_ascii=False), encoding="utf-8")
 
     models = sorted(set(row["model"] for row in deduped))
     constructions = sorted(set(row["construction"] for row in deduped))
+    official_domains = sorted(set(row["official_product_url"].split("/products/")[0] for row in deduped))
 
     REPORT_FILE.write_text(
         json.dumps(
             {
                 "brand": BRAND_NAME,
-                "board_urls_found": len(board_urls),
-                "rows": len(deduped),
+                "region": REGION_CODE,
+                "source": SOURCE_NAME,
+                "source_url": SHOP_ALL_URL,
+                "products_found": len(products),
+                "catalogue_rows": len(deduped),
+                "variant_rows": len(variant_summary),
                 "models": len(models),
+                "model_names": models,
                 "constructions": constructions,
+                "official_domains": official_domains,
                 "failures": failures,
-                "output_file": str(CATALOGUE_FILE),
+                "catalogue_output_file": str(CATALOGUE_FILE),
+                "variant_summary_file": str(VARIANT_SUMMARY_FILE),
+                "raw_products_file": str(RAW_PRODUCTS_FILE),
             },
             indent=2,
             ensure_ascii=False,
@@ -397,14 +428,17 @@ def build_catalogue():
 
     print("")
     print("=" * 80)
-    print("LOST MASTER CATALOGUE COMPLETE")
+    print("LOST AU MASTER CATALOGUE COMPLETE")
     print("=" * 80)
-    print("Board URLs:", len(board_urls))
+    print("Products:", len(products))
     print("Models:", len(models))
-    print("Rows:", len(deduped))
+    print("Catalogue rows:", len(deduped))
+    print("Variant rows:", len(variant_summary))
     print("Constructions:", constructions)
+    print("Official domains:", official_domains)
     print("Failures:", len(failures))
     print("Output:", CATALOGUE_FILE)
+    print("Variant summary:", VARIANT_SUMMARY_FILE)
     print("Report:", REPORT_FILE)
 
 
