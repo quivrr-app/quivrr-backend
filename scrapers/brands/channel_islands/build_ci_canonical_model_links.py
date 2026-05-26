@@ -17,9 +17,9 @@ TARGETS = [
         "url": "https://shop-au.cisurfboards.com/collections/board-models",
     },
     {
-        "region": "global",
-        "source": "board-models",
-        "url": "https://cisurfboards.com/collections/board-models",
+        "region": "au",
+        "source": "board-models-shortboard",
+        "url": "https://shop-au.cisurfboards.com/collections/board-models/shortboard",
     },
 ]
 
@@ -33,6 +33,10 @@ INVALID_SLUG_PARTS = [
     "e-gift",
     "accessories",
     "wetsuit",
+    "better-everyday",
+    "happy-everyday",
+    "g-skate",
+    "twin-pin",
 ]
 
 
@@ -114,8 +118,8 @@ def main() -> None:
 
                 existing = merged[slug]
 
-                if existing["region"] == "au" and item["region"] == "global":
-                    merged[slug] = item
+                # Prefer the first AU authoritative link found.
+                # Do not replace AU catalogue links with global links.
 
         except Exception as exc:
             print(f"FAILED {target['url']}: {exc}")
