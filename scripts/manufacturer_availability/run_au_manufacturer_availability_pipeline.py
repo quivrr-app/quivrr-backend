@@ -75,6 +75,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_haydenshapes_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Misfit Shapes AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_misfit_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 
