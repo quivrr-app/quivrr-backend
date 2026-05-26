@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 
 
 BRAND = "Album"
-BASE_URL = "https://albumsurf.com"
-MODELS_PAGE = "https://albumsurf.com/pages/board-models"
+BASE_URL = "https://albumsurf.com.au"
+MODELS_PAGE = "https://albumsurf.com.au/pages/board-models"
 
 OUTPUT_FILE = Path("scrapers/brands/album/output/album_master_catalogue_clean.json")
 REPORT_FILE = Path("scrapers/brands/album/output/album_master_catalogue_clean_report.json")
