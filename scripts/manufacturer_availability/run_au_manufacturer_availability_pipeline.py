@@ -61,6 +61,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_lost_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Sharp Eye AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_sharpeye_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 
