@@ -468,6 +468,7 @@ SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
     "Firewire",
     "Lost",
     "Sharp Eye",
+    "Haydenshapes",
 }
 
 
@@ -524,6 +525,12 @@ def manufacturer_search_policy(brand_name):
             "allow_alternate_manufacturer_construction": True,
         },
         "Sharp Eye": {
+            "direct_enabled": True,
+            "manufacturer_mode": "strict",
+            "retailer_exact_construction_mode": "strict",
+            "allow_alternate_manufacturer_construction": True,
+        },
+        "Haydenshapes": {
             "direct_enabled": True,
             "manufacturer_mode": "strict",
             "retailer_exact_construction_mode": "strict",
@@ -724,7 +731,7 @@ def search_inventory(boardSizeId: int):
                 )
                 OR
                 (
-                    mi.BrandName IN ('DHD', 'Pyzel', 'Firewire', 'Lost', 'Sharp Eye')
+                    mi.BrandName IN ('DHD', 'Pyzel', 'Firewire', 'Lost', 'Sharp Eye', 'Haydenshapes')
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =

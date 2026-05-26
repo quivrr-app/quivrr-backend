@@ -68,6 +68,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_sharpeye_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Haydenshapes AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_haydenshapes_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 
