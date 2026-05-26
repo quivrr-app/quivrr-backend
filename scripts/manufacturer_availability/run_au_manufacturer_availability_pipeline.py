@@ -54,6 +54,13 @@ PIPELINES = [
             "scripts/manufacturer_availability/run_firewire_au_availability_pipeline.py",
         ],
     },
+    {
+        "name": "Lost AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_lost_au_availability_pipeline.py",
+        ],
+    },
 ]
 
 
