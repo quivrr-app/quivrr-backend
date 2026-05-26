@@ -1296,8 +1296,16 @@ def search_inventory(boardSizeId: int):
         official_result["resultType"] = "manufacturerDirect"
         official_result["manufacturerAvailability"] = {
             "isAvailable": bool(first_direct.get("isAvailable")),
-            "stockStatus": first_direct.get("stockStatus")
+            "stockStatus": first_direct.get("stockStatus"),
+            "productUrl": first_direct.get("productUrl")
         }
+
+        if first_direct.get("productUrl"):
+            official_result["productUrl"] = first_direct.get("productUrl")
+
+        if first_direct.get("productImageUrl"):
+            official_result["productImageUrl"] = first_direct.get("productImageUrl")
+            official_result["imageUrl"] = first_direct.get("productImageUrl")
         official_result["productUrl"] = first_direct.get("productUrl") or official_result.get("productUrl")
         official_result["productImageUrl"] = first_direct.get("productImageUrl")
         official_result["imageUrl"] = first_direct.get("productImageUrl")
