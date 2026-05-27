@@ -53,10 +53,6 @@ STEPS = [
         "command": [PYTHON, "scripts/run_chemistry_pipeline.py"],
     },
     {
-        "name": "DMS Surfboards",
-        "command": [PYTHON, "scripts/run_dms_pipeline.py"],
-    },
-    {
         "name": "Pukas",
         "command": [PYTHON, "scripts/run_pukas_pipeline.py"],
     },
