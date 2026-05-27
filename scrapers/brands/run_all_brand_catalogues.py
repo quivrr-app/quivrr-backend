@@ -86,6 +86,13 @@ PIPELINES = [
         ],
     },
     {
+        "name": "Simon Anderson",
+        "command": [
+            sys.executable,
+            "scrapers/brands/run_simonanderson_pipeline.py",
+        ],
+    },
+    {
         "name": "Chilli",
         "command": [
             sys.executable,
