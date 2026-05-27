@@ -51,6 +51,13 @@ PIPELINES = [
         ],
     },
     {
+        "name": "Pukas",
+        "command": [
+            sys.executable,
+            "scrapers/brands/run_pukas_pipeline.py",
+        ],
+    },
+    {
         "name": "Rusty",
         "command": [
             sys.executable,
