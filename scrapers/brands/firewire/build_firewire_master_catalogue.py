@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 
 BRAND_NAME = "Firewire"
-BASE_URL = "https://www.firewiresurfboards.com"
+BASE_URL = "https://aus.firewiresurfboards.com"
 COLLECTION = "prestige-surfboards"
 
 OUTPUT_DIR = Path("scrapers/brands/firewire/output")
