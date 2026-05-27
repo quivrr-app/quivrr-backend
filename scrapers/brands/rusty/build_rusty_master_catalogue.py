@@ -1,19 +1,67 @@
-﻿import json
+import json
 import re
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
 
 
 BRAND_NAME = "Rusty"
-BASE_URL = "https://rustysurfboards.eu"
-COLLECTION = "surfboards"
+BASE_URL = "https://rustysurfboards.com"
+
+SOURCE_COLLECTIONS = [
+    "all-boards",
+    "all-shortboards",
+    "step-ups",
+    "all-alternatives",
+    "longboards",
+    "mid-lengths",
+    "all-big-boards",
+]
+
+BLOCKED_COLLECTION_SLUGS = {
+    "all-boards",
+    "all-shortboards",
+    "step-ups",
+    "all-alternatives",
+    "longboards",
+    "mid-lengths",
+    "all-big-boards",
+    "shortboards",
+    "alternatives",
+    "big-boards",
+    "grom-surfboards",
+    "wakesurf-boards",
+    "wake-in-stock",
+    "wakesurf-fins",
+    "wake-accessories",
+    "in-stock",
+    "factory-seconds",
+    "rdm-consignment",
+    "accessories",
+    "fins",
+    "r-tired",
+    "custom",
+    "hair",
+}
+
+BLOCKED_SLUG_PARTS = [
+    "wake",
+    "accessor",
+    "fin",
+    "stock",
+    "factory",
+    "second",
+    "consignment",
+    "sale",
+    "custom",
+]
 
 OUTPUT_DIR = Path("scrapers/brands/rusty/output")
 CATALOGUE_FILE = OUTPUT_DIR / "rusty_master_catalogue_clean.json"
 REPORT_FILE = OUTPUT_DIR / "rusty_master_catalogue_clean_report.json"
+MODEL_LINKS_FILE = OUTPUT_DIR / "rusty_model_links.json"
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -23,303 +71,260 @@ HEADERS = {
 
 
 def clean(value):
-    return re.sub(r"\s+", " ", str(value or "")).strip()
-
-
-def strip_html(value):
-    if not value:
-        return None
-
-    soup = BeautifulSoup(value, "html.parser")
-    return clean(soup.get_text(" ", strip=True))
-
-
-def normalise_model(title):
-    value = clean(title)
-
-    value = re.sub(r"^Rusty\s+", "", value, flags=re.I)
-    value = re.sub(r"\bSurfboard\b", "", value, flags=re.I)
-    value = re.sub(r"\bPerformance\b", "", value, flags=re.I)
-    value = re.sub(r"\bAlternative\b", "", value, flags=re.I)
-    value = re.sub(r"\bHybrid\b", "", value, flags=re.I)
-    value = re.sub(r"\bStep\s*up\b", "", value, flags=re.I)
-    value = re.sub(r"\bMid\s*Length\b", "", value, flags=re.I)
-    value = re.sub(r"\bLongboard\b", "", value, flags=re.I)
-
+    value = str(value or "")
+    value = value.replace("\u2019", "'").replace("\u2018", "'")
+    value = value.replace("\u2032", "'").replace("\u2033", '"')
     value = re.sub(r"\s+", " ", value).strip()
-
     return value
 
 
-def normalise_length(value):
-    value = clean(value)
+def slug_to_model(slug):
+    special = {
+        "sd": "SD",
+        "sd-rt-re": "SD RT RE",
+        "421-fish": "421 Fish",
+        "419-fish": "419 Fish",
+        "d-min": "D Min",
+        "big-d": "Big D",
+        "so-fuunnn": "So Fuunnn",
+    }
 
-    value = value.replace("''", '"')
-    value = value.replace("”", '"')
-    value = value.replace("″", '"')
-    value = value.replace('"', "")
-    value = value.replace("’", "'")
-    value = value.replace("`", "'")
+    if slug in special:
+        return special[slug]
 
-    suffixes = [
-        "standard",
-        "extra",
-        "mint",
-        "blue",
-        "green",
-        "light green",
-        "pastel green",
-    ]
-
-    lowered = value.lower()
-
-    for suffix in suffixes:
-
-        if lowered.endswith(" " + suffix):
-            value = value[:-(len(suffix) + 1)]
-
-        elif lowered.endswith(suffix):
-            value = value[:-len(suffix)]
-
-    value = clean(value)
-
-    return value
+    return slug.replace("-", " ").title()
 
 
-def normalise_fin(value):
-    value = clean(value)
+def should_skip_slug(slug):
+    if slug in BLOCKED_COLLECTION_SLUGS:
+        return True
 
-    if not value:
-        return None
-
-    value = value.replace("FCSII", "FCS II")
-    value = value.replace("FCS 2", "FCS II")
-
-    return value
+    return any(part in slug for part in BLOCKED_SLUG_PARTS)
 
 
-def normalise_construction(value):
-    value = clean(value)
+def discover_model_links():
+    links = {}
 
-    if not value:
-        return None
+    for collection in SOURCE_COLLECTIONS:
+        url = f"{BASE_URL}/collections/{collection}"
 
-    upper = value.upper()
+        print("")
+        print("Discovering:", url)
 
-    if "EPS" in upper:
-        return "EPS"
-
-    if "PU" in upper:
-        return "PU"
-
-    return value
-
-
-def fetch_products():
-    products = []
-    page = 1
-
-    while True:
-        url = f"{BASE_URL}/collections/{COLLECTION}/products.json?limit=250&page={page}"
-        response = requests.get(url, headers=HEADERS, timeout=(10, 30))
+        response = requests.get(url, headers=HEADERS, timeout=60)
         response.raise_for_status()
 
-        data = response.json()
-        page_products = data.get("products", [])
+        soup = BeautifulSoup(response.text, "html.parser")
 
-        if not page_products:
-            break
+        for a in soup.find_all("a", href=True):
+            href = a.get("href")
+            full_url = urljoin(BASE_URL, href)
 
-        products.extend(page_products)
+            if "/collections/" not in full_url:
+                continue
 
-        if len(page_products) < 250:
-            break
+            slug = full_url.rstrip("/").split("/")[-1].split("?")[0]
 
-        page += 1
+            if not slug:
+                continue
 
-    return products
+            if should_skip_slug(slug):
+                continue
 
+            links[slug] = full_url.split("?")[0]
 
-def get_product_image(product):
-    images = product.get("images") or []
-
-    if images:
-        return images[0].get("src")
-
-    image = product.get("image") or {}
-
-    if isinstance(image, dict):
-        return image.get("src")
-
-    return None
-
-
-def should_skip_product(product):
-    title = clean(product.get("title"))
-    handle = clean(product.get("handle"))
-    text = f"{title} {handle}".lower()
-
-    skip_terms = [
-        "custom",
-        "wakesurf",
-        "accessory",
-        "fin",
-        "gift",
-        "tee",
-        "shirt",
-        "hoodie",
-        "cap",
-        "hat",
-        "bag",
+    rows = [
+        {
+            "model": slug_to_model(slug),
+            "slug": slug,
+            "url": url,
+        }
+        for slug, url in sorted(links.items())
     ]
 
-    return any(term in text for term in skip_terms)
+    MODEL_LINKS_FILE.write_text(
+        json.dumps(rows, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    return rows
 
 
-def scrape_dimension_table(page, product_url):
-    dimensions = {}
+def parse_dimension_table(html):
+    soup = BeautifulSoup(html, "html.parser")
+    tables = soup.find_all("table")
 
-    try:
-        page.goto(
-            f"{product_url}#dimensions",
-            wait_until="domcontentloaded",
-            timeout=60000,
-        )
+    dimensions = []
 
-        page.wait_for_timeout(5000)
+    for table in tables:
+        rows = table.find_all("tr")
 
-        try:
-            page.get_by_role("button", name="Accept").click(timeout=3000)
-            page.wait_for_timeout(1000)
-        except Exception:
-            pass
+        for row in rows:
+            cells = [
+                clean(cell.get_text(" ", strip=True))
+                for cell in row.find_all(["th", "td"])
+            ]
 
-        html = page.content()
-        soup = BeautifulSoup(html, "html.parser")
+            if len(cells) < 4:
+                continue
 
-        tables = soup.find_all("table")
+            if cells[0].lower() in ["length", "size"]:
+                continue
 
-        for table in tables:
-            for row in table.find_all("tr"):
-                cells = [
-                    clean(cell.get_text(" ", strip=True))
-                    for cell in row.find_all(["th", "td"])
-                ]
+            length = normalise_length(cells[0])
 
-                if len(cells) < 4:
-                    continue
+            if not length:
+                continue
 
-                length = normalise_length(cells[0])
+            width = normalise_decimal_dimension(cells[1])
+            thickness = normalise_decimal_dimension(cells[2])
+            volume = normalise_volume(cells[3])
 
-                if not re.match(r"\d+'\d+", length):
-                    continue
+            if not width or not thickness or volume is None:
+                continue
 
-                try:
-                    width = cells[1].replace('"', "")
-                    thickness = cells[2].replace('"', "")
-                    volume = float(
-                        cells[3]
-                        .replace("L", "")
-                        .replace("l", "")
-                        .replace("\xa0", "")
-                        .strip()
-                    )
-                except Exception:
-                    continue
-
-                dimensions[length] = {
-                    "width": width,
-                    "thickness": thickness,
-                    "volume_litres": volume,
-                }
-
-    except Exception:
-        return {}
+            dimensions.append({
+                "length": length,
+                "width": width,
+                "thickness": thickness,
+                "volume_litres": volume,
+            })
 
     return dimensions
 
 
+def normalise_length(value):
+    value = clean(value)
+    value = value.replace('"', "")
+    value = value.replace(" ", "")
+
+    match = re.search(r"([4-9])'(\d{1,2})", value)
+
+    if not match:
+        return None
+
+    return f"{match.group(1)}'{int(match.group(2))}"
+
+
+def normalise_decimal_dimension(value):
+    value = clean(value)
+    value = value.replace('"', "")
+    value = value.replace("in", "")
+    value = value.strip()
+
+    match = re.search(r"\d+(?:\.\d+)?", value)
+
+    if not match:
+        return None
+
+    return match.group(0)
+
+
+def normalise_volume(value):
+    value = clean(value)
+    value = value.replace("L", "").replace("l", "").strip()
+
+    match = re.search(r"\d+(?:\.\d+)?", value)
+
+    if not match:
+        return None
+
+    return float(match.group(0))
+
+
+def get_page_description(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    meta = soup.find("meta", attrs={"name": "description"})
+
+    if meta and meta.get("content"):
+        return clean(meta.get("content"))
+
+    return None
+
+
+def get_page_image(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    meta = soup.find("meta", attrs={"property": "og:image"})
+
+    if meta and meta.get("content"):
+        return meta.get("content")
+
+    return None
+
+
 def build_catalogue():
-    products = fetch_products()
+    print("")
+    print("=" * 100)
+    print("RUSTY CANONICAL MODEL CATALOGUE BUILD")
+    print("=" * 100)
+
+    model_links = discover_model_links()
+
+    print("")
+    print("Candidate model pages:", len(model_links))
 
     rows = []
     failures = []
 
-    print("")
-    print("=" * 80)
-    print("RUSTY EU DIMENSION TABLE BUILD")
-    print("=" * 80)
-    print("Products seen:", len(products))
+    for model_link in model_links:
+        model = model_link["model"]
+        url = model_link["url"]
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+        print("")
+        print("Scraping:", model, "=>", url)
 
-        for product in products:
-            if should_skip_product(product):
-                continue
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=60)
+            response.raise_for_status()
 
-            title = clean(product.get("title"))
-            model = normalise_model(title)
-            description = strip_html(product.get("body_html"))
-            product_url = f"{BASE_URL}/products/{product.get('handle')}"
-            image_url = get_product_image(product)
+            html = response.text
+            dimensions = parse_dimension_table(html)
 
-            print("")
-            print("Scraping:", model)
-
-            table_dimensions = scrape_dimension_table(page, product_url)
-
-            if not table_dimensions:
+            if not dimensions:
                 failures.append({
                     "model": model,
-                    "reason": "no dimension table found",
-                    "product_url": product_url,
+                    "url": url,
+                    "reason": "no dimensions table found",
                 })
                 continue
 
-            variants = product.get("variants") or []
+            description = get_page_description(html)
+            image_url = get_page_image(html)
 
-            for variant in variants:
-                length = normalise_length(variant.get("option1"))
-                fin_system = normalise_fin(variant.get("option2"))
-                construction = normalise_construction(variant.get("option3"))
-
-                dims = table_dimensions.get(length)
-
-                if not dims:
-                    failures.append({
-                        "model": model,
-                        "length": length,
-                        "reason": "length missing from dimension table",
-                        "product_url": product_url,
-                    })
-                    continue
-
+            for dimension in dimensions:
                 rows.append({
                     "brand": BRAND_NAME,
                     "model": model,
                     "model_family": model,
                     "board_category": "Surfboard",
                     "description": description,
-                    "length": length,
-                    "width": dims["width"],
-                    "thickness": dims["thickness"],
-                    "volume_litres": dims["volume_litres"],
-                    "construction": construction,
-                    "fin_system": fin_system,
+                    "length": dimension["length"],
+                    "width": dimension["width"],
+                    "thickness": dimension["thickness"],
+                    "volume_litres": dimension["volume_litres"],
+                    "construction": None,
+                    "fin_system": None,
                     "tail_shape": None,
-                    "official_product_url": product_url,
+                    "official_product_url": url,
                     "official_image_url": image_url,
-                    "source": "rustysurfboards.eu/surfboards",
-                    "source_product_id": product.get("id"),
-                    "source_variant_id": variant.get("id"),
-                    "source_product_handle": product.get("handle"),
-                    "source_title": title,
+                    "source": BASE_URL,
+                    "source_product_id": None,
+                    "source_variant_id": None,
+                    "source_product_handle": model_link["slug"],
+                    "source_title": model,
                     "is_active": True,
                 })
 
-        browser.close()
+            print("Rows:", len(dimensions))
+
+        except Exception as exc:
+            failures.append({
+                "model": model,
+                "url": url,
+                "reason": str(exc),
+            })
 
     seen = set()
     deduped = []
@@ -328,8 +333,9 @@ def build_catalogue():
         key = (
             row["model"],
             row["length"],
-            row["construction"],
-            row["fin_system"],
+            row["width"],
+            row["thickness"],
+            row["volume_litres"],
         )
 
         if key in seen:
@@ -338,31 +344,36 @@ def build_catalogue():
         seen.add(key)
         deduped.append(row)
 
+    deduped.sort(
+        key=lambda row: (
+            row["model"],
+            row["length"],
+            row["volume_litres"] or 0,
+        )
+    )
+
     CATALOGUE_FILE.write_text(
         json.dumps(deduped, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
 
     models = sorted(set(row["model"] for row in deduped))
-    constructions = sorted(set(
-        row["construction"]
-        for row in deduped
-        if row.get("construction")
-    ))
 
     REPORT_FILE.write_text(
         json.dumps(
             {
                 "brand": BRAND_NAME,
                 "source": BASE_URL,
-                "collection": COLLECTION,
-                "products_seen": len(products),
+                "source_collections": SOURCE_COLLECTIONS,
+                "candidate_model_pages": len(model_links),
                 "rows": len(deduped),
                 "models": len(models),
-                "constructions": constructions,
+                "model_names": models,
                 "failures": failures[:200],
                 "failure_count": len(failures),
                 "output_file": str(CATALOGUE_FILE),
+                "model_links_file": str(MODEL_LINKS_FILE),
+                "mfa_policy": "disabled_for_au_until_direct_au_manufacturer_availability_exists",
             },
             indent=2,
             ensure_ascii=False,
@@ -371,13 +382,12 @@ def build_catalogue():
     )
 
     print("")
-    print("=" * 80)
-    print("RUSTY COMPLETE")
-    print("=" * 80)
-    print("Products seen:", len(products))
+    print("=" * 100)
+    print("RUSTY CANONICAL COMPLETE")
+    print("=" * 100)
+    print("Candidate model pages:", len(model_links))
     print("Models:", len(models))
     print("Rows:", len(deduped))
-    print("Constructions:", constructions)
     print("Failures:", len(failures))
     print("Output:", CATALOGUE_FILE)
     print("Report:", REPORT_FILE)
