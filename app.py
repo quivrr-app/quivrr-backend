@@ -1237,6 +1237,9 @@ def search_inventory(boardSizeId: int):
     direct_matches = []
 
     for row in manufacturer_direct_rows:
+        if official.BrandName == "JS Industries" and not constructions_match(row.Construction, official.Construction):
+            continue
+
         direct_matches.append({
             "resultType": "manufacturerDirect",
             "manufacturerInventoryId": row.ManufacturerInventoryId,
