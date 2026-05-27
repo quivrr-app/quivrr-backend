@@ -1,4 +1,4 @@
-﻿import subprocess
+import subprocess
 import sys
 from pathlib import Path
 
@@ -10,7 +10,7 @@ STEPS = [
         "name": "Scrape JS product pages and dimensions",
         "command": [
             sys.executable,
-            "scrapers/brands/scrape_js_product_pages.py",
+            "scrapers/brands/js/scrape_js_product_pages.py",
         ],
     },
     {

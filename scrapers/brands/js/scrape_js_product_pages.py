@@ -6,7 +6,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 
-OUTPUT_FILE = Path("scrapers/brands/output/js_page_catalogue.json")
+OUTPUT_FILE = Path("scrapers/brands/js/output/js_page_catalogue.json")
 
 PRODUCT_URLS = [
     "https://jsindustries.com/products/mother-trucker",
