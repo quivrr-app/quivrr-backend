@@ -688,7 +688,8 @@ def search_inventory(boardSizeId: int):
                     AND mi.LengthFeetInches = :length
                     THEN 2
 
-                WHEN mi.BrandId = :brand_id
+                WHEN mi.BrandName <> 'JS Industries'
+                    AND mi.BrandId = :brand_id
                     AND mi.LengthFeetInches = :length
                     AND (
                         mi.BoardModelId = :board_model_id
@@ -766,7 +767,8 @@ def search_inventory(boardSizeId: int):
                 )
                 OR
                 (
-                    mi.BrandId = :brand_id
+                    mi.BrandName <> 'JS Industries'
+                    AND mi.BrandId = :brand_id
                     AND mi.LengthFeetInches = :length
                     AND (
                         mi.BoardModelId = :board_model_id
