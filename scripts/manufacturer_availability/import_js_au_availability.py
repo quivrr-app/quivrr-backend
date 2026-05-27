@@ -1,23 +1,50 @@
-import json
+﻿import json
 import os
-import sys
+import time
 from pathlib import Path
-from urllib.parse import quote_plus
 
+import pyodbc
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, text
+
+load_dotenv()
+
+INPUT_PATH = Path("scrapers/manufacturers/availability/output/js_industries/js_au_manufacturer_inventory.json")
+
+BRAND_NAME = "JS Industries"
+REGION_CODE = "AU"
+AVAILABILITY_SOURCE = "manufacturer_direct"
+
+connection_string = (
+    f"DRIVER={{{os.getenv('SQL_DRIVER', 'ODBC Driver 18 for SQL Server')}}};"
+    f"SERVER={os.getenv('SQL_SERVER')};"
+    f"DATABASE={os.getenv('SQL_DATABASE')};"
+    f"UID={os.getenv('SQL_USERNAME')};"
+    f"PWD={os.getenv('SQL_PASSWORD')};"
+    "Encrypt=yes;"
+    "TrustServerCertificate=no;"
+)
 
 
-INPUT_FILE = Path("scrapers/manufacturers/availability/output/js_industries/js_au_manufacturer_inventory.json")
+def connect():
+    for attempt in range(1, 11):
+        try:
+            return pyodbc.connect(connection_string, timeout=30)
 
+        except pyodbc.Error as exc:
+            print(f"SQL connect retry {attempt}/10: {exc}")
 
-def normalise_js_construction(value):
-    value = (value or "").strip()
+            if attempt == 10:
+                raise
 
-    if value.upper() == "HYFI":
-        return "HYFI 3.0"
+            time.sleep(15)
 
-    return value
+        except Exception as exc:
+            print(f"SQL connect retry {attempt}/10: {exc}")
+
+            if attempt == 10:
+                raise
+
+            time.sleep(15)
 
 
 def clean(value):
@@ -25,235 +52,289 @@ def clean(value):
         return None
 
     value = str(value).strip()
-    return value or None
 
+    if not value:
+        return None
 
-def get_engine():
-    load_dotenv(dotenv_path=Path(".env"))
-
-    cs = (
-        f"DRIVER={{ODBC Driver 18 for SQL Server}};"
-        f"SERVER={os.getenv('SQL_SERVER')};"
-        f"DATABASE={os.getenv('SQL_DATABASE')};"
-        f"UID={os.getenv('SQL_USERNAME')};"
-        f"PWD={os.getenv('SQL_PASSWORD')};"
-        f"Encrypt=yes;"
-        f"TrustServerCertificate=no;"
-        f"Connection Timeout=30;"
+    return (
+        value
+        .replace("’", "'")
+        .replace("‘", "'")
+        .replace("“", '"')
+        .replace("”", '"')
     )
 
-    return create_engine(f"mssql+pyodbc:///?odbc_connect={quote_plus(cs)}")
+
+
+
+
+def to_float(value):
+    if value is None:
+        return None
+
+    try:
+        return float(value)
+    except Exception:
+        return None
+
+
+def get_columns(cursor):
+    cursor.execute("""
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = 'dbo'
+          AND TABLE_NAME = 'ManufacturerInventory'
+    """)
+
+    return {row[0] for row in cursor.fetchall()}
+
+
+def find_brand_id(cursor):
+    cursor.execute("""
+        SELECT TOP 1 BrandId
+        FROM dbo.Brands
+        WHERE BrandName = ?
+    """, BRAND_NAME)
+
+    row = cursor.fetchone()
+
+    if not row:
+        raise RuntimeError(f"Could not find BrandId for {BRAND_NAME}")
+
+    return row[0]
+
+
+def find_board_model_id(cursor, model_name):
+    if not model_name:
+        return None
+
+    cursor.execute("""
+        SELECT TOP 1
+            bm.BoardModelId
+        FROM dbo.BoardModels bm
+        JOIN dbo.Brands b
+            ON bm.BrandId = b.BrandId
+        WHERE b.BrandName = ?
+          AND LOWER(bm.ModelName) = LOWER(?)
+    """, BRAND_NAME, model_name)
+
+    row = cursor.fetchone()
+
+    return row[0] if row else None
+
+
+def find_board_size_id(cursor, board_model_id, item):
+    if not board_model_id:
+        return None
+
+    length = clean(item.get("lengthFeetInches"))
+    width = clean(item.get("width"))
+    thickness = clean(item.get("thickness"))
+    volume = to_float(item.get("volumeLitres"))
+    construction = clean(item.get("construction"))
+
+    params = [board_model_id, length]
+
+    query = """
+        SELECT TOP 1
+            BoardSizeId
+        FROM dbo.BoardSizes
+        WHERE BoardModelId = ?
+          AND LengthFeetInches = ?
+    """
+
+    if width:
+        query += " AND Width = ?"
+        params.append(width)
+
+    if thickness:
+        query += " AND Thickness = ?"
+        params.append(thickness)
+
+    if volume is not None:
+        query += " AND VolumeLitres IS NOT NULL AND ABS(CAST(VolumeLitres AS float) - ?) <= 0.15"
+        params.append(volume)
+
+    if construction:
+        query += " AND (Construction = ? OR Construction IS NULL)"
+        params.append(construction)
+
+    query += " ORDER BY BoardSizeId"
+
+    cursor.execute(query, params)
+
+    row = cursor.fetchone()
+
+    return row[0] if row else None
+
+
+def insert_row(cursor, columns, item, brand_id, board_model_id, board_size_id):
+    values = {
+        "BrandId": brand_id,
+        "BrandName": BRAND_NAME,
+        "ModelName": clean(item.get("modelName")),
+        "BoardModelId": board_model_id,
+        "BoardSizeId": board_size_id,
+        "LengthFeetInches": clean(item.get("lengthFeetInches")),
+        "Width": clean(item.get("width")),
+        "Thickness": clean(item.get("thickness")),
+        "VolumeLitres": to_float(item.get("volumeLitres")),
+        "Construction": clean(item.get("construction")),
+        "FinSetup": clean(item.get("finSetup")),
+        "TailShape": clean(item.get("tailShape")),
+        "ProductUrl": clean(item.get("productUrl")),
+        "ProductImageUrl": clean(item.get("productImageUrl")),
+        "PriceAmount": to_float(item.get("priceAmount")),
+        "PriceCurrency": clean(item.get("priceCurrency")) or "AUD",
+        "StockStatus": clean(item.get("stockStatus")) or "available",
+        "IsAvailable": 1 if item.get("isAvailable") else 0,
+        "AvailabilitySource": AVAILABILITY_SOURCE,
+        "RegionCode": REGION_CODE,
+        "SourceProductId": clean(item.get("sourceProductId")),
+        "SourceVariantId": clean(item.get("sourceVariantId")),
+        "SourceVariantTitle": clean(item.get("sourceVariantTitle")),
+        "IsActive": 1,
+    }
+
+    usable = {
+        key: value
+        for key, value in values.items()
+        if key in columns
+    }
+
+    column_sql = ", ".join(f"[{key}]" for key in usable.keys())
+    placeholder_sql = ", ".join("?" for _ in usable)
+    params = list(usable.values())
+
+    cursor.execute(
+        f"""
+        INSERT INTO dbo.ManufacturerInventory
+            ({column_sql})
+        VALUES
+            ({placeholder_sql})
+        """,
+        params
+    )
 
 
 def main():
-    print("")
+    if not INPUT_PATH.exists():
+        raise SystemExit(f"Missing input file: {INPUT_PATH}")
+
+    rows = json.loads(INPUT_PATH.read_text(encoding="utf-8"))
+
+    conn = connect()
+    cursor = conn.cursor()
+
+    columns = get_columns(cursor)
+
     print("Importing JS Industries AU manufacturer availability")
-    print(f"Input: {INPUT_FILE}")
+    print(f"Input: {INPUT_PATH}")
+    print(f"Rows: {len(rows)}")
 
-    rows = json.loads(INPUT_FILE.read_text(encoding="utf-8"))
+    if "BrandName" not in columns:
+        raise SystemExit("dbo.ManufacturerInventory does not contain BrandName")
 
-    engine = get_engine()
+    delete_conditions = ["BrandName = ?"]
+    delete_params = [BRAND_NAME]
 
-    with engine.begin() as conn:
-        brand_id = conn.execute(text("""
-            SELECT BrandId
-            FROM dbo.Brands
-            WHERE BrandName = 'JS Industries'
-        """)).scalar()
+    if "AvailabilitySource" in columns:
+        delete_conditions.append("AvailabilitySource = ?")
+        delete_params.append(AVAILABILITY_SOURCE)
 
-        if not brand_id:
-            raise RuntimeError("JS Industries brand not found")
+    if "RegionCode" in columns:
+        delete_conditions.append("RegionCode = ?")
+        delete_params.append(REGION_CODE)
 
-        conn.execute(text("""
-            UPDATE dbo.ManufacturerInventory
-            SET IsActive = 0,
-                UpdatedAtUtc = SYSUTCDATETIME()
-            WHERE BrandId = :brand_id
-              AND RegionCode = 'AU'
-              AND AvailabilitySource = 'manufacturer_direct'
-        """), {"brand_id": brand_id})
+    cursor.execute(
+        f"""
+        DELETE FROM dbo.ManufacturerInventory
+        WHERE {" AND ".join(delete_conditions)}
+        """,
+        delete_params
+    )
 
-        inserted = 0
+    inserted = 0
+    linked_models = 0
+    linked_sizes = 0
 
-        for row in rows:
-            model_name = clean(row.get("modelName"))
-            length = clean(row.get("lengthFeetInches"))
-            volume = row.get("volumeLitres")
-            construction = normalise_js_construction(row.get("construction"))
+    brand_id = find_brand_id(cursor)
 
-            board_model_id = None
-            board_size_id = None
+    model_cache = {}
+    size_cache = {}
 
-            if model_name:
-                board_model_id = conn.execute(text("""
-                    SELECT TOP 1 BoardModelId
-                    FROM dbo.BoardModels
-                    WHERE BrandId = :brand_id
-                      AND (
-                          ModelName = :model_name
-                          OR :model_name LIKE '%' + ModelName + '%'
-                          OR ModelName LIKE '%' + :model_name + '%'
-                      )
-                    ORDER BY
-                        CASE WHEN ModelName = :model_name THEN 0 ELSE 1 END,
-                        LEN(ModelName) DESC
-                """), {
-                    "brand_id": brand_id,
-                    "model_name": model_name,
-                }).scalar()
+    for item in rows:
+        model_name = clean(item.get("modelName"))
 
-            if board_model_id and length:
-                board_size_id = conn.execute(text("""
-                    SELECT TOP 1 BoardSizeId
-                    FROM dbo.BoardSizes
-                    WHERE BoardModelId = :board_model_id
-                      AND LengthFeetInches = :length
-                      AND (
-                          :volume IS NULL
-                          OR VolumeLitres IS NULL
-                          OR ABS(CAST(VolumeLitres AS FLOAT) - CAST(:volume AS FLOAT)) <= 0.75
-                      )
-                      AND (
-                          :width IS NULL
-                          OR Width IS NULL
-                          OR REPLACE(REPLACE(Width, '"', ''), ' ', '') = REPLACE(REPLACE(:width, '"', ''), ' ', '')
-                      )
-                      AND (
-                          :thickness IS NULL
-                          OR Thickness IS NULL
-                          OR REPLACE(REPLACE(Thickness, '"', ''), ' ', '') = REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
-                      )
-                      AND (
-                          :construction IS NULL
-                          OR Construction IS NULL
-                          OR Construction = :construction
-                          OR Construction LIKE '%' + :construction + '%'
-                          OR :construction LIKE '%' + Construction + '%'
-                      )
-                    ORDER BY
-                        CASE
-                            WHEN :volume IS NOT NULL AND VolumeLitres IS NOT NULL
-                            THEN ABS(CAST(VolumeLitres AS FLOAT) - CAST(:volume AS FLOAT))
-                            ELSE 999
-                        END,
-                        CASE
-                            WHEN :width IS NOT NULL AND Width IS NOT NULL THEN 0 ELSE 1
-                        END,
-                        CASE
-                            WHEN :thickness IS NOT NULL AND Thickness IS NOT NULL THEN 0 ELSE 1
-                        END
-                """), {
-                    "board_model_id": board_model_id,
-                    "length": length,
-                    "volume": volume,
-                    "width": clean(row.get("width")),
-                    "thickness": clean(row.get("thickness")),
-                    "construction": construction,
-                }).scalar()
+        if model_name not in model_cache:
+            model_cache[model_name] = find_board_model_id(cursor, model_name)
 
-            conn.execute(text("""
-                INSERT INTO dbo.ManufacturerInventory (
-                    BrandId,
-                    BoardModelId,
-                    BoardSizeId,
-                    BrandName,
-                    ModelName,
-                    RawProductTitle,
-                    NormalisedProductTitle,
-                    ProductUrl,
-                    ProductImageUrl,
-                    LengthFeetInches,
-                    Width,
-                    Thickness,
-                    VolumeLitres,
-                    Construction,
-                    FinSetup,
-                    PriceAmount,
-                    PriceCurrency,
-                    StockStatus,
-                    IsAvailable,
-                    Source,
-                    SourcePayload,
-                    ScrapedAtUtc,
-                    IsActive,
-                    RegionCode,
-                    AvailabilitySource
+        board_model_id = model_cache[model_name]
+
+        if board_model_id:
+            linked_models += 1
+
+        size_key = (
+            board_model_id,
+            clean(item.get("lengthFeetInches")),
+            clean(item.get("width")),
+            clean(item.get("thickness")),
+            item.get("volumeLitres"),
+            clean(item.get("construction")),
+        )
+
+        if size_key not in size_cache:
+            size_cache[size_key] = find_board_size_id(cursor, board_model_id, item)
+
+        board_size_id = size_cache[size_key]
+
+        if board_size_id:
+            linked_sizes += 1
+
+        for attempt in range(1, 6):
+            try:
+                insert_row(
+                    cursor,
+                    columns,
+                    item,
+                    brand_id,
+                    board_model_id,
+                    board_size_id
                 )
-                VALUES (
-                    :brand_id,
-                    :board_model_id,
-                    :board_size_id,
-                    :brand_name,
-                    :model_name,
-                    :raw_product_title,
-                    :normalised_product_title,
-                    :product_url,
-                    :product_image_url,
-                    :length,
-                    :width,
-                    :thickness,
-                    :volume,
-                    :construction,
-                    :fin_setup,
-                    :price_amount,
-                    :price_currency,
-                    :stock_status,
-                    :is_available,
-                    :source,
-                    :source_payload,
-                    SYSUTCDATETIME(),
-                    1,
-                    :region_code,
-                    'manufacturer_direct'
-                )
-            """), {
-                "brand_id": brand_id,
-                "board_model_id": board_model_id,
-                "board_size_id": board_size_id,
-                "brand_name": clean(row.get("brandName")) or "JS Industries",
-                "model_name": model_name,
-                "raw_product_title": clean(row.get("rawProductTitle")),
-                "normalised_product_title": clean(row.get("normalisedProductTitle")),
-                "product_url": clean(row.get("productUrl")),
-                "product_image_url": clean(row.get("productImageUrl")),
-                "length": length,
-                "width": clean(row.get("width")),
-                "thickness": clean(row.get("thickness")),
-                "volume": volume,
-                "construction": construction,
-                "fin_setup": clean(row.get("finSetup")),
-                "price_amount": row.get("priceAmount"),
-                "price_currency": clean(row.get("priceCurrency")) or "AUD",
-                "stock_status": clean(row.get("stockStatus")),
-                "is_available": 1 if row.get("isAvailable") else 0,
-                "source": clean(row.get("source")),
-                "source_payload": json.dumps(row.get("sourcePayload"), ensure_ascii=False),
-                "region_code": clean(row.get("regionCode")) or "AU",
-            })
+                break
 
-            inserted += 1
+            except pyodbc.OperationalError as exc:
+                print(f"SQL retry {attempt}/5 for {model_name}: {exc}")
 
-        summary = conn.execute(text("""
-            SELECT
-                COUNT(*) AS TotalRows,
-                SUM(CASE WHEN IsAvailable = 1 THEN 1 ELSE 0 END) AS AvailableRows,
-                COUNT(BoardModelId) AS LinkedModelRows,
-                COUNT(BoardSizeId) AS LinkedSizeRows
-            FROM dbo.ManufacturerInventory
-            WHERE BrandId = :brand_id
-              AND RegionCode = 'AU'
-              AND IsActive = 1
-        """), {"brand_id": brand_id}).fetchone()
+                if attempt == 5:
+                    raise
 
-        print("")
-        print("Import complete")
-        print(f"Inserted rows: {inserted}")
-        print(dict(summary._mapping))
+                try:
+                    conn.close()
+                except Exception:
+                    pass
+
+                time.sleep(5)
+
+                conn = connect()
+                cursor = conn.cursor()
+                columns = get_columns(cursor)
+
+        inserted += 1
+
+    conn.commit()
+
+    print("")
+    print("JS Industries AU manufacturer availability import complete")
+    print(f"Inserted rows: {inserted}")
+    print({
+        "TotalRows": len(rows),
+        "LinkedModelRows": linked_models,
+        "LinkedSizeRows": linked_sizes,
+    })
+
+    conn.close()
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as exc:
-        print(f"JS Industries manufacturer availability import failed: {exc}")
-        sys.exit(1)
+    main()

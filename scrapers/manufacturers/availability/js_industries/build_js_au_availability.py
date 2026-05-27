@@ -246,19 +246,54 @@ def parse_model_from_title(title):
     )
 
     if match:
-        return clean(match.group("model"))
+        title = clean(match.group("model")) or title
 
-    match = re.search(
-        r"\bJS\s+(?P<model>.+?)\s+-\s+[4-9]'\d{1,2}",
-        title,
-        re.IGNORECASE,
-    )
+    cleanup_patterns = [
+        r"\bclear\b",
+        r"\b24s\d+\b",
+        r"\bsea\b",
+        r"\bstorm\b",
+        r"\bsoftboard\b",
+        r"\bhyfi\b",
+        r"\bcarbotune\b",
+        r"\bpu\b",
+        r"\beps\b",
+        r"\bpe\b",
+    ]
 
-    if match:
-        return clean(match.group("model"))
+    cleaned = title
 
-    return title or None
+    for cleanup_pattern in cleanup_patterns:
+        cleaned = re.sub(cleanup_pattern, "", cleaned, flags=re.IGNORECASE)
 
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+
+    canonical_mappings = {
+        "Big Baron Easy Rider": "Big Baron Easy Rider",
+        "Big Baron": "Big Baron",
+        "Black Baron": "Black Baron",
+        "Black Eagle 2": "Black Eagle 2",
+        "Bull Run": "Bull Run",
+        "El Baron": "El Baron",
+        "Flame Fish": "Flame Fish",
+        "Forget Me Not 3": "Forget Me Not 3",
+        "Golden Child": "Golden Child",
+        "Monsta 10": "Monsta 10",
+        "Monsta": "Monsta",
+        "Mother Trucker": "Mother Trucker",
+        "Raging Bull": "Raging Bull",
+        "Schooner": "Schooner",
+        "Step Off": "Step Off",
+        "Sub Xero": "Sub Xero",
+        "Xero Fusion": "Xero Fusion",
+        "Xero Gravity": "Xero Gravity",
+    }
+
+    for key, canonical in canonical_mappings.items():
+        if key.lower() in cleaned.lower():
+            return canonical
+
+    return cleaned or None
 
 def parse_variant(product, variant):
     product_title = clean(product.get("title")) or ""
