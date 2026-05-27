@@ -481,7 +481,7 @@ def manufacturer_search_policy(brand_name):
             "direct_enabled": True,
             "manufacturer_mode": "strict",
             "retailer_exact_construction_mode": "strict",
-            "allow_alternate_manufacturer_construction": True,
+            "allow_alternate_manufacturer_construction": False,
         },
         "Channel Islands": {
             "direct_enabled": True,
