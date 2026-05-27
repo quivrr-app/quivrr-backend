@@ -94,6 +94,13 @@ PIPELINES = [
             "scrapers/brands/run_christenson_pipeline.py",
         ],
     },
+    {
+        "name": "Chemistry Surfboards",
+        "command": [
+            sys.executable,
+            "scrapers/brands/run_chemistry_pipeline.py",
+        ],
+    },
 
 
 ]

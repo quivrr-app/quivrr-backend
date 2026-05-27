@@ -1,4 +1,4 @@
-﻿import subprocess
+import subprocess
 import sys
 
 PYTHON = sys.executable
@@ -8,14 +8,17 @@ STEPS = [
     [PYTHON, "scripts/import_chemistry_catalogue.py"],
 ]
 
+
 for step in STEPS:
     print("")
-    print("=" * 80)
+    print("=" * 100)
     print("Running:", " ".join(step))
-    print("=" * 80)
+    print("=" * 100)
+
     result = subprocess.run(step)
+
     if result.returncode != 0:
         sys.exit(result.returncode)
 
 print("")
-print("Chemistry Surfboards catalogue pipeline complete")
+print("Chemistry catalogue pipeline complete")
