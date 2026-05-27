@@ -8,7 +8,7 @@ import requests
 
 
 BRAND = "Haydenshapes"
-BASE_URL = "https://www.haydenshapes.com"
+BASE_URL = "https://au.haydenshapes.com"
 COLLECTION = "surfboard-models"
 
 OUTPUT_FILE = Path("scrapers/brands/haydenshapes/output/haydenshapes_master_catalogue_clean.json")
