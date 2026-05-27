@@ -8,7 +8,7 @@ import requests
 
 
 BRAND = "Sharp Eye"
-BASE_URL = "https://sharpeyesurfboards.com"
+BASE_URL = "https://www.sharpeyesurfboards.com.au"
 
 COLLECTIONS = [
     "performance-range",
@@ -179,63 +179,94 @@ def extract_dimensions_from_html(product_url):
     html = response.text
     html = html.replace("\\/", "/")
     html = html.replace("&quot;", '"')
-    html = html.replace("×", "x")
+    html = html.replace("Ã—", "x")
 
-    candidates = []
+    rows = []
 
-    stock_json_pattern = (
+    pattern = (
         r'"length_inches"\s*:\s*"(?P<length>[^"]+)"'
-        r'.{0,700}?'
+        r'.{0,900}?'
         r'"width_inches"\s*:\s*"(?P<width>[^"]+)"'
-        r'.{0,700}?'
+        r'.{0,900}?'
         r'"thickness_inches"\s*:\s*"(?P<thickness>[^"]+)"'
-        r'.{0,700}?'
+        r'.{0,900}?'
         r'"volume"\s*:\s*"(?P<volume>[^"]+)"'
+        r'.{0,900}?'
+        r'"surfboardconstructiontype"\s*:\s*"(?P<construction>[^"]+)"'
+        r'.{0,900}?'
+        r'"tail"\s*:\s*"(?P<tail>[^"]*)"'
+        r'.{0,900}?'
+        r'"fin_options"\s*:\s*"(?P<fin_options>[^"]*)"'
     )
 
-    for match in re.finditer(stock_json_pattern, html, flags=re.IGNORECASE | re.DOTALL):
-        candidate = (
-            f"{match.group('length')} x "
-            f"{match.group('width')} x "
-            f"{match.group('thickness')} "
-            f"{match.group('volume')} L"
+    for match in re.finditer(pattern, html, flags=re.IGNORECASE | re.DOTALL):
+        length = clean(match.group("length")).replace('"', '')
+        width = clean(match.group("width")).replace('"', '')
+        thickness = clean(match.group("thickness")).replace('"', '')
+
+        try:
+            volume = float(Decimal(clean(match.group("volume"))))
+        except Exception:
+            continue
+
+        rows.append({
+            "length_feet_inches": length,
+            "width": width,
+            "thickness": thickness,
+            "volume_litres": volume,
+            "construction": clean(match.group("construction")),
+            "fin_setup": normalise_fin_options(match.group("fin_options")),
+            "tail_shape": clean(match.group("tail")) or None,
+            "raw": f"{length} x {width} x {thickness} {volume} L",
+        })
+
+    deduped = []
+    seen = set()
+
+    for row in rows:
+        key = (
+            row["length_feet_inches"],
+            row["width"],
+            row["thickness"],
+            row["volume_litres"],
+            row["construction"],
+            row["fin_setup"],
+            row["tail_shape"],
         )
-        candidates.append(clean(candidate))
 
-    visible_pattern = (
-        r"\d+'\s*\d{1,2}\"?\s*x\s*"
-        r"\d+(?:\.\d+)?\s*x\s*"
-        r"\d+(?:\.\d+)?\s+"
-        r"\d+(?:\.\d+)?\s*L"
-    )
+        if key in seen:
+            continue
 
-    for match in re.findall(visible_pattern, html, flags=re.IGNORECASE):
-        candidates.append(clean(match))
+        seen.add(key)
+        deduped.append(row)
 
-    cleaned = []
-
-    for candidate in candidates:
-        parsed = parse_dimension_text(candidate)
-
-        if parsed and candidate not in cleaned:
-            cleaned.append(candidate)
-
-    return cleaned
+    return deduped
 
 
-def add_row(rows, title, tags, product, variant_text):
-    parsed = parse_dimension_text(variant_text)
+def normalise_fin_options(value):
+    value = clean(value)
 
+    if not value:
+        return None
+
+    value = value.replace("FCS 2", "FCS II")
+    value = value.replace("FCS2", "FCS II")
+    value = value.replace("/", " / ")
+    value = re.sub(r"\s+", " ", value).strip()
+
+    return value
+
+
+def add_row(rows, title, tags, product, parsed):
     if not parsed:
         return False
 
     model_name = normalise_model_name(title)
-    construction = detect_construction(title, tags)
     product_url = f"{BASE_URL}/products/{product.get('handle')}"
 
     board_category = "Youth Shortboard" if "YTH" in title.upper() or "YOUTH" in title.upper() else "Shortboard"
 
-    if parsed["is_hv"]:
+    if " HV" in title.upper():
         board_category = "High Volume Shortboard"
 
     rows.append({
@@ -252,11 +283,11 @@ def add_row(rows, title, tags, product, variant_text):
         "width": parsed["width"],
         "thickness": parsed["thickness"],
         "volume_litres": parsed["volume_litres"],
-        "construction": construction,
-        "fin_setup": detect_fin_setup(variant_text),
-        "tail_shape": None,
+        "construction": parsed.get("construction") or detect_construction(title, tags),
+        "fin_setup": parsed.get("fin_setup"),
+        "tail_shape": parsed.get("tail_shape"),
         "source_product_title": title,
-        "source_variant_title": variant_text,
+        "source_variant_title": parsed.get("raw"),
         "source": BASE_URL,
     })
 
@@ -278,19 +309,11 @@ def build_catalogue():
 
         added = 0
 
-        for variant in variants:
-            variant_title = clean(variant.get("title"))
+        fallback_dimensions = extract_dimensions_from_html(product_url)
 
-            if variant_title and variant_title.lower() != "default title":
-                if add_row(rows, title, tags, product, variant_title):
-                    added += 1
-
-        if added == 0:
-            fallback_dimensions = extract_dimensions_from_html(product_url)
-
-            for dimension in fallback_dimensions:
-                if add_row(rows, title, tags, product, dimension):
-                    added += 1
+        for dimension in fallback_dimensions:
+            if add_row(rows, title, tags, product, dimension):
+                added += 1
 
         product_debug.append({
             "title": title,
