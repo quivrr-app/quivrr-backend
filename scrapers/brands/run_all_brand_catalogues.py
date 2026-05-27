@@ -44,6 +44,13 @@ PIPELINES = [
         ],
     },
     {
+        "name": "Misfit Shapes",
+        "command": [
+            sys.executable,
+            "scrapers/brands/run_misfit_pipeline.py",
+        ],
+    },
+    {
         "name": "Rusty",
         "command": [
             sys.executable,
