@@ -1,101 +1,337 @@
 import json
 import re
+from datetime import datetime, timezone
+from html import unescape
 from pathlib import Path
+from urllib.parse import urljoin
+
+import requests
+from bs4 import BeautifulSoup
 
 
-INPUT_FILE = Path("scrapers/brands/christenson/output/christenson_dimension_probe.json")
-OUTPUT_FILE = Path("scrapers/brands/christenson/output/christenson_master_catalogue_clean.json")
-REPORT_FILE = Path("scrapers/brands/christenson/output/christenson_master_catalogue_clean_report.json")
+BRAND_NAME = "Christenson"
+REGION_CODE = "AU"
+BASE_URL = "https://christensonsurfboards.com.au"
+SOURCE_URL = "https://christensonsurfboards.com.au/collections/surfboards/products.json?limit=250"
 
-dimension_regex = re.compile(
-    r"(?P<length>\d+'\d{1,2})\s*x\s*(?P<width>\d+(?:\s+\d+/\d+|\.\d+)?)\s*x\s*(?P<thickness>\d+(?:\s+\d+/\d+|\.\d+)?)",
-    re.IGNORECASE,
+OUTPUT_DIR = Path("scrapers/brands/christenson/output")
+OUTPUT_FILE = OUTPUT_DIR / "christenson_master_catalogue_clean.json"
+REPORT_FILE = OUTPUT_DIR / "christenson_master_catalogue_clean_report.json"
+RAW_PRODUCTS_FILE = OUTPUT_DIR / "christenson_au_shopify_products_raw.json"
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)",
+    "Accept": "application/json,text/html;q=0.9,*/*;q=0.8",
+}
+
+TITLE_PATTERN = re.compile(
+    r"^(?P<model>.*?)\s+"
+    r"(?P<length>\d+'\d{1,2})\"\s*[xX]\s*"
+    r"(?P<width>\d+(?:\s+\d+/\d+|\.\d+|/\d+)?)\"\s*[xX]\s*"
+    r"(?P<thickness>\d+(?:\s+\d+/\d+|\.\d+|/\d+)?)\""
+    r"(?:\s*-\s*(?P<volume>\d+(?:\.\d+)?)L)?"
+    r"(?:,\s*(?P<tail>[^,]+))?"
+    r"(?:,\s*(?P<fins>[^,]+?)\s+Fin Boxes)?"
+    r"(?:,\s*(?P<construction>PU|PE|EPS|Epoxy|Carbon|Dark Arts))?"
+    r"(?:\s*-\s*ID:(?P<source_id>\d+))?",
+    re.I,
 )
 
-rows = json.loads(INPUT_FILE.read_text(encoding="utf-8"))
+SKIP_PRODUCT_TYPES = {
+    "fins",
+    "tees - short sleeve",
+    "custom board",
+    "accessories",
+    "leashes",
+    "apparel",
+    "hats",
+    "stickers",
+    "skateboards",
+}
 
-catalogue = []
+SKIP_TITLE_TERMS = [
+    "tee",
+    "hat",
+    "shirt",
+    "sticker",
+    "leash",
+    "custom order",
+]
 
-skip_names = {"team", "fish", "learn more"}
 
-for row in rows:
-    model_name = row.get("name")
-    url = row.get("url")
-    specifications = row.get("specifications") or []
+def clean(value):
+    return re.sub(r"\s+", " ", str(value or "")).strip()
 
-    if not model_name or model_name.lower() in skip_names:
-        continue
 
-    for spec in specifications:
-        dimension = spec.get("dimension") or ""
-        profile = spec.get("profile") or "PU"
-        volume = spec.get("volume_litres")
+def strip_html(value):
+    if not value:
+        return None
 
-        match = dimension_regex.search(dimension)
+    soup = BeautifulSoup(value, "html.parser")
+    return clean(unescape(soup.get_text(" ", strip=True))) or None
 
-        if not match:
+
+def fetch_products():
+    response = requests.get(
+        SOURCE_URL,
+        headers=HEADERS,
+        timeout=(10, 60),
+    )
+    response.raise_for_status()
+    return response.json().get("products", [])
+
+
+def normalise_model(value):
+    value = clean(value)
+
+    replacements = {
+        "Op3": "OP3",
+        "C Bucket": "C-Bucket",
+        "Long Phish Ii": "Long Phish II",
+    }
+
+    value = value.replace(" -", " ")
+    value = re.sub(r"\s+", " ", value).strip()
+    value = value.title()
+
+    for old, new in replacements.items():
+        value = value.replace(old, new)
+
+    return clean(value)
+
+
+def normalise_fin(value):
+    value = clean(value)
+
+    if not value:
+        return None
+
+    lowered = value.lower()
+
+    if "fcs" in lowered:
+        return "FCS II"
+
+    if "future" in lowered:
+        return "Futures"
+
+    return value
+
+
+def normalise_construction(value):
+    value = clean(value)
+
+    if not value:
+        return "PU"
+
+    lowered = value.lower()
+
+    if lowered == "pu":
+        return "PU"
+
+    if lowered == "pe":
+        return "PE"
+
+    if "eps" in lowered:
+        return "EPS"
+
+    if "epoxy" in lowered:
+        return "Epoxy"
+
+    if "carbon" in lowered:
+        return "Carbon"
+
+    if "dark arts" in lowered:
+        return "Dark Arts"
+
+    return value
+
+
+def is_surfboard(product):
+    title = clean(product.get("title")).lower()
+    product_type = clean(product.get("product_type")).lower()
+    vendor = clean(product.get("vendor")).lower()
+
+    if product_type in SKIP_PRODUCT_TYPES:
+        return False
+
+    if any(term in title for term in SKIP_TITLE_TERMS):
+        return False
+
+    if vendor not in ["chris christenson", "christenson surfboards australia", "christenson"]:
+        return False
+
+    return bool(TITLE_PATTERN.search(product.get("title") or ""))
+
+
+def get_image(product):
+    images = product.get("images") or []
+
+    if images and images[0].get("src"):
+        return images[0].get("src")
+
+    image = product.get("image") or {}
+    return image.get("src")
+
+
+def build_catalogue():
+    print("")
+    print("=" * 100)
+    print("BUILD CHRISTENSON AU MASTER CATALOGUE")
+    print("=" * 100)
+    print("Source:", SOURCE_URL)
+
+    products = fetch_products()
+
+    rows = []
+    failures = []
+
+    for product in products:
+        title = clean(product.get("title"))
+        handle = clean(product.get("handle"))
+
+        if not is_surfboard(product):
             continue
 
-        construction = profile if profile in ["Standard", "Performance"] else "PU"
+        match = TITLE_PATTERN.search(title)
 
-        catalogue.append({
-            "brand": "Christenson",
-            "model_name": model_name,
-            "model_family": model_name,
-            "board_category": "Surfboard",
-            "description": None,
-            "official_product_url": url,
-            "official_image_url": None,
+        if not match:
+            failures.append({
+                "title": title,
+                "reason": "title did not match dimension pattern",
+            })
+            continue
+
+        volume_raw = match.group("volume")
+
+        if not volume_raw:
+            failures.append({
+                "title": title,
+                "reason": "missing volume",
+            })
+            continue
+
+        volume = float(volume_raw)
+
+        if volume <= 0:
+            failures.append({
+                "title": title,
+                "reason": "zero volume ignored",
+            })
+            continue
+
+        model = normalise_model(match.group("model"))
+        construction = normalise_construction(match.group("construction"))
+        fin_setup = normalise_fin(match.group("fins"))
+        tail_shape = clean(match.group("tail"))
+        product_url = urljoin(BASE_URL.rstrip("/") + "/", f"products/{handle}")
+
+        rows.append({
+            "brand": BRAND_NAME,
+            "model_name": model,
+            "model_family": model,
+            "board_category": clean(product.get("product_type")) or "Surfboard",
+            "description": strip_html(product.get("body_html")),
+            "official_product_url": product_url,
+            "official_image_url": get_image(product),
             "recommended_wave_range": None,
             "recommended_surfer_weight": None,
-            "length_feet_inches": match.group("length").strip(),
-            "width": match.group("width").strip(),
-            "thickness": match.group("thickness").strip(),
+            "length_feet_inches": clean(match.group("length")),
+            "width": clean(match.group("width")),
+            "thickness": clean(match.group("thickness")),
             "volume_litres": volume,
             "construction": construction,
-            "fin_setup": None,
-            "tail_shape": None,
-            "source_product_title": model_name,
-            "source_variant_title": dimension,
-            "source": url,
+            "fin_setup": fin_setup,
+            "tail_shape": tail_shape,
+            "source_product_title": title,
+            "source_variant_title": title,
+            "source": BASE_URL,
+            "source_product_id": product.get("id"),
+            "source_handle": handle,
+            "source_board_id": match.group("source_id"),
+            "region": REGION_CODE,
+            "scraped_at_utc": datetime.now(timezone.utc).isoformat(),
+            "is_active": True,
         })
 
-seen = set()
-deduped = []
+    deduped_by_key = {}
 
-for row in catalogue:
-    key = (
-        row["model_name"],
-        row["length_feet_inches"],
-        row["width"],
-        row["thickness"],
-        row["volume_litres"],
-        row["construction"],
+    for row in rows:
+        key = (
+            row["model_name"].lower(),
+            row["length_feet_inches"],
+            row["width"],
+            row["thickness"],
+            row["volume_litres"],
+            row["construction"],
+            row["fin_setup"],
+        )
+
+        if key not in deduped_by_key:
+            deduped_by_key[key] = row
+
+    deduped = sorted(
+        deduped_by_key.values(),
+        key=lambda row: (
+            row["model_name"].lower(),
+            row["construction"],
+            row["length_feet_inches"],
+            row["fin_setup"] or "",
+        ),
     )
 
-    if key in seen:
-        continue
+    OUTPUT_FILE.write_text(
+        json.dumps(deduped, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
-    seen.add(key)
-    deduped.append(row)
+    RAW_PRODUCTS_FILE.write_text(
+        json.dumps(products, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
-deduped.sort(key=lambda row: (row["model_name"], row["construction"], row["length_feet_inches"]))
+    models = sorted(set(row["model_name"] for row in deduped))
+    constructions = sorted(set(row["construction"] for row in deduped))
+    fin_setups = sorted(set(row["fin_setup"] for row in deduped if row["fin_setup"]))
 
-OUTPUT_FILE.write_text(json.dumps(deduped, indent=2, ensure_ascii=False), encoding="utf-8")
+    REPORT_FILE.write_text(
+        json.dumps(
+            {
+                "brand": BRAND_NAME,
+                "region": REGION_CODE,
+                "source": BASE_URL,
+                "source_url": SOURCE_URL,
+                "products_found": len(products),
+                "catalogue_rows": len(deduped),
+                "models": len(models),
+                "model_names": models,
+                "constructions": constructions,
+                "fin_setups": fin_setups,
+                "failures": failures,
+                "failure_count": len(failures),
+                "output_file": str(OUTPUT_FILE),
+                "raw_products_file": str(RAW_PRODUCTS_FILE),
+            },
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
 
-REPORT_FILE.write_text(
-    json.dumps({
-        "rows": len(deduped),
-        "models": len(set(row["model_name"] for row in deduped)),
-        "models_list": sorted(set(row["model_name"] for row in deduped)),
-    }, indent=2),
-    encoding="utf-8",
-)
+    print("")
+    print("=" * 100)
+    print("CHRISTENSON AU COMPLETE")
+    print("=" * 100)
+    print("Products found:", len(products))
+    print("Catalogue rows:", len(deduped))
+    print("Models:", len(models))
+    print("Constructions:", constructions)
+    print("Fin setups:", fin_setups)
+    print("Failures:", len(failures))
+    print("Output:", OUTPUT_FILE)
+    print("Report:", REPORT_FILE)
 
-print("")
-print("=" * 100)
-print("CHRISTENSON COMPLETE")
-print("=" * 100)
-print("Catalogue rows:", len(deduped))
-print("Models:", len(set(row["model_name"] for row in deduped)))
-print("Output:", OUTPUT_FILE)
+
+if __name__ == "__main__":
+    build_catalogue()
