@@ -149,7 +149,7 @@ def normalise_construction(source_title, source_product_title, product_url):
 def main():
     build_catalogue(
         brand_name="Pyzel",
-        base_url="https://pyzelsurfboards.com",
+        base_url="https://pyzelsurf.com.au",
         output_file=str(OUTPUT_FILE),
     )
 
