@@ -648,8 +648,18 @@ def search_inventory(boardSizeId: int):
                         OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.05
                     )
                     AND mi.Construction IS NOT NULL
-                    AND LOWER(LTRIM(RTRIM(mi.Construction))) =
-                        LOWER(LTRIM(RTRIM(:construction)))
+                    AND (
+                        LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                        OR (
+                            LOWER(LTRIM(RTRIM(mi.Construction))) IN ('hyfi', 'hyfi 3', 'hyfi 3.0', 'hyfi 3 0')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('hyfi', 'hyfi 3', 'hyfi 3.0', 'hyfi 3 0')
+                        )
+                        OR (
+                            LOWER(LTRIM(RTRIM(mi.Construction))) IN ('carbotune', 'carbon tune')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('carbotune', 'carbon tune')
+                        )
+                    )
                     THEN 0
 
                 WHEN mi.BrandName = 'Channel Islands'
@@ -665,8 +675,18 @@ def search_inventory(boardSizeId: int):
                         OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
                     )
                     AND mi.Construction IS NOT NULL
-                    AND LOWER(LTRIM(RTRIM(mi.Construction))) =
-                        LOWER(LTRIM(RTRIM(:construction)))
+                    AND (
+                        LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                        OR (
+                            LOWER(LTRIM(RTRIM(mi.Construction))) IN ('hyfi', 'hyfi 3', 'hyfi 3.0', 'hyfi 3 0')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('hyfi', 'hyfi 3', 'hyfi 3.0', 'hyfi 3 0')
+                        )
+                        OR (
+                            LOWER(LTRIM(RTRIM(mi.Construction))) IN ('carbotune', 'carbon tune')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('carbotune', 'carbon tune')
+                        )
+                    )
                     THEN 1
 
 
