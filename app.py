@@ -664,6 +664,9 @@ def search_inventory(boardSizeId: int):
                         OR :volume IS NULL
                         OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
                     )
+                    AND mi.Construction IS NOT NULL
+                    AND LOWER(LTRIM(RTRIM(mi.Construction))) =
+                        LOWER(LTRIM(RTRIM(:construction)))
                     THEN 1
 
 
@@ -748,6 +751,9 @@ def search_inventory(boardSizeId: int):
                         OR :volume IS NULL
                         OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
                     )
+                    AND mi.Construction IS NOT NULL
+                    AND LOWER(LTRIM(RTRIM(mi.Construction))) =
+                        LOWER(LTRIM(RTRIM(:construction)))
                 )
                 OR
                 (
