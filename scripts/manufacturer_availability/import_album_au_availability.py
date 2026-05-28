@@ -65,9 +65,7 @@ def main():
             raise RuntimeError("Album brand not found")
 
         conn.execute(text("""
-            UPDATE dbo.ManufacturerInventory
-            SET IsActive = 0,
-                UpdatedAtUtc = SYSUTCDATETIME()
+            DELETE FROM dbo.ManufacturerInventory
             WHERE BrandId = :brand_id
               AND RegionCode = 'AU'
               AND AvailabilitySource = 'manufacturer_direct'
