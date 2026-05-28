@@ -18,6 +18,7 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.7",
     "Accept-Language": "en-AU,en;q=0.9",
     "Referer": "https://albumsurf.com.au/",
+    "X-Shopify-Currency": "AUD",
 }
 
 DIMENSION_CACHE = {}
