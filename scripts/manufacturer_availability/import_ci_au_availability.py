@@ -193,13 +193,10 @@ def main():
     brand_id = get_brand_id(cursor)
 
     cursor.execute("""
-        UPDATE dbo.ManufacturerInventory
-        SET IsActive = 0,
-            UpdatedAtUtc = SYSUTCDATETIME()
+        DELETE FROM dbo.ManufacturerInventory
         WHERE BrandName = 'Channel Islands'
           AND RegionCode = 'AU'
           AND AvailabilitySource = 'manufacturer_direct'
-          AND IsActive = 1
     """)
 
     inserted = 0
