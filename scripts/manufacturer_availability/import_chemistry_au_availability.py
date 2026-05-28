@@ -183,13 +183,10 @@ def main():
         raise RuntimeError("Chemistry Surfboards brand not found")
 
     cursor.execute("""
-        UPDATE dbo.ManufacturerInventory
-        SET IsActive = 0,
-            UpdatedAtUtc = SYSUTCDATETIME()
+        DELETE FROM dbo.ManufacturerInventory
         WHERE BrandName = ?
           AND RegionCode = 'AU'
           AND AvailabilitySource = 'manufacturer_direct'
-          AND IsActive = 1
     """, BRAND_NAME)
 
     inserted = 0
