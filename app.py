@@ -1485,7 +1485,7 @@ def search_inventory(boardSizeId: int):
     if official_result.get("directManufacturerMatches"):
         available_direct_matches = [
             match for match in official_result.get("directManufacturerMatches", [])
-            if match.get("isAvailable") is True
+            if bool(match.get("isAvailable"))
         ]
 
         selected_direct_match = (
