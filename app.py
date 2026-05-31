@@ -716,7 +716,7 @@ def search_inventory(boardSizeId: int):
                             LOWER(LTRIM(RTRIM(:construction)))
                         OR (
                             LOWER(LTRIM(RTRIM(mi.Construction))) IN ('pu', 'pu stringer')
-                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('pu', 'pu stringer')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('pu', 'pu stringer', 'standard')
                         )
                     )
                     THEN 2
@@ -837,7 +837,7 @@ def search_inventory(boardSizeId: int):
                             LOWER(LTRIM(RTRIM(:construction)))
                         OR (
                             LOWER(LTRIM(RTRIM(mi.Construction))) IN ('pu', 'pu stringer')
-                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('pu', 'pu stringer')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('pu', 'pu stringer', 'standard')
                         )
                     )
                 )

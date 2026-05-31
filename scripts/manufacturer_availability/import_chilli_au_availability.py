@@ -141,7 +141,17 @@ def find_board_size_id(cursor, board_model_id, item):
         params.append(volume)
 
     if construction:
-        query += " AND (Construction = ? OR Construction IS NULL)"
+        query += """
+            AND (
+                Construction = ?
+                OR Construction IS NULL
+                OR (
+                    ? IN ('PU', 'PU Stringer')
+                    AND Construction = 'Standard'
+                )
+            )
+        """
+        params.append(construction)
         params.append(construction)
 
     query += " ORDER BY BoardSizeId"
