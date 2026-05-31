@@ -121,8 +121,9 @@ def find_board_size_id(cursor, board_model_id, item):
     params = [board_model_id, length]
 
     query = """
-        SELECT TOP 1
-            BoardSizeId
+        SELECT
+            BoardSizeId,
+            Construction
         FROM dbo.BoardSizes
         WHERE BoardModelId = ?
           AND LengthFeetInches = ?
@@ -140,17 +141,52 @@ def find_board_size_id(cursor, board_model_id, item):
         query += " AND VolumeLitres IS NOT NULL AND ABS(CAST(VolumeLitres AS float) - ?) <= 0.15"
         params.append(volume)
 
-    if construction:
-        query += " AND (Construction = ? OR Construction IS NULL)"
-        params.append(construction)
-
     query += " ORDER BY BoardSizeId"
 
     cursor.execute(query, params)
 
-    row = cursor.fetchone()
+    rows = cursor.fetchall()
 
-    return row[0] if row else None
+    if not rows:
+        return None
+
+    def normalise_firewire_construction(value):
+        value = clean(value) or ""
+        value = value.lower()
+        value = value.replace("-", " ")
+        value = value.replace(".", " ")
+        value = " ".join(value.split())
+
+        aliases = {
+            "ibolic": "i bolic",
+            "i bolic": "i bolic",
+            "i bolic 2 0": "i bolic",
+            "ibolic 2 0": "i bolic",
+            "i bolic volcanic": "i bolic volcanic",
+            "ibolic volcanic": "i bolic volcanic",
+            "volcanic": "volcanic",
+            "helium": "helium",
+            "g flex": "g flex",
+            "gflex": "g flex",
+            "proflex": "proflex",
+        }
+
+        return aliases.get(value, value)
+
+    target_construction = normalise_firewire_construction(construction)
+
+    exact_matches = [
+        row for row in rows
+        if normalise_firewire_construction(row.Construction) == target_construction
+    ]
+
+    if exact_matches:
+        return exact_matches[0].BoardSizeId
+
+    if len(rows) == 1:
+        return rows[0].BoardSizeId
+
+    return None
 
 
 def insert_row(cursor, columns, item, brand_id, board_model_id, board_size_id):
