@@ -1,0 +1,457 @@
+{
+  "expected_brand_count": 16,
+  "backend_root": "C:\\Projects\\quivrr.app\\quivrr-backend",
+  "frontend_root": "C:\\Projects\\quivrr.app\\quivrr-frontend",
+  "brands": {
+    "Album": {
+      "slug": "album",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\album\\build_album_au_availability.py",
+        "scrapers\\manufacturers\\availability\\album\\build_album_us_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\album\\build_album_master_catalogue.py",
+        "scrapers\\brands\\album\\discover_album_model_pages.py",
+        "scrapers\\brands\\album\\inspect_album_products.py",
+        "scrapers\\brands\\album\\probe_album_collections.py",
+        "scrapers\\brands\\album\\probe_album_new_surfboards.py",
+        "scrapers\\brands\\album\\recon_album.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_album_au_availability.py",
+        "scripts\\manufacturer_availability\\run_album_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://albumsurf.com.au",
+        "https://albumsurf.com.au/",
+        "https://albumsurf.com.au/collections/new-boards/products.json?limit=250",
+        "https://albumsurf.com/en-au/collections/new-boards/products.json?limit=250",
+        "https://albumsurf.com/en-au/products/{product.get("
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Channel Islands": {
+      "slug": "channel_islands",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\channel_islands\\build_ci_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\channel_islands\\build_ci_canonical_model_links.py",
+        "scrapers\\brands\\channel_islands\\build_ci_master_catalogue.py",
+        "scrapers\\brands\\channel_islands\\debug_ci_dimensions.py",
+        "scrapers\\brands\\channel_islands\\discover_ci_shopify_products.py",
+        "scrapers\\brands\\channel_islands\\discover_ci_sitemap_products.py",
+        "scrapers\\brands\\channel_islands\\inspect_ci_links.py",
+        "scrapers\\brands\\channel_islands\\normalise_ci_master_catalogue.py",
+        "scrapers\\brands\\channel_islands\\recon_channel_islands.py",
+        "scrapers\\brands\\channel_islands\\run_ci_pipeline.py",
+        "scrapers\\brands\\channel_islands\\scrape_ci_product_links.py"
+      ],
+      "runner_or_importer_candidates": [],
+      "urls_found_in_mfa": [
+        "https://shop-au.cisurfboards.com"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Chemistry Surfboards": {
+      "slug": "chemistry",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\chemistry\\build_chemistry_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\chemistry\\build_chemistry_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_chemistry_au_availability.py",
+        "scripts\\manufacturer_availability\\run_chemistry_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://chemistrysurfboards.com.au"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Chilli": {
+      "slug": "chilli",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\chilli\\build_chilli_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\chilli\\build_chilli_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_chilli_au_availability.py",
+        "scripts\\manufacturer_availability\\run_chilli_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://chilli.shaperbuddy.com/api/v1/surfboardmodels",
+        "https://chilli.shaperbuddy.com/api/v1/surfboardmodels/{id}?lang=en",
+        "https://www.chillisurfboards.com",
+        "https://www.chillisurfboards.com/surfboards/detail.php"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Christenson": {
+      "slug": "christenson",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\christenson\\build_christenson_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\christenson\\build_christenson_master_catalogue.py",
+        "scrapers\\brands\\christenson\\discover_christenson_model_links.py",
+        "scrapers\\brands\\christenson\\probe_christenson_dimensions.py",
+        "scrapers\\brands\\christenson\\recon_christenson.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_christenson_au_availability.py",
+        "scripts\\manufacturer_availability\\run_christenson_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://christensonsurfboards.com.au",
+        "https://christensonsurfboards.com.au/products.json"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "DHD": {
+      "slug": "dhd",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\dhd\\build_dhd_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\dhd\\build_dhd_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_dhd_au_availability.py",
+        "scripts\\manufacturer_availability\\run_dhd_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Firewire": {
+      "slug": "firewire",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\firewire\\build_firewire_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\firewire\\build_firewire_master_catalogue.py",
+        "scrapers\\brands\\firewire\\probe_firewire_collections.py",
+        "scrapers\\brands\\firewire\\recon_firewire.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_firewire_au_availability.py",
+        "scripts\\manufacturer_availability\\run_firewire_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://aus.firewiresurfboards.com"
+      ],
+      "possible_non_au_url_flags": [
+        "https://aus.firewiresurfboards.com"
+      ],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Haydenshapes": {
+      "slug": "haydenshapes",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\haydenshapes\\build_haydenshapes_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\haydenshapes\\build_haydenshapes_master_catalogue.py",
+        "scrapers\\brands\\haydenshapes\\probe_haydenshapes_collections.py",
+        "scrapers\\brands\\haydenshapes\\recon_haydenshapes.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_haydenshapes_au_availability.py",
+        "scripts\\manufacturer_availability\\run_haydenshapes_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://au.haydenshapes.com"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "JS Industries": {
+      "slug": "js_industries",
+      "canonical_dir_exists": false,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\js_industries\\build_js_au_availability.py"
+      ],
+      "canonical_python_files": [],
+      "runner_or_importer_candidates": [],
+      "urls_found_in_mfa": [
+        "https://jsindustries.com",
+        "https://jsindustries.com/",
+        "https://jsindustries.com/products.json?limit=250"
+      ],
+      "possible_non_au_url_flags": [
+        "https://jsindustries.com/products.json?limit=250"
+      ],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Lost": {
+      "slug": "lost",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\lost\\build_lost_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\lost\\build_lost_master_catalogue.py",
+        "scrapers\\brands\\lost\\discover_lost_board_urls.py",
+        "scrapers\\brands\\lost\\discover_lost_construction_collections.py",
+        "scrapers\\brands\\lost\\inspect_speed_demon_html_patterns.py",
+        "scrapers\\brands\\lost\\parse_speed_demon.py",
+        "scrapers\\brands\\lost\\parse_speed_demon_clean.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_lost_au_availability.py",
+        "scripts\\manufacturer_availability\\run_lost_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://lostsurfboards.com.au",
+        "https://lostsurfboards.com.au/collections/shop-all/products.json"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Misfit Shapes": {
+      "slug": "misfit",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\misfit\\build_misfit_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\misfit\\build_misfit_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_misfit_au_availability.py",
+        "scripts\\manufacturer_availability\\run_misfit_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://misfitshapes.com",
+        "https://misfitshapes.com/collections/current-models/products.json"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Pukas": {
+      "slug": "pukas",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": false,
+      "mfa_python_files": [],
+      "canonical_python_files": [
+        "scrapers\\brands\\pukas\\build_pukas_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [],
+      "urls_found_in_mfa": [],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": false,
+      "has_view_url_reference": false
+    },
+    "Pyzel": {
+      "slug": "pyzel",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\pyzel\\build_pyzel_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\pyzel\\build_pyzel_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_pyzel_au_availability.py",
+        "scripts\\manufacturer_availability\\run_pyzel_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://pyzelsurf.com.au"
+      ],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Rusty": {
+      "slug": "rusty",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": false,
+      "mfa_python_files": [],
+      "canonical_python_files": [
+        "scrapers\\brands\\rusty\\build_rusty_master_catalogue.py",
+        "scrapers\\brands\\rusty\\debug_rusty_dimension_table.py",
+        "scrapers\\brands\\rusty\\debug_rusty_dimensions.py",
+        "scrapers\\brands\\rusty\\discover_rusty_collections.py",
+        "scrapers\\brands\\rusty\\probe_rusty_collections.py"
+      ],
+      "runner_or_importer_candidates": [],
+      "urls_found_in_mfa": [],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": false,
+      "has_view_url_reference": false
+    },
+    "Sharp Eye": {
+      "slug": "sharpeye",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": true,
+      "mfa_python_files": [
+        "scrapers\\manufacturers\\availability\\sharpeye\\build_sharpeye_au_availability.py"
+      ],
+      "canonical_python_files": [
+        "scrapers\\brands\\sharpeye\\build_sharpeye_master_catalogue.py",
+        "scrapers\\brands\\sharpeye\\probe_sharpeye_product_pages.py"
+      ],
+      "runner_or_importer_candidates": [
+        "scripts\\manufacturer_availability\\import_sharpeye_au_availability.py",
+        "scripts\\manufacturer_availability\\run_sharpeye_au_availability_pipeline.py"
+      ],
+      "urls_found_in_mfa": [
+        "https://aus.sharpeyesurfboards.com"
+      ],
+      "possible_non_au_url_flags": [
+        "https://aus.sharpeyesurfboards.com"
+      ],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": true,
+      "has_view_url_reference": true
+    },
+    "Simon Anderson": {
+      "slug": "simonanderson",
+      "canonical_dir_exists": true,
+      "mfa_dir_exists": false,
+      "mfa_python_files": [],
+      "canonical_python_files": [
+        "scrapers\\brands\\simonanderson\\build_simonanderson_master_catalogue.py"
+      ],
+      "runner_or_importer_candidates": [],
+      "urls_found_in_mfa": [],
+      "possible_non_au_url_flags": [],
+      "has_board_size_id_reference": false,
+      "has_board_model_id_reference": false,
+      "has_stock_status_reference": false,
+      "has_view_url_reference": false
+    }
+  },
+  "dms_references": [
+    "audit_mfa_catalogue_alignment.py",
+    "check_weekly_catalogue_orchestrator.py",
+    "scripts\\import_dms_catalogue.py",
+    "scripts\\reconcile_retailer_inventory_brands.py",
+    "scripts\\run_all_brand_catalogues.py",
+    "scripts\\run_dms_pipeline.py",
+    "scrapers\\brands\\brands_seed.json",
+    "scrapers\\brands\\run_all_brand_catalogues.py",
+    "scrapers\\brands\\run_dms_pipeline.py",
+    "scrapers\\products\\filter_surfboards.py",
+    "scrapers\\retailers\\stockists\\brand_stockist_sources.json",
+    "scrapers\\products\\output\\ecwid\\slimes_boardstore.json",
+    "scrapers\\products\\output\\shopify\\board_collective.json",
+    "scrapers\\products\\output\\shopify\\sanbah_surf_shop.json",
+    "scrapers\\brands\\dms\\build_dms_master_catalogue.py",
+    "scrapers\\brands\\output\\weekly_catalogue_orchestrator_check.json",
+    "scrapers\\brands\\_debug\\simon_anderson_sample_model_probe.json",
+    "scrapers\\brands\\dms\\output\\dms_master_catalogue_clean.json"
+  ],
+  "frontend_dms_references": [
+    "index.backup-before-region-pages.html",
+    "index.html",
+    "australia\\index.html",
+    "_backup_theme_20260518-010904\\australia.index.html",
+    "_backup_theme_20260518-010904\\index.html"
+  ],
+  "app_py_findings": {
+    "exists": true,
+    "has_manufacturer_inventory": true,
+    "has_direct_stock_not_available": false,
+    "has_not_in_stock": false,
+    "has_available": true,
+    "mentions_dms": false,
+    "mentioned_expected_brands": [
+      "Album",
+      "Channel Islands",
+      "Chemistry Surfboards",
+      "Christenson",
+      "DHD",
+      "Firewire",
+      "Haydenshapes",
+      "JS Industries",
+      "Lost",
+      "Misfit Shapes",
+      "Pyzel",
+      "Sharp Eye"
+    ]
+  },
+  "target_config": {
+    "exists": true,
+    "json": [
+      {
+        "brand": "JS Industries",
+        "regionCode": "AU",
+        "countryScope": "Australia",
+        "baseUrl": "https://jsindustries.com",
+        "platform": "shopify",
+        "currency": "AUD",
+        "enabled": true
+      }
+    ]
+  }
+}

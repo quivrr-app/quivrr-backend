@@ -1,0 +1,15 @@
+{
+  "brand": "Simon Anderson",
+  "source": "https://simonandersonsurfboards.com",
+  "models": 8,
+  "rows": 94,
+  "failures": [
+    {
+      "model": "Custom Only Boards",
+      "reason": "no tables found",
+      "url": "https://simonandersonsurfboards.com/surfboards/custom-only-boards"
+    }
+  ],
+  "failure_count": 1,
+  "output_file": "scrapers\\brands\\simonanderson\\output\\simonanderson_master_catalogue_clean.json"
+}

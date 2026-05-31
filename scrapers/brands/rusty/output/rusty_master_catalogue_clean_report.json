@@ -1,196 +1,83 @@
 {
   "brand": "Rusty",
-  "source": "https://rustysurfboards.eu",
-  "collection": "surfboards",
-  "products_seen": 43,
-  "rows": 440,
-  "models": 35,
-  "constructions": [
-    "EPOXY",
-    "PU",
-    "Torsion Spring"
+  "source": "https://rustysurfboards.com",
+  "source_collections": [
+    "all-boards",
+    "all-shortboards",
+    "step-ups",
+    "all-alternatives",
+    "longboards",
+    "mid-lengths",
+    "all-big-boards"
+  ],
+  "candidate_model_pages": 51,
+  "rows": 901,
+  "models": 49,
+  "model_names": [
+    "1984",
+    "419 Fish",
+    "421 Fish",
+    "Bali Single",
+    "Barking Spider",
+    "Big Cat",
+    "Blackbird",
+    "Blade",
+    "D Min",
+    "Desert Island",
+    "Dozer",
+    "Dwart",
+    "Dwart Too",
+    "Egg",
+    "Egg Not",
+    "El Dorado",
+    "Enough Said",
+    "Express",
+    "Fish Quatro",
+    "Hatchet",
+    "Heckler",
+    "Hustler",
+    "Illuminati",
+    "Keg",
+    "Lowrider",
+    "Mi Amigo",
+    "Mini Tanker",
+    "Miso",
+    "Moby Fish",
+    "Model 8",
+    "Neil",
+    "New Traveler",
+    "Not So Moby Fish",
+    "Panda",
+    "SD",
+    "SD RT RE",
+    "Shiv",
+    "Sista Brotha",
+    "Slayer",
+    "Slayer 2",
+    "Smoothie",
+    "So Fuunnn",
+    "The Deuce",
+    "The Rooster",
+    "Underdog",
+    "Utility",
+    "What",
+    "Yeti",
+    "Zeppelin"
   ],
   "failures": [
     {
-      "model": "SD High",
-      "length": "6'6",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-sd-performance-surfboard"
+      "model": "Flat Deck Collection",
+      "url": "https://rustysurfboards.com/collections/flat-deck-collection",
+      "reason": "no dimensions table found"
     },
     {
-      "model": "New Traveler",
-      "length": "5'5",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-new-traveler-step-up-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'7",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'7",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'9",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'9",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'11",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'11",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "5'11",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'1",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'1",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'1",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'3",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'5",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'7",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'9",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "The Keg High",
-      "length": "6'11",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-the-keg-performance-surfboard"
-    },
-    {
-      "model": "Blackbird",
-      "length": "8'2",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-blackbird-step-up-surfboard"
-    },
-    {
-      "model": "Blackbird",
-      "length": "8'4",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-blackbird-step-up-surfboard"
-    },
-    {
-      "model": "El Dorado",
-      "reason": "no dimension table found",
-      "product_url": "https://rustysurfboards.eu/products/rusty-el-dorado-longboard"
-    },
-    {
-      "model": "Lowrider",
-      "length": "6'6",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-lowrider-mid-surfboard"
-    },
-    {
-      "model": "Neil Diamond High",
-      "length": "5'8",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-neil-diamond-performance-surfboard"
-    },
-    {
-      "model": "NSMF",
-      "length": "",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-nsmf-hybrid-surfboard"
-    },
-    {
-      "model": "NSMF",
-      "length": "",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-nsmf-hybrid-surfboard"
-    },
-    {
-      "model": "SD RT RE High",
-      "length": "5'9",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-sd-rt-re-surfboard"
-    },
-    {
-      "model": "Illuminati High",
-      "length": "5'10",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-illuminati-high-performance-surfboard"
-    },
-    {
-      "model": "So Fuunnn!",
-      "length": "5'11",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-so-fuunnn-alternative-surfboard"
-    },
-    {
-      "model": "So Fuunnn!",
-      "length": "6'2",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-so-fuunnn-alternative-surfboard"
-    },
-    {
-      "model": "So Fuunnn!",
-      "length": "6'10",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-so-fuunnn-alternative-surfboard"
-    },
-    {
-      "model": "So Fuunnn!",
-      "length": "7'0",
-      "reason": "length missing from dimension table",
-      "product_url": "https://rustysurfboards.eu/products/rusty-so-fuunnn-alternative-surfboard"
+      "model": "Rapid Entry",
+      "url": "https://rustysurfboards.com/collections/rapid-entry",
+      "reason": "no dimensions table found"
     }
   ],
-  "failure_count": 30,
-  "output_file": "scrapers\\brands\\rusty\\output\\rusty_master_catalogue_clean.json"
+  "failure_count": 2,
+  "output_file": "scrapers\\brands\\rusty\\output\\rusty_master_catalogue_clean.json",
+  "model_links_file": "scrapers\\brands\\rusty\\output\\rusty_model_links.json",
+  "mfa_policy": "disabled_for_au_until_direct_au_manufacturer_availability_exists"
 }

@@ -1,0 +1,212 @@
+{
+  "js_alignment_audit": [
+    {
+      "file": "scrapers\\manufacturers\\availability\\js_industries\\build_js_au_availability.py",
+      "js_urls": [
+        "https://jsindustries.com",
+        "https://jsindustries.com/",
+        "https://jsindustries.com/products.json?limit=250"
+      ],
+      "contains_products_json": true,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\run_all_brand_catalogues.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": false
+    },
+    {
+      "file": "scrapers\\brands\\run_js_pipeline.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": false
+    },
+    {
+      "file": "scrapers\\brands\\devtools\\debug_js_product.py",
+      "js_urls": [
+        "https://jsindustries.com/products/xero-gravity"
+      ],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\build_js_catalogue.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\build_js_search_index.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\normalise_js_models.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\save_js_models.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\scrape_js_dimensions.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\scrape_js_industries.py",
+      "js_urls": [
+        "https://jsindustries.com",
+        "https://jsindustries.com/collections/surfboards"
+      ],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\js\\scrape_js_product_pages.py",
+      "js_urls": [
+        "https://jsindustries.com/products/big-baron",
+        "https://jsindustries.com/products/big-baron-easy-rider-softboard",
+        "https://jsindustries.com/products/big-baron-softboard",
+        "https://jsindustries.com/products/big-horse",
+        "https://jsindustries.com/products/black-baron",
+        "https://jsindustries.com/products/black-eagle-2",
+        "https://jsindustries.com/products/bull-run",
+        "https://jsindustries.com/products/bull-run-softboard",
+        "https://jsindustries.com/products/el-baron",
+        "https://jsindustries.com/products/flame-fish",
+        "https://jsindustries.com/products/flame-fish-softboard",
+        "https://jsindustries.com/products/forget-me-not-3",
+        "https://jsindustries.com/products/forget-me-not-3-step-up",
+        "https://jsindustries.com/products/golden-child",
+        "https://jsindustries.com/products/golden-child-easy-rider",
+        "https://jsindustries.com/products/golden-child-youth",
+        "https://jsindustries.com/products/monsta",
+        "https://jsindustries.com/products/monsta-easy-rider",
+        "https://jsindustries.com/products/monsta-youth",
+        "https://jsindustries.com/products/mother-trucker",
+        "https://jsindustries.com/products/raging-bull",
+        "https://jsindustries.com/products/raging-bull-easy-rider-1",
+        "https://jsindustries.com/products/schooner",
+        "https://jsindustries.com/products/step-off-performer",
+        "https://jsindustries.com/products/sub-xero",
+        "https://jsindustries.com/products/xero-fusion",
+        "https://jsindustries.com/products/xero-fusion-easy-rider",
+        "https://jsindustries.com/products/xero-gravity",
+        "https://jsindustries.com/products/xero-gravity-easy-rider",
+        "https://jsindustries.com/products/xero-gravity-youth"
+      ],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scrapers\\brands\\chilli\\archive\\fix_production_weekly_brand_runner.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": false
+    },
+    {
+      "file": "scripts\\clean_js_catalogue.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scripts\\import_retailer_inventory.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": true,
+      "contains_view_url": true
+    },
+    {
+      "file": "scripts\\import_slimes_newcastle_inventory.py",
+      "js_urls": [],
+      "contains_products_json": true,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": true,
+      "contains_view_url": true
+    },
+    {
+      "file": "scripts\\reconcile_retailer_inventory_brands.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    },
+    {
+      "file": "scripts\\run_all_brand_catalogues.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": false
+    },
+    {
+      "file": "scripts\\manufacturer_availability\\import_js_au_availability.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": true,
+      "contains_boardsizeid": true,
+      "contains_view_url": true
+    },
+    {
+      "file": "scripts\\manufacturer_availability\\run_au_manufacturer_availability_pipeline.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": false
+    },
+    {
+      "file": "scripts\\manufacturer_availability\\run_js_au_availability_pipeline.py",
+      "js_urls": [],
+      "contains_products_json": false,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": false
+    },
+    {
+      "file": "scripts\\tools\\retailer_recon_probe.py",
+      "js_urls": [],
+      "contains_products_json": true,
+      "contains_manufacturer_inventory": false,
+      "contains_boardsizeid": false,
+      "contains_view_url": true
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 ﻿import subprocess
 import sys
 
+
 PYTHON = sys.executable
 
 STEPS = [
@@ -13,7 +14,9 @@ for step in STEPS:
     print("=" * 80)
     print("Running:", " ".join(step))
     print("=" * 80)
+
     result = subprocess.run(step)
+
     if result.returncode != 0:
         sys.exit(result.returncode)
 

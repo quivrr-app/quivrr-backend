@@ -106,7 +106,17 @@ def as_float(value):
 
 
 def is_dimension_available(dimension, detail):
-    return str(detail.get("shopavailable")) == "1"
+    dimension_available = dimension.get("shopavailable")
+
+    if str(dimension_available).lower() in ["1", "true", "yes", "available"]:
+        return True
+
+    current_availability = as_float(dimension.get("currentavailability"))
+
+    if current_availability is not None and current_availability > 0:
+        return True
+
+    return False
 
 
 def fetch_models():
@@ -188,7 +198,9 @@ def main():
         )
 
         for dimension in dimensions:
-            if not is_dimension_available(dimension, detail):
+            is_available = is_dimension_available(dimension, detail)
+
+            if not is_available:
                 skipped_unavailable += 1
                 continue
 
@@ -238,8 +250,8 @@ def main():
                 "productImageUrl": image_url,
                 "priceAmount": price_amount,
                 "priceCurrency": "AUD",
-                "stockStatus": "orderable",
-                "isAvailable": True,
+                "stockStatus": "available" if is_available else "unavailable",
+                "isAvailable": is_available,
                 "availabilitySource": AVAILABILITY_SOURCE,
                 "regionCode": REGION_CODE,
                 "sourceProductId": model_id,

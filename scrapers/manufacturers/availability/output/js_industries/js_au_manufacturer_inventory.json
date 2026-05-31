@@ -15,7 +15,7 @@
     "volumeLitres": 29.4,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -30,7 +30,7 @@
       "inventory_quantity": null,
       "sku": "SB1129827"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.667526+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.294851+00:00"
   },
   {
     "brand": "JS Industries",
@@ -48,7 +48,7 @@
     "volumeLitres": 44.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -63,7 +63,7 @@
       "inventory_quantity": null,
       "sku": "SB1121250"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.667638+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.294956+00:00"
   },
   {
     "brand": "JS Industries",
@@ -81,7 +81,7 @@
     "volumeLitres": 38.8,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -96,7 +96,7 @@
       "inventory_quantity": null,
       "sku": "SB1112355"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.667734+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295041+00:00"
   },
   {
     "brand": "JS Industries",
@@ -114,7 +114,7 @@
     "volumeLitres": 33.5,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -129,7 +129,7 @@
       "inventory_quantity": null,
       "sku": "SB1124827"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.667883+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295121+00:00"
   },
   {
     "brand": "JS Industries",
@@ -147,7 +147,7 @@
     "volumeLitres": 36.5,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -162,13 +162,13 @@
       "inventory_quantity": null,
       "sku": "SB1109176"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.667986+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295198+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'0\" x 20\" X 2 11/16\" - 34.60L, Round, 5x Futures Fin Boxes, PU - ID:1109187 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'0\" x 20\" X 2 11/16\" - 34.60L, Round, 5x Futures Fin Boxes, PU - ID:1109187 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1109187",
@@ -180,7 +180,7 @@
     "volumeLitres": 34.6,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -195,13 +195,13 @@
       "inventory_quantity": null,
       "sku": "SB1109187"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.668340+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295323+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 3x FCS 2 Fin Boxes, PU - ID:1108830 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 3x FCS 2 Fin Boxes, PU - ID:1108830 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1108830",
@@ -213,7 +213,7 @@
     "volumeLitres": 34.3,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -228,40 +228,7 @@
       "inventory_quantity": null,
       "sku": "SB1108830"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.668552+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Raging Bull",
-    "rawProductTitle": "Raging Bull 6'0\" x 19 5/8\" X 2 5/8\" - 32.70L, Round, 5x FCS 2 Fin Boxes, PU - ID:1105972 Default Title",
-    "normalisedProductTitle": "Raging Bull 6'0\" x 19 5/8\" X 2 5/8\" - 32.70L, Round, 5x FCS 2 Fin Boxes, PU - ID:1105972 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1105972",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/99245461869928_3b9e9dff-69dd-439b-8e17-2465baafd304.jpg?v=1778723948",
-    "length": "6'0",
-    "lengthFeetInches": "6'0",
-    "width": "19 5/8",
-    "thickness": "2 5/8",
-    "volumeLitres": 32.7,
-    "construction": "PU",
-    "finSetup": null,
-    "priceAmount": 594.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9168479551700,
-      "variant_id": 47936177012948,
-      "product_title": "Raging Bull 6'0\" x 19 5/8\" X 2 5/8\" - 32.70L, Round, 5x FCS 2 Fin Boxes, PU - ID:1105972",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1105972"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.668659+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295413+00:00"
   },
   {
     "brand": "JS Industries",
@@ -279,7 +246,7 @@
     "volumeLitres": 32.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -294,13 +261,13 @@
       "inventory_quantity": null,
       "sku": "SB1123258"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.668744+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295482+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Swallow, 3x Futures Fin Boxes, PU - ID:1109192 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Swallow, 3x Futures Fin Boxes, PU - ID:1109192 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1109192",
@@ -312,7 +279,7 @@
     "volumeLitres": 36.2,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -327,7 +294,7 @@
       "inventory_quantity": null,
       "sku": "SB1109192"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.668834+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295556+00:00"
   },
   {
     "brand": "JS Industries",
@@ -345,7 +312,7 @@
     "volumeLitres": 35.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -360,7 +327,7 @@
       "inventory_quantity": null,
       "sku": "SB1094710"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.668918+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295622+00:00"
   },
   {
     "brand": "JS Industries",
@@ -378,7 +345,7 @@
     "volumeLitres": 33.5,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -393,7 +360,7 @@
       "inventory_quantity": null,
       "sku": "SB1119744"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669008+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295689+00:00"
   },
   {
     "brand": "JS Industries",
@@ -411,7 +378,7 @@
     "volumeLitres": 28.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -426,7 +393,7 @@
       "inventory_quantity": null,
       "sku": "SB1109846"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669101+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295764+00:00"
   },
   {
     "brand": "JS Industries",
@@ -444,7 +411,7 @@
     "volumeLitres": 32.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -459,7 +426,7 @@
       "inventory_quantity": null,
       "sku": "SB1066115"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669185+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295829+00:00"
   },
   {
     "brand": "JS Industries",
@@ -477,7 +444,7 @@
     "volumeLitres": 30.5,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -492,7 +459,7 @@
       "inventory_quantity": null,
       "sku": "SB1122247"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669269+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295891+00:00"
   },
   {
     "brand": "JS Industries",
@@ -510,7 +477,7 @@
     "volumeLitres": 30.5,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -525,7 +492,7 @@
       "inventory_quantity": null,
       "sku": "SB1066288"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669352+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.295953+00:00"
   },
   {
     "brand": "JS Industries",
@@ -543,7 +510,7 @@
     "volumeLitres": 30.5,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -558,7 +525,7 @@
       "inventory_quantity": null,
       "sku": "SB1066520"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669436+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296015+00:00"
   },
   {
     "brand": "JS Industries",
@@ -576,7 +543,7 @@
     "volumeLitres": 32.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -591,13 +558,13 @@
       "inventory_quantity": null,
       "sku": "SB1121059"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669517+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296077+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Youth",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Youth 5'6\" x 18 1/2\" X 2 1/4\" - 24.10L, Squash, 3x FCS 2 Fin Boxes, PU - ID:1101533 Default Title",
     "normalisedProductTitle": "Xero Gravity Youth 5'6\" x 18 1/2\" X 2 1/4\" - 24.10L, Squash, 3x FCS 2 Fin Boxes, PU - ID:1101533 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1101533",
@@ -609,7 +576,7 @@
     "volumeLitres": 24.1,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -624,7 +591,7 @@
       "inventory_quantity": null,
       "sku": "SB1101533"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669606+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296147+00:00"
   },
   {
     "brand": "JS Industries",
@@ -642,7 +609,7 @@
     "volumeLitres": 32.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -657,46 +624,13 @@
       "inventory_quantity": null,
       "sku": "SB1117277"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669686+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296220+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
-    "rawProductTitle": "Xero Gravity Easy Rider 5'9\" x 19 1/2\" X 2 1/2\" - 30.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071552 Default Title",
-    "normalisedProductTitle": "Xero Gravity Easy Rider 5'9\" x 19 1/2\" X 2 1/2\" - 30.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071552 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1071552",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/17426485586747_a675263b-61cc-424b-a698-924b2fe051ec.jpg?v=1776381850",
-    "length": "5'9",
-    "lengthFeetInches": "5'9",
-    "width": "19 1/2",
-    "thickness": "2 1/2",
-    "volumeLitres": 30.0,
-    "construction": "HYFI",
-    "finSetup": null,
-    "priceAmount": 814.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9143086088404,
-      "variant_id": 47811862495444,
-      "product_title": "Xero Gravity Easy Rider 5'9\" x 19 1/2\" X 2 1/2\" - 30.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071552",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1071552"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669775+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 7'6\" x 22 1/4\" X 3 1/4\" - 57.90L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071663 Default Title",
     "normalisedProductTitle": "Big Baron Clear 7'6\" x 22 1/4\" X 3 1/4\" - 57.90L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071663 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071663",
@@ -708,7 +642,7 @@
     "volumeLitres": 57.9,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 751.95,
+    "priceAmount": 749.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -723,7 +657,7 @@
       "inventory_quantity": null,
       "sku": "SB1071663"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.669922+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296333+00:00"
   },
   {
     "brand": "JS Industries",
@@ -741,7 +675,7 @@
     "volumeLitres": 29.5,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -756,7 +690,7 @@
       "inventory_quantity": null,
       "sku": "SB1071622"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670020+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296399+00:00"
   },
   {
     "brand": "JS Industries",
@@ -774,7 +708,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -789,7 +723,7 @@
       "inventory_quantity": null,
       "sku": "SB1052618"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670106+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296463+00:00"
   },
   {
     "brand": "JS Industries",
@@ -807,7 +741,7 @@
     "volumeLitres": 30.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -822,13 +756,46 @@
       "inventory_quantity": null,
       "sku": "SB1052607"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670366+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296528+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard",
+    "modelName": "Xero Gravity",
+    "rawProductTitle": "Xero Gravity Easy Rider 5'9\" x 19 1/2\" X 2 1/2\" - 30.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071552 Default Title",
+    "normalisedProductTitle": "Xero Gravity Easy Rider 5'9\" x 19 1/2\" X 2 1/2\" - 30.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071552 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1071552",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/17426485586747_a675263b-61cc-424b-a698-924b2fe051ec.jpg?v=1776381850",
+    "length": "5'9",
+    "lengthFeetInches": "5'9",
+    "width": "19 1/2",
+    "thickness": "2 1/2",
+    "volumeLitres": 30.0,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 812.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9143086088404,
+      "variant_id": 47811862495444,
+      "product_title": "Xero Gravity Easy Rider 5'9\" x 19 1/2\" X 2 1/2\" - 30.00L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071552",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1071552"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.296605+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 7'0\" x 22\" X 3\" - 56.00L, Round, 3x Fin Boxes, Softboard - ID:1123833 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 7'0\" x 22\" X 3\" - 56.00L, Round, 3x Fin Boxes, Softboard - ID:1123833 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1123833",
@@ -840,7 +807,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -855,7 +822,7 @@
       "inventory_quantity": null,
       "sku": "SB1123833"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670487+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296685+00:00"
   },
   {
     "brand": "JS Industries",
@@ -873,7 +840,7 @@
     "volumeLitres": 32.7,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -888,40 +855,7 @@
       "inventory_quantity": null,
       "sku": "SB1052609"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670582+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Bull Run",
-    "rawProductTitle": "Bull Run 6'2\" x 20 1/2\" X 2 13/16\" - 38.30L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071518 Default Title",
-    "normalisedProductTitle": "Bull Run 6'2\" x 20 1/2\" X 2 13/16\" - 38.30L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071518 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1071518-1",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/1527043736689e_65ff498c-a907-4603-89d0-50848e0e554c.jpg?v=1776382904",
-    "length": "6'2",
-    "lengthFeetInches": "6'2",
-    "width": "20 1/2",
-    "thickness": "2 13/16",
-    "volumeLitres": 38.3,
-    "construction": "HYFI",
-    "finSetup": null,
-    "priceAmount": 908.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9143094018260,
-      "variant_id": 47811886874836,
-      "product_title": "Bull Run 6'2\" x 20 1/2\" X 2 13/16\" - 38.30L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071518",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1071518"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670669+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296750+00:00"
   },
   {
     "brand": "JS Industries",
@@ -939,7 +873,7 @@
     "volumeLitres": 30.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -954,7 +888,7 @@
       "inventory_quantity": null,
       "sku": "SB1071587"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670751+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296814+00:00"
   },
   {
     "brand": "JS Industries",
@@ -972,7 +906,7 @@
     "volumeLitres": 26.1,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -987,7 +921,7 @@
       "inventory_quantity": null,
       "sku": "SB1071562"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670836+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296878+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1005,7 +939,7 @@
     "volumeLitres": 32.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1020,40 +954,7 @@
       "inventory_quantity": null,
       "sku": "SB1072266"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.670918+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Xero Gravity",
-    "rawProductTitle": "Xero Gravity 6'0\" x 19 3/4\" X 2 1/2\" - 32.00L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071629 Default Title",
-    "normalisedProductTitle": "Xero Gravity 6'0\" x 19 3/4\" X 2 1/2\" - 32.00L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071629 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1071629",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/29641525065e14_d04f12ec-96f0-4a6b-a18b-d544fa324363.jpg?v=1776382861",
-    "length": "6'0",
-    "lengthFeetInches": "6'0",
-    "width": "19 3/4",
-    "thickness": "2 1/2",
-    "volumeLitres": 32.0,
-    "construction": "CarboTune",
-    "finSetup": null,
-    "priceAmount": 1002.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9143093756116,
-      "variant_id": 47811886448852,
-      "product_title": "Xero Gravity 6'0\" x 19 3/4\" X 2 1/2\" - 32.00L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071629",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1071629"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671002+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.296940+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1071,7 +972,7 @@
     "volumeLitres": 29.7,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1086,13 +987,13 @@
       "inventory_quantity": null,
       "sku": "SB1052606"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671084+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297003+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x Futures Fin Boxes, HYFI 3.0 - ID:1071601 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x Futures Fin Boxes, HYFI 3.0 - ID:1071601 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071601-1",
@@ -1104,7 +1005,7 @@
     "volumeLitres": 31.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1119,7 +1020,7 @@
       "inventory_quantity": null,
       "sku": "SB1071601"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671172+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297072+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1137,7 +1038,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1152,7 +1053,7 @@
       "inventory_quantity": null,
       "sku": "SB1071505"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671252+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297133+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1170,7 +1071,7 @@
     "volumeLitres": 30.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1185,7 +1086,7 @@
       "inventory_quantity": null,
       "sku": "SB1046097"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671340+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297195+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1203,7 +1104,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1218,7 +1119,7 @@
       "inventory_quantity": null,
       "sku": "SB1071597"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671431+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297257+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1236,7 +1137,7 @@
     "volumeLitres": 29.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1251,13 +1152,13 @@
       "inventory_quantity": null,
       "sku": "SB1071596"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671517+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297317+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'3\" x 20 3/4\" X 2 7/8\" - 40.20L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052627 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'3\" x 20 3/4\" X 2 7/8\" - 40.20L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052627 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052627",
@@ -1269,7 +1170,7 @@
     "volumeLitres": 40.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1284,40 +1185,7 @@
       "inventory_quantity": null,
       "sku": "SB1052627"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671611+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Xero Gravity",
-    "rawProductTitle": "Xero Gravity 5'11\" x 19 1/2\" X 2 7/16\" - 30.20L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071625 Default Title",
-    "normalisedProductTitle": "Xero Gravity 5'11\" x 19 1/2\" X 2 7/16\" - 30.20L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071625 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1071625",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/29641525065e14_e0aef8a6-4e03-465e-8157-af7d49da36a2.jpg?v=1776382749",
-    "length": "5'11",
-    "lengthFeetInches": "5'11",
-    "width": "19 1/2",
-    "thickness": "2 7/16",
-    "volumeLitres": 30.2,
-    "construction": "CarboTune",
-    "finSetup": null,
-    "priceAmount": 1002.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9143092740308,
-      "variant_id": 47811885105364,
-      "product_title": "Xero Gravity 5'11\" x 19 1/2\" X 2 7/16\" - 30.20L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071625",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1071625"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671698+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297385+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1335,7 +1203,7 @@
     "volumeLitres": 29.9,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1350,13 +1218,13 @@
       "inventory_quantity": null,
       "sku": "SB1052643"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671782+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297446+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052626 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052626 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052626",
@@ -1368,7 +1236,7 @@
     "volumeLitres": 38.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1383,7 +1251,7 @@
       "inventory_quantity": null,
       "sku": "SB1052626"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671872+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297513+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1401,7 +1269,7 @@
     "volumeLitres": 29.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1416,7 +1284,7 @@
       "inventory_quantity": null,
       "sku": "SB1072261"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.671953+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297573+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1434,7 +1302,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "unavailable",
     "isAvailable": false,
@@ -1449,7 +1317,7 @@
       "inventory_quantity": null,
       "sku": "SB1071508"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672041+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297633+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1467,7 +1335,7 @@
     "volumeLitres": 24.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1482,13 +1350,13 @@
       "inventory_quantity": null,
       "sku": "SB1071539"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672125+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297698+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071572 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071572 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071572",
@@ -1500,7 +1368,7 @@
     "volumeLitres": 31.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "unavailable",
     "isAvailable": false,
@@ -1515,7 +1383,7 @@
       "inventory_quantity": null,
       "sku": "SB1071572"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672214+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297767+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1533,7 +1401,7 @@
     "volumeLitres": 34.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1548,7 +1416,7 @@
       "inventory_quantity": null,
       "sku": "SB1052610"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672297+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297829+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1566,7 +1434,7 @@
     "volumeLitres": 25.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1581,7 +1449,7 @@
       "inventory_quantity": null,
       "sku": "SB1052726"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672384+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.297892+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1599,7 +1467,7 @@
     "volumeLitres": 23.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1614,7 +1482,7 @@
       "inventory_quantity": null,
       "sku": "SB1071538"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672464+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298001+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1632,7 +1500,7 @@
     "volumeLitres": 27.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1647,13 +1515,13 @@
       "inventory_quantity": null,
       "sku": "SB1052699"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672544+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298069+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'3\" x 21 1/4\" X 3\" - 42.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071576 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'3\" x 21 1/4\" X 3\" - 42.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071576 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071576-1",
@@ -1665,7 +1533,7 @@
     "volumeLitres": 42.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1680,7 +1548,7 @@
       "inventory_quantity": null,
       "sku": "SB1071576"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672631+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298351+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1698,7 +1566,7 @@
     "volumeLitres": 31.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1713,7 +1581,7 @@
       "inventory_quantity": null,
       "sku": "SB1071598"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672711+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298515+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1731,7 +1599,7 @@
     "volumeLitres": 25.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1746,7 +1614,7 @@
       "inventory_quantity": null,
       "sku": "SB1071561"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672790+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298654+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1764,7 +1632,7 @@
     "volumeLitres": 28.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1779,7 +1647,7 @@
       "inventory_quantity": null,
       "sku": "SB1052702"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672872+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298863+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1797,7 +1665,7 @@
     "volumeLitres": 26.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1812,7 +1680,7 @@
       "inventory_quantity": null,
       "sku": "SB1071542"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.672953+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.298939+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1830,7 +1698,7 @@
     "volumeLitres": 23.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1845,7 +1713,7 @@
       "inventory_quantity": null,
       "sku": "SB1071559"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673035+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299006+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1863,7 +1731,7 @@
     "volumeLitres": 35.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1878,7 +1746,7 @@
       "inventory_quantity": null,
       "sku": "SB1052611"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673116+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299088+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1896,7 +1764,7 @@
     "volumeLitres": 42.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1911,7 +1779,7 @@
       "inventory_quantity": null,
       "sku": "SB1071523"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673196+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299156+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1929,7 +1797,7 @@
     "volumeLitres": 27.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1944,13 +1812,13 @@
       "inventory_quantity": null,
       "sku": "SB1052729"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673278+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299268+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x Futures Fin Boxes, HYFI 3.0 - ID:1071602 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x Futures Fin Boxes, HYFI 3.0 - ID:1071602 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071602",
@@ -1962,7 +1830,7 @@
     "volumeLitres": 32.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -1977,7 +1845,7 @@
       "inventory_quantity": null,
       "sku": "SB1071602"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673365+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299413+00:00"
   },
   {
     "brand": "JS Industries",
@@ -1995,7 +1863,7 @@
     "volumeLitres": 28.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2010,7 +1878,7 @@
       "inventory_quantity": null,
       "sku": "SB1052638"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673452+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299503+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2028,7 +1896,7 @@
     "volumeLitres": 27.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "unavailable",
     "isAvailable": false,
@@ -2043,13 +1911,13 @@
       "inventory_quantity": null,
       "sku": "SB1071564"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673563+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299575+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'4\" x 20 7/8\" X 3\" - 42.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071499 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'4\" x 20 7/8\" X 3\" - 42.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071499 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071499",
@@ -2061,7 +1929,7 @@
     "volumeLitres": 42.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2076,7 +1944,7 @@
       "inventory_quantity": null,
       "sku": "SB1071499"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673652+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299653+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2094,7 +1962,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2109,7 +1977,7 @@
       "inventory_quantity": null,
       "sku": "SB1071507"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673734+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299717+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2127,7 +1995,7 @@
     "volumeLitres": 47.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2142,7 +2010,7 @@
       "inventory_quantity": null,
       "sku": "SB1071568"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673813+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299781+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2160,7 +2028,7 @@
     "volumeLitres": 33.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2175,7 +2043,7 @@
       "inventory_quantity": null,
       "sku": "SB1052616"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673893+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299847+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2193,7 +2061,7 @@
     "volumeLitres": 33.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2208,7 +2076,7 @@
       "inventory_quantity": null,
       "sku": "SB1071481"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.673970+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299907+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2226,7 +2094,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2241,7 +2109,7 @@
       "inventory_quantity": null,
       "sku": "SB1071483"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674057+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.299969+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2259,7 +2127,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2274,7 +2142,7 @@
       "inventory_quantity": null,
       "sku": "SB1071482"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674140+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300030+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2292,7 +2160,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2307,7 +2175,7 @@
       "inventory_quantity": null,
       "sku": "SB1052652"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674221+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300103+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2325,7 +2193,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2340,7 +2208,7 @@
       "inventory_quantity": null,
       "sku": "SB1071512"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674300+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300168+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2358,7 +2226,7 @@
     "volumeLitres": 33.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2373,13 +2241,13 @@
       "inventory_quantity": null,
       "sku": "SB1052736"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674385+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300233+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'3\" x 20 3/4\" X 2 7/8\" - 40.20L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071554 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'3\" x 20 3/4\" X 2 7/8\" - 40.20L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071554 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071554-1",
@@ -2391,7 +2259,7 @@
     "volumeLitres": 40.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2406,13 +2274,13 @@
       "inventory_quantity": null,
       "sku": "SB1071554"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674473+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300305+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071497 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071497 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071497",
@@ -2424,7 +2292,7 @@
     "volumeLitres": 38.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2439,7 +2307,7 @@
       "inventory_quantity": null,
       "sku": "SB1071497"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674559+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300374+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2457,7 +2325,7 @@
     "volumeLitres": 32.7,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2472,7 +2340,7 @@
       "inventory_quantity": null,
       "sku": "SB1071632"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674640+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300438+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2490,7 +2358,7 @@
     "volumeLitres": 37.1,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2505,7 +2373,7 @@
       "inventory_quantity": null,
       "sku": "SB1071549"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674724+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300502+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2523,7 +2391,7 @@
     "volumeLitres": 45.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2538,7 +2406,7 @@
       "inventory_quantity": null,
       "sku": "SB1071567"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674804+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300564+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2556,7 +2424,7 @@
     "volumeLitres": 47.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2571,13 +2439,13 @@
       "inventory_quantity": null,
       "sku": "SB1071551"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674884+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300625+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071574 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071574 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071574",
@@ -2589,7 +2457,7 @@
     "volumeLitres": 32.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2604,7 +2472,7 @@
       "inventory_quantity": null,
       "sku": "SB1071574"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.674968+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300693+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2622,7 +2490,7 @@
     "volumeLitres": 32.7,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2637,7 +2505,7 @@
       "inventory_quantity": null,
       "sku": "SB1071633"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675045+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300757+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2655,7 +2523,7 @@
     "volumeLitres": 42.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2670,7 +2538,7 @@
       "inventory_quantity": null,
       "sku": "SB1071526"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675123+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300817+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2688,7 +2556,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2703,7 +2571,7 @@
       "inventory_quantity": null,
       "sku": "SB1052755"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675201+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300879+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2721,7 +2589,7 @@
     "volumeLitres": 34.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2736,7 +2604,7 @@
       "inventory_quantity": null,
       "sku": "SB1071566"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675290+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.300942+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2754,7 +2622,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2769,7 +2637,7 @@
       "inventory_quantity": null,
       "sku": "SB1052672"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675380+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301001+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2787,7 +2655,7 @@
     "volumeLitres": 42.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2802,7 +2670,7 @@
       "inventory_quantity": null,
       "sku": "SB1071525"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675457+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301059+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2820,7 +2688,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2835,7 +2703,7 @@
       "inventory_quantity": null,
       "sku": "SB1052617"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675539+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301120+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2853,7 +2721,7 @@
     "volumeLitres": 33.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2868,7 +2736,7 @@
       "inventory_quantity": null,
       "sku": "SB1071583"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675618+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301191+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2886,7 +2754,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2901,7 +2769,7 @@
       "inventory_quantity": null,
       "sku": "SB1071517"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675697+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301252+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2919,7 +2787,7 @@
     "volumeLitres": 44.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2934,13 +2802,13 @@
       "inventory_quantity": null,
       "sku": "SB1072276"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675774+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301314+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071575 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071575 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071575",
@@ -2952,7 +2820,7 @@
     "volumeLitres": 36.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -2967,7 +2835,7 @@
       "inventory_quantity": null,
       "sku": "SB1071575"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675879+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301382+00:00"
   },
   {
     "brand": "JS Industries",
@@ -2985,7 +2853,7 @@
     "volumeLitres": 39.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3000,13 +2868,13 @@
       "inventory_quantity": null,
       "sku": "SB1071477"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.675964+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301446+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'6\" x 21 3/4\" X 3 1/8\" - 47.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071578 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'6\" x 21 3/4\" X 3 1/8\" - 47.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071578 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071578",
@@ -3018,7 +2886,7 @@
     "volumeLitres": 47.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3033,13 +2901,13 @@
       "inventory_quantity": null,
       "sku": "SB1071578"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676058+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301516+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071577 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071577 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071577",
@@ -3051,7 +2919,7 @@
     "volumeLitres": 45.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3066,7 +2934,7 @@
       "inventory_quantity": null,
       "sku": "SB1071577"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676144+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301583+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3084,7 +2952,7 @@
     "volumeLitres": 33.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3099,13 +2967,13 @@
       "inventory_quantity": null,
       "sku": "SB1072267"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676230+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301648+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071636 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071636 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071636-1",
@@ -3117,7 +2985,7 @@
     "volumeLitres": 36.3,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1064.95,
+    "priceAmount": 1062.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3132,7 +3000,7 @@
       "inventory_quantity": null,
       "sku": "SB1071636"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676320+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301717+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3150,7 +3018,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3165,7 +3033,7 @@
       "inventory_quantity": null,
       "sku": "SB1071509"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676405+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301779+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3183,7 +3051,7 @@
     "volumeLitres": 31.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3198,7 +3066,7 @@
       "inventory_quantity": null,
       "sku": "SB1052615"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676488+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301840+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3216,7 +3084,7 @@
     "volumeLitres": 39.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3231,13 +3099,13 @@
       "inventory_quantity": null,
       "sku": "SB1071586"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676570+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301903+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 7'6\" x 22 1/4\" X 3 1/4\" - 57.90L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071665 Default Title",
     "normalisedProductTitle": "Big Baron Clear 7'6\" x 22 1/4\" X 3 1/4\" - 57.90L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071665 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071665",
@@ -3249,7 +3117,7 @@
     "volumeLitres": 57.9,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 751.95,
+    "priceAmount": 749.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3264,7 +3132,7 @@
       "inventory_quantity": null,
       "sku": "SB1071665"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676659+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.301972+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3282,7 +3150,7 @@
     "volumeLitres": 51.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3297,13 +3165,13 @@
       "inventory_quantity": null,
       "sku": "SB1071537"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676740+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302034+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 7'6\" x 22 1/4\" X 3 1/4\" - 57.90L, Round, 2x Futures Fin Boxes, PE - ID:1071682 Default Title",
     "normalisedProductTitle": "Big Baron Clear 7'6\" x 22 1/4\" X 3 1/4\" - 57.90L, Round, 2x Futures Fin Boxes, PE - ID:1071682 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071682",
@@ -3315,7 +3183,7 @@
     "volumeLitres": 57.9,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 751.95,
+    "priceAmount": 749.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3330,7 +3198,7 @@
       "inventory_quantity": null,
       "sku": "SB1071682"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676826+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302108+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3348,7 +3216,7 @@
     "volumeLitres": 38.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3363,7 +3231,7 @@
       "inventory_quantity": null,
       "sku": "SB1072274"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676907+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302171+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3381,7 +3249,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3396,7 +3264,7 @@
       "inventory_quantity": null,
       "sku": "SB1071608"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.676986+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302231+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3414,7 +3282,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3429,7 +3297,7 @@
       "inventory_quantity": null,
       "sku": "SB1071516"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677068+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302291+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3447,7 +3315,7 @@
     "volumeLitres": 31.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3462,13 +3330,13 @@
       "inventory_quantity": null,
       "sku": "SB1071582"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677151+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302353+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 7'6\" x 21 3/4\" X 2 7/8\" - 50.00L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071662 Default Title",
     "normalisedProductTitle": "Big Baron Clear 7'6\" x 21 3/4\" X 2 7/8\" - 50.00L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071662 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071662",
@@ -3480,7 +3348,7 @@
     "volumeLitres": 50.0,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 751.95,
+    "priceAmount": 749.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3495,7 +3363,7 @@
       "inventory_quantity": null,
       "sku": "SB1071662"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677240+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302418+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3513,7 +3381,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3528,7 +3396,7 @@
       "inventory_quantity": null,
       "sku": "SB1071510"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677324+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302477+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3546,7 +3414,7 @@
     "volumeLitres": 33.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3561,7 +3429,7 @@
       "inventory_quantity": null,
       "sku": "SB1072268"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677409+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302540+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3579,7 +3447,7 @@
     "volumeLitres": 51.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3594,7 +3462,7 @@
       "inventory_quantity": null,
       "sku": "SB1071590"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677488+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302602+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3612,7 +3480,7 @@
     "volumeLitres": 32.7,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3627,7 +3495,7 @@
       "inventory_quantity": null,
       "sku": "SB1071547"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677570+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302667+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3645,7 +3513,7 @@
     "volumeLitres": 29.9,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3660,13 +3528,13 @@
       "inventory_quantity": null,
       "sku": "SB1052642"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677650+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302730+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 6'8\" x 21\" X 2 7/8\" - 42.80L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071660 Default Title",
     "normalisedProductTitle": "Big Baron Clear 6'8\" x 21\" X 2 7/8\" - 42.80L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071660 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071660",
@@ -3678,7 +3546,7 @@
     "volumeLitres": 42.8,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 720.95,
+    "priceAmount": 718.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3693,13 +3561,13 @@
       "inventory_quantity": null,
       "sku": "SB1071660"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677737+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302796+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 6'8\" x 21\" X 2 7/8\" - 42.80L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071659 Default Title",
     "normalisedProductTitle": "Big Baron Clear 6'8\" x 21\" X 2 7/8\" - 42.80L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071659 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071659",
@@ -3711,7 +3579,7 @@
     "volumeLitres": 42.8,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 720.95,
+    "priceAmount": 718.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3726,7 +3594,7 @@
       "inventory_quantity": null,
       "sku": "SB1071659"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677826+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302859+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3744,7 +3612,7 @@
     "volumeLitres": 32.1,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3759,7 +3627,7 @@
       "inventory_quantity": null,
       "sku": "SB1071565"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677907+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302923+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3777,7 +3645,7 @@
     "volumeLitres": 27.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3792,7 +3660,7 @@
       "inventory_quantity": null,
       "sku": "SB1052701"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.677989+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.302987+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3810,7 +3678,7 @@
     "volumeLitres": 28.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3825,7 +3693,7 @@
       "inventory_quantity": null,
       "sku": "SB1071591"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678071+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303050+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3843,7 +3711,7 @@
     "volumeLitres": 31.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3858,13 +3726,13 @@
       "inventory_quantity": null,
       "sku": "SB1071480"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678155+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303114+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 6'4\" x 20 3/4\" X 2 3/4\" - 38.70L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071658 Default Title",
     "normalisedProductTitle": "Big Baron Clear 6'4\" x 20 3/4\" X 2 3/4\" - 38.70L, Round, 2x FCS 2 Fin Boxes, PE - ID:1071658 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071658-1",
@@ -3876,7 +3744,7 @@
     "volumeLitres": 38.7,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3891,7 +3759,7 @@
       "inventory_quantity": null,
       "sku": "SB1071658"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678243+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303182+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3909,7 +3777,7 @@
     "volumeLitres": 45.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3924,7 +3792,7 @@
       "inventory_quantity": null,
       "sku": "SB1071600"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678326+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303245+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3942,7 +3810,7 @@
     "volumeLitres": 31.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3957,7 +3825,7 @@
       "inventory_quantity": null,
       "sku": "SB1052608"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678415+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303307+00:00"
   },
   {
     "brand": "JS Industries",
@@ -3975,7 +3843,7 @@
     "volumeLitres": 27.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -3990,7 +3858,7 @@
       "inventory_quantity": null,
       "sku": "SB1052700"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678495+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303369+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4008,7 +3876,7 @@
     "volumeLitres": 26.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4023,7 +3891,7 @@
       "inventory_quantity": null,
       "sku": "SB1071604"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678574+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303431+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4041,7 +3909,7 @@
     "volumeLitres": 30.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4056,7 +3924,7 @@
       "inventory_quantity": null,
       "sku": "SB1071479"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678654+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303492+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4074,7 +3942,7 @@
     "volumeLitres": 31.0,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4089,7 +3957,7 @@
       "inventory_quantity": null,
       "sku": "SB1071628"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678734+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303554+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4107,7 +3975,7 @@
     "volumeLitres": 28.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4122,7 +3990,7 @@
       "inventory_quantity": null,
       "sku": "SB1071478"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678816+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303615+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4140,7 +4008,7 @@
     "volumeLitres": 24.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4155,7 +4023,7 @@
       "inventory_quantity": null,
       "sku": "SB1071560"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678898+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303677+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4173,7 +4041,7 @@
     "volumeLitres": 31.0,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4188,40 +4056,7 @@
       "inventory_quantity": null,
       "sku": "SB1071626"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.678984+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Bull Run",
-    "rawProductTitle": "Bull Run 5'6\" x 19 1/4\" X 2 5/16\" - 26.00L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071500 Default Title",
-    "normalisedProductTitle": "Bull Run 5'6\" x 19 1/4\" X 2 5/16\" - 26.00L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071500 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1071500",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/1527043736689e_0d747005-7d07-4efb-b1ea-1e9abf4a63c4.jpg?v=1776381663",
-    "length": "5'6",
-    "lengthFeetInches": "5'6",
-    "width": "19 1/4",
-    "thickness": "2 5/16",
-    "volumeLitres": 26.0,
-    "construction": "HYFI",
-    "finSetup": null,
-    "priceAmount": 876.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9143084712148,
-      "variant_id": 47811861020884,
-      "product_title": "Bull Run 5'6\" x 19 1/4\" X 2 5/16\" - 26.00L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071500",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1071500"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679072+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303738+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4239,7 +4074,7 @@
     "volumeLitres": 28.1,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4254,40 +4089,7 @@
       "inventory_quantity": null,
       "sku": "SB1052605"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679157+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Xero Gravity",
-    "rawProductTitle": "Xero Gravity 5'11\" x 19 1/2\" X 2 1/2\" - 31.00L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071627 Default Title",
-    "normalisedProductTitle": "Xero Gravity 5'11\" x 19 1/2\" X 2 1/2\" - 31.00L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071627 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1071627",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/29641525065e14_ee86bfe5-2d88-488c-9ea8-e83ea5f7e466.jpg?v=1776381615",
-    "length": "5'11",
-    "lengthFeetInches": "5'11",
-    "width": "19 1/2",
-    "thickness": "2 1/2",
-    "volumeLitres": 31.0,
-    "construction": "CarboTune",
-    "finSetup": null,
-    "priceAmount": 1002.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9143084450004,
-      "variant_id": 47811860725972,
-      "product_title": "Xero Gravity 5'11\" x 19 1/2\" X 2 1/2\" - 31.00L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071627",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1071627"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679243+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303798+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4305,7 +4107,7 @@
     "volumeLitres": 26.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4320,13 +4122,13 @@
       "inventory_quantity": null,
       "sku": "SB1071501"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679328+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303860+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071573 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1071573 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071573",
@@ -4338,7 +4140,7 @@
     "volumeLitres": 32.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4353,7 +4155,7 @@
       "inventory_quantity": null,
       "sku": "SB1071573"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679421+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303929+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4371,7 +4173,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4386,13 +4188,13 @@
       "inventory_quantity": null,
       "sku": "SB1071506"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679512+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.303991+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, Carbotune - ID:1071641 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, Carbotune - ID:1071641 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071641",
@@ -4404,7 +4206,7 @@
     "volumeLitres": 31.0,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1033.95,
+    "priceAmount": 1031.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4419,13 +4221,13 @@
       "inventory_quantity": null,
       "sku": "SB1071641"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679612+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304061+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'4\" x 20 7/8\" X 3\" - 42.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052628 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'4\" x 20 7/8\" X 3\" - 42.40L, Round, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052628 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052628",
@@ -4437,7 +4239,7 @@
     "volumeLitres": 42.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4452,7 +4254,7 @@
       "inventory_quantity": null,
       "sku": "SB1052628"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679710+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304134+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4470,7 +4272,7 @@
     "volumeLitres": 30.2,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4485,7 +4287,7 @@
       "inventory_quantity": null,
       "sku": "SB1071624"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679808+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304199+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4503,7 +4305,7 @@
     "volumeLitres": 42.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4518,13 +4320,13 @@
       "inventory_quantity": null,
       "sku": "SB1071524"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679894+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304260+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, Carbotune - ID:1071646 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, Carbotune - ID:1071646 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071646-1",
@@ -4536,7 +4338,7 @@
     "volumeLitres": 40.5,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1096.95,
+    "priceAmount": 1093.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4551,7 +4353,7 @@
       "inventory_quantity": null,
       "sku": "SB1071646"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.679980+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304328+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4569,7 +4371,7 @@
     "volumeLitres": 28.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4584,7 +4386,7 @@
       "inventory_quantity": null,
       "sku": "SB1052613"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680072+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304392+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4602,7 +4404,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4617,7 +4419,7 @@
       "inventory_quantity": null,
       "sku": "SB1071585"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680165+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304454+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4635,7 +4437,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4650,7 +4452,7 @@
       "inventory_quantity": null,
       "sku": "SB1071503"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680253+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304514+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4668,7 +4470,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4683,7 +4485,7 @@
       "inventory_quantity": null,
       "sku": "SB1046099"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680333+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304573+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4701,7 +4503,7 @@
     "volumeLitres": 34.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4716,13 +4518,13 @@
       "inventory_quantity": null,
       "sku": "SB1071594"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680424+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304634+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, Carbotune - ID:1071645 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, Carbotune - ID:1071645 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071645",
@@ -4734,7 +4536,7 @@
     "volumeLitres": 36.2,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1033.95,
+    "priceAmount": 1031.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4749,7 +4551,7 @@
       "inventory_quantity": null,
       "sku": "SB1071645"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680522+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304701+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4767,7 +4569,7 @@
     "volumeLitres": 32.7,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4782,7 +4584,7 @@
       "inventory_quantity": null,
       "sku": "SB1071631"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680604+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304764+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4800,7 +4602,7 @@
     "volumeLitres": 42.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4815,7 +4617,7 @@
       "inventory_quantity": null,
       "sku": "SB1071550"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680684+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304828+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4833,7 +4635,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4848,13 +4650,13 @@
       "inventory_quantity": null,
       "sku": "SB1071515"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680769+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304891+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'0\" x 20\" X 2 11/16\" - 34.60L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071635 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'0\" x 20\" X 2 11/16\" - 34.60L, Squash, 3x FCS 2 Fin Boxes, Carbotune - ID:1071635 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071635",
@@ -4866,7 +4668,7 @@
     "volumeLitres": 34.6,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1002.95,
+    "priceAmount": 999.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4881,7 +4683,7 @@
       "inventory_quantity": null,
       "sku": "SB1071635"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680854+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.304959+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4899,7 +4701,7 @@
     "volumeLitres": 42.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4914,7 +4716,7 @@
       "inventory_quantity": null,
       "sku": "SB1071527"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.680932+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305021+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4932,7 +4734,7 @@
     "volumeLitres": 33.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4947,7 +4749,7 @@
       "inventory_quantity": null,
       "sku": "SB1046098"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681012+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305083+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4965,7 +4767,7 @@
     "volumeLitres": 38.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -4980,7 +4782,7 @@
       "inventory_quantity": null,
       "sku": "SB1071514"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681093+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305144+00:00"
   },
   {
     "brand": "JS Industries",
@@ -4998,7 +4800,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5013,7 +4815,7 @@
       "inventory_quantity": null,
       "sku": "SB1072270"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681176+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305209+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5031,7 +4833,7 @@
     "volumeLitres": 36.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5046,7 +4848,7 @@
       "inventory_quantity": null,
       "sku": "SB1072272"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681264+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305277+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5064,7 +4866,7 @@
     "volumeLitres": 36.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5079,7 +4881,7 @@
       "inventory_quantity": null,
       "sku": "SB1071476"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681351+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305342+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5097,7 +4899,7 @@
     "volumeLitres": 33.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5112,13 +4914,13 @@
       "inventory_quantity": null,
       "sku": "SB1091037"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681436+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305413+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071708 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071708 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071708",
@@ -5130,7 +4932,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5145,13 +4947,13 @@
       "inventory_quantity": null,
       "sku": "SB1071708"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681537+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305498+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071705 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071705 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071705",
@@ -5163,7 +4965,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5178,13 +4980,13 @@
       "inventory_quantity": null,
       "sku": "SB1071705"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681639+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305582+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071695 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071695 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071695",
@@ -5196,7 +4998,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5211,13 +5013,13 @@
       "inventory_quantity": null,
       "sku": "SB1071695"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681736+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305661+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Bull Run Softboard Sage",
+    "modelName": "Bull Run",
     "rawProductTitle": "Bull Run Softboard Sage 6'2\" x 21\" X 2 7/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071714 Default Title",
     "normalisedProductTitle": "Bull Run Softboard Sage 6'2\" x 21\" X 2 7/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071714 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071714",
@@ -5229,7 +5031,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5244,13 +5046,13 @@
       "inventory_quantity": null,
       "sku": "SB1071714"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681827+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305737+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071706 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071706 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071706",
@@ -5262,7 +5064,7 @@
     "volumeLitres": 45.5,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5277,13 +5079,13 @@
       "inventory_quantity": null,
       "sku": "SB1071706"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.681928+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305839+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071692 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071692 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071692",
@@ -5295,7 +5097,7 @@
     "volumeLitres": 45.5,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5310,13 +5112,13 @@
       "inventory_quantity": null,
       "sku": "SB1071692"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682028+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.305924+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071693 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071693 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071693",
@@ -5328,7 +5130,7 @@
     "volumeLitres": 51.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5343,13 +5145,13 @@
       "inventory_quantity": null,
       "sku": "SB1071693"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682127+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306005+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071691 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071691 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071691",
@@ -5361,7 +5163,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5376,13 +5178,13 @@
       "inventory_quantity": null,
       "sku": "SB1071691"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682223+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306086+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071707 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071707 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071707",
@@ -5394,7 +5196,7 @@
     "volumeLitres": 51.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5409,13 +5211,13 @@
       "inventory_quantity": null,
       "sku": "SB1071707"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682323+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306237+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071694 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1071694 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1071694",
@@ -5427,7 +5229,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5442,13 +5244,13 @@
       "inventory_quantity": null,
       "sku": "SB1071694"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682429+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306349+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Black Baron 2.1",
+    "modelName": "Black Baron",
     "rawProductTitle": "Black Baron 2.1 5'8\" x 19 3/8\" X 2 5/8\" - 29.60L, Swallow, 3x FCS 2 Fin Boxes, PU - ID:1109554 Default Title",
     "normalisedProductTitle": "Black Baron 2.1 5'8\" x 19 3/8\" X 2 5/8\" - 29.60L, Swallow, 3x FCS 2 Fin Boxes, PU - ID:1109554 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1109554",
@@ -5460,7 +5262,7 @@
     "volumeLitres": 29.6,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5475,13 +5277,13 @@
       "inventory_quantity": null,
       "sku": "SB1109554"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682520+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306428+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Ramzi Boukhiam Monsta",
+    "modelName": "Monsta",
     "rawProductTitle": "Ramzi Boukhiam Monsta 6'3\"1/2 x X - 31.92L, Squash, 3x Futures Fin Boxes, PU [Good] - ID:1114840 Default Title",
     "normalisedProductTitle": "Ramzi Boukhiam Monsta 6'3\"1/2 x X - 31.92L, Squash, 3x Futures Fin Boxes, PU [Good] - ID:1114840 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1114840",
@@ -5493,7 +5295,7 @@
     "volumeLitres": 31.92,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5508,13 +5310,13 @@
       "inventory_quantity": null,
       "sku": "SB1114840"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682595+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306500+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Raging Bull Easy Rider",
+    "modelName": "Raging Bull",
     "rawProductTitle": "Raging Bull Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Round, 5x Futures Fin Boxes, PU - ID:1110408 Default Title",
     "normalisedProductTitle": "Raging Bull Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Round, 5x Futures Fin Boxes, PU - ID:1110408 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1110408",
@@ -5526,7 +5328,7 @@
     "volumeLitres": 38.4,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 594.95,
+    "priceAmount": 593.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5541,13 +5343,13 @@
       "inventory_quantity": null,
       "sku": "SB1110408"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682687+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306578+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Bull Run Softboard Sage",
+    "modelName": "Bull Run",
     "rawProductTitle": "Bull Run Softboard Sage 6'2\" x 21\" X 2 7/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052937 Default Title",
     "normalisedProductTitle": "Bull Run Softboard Sage 6'2\" x 21\" X 2 7/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052937 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052937",
@@ -5559,7 +5361,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5574,13 +5376,13 @@
       "inventory_quantity": null,
       "sku": "SB1052937"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682779+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306659+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 6'6\" x 20 1/4\" X 2 5/8\" - 36.80L, Round, 2x FCS 2 Fin Boxes, PE - ID:1116414 Default Title",
     "normalisedProductTitle": "Big Baron Clear 6'6\" x 20 1/4\" X 2 5/8\" - 36.80L, Round, 2x FCS 2 Fin Boxes, PE - ID:1116414 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1116414",
@@ -5592,7 +5394,7 @@
     "volumeLitres": 36.8,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5607,7 +5409,7 @@
       "inventory_quantity": null,
       "sku": "SB1116414"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682867+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306733+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5625,7 +5427,7 @@
     "volumeLitres": 29.0,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 563.95,
+    "priceAmount": 562.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5640,13 +5442,13 @@
       "inventory_quantity": null,
       "sku": "SB1065705"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.682946+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.306801+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Ramzi Boukhiam Monsta",
+    "modelName": "Monsta",
     "rawProductTitle": "Ramzi Boukhiam Monsta 6'2\"1/2 x 19 3/8\" X 2 3/4\" - 33.42L, 3x Futures Fin Boxes, PU [Good] - ID:1108592 Default Title",
     "normalisedProductTitle": "Ramzi Boukhiam Monsta 6'2\"1/2 x 19 3/8\" X 2 3/4\" - 33.42L, 3x Futures Fin Boxes, PU [Good] - ID:1108592 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1108592",
@@ -5658,7 +5460,7 @@
     "volumeLitres": 33.42,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5673,7 +5475,7 @@
       "inventory_quantity": null,
       "sku": "SB1108592"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.683637+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307454+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5691,7 +5493,7 @@
     "volumeLitres": 30.76,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5706,13 +5508,13 @@
       "inventory_quantity": null,
       "sku": "SB1106893"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.683719+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307523+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Jack Robinson Golden Child",
+    "modelName": "Golden Child",
     "rawProductTitle": "Jack Robinson Golden Child 6'0\"1/2 x 19 1/8\" X 2 5/8\" - 30.98L, Squash, 3x Futures Fin Boxes, PU [Semi New] - ID:1106896 Default Title",
     "normalisedProductTitle": "Jack Robinson Golden Child 6'0\"1/2 x 19 1/8\" X 2 5/8\" - 30.98L, Squash, 3x Futures Fin Boxes, PU [Semi New] - ID:1106896 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1106896",
@@ -5724,7 +5526,7 @@
     "volumeLitres": 30.98,
     "construction": "PU",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5739,7 +5541,7 @@
       "inventory_quantity": null,
       "sku": "SB1106896"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.683808+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307597+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5757,7 +5559,7 @@
     "volumeLitres": 29.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5772,7 +5574,7 @@
       "inventory_quantity": null,
       "sku": "SB1046121"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.683890+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307678+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5790,7 +5592,7 @@
     "volumeLitres": 27.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5805,13 +5607,13 @@
       "inventory_quantity": null,
       "sku": "SB1045963"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.683978+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307747+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'8\" x 19 5/8\" X 2 1/2\" - 29.60L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095525 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'8\" x 19 5/8\" X 2 1/2\" - 29.60L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095525 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1095525",
@@ -5823,7 +5625,7 @@
     "volumeLitres": 29.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5838,7 +5640,7 @@
       "inventory_quantity": null,
       "sku": "SB1095525"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684084+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307822+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5856,7 +5658,7 @@
     "volumeLitres": 36.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 814.95,
+    "priceAmount": 812.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5871,13 +5673,13 @@
       "inventory_quantity": null,
       "sku": "SB1045890"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684173+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307891+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Clear",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Clear 6'4\" x 20 3/4\" X 2 3/4\" - 38.70L, Round, 2x FCS 2 Fin Boxes, PE - ID:1052789 Default Title",
     "normalisedProductTitle": "Big Baron Clear 6'4\" x 20 3/4\" X 2 3/4\" - 38.70L, Round, 2x FCS 2 Fin Boxes, PE - ID:1052789 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052789",
@@ -5889,7 +5691,7 @@
     "volumeLitres": 38.7,
     "construction": "PE",
     "finSetup": null,
-    "priceAmount": 688.95,
+    "priceAmount": 687.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5904,13 +5706,13 @@
       "inventory_quantity": null,
       "sku": "SB1052789"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684264+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.307964+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046090 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046090 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046090",
@@ -5922,7 +5724,7 @@
     "volumeLitres": 40.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5937,7 +5739,7 @@
       "inventory_quantity": null,
       "sku": "SB1046090"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684351+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308038+00:00"
   },
   {
     "brand": "JS Industries",
@@ -5955,7 +5757,7 @@
     "volumeLitres": 42.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 908.95,
+    "priceAmount": 905.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -5970,13 +5772,13 @@
       "inventory_quantity": null,
       "sku": "SB1052675"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684432+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308103+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052930 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052930 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052930",
@@ -5988,7 +5790,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6003,13 +5805,13 @@
       "inventory_quantity": null,
       "sku": "SB1052930"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684530+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308190+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052929 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052929 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052929",
@@ -6021,7 +5823,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6036,13 +5838,13 @@
       "inventory_quantity": null,
       "sku": "SB1052929"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684624+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308270+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052928 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052928 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052928",
@@ -6054,7 +5856,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6069,13 +5871,13 @@
       "inventory_quantity": null,
       "sku": "SB1052928"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684717+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308347+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052926 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052926 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052926",
@@ -6087,7 +5889,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6102,13 +5904,13 @@
       "inventory_quantity": null,
       "sku": "SB1052926"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684809+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308423+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052901 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052901 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052901",
@@ -6120,7 +5922,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6135,13 +5937,13 @@
       "inventory_quantity": null,
       "sku": "SB1052901"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.684905+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308503+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052927 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052927 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052927",
@@ -6153,7 +5955,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6168,13 +5970,13 @@
       "inventory_quantity": null,
       "sku": "SB1052927"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685075+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308579+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'6\" x 22 3/4\" X 3\" - 65.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052931 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 7'6\" x 22 3/4\" X 3\" - 65.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052931 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052931",
@@ -6186,7 +5988,7 @@
     "volumeLitres": 65.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 469.95,
+    "priceAmount": 468.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6201,13 +6003,13 @@
       "inventory_quantity": null,
       "sku": "SB1052931"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685190+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308661+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052900 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052900 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052900",
@@ -6219,7 +6021,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6234,13 +6036,13 @@
       "inventory_quantity": null,
       "sku": "SB1052900"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685287+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308738+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052899 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052899 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052899",
@@ -6252,7 +6054,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6267,13 +6069,13 @@
       "inventory_quantity": null,
       "sku": "SB1052899"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685381+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308812+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052898 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052898 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052898",
@@ -6285,7 +6087,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6300,13 +6102,13 @@
       "inventory_quantity": null,
       "sku": "SB1052898"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685475+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308892+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052897 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 7'0\" x 22\" X 3\" - 56.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052897 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052897",
@@ -6318,7 +6120,7 @@
     "volumeLitres": 56.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6333,13 +6135,13 @@
       "inventory_quantity": null,
       "sku": "SB1052897"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685567+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.308966+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052894 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052894 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052894",
@@ -6351,7 +6153,7 @@
     "volumeLitres": 45.5,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6366,13 +6168,13 @@
       "inventory_quantity": null,
       "sku": "SB1052894"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685671+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309046+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052924 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052924 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052924",
@@ -6384,7 +6186,7 @@
     "volumeLitres": 45.5,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6399,13 +6201,13 @@
       "inventory_quantity": null,
       "sku": "SB1052924"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685773+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309128+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052896 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052896 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052896",
@@ -6417,7 +6219,7 @@
     "volumeLitres": 51.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6432,13 +6234,13 @@
       "inventory_quantity": null,
       "sku": "SB1052896"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685874+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309206+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052925 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'8\" x 21 1/4\" X 2 7/8\" - 51.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052925 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052925",
@@ -6450,7 +6252,7 @@
     "volumeLitres": 51.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 438.95,
+    "priceAmount": 437.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6465,13 +6267,13 @@
       "inventory_quantity": null,
       "sku": "SB1052925"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.685972+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309285+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052923 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'4\" x 20 3/4\" X 2 3/4\" - 45.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052923 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052923",
@@ -6483,7 +6285,7 @@
     "volumeLitres": 45.5,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6498,13 +6300,13 @@
       "inventory_quantity": null,
       "sku": "SB1052923"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686070+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309366+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052890 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052890 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052890",
@@ -6516,7 +6318,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6531,13 +6333,13 @@
       "inventory_quantity": null,
       "sku": "SB1052890"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686170+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309446+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052891 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052891 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052891",
@@ -6549,7 +6351,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6564,13 +6366,13 @@
       "inventory_quantity": null,
       "sku": "SB1052891"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686268+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309525+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052919 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052919 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052919",
@@ -6582,7 +6384,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6597,13 +6399,13 @@
       "inventory_quantity": null,
       "sku": "SB1052919"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686368+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309605+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052921 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052921 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052921",
@@ -6615,7 +6417,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6630,13 +6432,13 @@
       "inventory_quantity": null,
       "sku": "SB1052921"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686465+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309689+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052892 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052892 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052892",
@@ -6648,7 +6450,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6663,13 +6465,13 @@
       "inventory_quantity": null,
       "sku": "SB1052892"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686563+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309767+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Sea",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052893 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Sea 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052893 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052893",
@@ -6681,7 +6483,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6696,13 +6498,13 @@
       "inventory_quantity": null,
       "sku": "SB1052893"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686660+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309845+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052920 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052920 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052920",
@@ -6714,7 +6516,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6729,13 +6531,13 @@
       "inventory_quantity": null,
       "sku": "SB1052920"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686757+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.309923+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Easy Rider Softboard 24S2 Storm",
+    "modelName": "Big Baron Easy Rider",
     "rawProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052922 Default Title",
     "normalisedProductTitle": "Big Baron Easy Rider Softboard 24S2 Storm 6'0\" x 20\" X 2 5/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052922 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052922",
@@ -6747,7 +6549,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6762,13 +6564,13 @@
       "inventory_quantity": null,
       "sku": "SB1052922"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686853+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310002+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Bull Run Softboard Storm",
+    "modelName": "Bull Run",
     "rawProductTitle": "Bull Run Softboard Storm 6'2\" x 21\" X 2 7/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052906 Default Title",
     "normalisedProductTitle": "Bull Run Softboard Storm 6'2\" x 21\" X 2 7/8\" - 40.00L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052906 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052906",
@@ -6780,7 +6582,7 @@
     "volumeLitres": 40.0,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6795,13 +6597,13 @@
       "inventory_quantity": null,
       "sku": "SB1052906"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.686945+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310078+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Big Baron Softboard 24S2 Sea",
+    "modelName": "Big Baron",
     "rawProductTitle": "Big Baron Softboard 24S2 Sea 6'0\" x 19 1/2\" X 2 7/16\" - 31.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052911 Default Title",
     "normalisedProductTitle": "Big Baron Softboard 24S2 Sea 6'0\" x 19 1/2\" X 2 7/16\" - 31.50L, Round, 3x FCS 2 Fin Boxes, Softboard - ID:1052911 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052911",
@@ -6813,7 +6615,7 @@
     "volumeLitres": 31.5,
     "construction": null,
     "finSetup": null,
-    "priceAmount": 413.95,
+    "priceAmount": 412.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6828,7 +6630,7 @@
       "inventory_quantity": null,
       "sku": "SB1052911"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687050+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310157+00:00"
   },
   {
     "brand": "JS Industries",
@@ -6846,7 +6648,7 @@
     "volumeLitres": 33.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6861,13 +6663,13 @@
       "inventory_quantity": null,
       "sku": "SB1052714"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687135+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310227+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'3\" x 20 3/4\" X 2 7/8\" - 40.20L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046019 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'3\" x 20 3/4\" X 2 7/8\" - 40.20L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046019 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046019",
@@ -6879,7 +6681,7 @@
     "volumeLitres": 40.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6894,13 +6696,13 @@
       "inventory_quantity": null,
       "sku": "SB1046019"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687227+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310301+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046018 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046018 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046018",
@@ -6912,7 +6714,7 @@
     "volumeLitres": 38.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6927,13 +6729,13 @@
       "inventory_quantity": null,
       "sku": "SB1046018"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687316+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310374+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046017 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'2\" x 20 1/2\" X 2 13/16\" - 38.40L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046017 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046017",
@@ -6945,7 +6747,7 @@
     "volumeLitres": 38.4,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6960,13 +6762,13 @@
       "inventory_quantity": null,
       "sku": "SB1046017"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687405+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310441+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052723 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052723 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052723",
@@ -6978,7 +6780,7 @@
     "volumeLitres": 36.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -6993,46 +6795,13 @@
       "inventory_quantity": null,
       "sku": "SB1052723"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687497+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310510+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
-    "rawProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052722 Default Title",
-    "normalisedProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052722 Default Title",
-    "productUrl": "https://jsindustries.com/products/sb1052722",
-    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/17426485586747_0d4276b5-b2fb-4390-ba09-66f0b55fd63c.jpg?v=1772765170",
-    "length": "6'1",
-    "lengthFeetInches": "6'1",
-    "width": "20 1/4",
-    "thickness": "2 3/4",
-    "volumeLitres": 36.3,
-    "construction": "HYFI",
-    "finSetup": null,
-    "priceAmount": 845.95,
-    "priceCurrency": "AUD",
-    "stockStatus": "available",
-    "isAvailable": true,
-    "availabilitySource": "manufacturer_direct",
-    "source": "js_industries_shopify_products_json",
-    "sourcePayload": {
-      "product_id": 9095297859796,
-      "variant_id": 47625862250708,
-      "product_title": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052722",
-      "variant_title": "Default Title",
-      "available": true,
-      "inventory_quantity": null,
-      "sku": "SB1052722"
-    },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687586+00:00"
-  },
-  {
-    "brand": "JS Industries",
-    "regionCode": "AU",
-    "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046016 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046016 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046016",
@@ -7044,7 +6813,7 @@
     "volumeLitres": 36.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7059,13 +6828,13 @@
       "inventory_quantity": null,
       "sku": "SB1046016"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687676+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310578+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Gravity Easy Rider",
+    "modelName": "Xero Gravity",
     "rawProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046015 Default Title",
     "normalisedProductTitle": "Xero Gravity Easy Rider 6'1\" x 20 1/4\" X 2 3/4\" - 36.30L, Squash, 3x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046015 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046015",
@@ -7077,7 +6846,7 @@
     "volumeLitres": 36.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7092,7 +6861,7 @@
       "inventory_quantity": null,
       "sku": "SB1046015"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687765+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310645+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7110,7 +6879,7 @@
     "volumeLitres": 38.0,
     "construction": "CarboTune",
     "finSetup": null,
-    "priceAmount": 1064.95,
+    "priceAmount": 1062.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7125,13 +6894,13 @@
       "inventory_quantity": null,
       "sku": "SB1052834"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687850+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310711+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052744 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052744 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052744",
@@ -7143,7 +6912,7 @@
     "volumeLitres": 45.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7158,13 +6927,13 @@
       "inventory_quantity": null,
       "sku": "SB1052744"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.687942+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310784+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'1\" x 20 3/4\" X 2 7/8\" - 39.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052741 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'1\" x 20 3/4\" X 2 7/8\" - 39.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052741 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052741",
@@ -7176,7 +6945,7 @@
     "volumeLitres": 39.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7191,7 +6960,7 @@
       "inventory_quantity": null,
       "sku": "SB1052741"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688032+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310858+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7209,7 +6978,7 @@
     "volumeLitres": 42.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7224,13 +6993,13 @@
       "inventory_quantity": null,
       "sku": "SB1046006"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688119+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310926+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046088 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046088 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046088",
@@ -7242,7 +7011,7 @@
     "volumeLitres": 36.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7257,7 +7026,7 @@
       "inventory_quantity": null,
       "sku": "SB1046088"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688211+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.310998+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7275,7 +7044,7 @@
     "volumeLitres": 39.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7290,13 +7059,13 @@
       "inventory_quantity": null,
       "sku": "SB1046005"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688301+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311065+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046087 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'0\" x 20 1/2\" X 2 3/4\" - 36.20L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046087 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046087",
@@ -7308,7 +7077,7 @@
     "volumeLitres": 36.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7323,7 +7092,7 @@
       "inventory_quantity": null,
       "sku": "SB1046087"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688393+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311132+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7341,7 +7110,7 @@
     "volumeLitres": 36.1,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7356,13 +7125,13 @@
       "inventory_quantity": null,
       "sku": "SB1046000"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688480+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311197+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052740 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052740 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052740",
@@ -7374,7 +7143,7 @@
     "volumeLitres": 34.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7389,13 +7158,13 @@
       "inventory_quantity": null,
       "sku": "SB1052740"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688576+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311269+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046086 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046086 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046086",
@@ -7407,7 +7176,7 @@
     "volumeLitres": 34.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7422,13 +7191,13 @@
       "inventory_quantity": null,
       "sku": "SB1046086"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688670+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311338+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046085 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'11\" x 20 1/4\" X 2 11/16\" - 34.30L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046085 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046085",
@@ -7440,7 +7209,7 @@
     "volumeLitres": 34.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7455,13 +7224,13 @@
       "inventory_quantity": null,
       "sku": "SB1046085"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688761+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311408+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046084 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046084 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046084",
@@ -7473,7 +7242,7 @@
     "volumeLitres": 32.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7488,13 +7257,13 @@
       "inventory_quantity": null,
       "sku": "SB1046084"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688853+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311482+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x Futures Fin Boxes, HYFI 3.0 - ID:1046127 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x Futures Fin Boxes, HYFI 3.0 - ID:1046127 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046127",
@@ -7506,7 +7275,7 @@
     "volumeLitres": 32.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7521,13 +7290,13 @@
       "inventory_quantity": null,
       "sku": "SB1046127"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.688943+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311553+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046083 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'10\" x 20\" X 2 5/8\" - 32.80L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046083 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046083",
@@ -7539,7 +7308,7 @@
     "volumeLitres": 32.8,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7554,13 +7323,13 @@
       "inventory_quantity": null,
       "sku": "SB1046083"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689099+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311630+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095527 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095527 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1095527",
@@ -7572,7 +7341,7 @@
     "volumeLitres": 31.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7587,13 +7356,13 @@
       "inventory_quantity": null,
       "sku": "SB1095527"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689193+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311703+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095526 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'9\" x 19 3/4\" X 2 9/16\" - 31.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095526 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1095526",
@@ -7605,7 +7374,7 @@
     "volumeLitres": 31.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7620,13 +7389,13 @@
       "inventory_quantity": null,
       "sku": "SB1095526"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689283+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311772+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 5'8\" x 19 5/8\" X 2 1/2\" - 29.60L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095524 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 5'8\" x 19 5/8\" X 2 1/2\" - 29.60L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1095524 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1095524",
@@ -7638,7 +7407,7 @@
     "volumeLitres": 29.6,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7653,13 +7422,13 @@
       "inventory_quantity": null,
       "sku": "SB1095524"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689374+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311842+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046091 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046091 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046091",
@@ -7671,7 +7440,7 @@
     "volumeLitres": 40.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7686,13 +7455,13 @@
       "inventory_quantity": null,
       "sku": "SB1046091"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689464+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311912+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052742 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'2\" x 21\" X 2 15/16\" - 40.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052742 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1052742",
@@ -7704,7 +7473,7 @@
     "volumeLitres": 40.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7719,7 +7488,7 @@
       "inventory_quantity": null,
       "sku": "SB1052742"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689553+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.311985+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7737,7 +7506,7 @@
     "volumeLitres": 42.1,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7752,13 +7521,13 @@
       "inventory_quantity": null,
       "sku": "SB1046080"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689642+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312052+00:00"
   },
   {
     "brand": "JS Industries",
     "regionCode": "AU",
     "brandName": "JS Industries",
-    "modelName": "Xero Fusion Easy Rider",
+    "modelName": "Xero Fusion",
     "rawProductTitle": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046092 Default Title",
     "normalisedProductTitle": "Xero Fusion Easy Rider 6'4\" x 21 1/2\" X 3 1/8\" - 45.00L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046092 Default Title",
     "productUrl": "https://jsindustries.com/products/sb1046092",
@@ -7770,7 +7539,7 @@
     "volumeLitres": 45.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7785,7 +7554,7 @@
       "inventory_quantity": null,
       "sku": "SB1046092"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689737+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312197+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7803,7 +7572,7 @@
     "volumeLitres": 33.2,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7818,7 +7587,7 @@
       "inventory_quantity": null,
       "sku": "SB1045900"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689824+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312267+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7836,7 +7605,7 @@
     "volumeLitres": 35.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7851,7 +7620,7 @@
       "inventory_quantity": null,
       "sku": "SB1045902"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.689914+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312333+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7869,7 +7638,7 @@
     "volumeLitres": 40.0,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7884,7 +7653,7 @@
       "inventory_quantity": null,
       "sku": "SB1052653"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690001+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312400+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7902,7 +7671,7 @@
     "volumeLitres": 37.3,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 876.95,
+    "priceAmount": 874.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7917,7 +7686,7 @@
       "inventory_quantity": null,
       "sku": "SB1046074"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690088+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312465+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7935,7 +7704,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7950,7 +7719,7 @@
       "inventory_quantity": null,
       "sku": "SB1046053"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690175+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312533+00:00"
   },
   {
     "brand": "JS Industries",
@@ -7968,7 +7737,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -7983,7 +7752,7 @@
       "inventory_quantity": null,
       "sku": "SB1034550"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690260+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312596+00:00"
   },
   {
     "brand": "JS Industries",
@@ -8001,7 +7770,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -8016,7 +7785,7 @@
       "inventory_quantity": null,
       "sku": "SB1046051"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690344+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312663+00:00"
   },
   {
     "brand": "JS Industries",
@@ -8034,7 +7803,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -8049,7 +7818,7 @@
       "inventory_quantity": null,
       "sku": "SB1046052"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690427+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312726+00:00"
   },
   {
     "brand": "JS Industries",
@@ -8067,7 +7836,7 @@
     "volumeLitres": 30.5,
     "construction": "HYFI",
     "finSetup": null,
-    "priceAmount": 845.95,
+    "priceAmount": 843.95,
     "priceCurrency": "AUD",
     "stockStatus": "available",
     "isAvailable": true,
@@ -8082,6 +7851,237 @@
       "inventory_quantity": null,
       "sku": "SB1037855"
     },
-    "scrapedAtUtc": "2026-05-23T17:32:01.690509+00:00"
+    "scrapedAtUtc": "2026-05-27T15:43:15.312789+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Xero Fusion",
+    "rawProductTitle": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046070 Default Title",
+    "normalisedProductTitle": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046070 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1046070",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/806593687690d7_ccd68bae-bb71-497f-9fb9-120c81e69b80.jpg?v=1772765946",
+    "length": "6'1",
+    "lengthFeetInches": "6'1",
+    "width": "20 1/2",
+    "thickness": "2 5/8",
+    "volumeLitres": 35.5,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 874.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095319978196,
+      "variant_id": 47626063380692,
+      "product_title": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046070",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1046070"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.312855+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Xero Fusion",
+    "rawProductTitle": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046069 Default Title",
+    "normalisedProductTitle": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046069 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1046069",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/806593687690d7_6ec23507-810e-4523-8652-13becba06e9c.jpg?v=1772765082",
+    "length": "6'1",
+    "lengthFeetInches": "6'1",
+    "width": "20 1/2",
+    "thickness": "2 5/8",
+    "volumeLitres": 35.5,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 874.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095293698260,
+      "variant_id": 47625850552532,
+      "product_title": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046069",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1046069"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.312917+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Xero Fusion",
+    "rawProductTitle": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052641 Default Title",
+    "normalisedProductTitle": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052641 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1052641",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/806593687690d7_c1cc72cd-2a7b-4b04-b28f-5a062c865bfe.jpg?v=1772764569",
+    "length": "5'9",
+    "lengthFeetInches": "5'9",
+    "width": "19 5/8",
+    "thickness": "2 7/16",
+    "volumeLitres": 29.9,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 843.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095274397908,
+      "variant_id": 47625806414036,
+      "product_title": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052641",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1052641"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.312981+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Xero Fusion",
+    "rawProductTitle": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1037858 Default Title",
+    "normalisedProductTitle": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1037858 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1037858",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/806593687690d7_fc501054-872f-4423-8aa5-6a24eef2a508.jpg?v=1772750672",
+    "length": "6'1",
+    "lengthFeetInches": "6'1",
+    "width": "20 1/2",
+    "thickness": "2 5/8",
+    "volumeLitres": 35.5,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 874.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095078445268,
+      "variant_id": 47625161539796,
+      "product_title": "Xero Fusion 6'1\" x 20 1/2\" X 2 5/8\" - 35.50L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1037858",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1037858"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.313044+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Xero Fusion",
+    "rawProductTitle": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052639 Default Title",
+    "normalisedProductTitle": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052639 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1052639",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/806593687690d7_8ec77e2a-205a-4325-8fb0-9190406d83f7.jpg?v=1772764784",
+    "length": "5'9",
+    "lengthFeetInches": "5'9",
+    "width": "19 5/8",
+    "thickness": "2 7/16",
+    "volumeLitres": 29.9,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 843.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095280525524,
+      "variant_id": 47625819848916,
+      "product_title": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1052639",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1052639"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.313106+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Bull Run",
+    "rawProductTitle": "Bull Run 5'10\" x 19 3/4\" X 2 9/16\" - 32.00L, Round, 5x Futures Fin Boxes, HYFI 3.0 - ID:1052752 Default Title",
+    "normalisedProductTitle": "Bull Run 5'10\" x 19 3/4\" X 2 9/16\" - 32.00L, Round, 5x Futures Fin Boxes, HYFI 3.0 - ID:1052752 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1052752",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/1527043736689e_811f713d-472a-4cf8-9110-6d6854a2416b.jpg?v=1772765664",
+    "length": "5'10",
+    "lengthFeetInches": "5'10",
+    "width": "19 3/4",
+    "thickness": "2 9/16",
+    "volumeLitres": 32.0,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 843.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095317651668,
+      "variant_id": 47626057973972,
+      "product_title": "Bull Run 5'10\" x 19 3/4\" X 2 9/16\" - 32.00L, Round, 5x Futures Fin Boxes, HYFI 3.0 - ID:1052752",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1052752"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.313170+00:00"
+  },
+  {
+    "brand": "JS Industries",
+    "regionCode": "AU",
+    "brandName": "JS Industries",
+    "modelName": "Xero Fusion",
+    "rawProductTitle": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046049 Default Title",
+    "normalisedProductTitle": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046049 Default Title",
+    "productUrl": "https://jsindustries.com/products/sb1046049",
+    "productImageUrl": "https://cdn.shopify.com/s/files/1/0608/8258/3764/files/806593687690d7_198ebae3-ac9b-4ab9-ab67-1556e85ef723.jpg?v=1772764111",
+    "length": "5'9",
+    "lengthFeetInches": "5'9",
+    "width": "19 5/8",
+    "thickness": "2 7/16",
+    "volumeLitres": 29.9,
+    "construction": "HYFI",
+    "finSetup": null,
+    "priceAmount": 843.95,
+    "priceCurrency": "AUD",
+    "stockStatus": "available",
+    "isAvailable": true,
+    "availabilitySource": "manufacturer_direct",
+    "source": "js_industries_shopify_products_json",
+    "sourcePayload": {
+      "product_id": 9095250968788,
+      "variant_id": 47625702310100,
+      "product_title": "Xero Fusion 5'9\" x 19 5/8\" X 2 7/16\" - 29.90L, Squash, 5x FCS 2 Fin Boxes, HYFI 3.0 - ID:1046049",
+      "variant_title": "Default Title",
+      "available": true,
+      "inventory_quantity": null,
+      "sku": "SB1046049"
+    },
+    "scrapedAtUtc": "2026-05-27T15:43:15.313232+00:00"
   }
 ]
