@@ -470,6 +470,7 @@ SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
     "Sharp Eye",
     "Haydenshapes",
     "Misfit Shapes",
+    "Chilli",
 }
 
 
@@ -500,6 +501,12 @@ def manufacturer_search_policy(brand_name):
             "manufacturer_mode": "relaxed_chemistry",
             "retailer_exact_construction_mode": "relaxed",
             "allow_alternate_manufacturer_construction": True,
+        },
+        "Chilli": {
+            "direct_enabled": True,
+            "manufacturer_mode": "strict_chilli",
+            "retailer_exact_construction_mode": "relaxed",
+            "allow_alternate_manufacturer_construction": False,
         },
         "DHD": {
             "direct_enabled": True,
@@ -690,6 +697,30 @@ def search_inventory(boardSizeId: int):
                     THEN 1
 
 
+                WHEN mi.BrandName = 'Chilli'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    AND (
+                        :construction IS NULL
+                        OR mi.Construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                        OR (
+                            LOWER(LTRIM(RTRIM(mi.Construction))) IN ('pu', 'pu stringer')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('pu', 'pu stringer')
+                        )
+                    )
+                    THEN 2
+
                 WHEN mi.BrandName = 'Chemistry Surfboards'
                     AND mi.BoardModelId = :board_model_id
                     AND (
@@ -784,6 +815,31 @@ def search_inventory(boardSizeId: int):
                     AND mi.Construction IS NOT NULL
                     AND LOWER(LTRIM(RTRIM(mi.Construction))) =
                         LOWER(LTRIM(RTRIM(:construction)))
+                )
+                OR
+                (
+                    mi.BrandName = 'Chilli'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    AND (
+                        :construction IS NULL
+                        OR mi.Construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                        OR (
+                            LOWER(LTRIM(RTRIM(mi.Construction))) IN ('pu', 'pu stringer')
+                            AND LOWER(LTRIM(RTRIM(:construction))) IN ('pu', 'pu stringer')
+                        )
+                    )
                 )
                 OR
                 (
