@@ -191,6 +191,20 @@ def detect_fin_setup(title, variant_title):
     return None
 
 
+def product_url_quality_score(url):
+    value = clean(url).lower()
+
+    penalty_terms = [
+        "plasma", "grunge", "resin", "tint", "foam-flare", "kostechko",
+        "tribal", "tiger", "mono", "oxy", "kelp", "cobalt", "canary",
+        "zephyr", "purple", "violet", "salmon", "teal", "bone", "clear",
+        "blue", "red", "grey", "black", "salt-sun", "plum", "cynano",
+        "mig-edition", "archive",
+    ]
+
+    return sum(10 for term in penalty_terms if term in value)
+
+
 def parse_dimension_text(text_value):
     text_value = clean(text_value)
     text_value = text_value.replace("×", "x")
@@ -376,6 +390,18 @@ def build_catalogue():
                 "source": BASE_URL,
             })
 
+    rows.sort(
+        key=lambda row: (
+            row["model_name"],
+            row["construction"] or "",
+            row["length_feet_inches"] or "",
+            row["width"] or "",
+            row["thickness"] or "",
+            row["volume_litres"] or 0,
+            product_url_quality_score(row.get("official_product_url")),
+        )
+    )
+
     seen = set()
     deduped = []
 
@@ -387,7 +413,6 @@ def build_catalogue():
             row["thickness"],
             row["volume_litres"],
             row["construction"],
-            row["fin_setup"],
         )
 
         if key in seen:
