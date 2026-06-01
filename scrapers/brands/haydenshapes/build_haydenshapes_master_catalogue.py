@@ -9,7 +9,11 @@ import requests
 
 BRAND = "Haydenshapes"
 BASE_URL = "https://au.haydenshapes.com"
-COLLECTION = "surfboard-models"
+COLLECTIONS = [
+    "surfboard-models",
+    "surfboards",
+    "new-releases",
+]
 
 OUTPUT_FILE = Path("scrapers/brands/haydenshapes/output/haydenshapes_master_catalogue_clean.json")
 REPORT_FILE = Path("scrapers/brands/haydenshapes/output/haydenshapes_master_catalogue_clean_report.json")
@@ -60,6 +64,42 @@ def clean(value):
 def normalise_model_name(title):
     value = clean(title)
 
+    cleanup_patterns = [
+        r"\s*-\s*fcs\s*ii.*$",
+        r"\s*-\s*fcs2.*$",
+        r"\s*-\s*futures.*$",
+        r"\s*-\s*single\s*fin.*$",
+        r"\s*-\s*\d+'\d+.*$",
+        r"\s*-\s*black.*$",
+        r"\s*-\s*blue.*$",
+        r"\s*-\s*grey.*$",
+        r"\s*-\s*purple.*$",
+        r"\s*-\s*plasma.*$",
+        r"\s*-\s*grunge.*$",
+        r"\s*-\s*resin\s*tint.*$",
+        r"\s*-\s*tribal.*$",
+        r"\s*-\s*tiger.*$",
+        r"\s*-\s*mono.*$",
+        r"\s*-\s*oxy.*$",
+        r"\s*-\s*kelp.*$",
+        r"\s*-\s*archive.*$",
+        r"\s*-\s*mig\s*edition.*$",
+        r"\s*-\s*kostechko.*$",
+        r"\s*-\s*foam\s*flare.*$",
+        r"\s*-\s*cobalt\s*blue.*$",
+        r"\s*-\s*canary\s*yellow.*$",
+        r"\s*-\s*red.*$",
+        r"\s*-\s*teal.*$",
+        r"\s*-\s*violet.*$",
+        r"\s*-\s*zephyr.*$",
+        r"\s*-\s*salt\s*sun.*$",
+        r"\s*-\s*plum.*$",
+        r"\s*-\s*cynano.*$",
+    ]
+
+    for cleanup_pattern in cleanup_patterns:
+        value = re.sub(cleanup_pattern, "", value, flags=re.IGNORECASE)
+
     suffixes = [
         "FutureFlex",
         "Futureflex",
@@ -79,8 +119,35 @@ def normalise_model_name(title):
             flags=re.IGNORECASE,
         )
 
+    value = re.sub(r"\s+carbonyx$", "", value, flags=re.IGNORECASE)
+
+    collapse_patterns = [
+        r"^(Weird Series).*",
+        r"^(Performance Cruiser).*",
+        r"^(Mini Mal).*",
+        r"^(Holy Hypto FutureFlex).*",
+        r"^(Holy Hypto PU).*",
+        r"^(Hypto Krypto FutureFlex).*",
+    ]
+
+    for collapse_pattern in collapse_patterns:
+        match = re.match(collapse_pattern, value, flags=re.IGNORECASE)
+
+        if match:
+            value = match.group(1)
+            break
+
+    aliases = {
+        "Holy Hypto PU": "Holy Hypto",
+        "Holy Hypto Futureflex": "Holy Hypto FutureFlex",
+        "Hypto Krypto Futureflex": "Hypto Krypto",
+        "DarkNoiz -": "DarkNoiz",
+    }
+
+    value = aliases.get(value, value)
+
     value = re.sub(r"\s+-\s+Single Fin$", "", value, flags=re.IGNORECASE)
-    value = re.sub(r"\s+", " ", value).strip()
+    value = re.sub(r"\s+", " ", value).strip(" -")
 
     return value
 
@@ -103,7 +170,7 @@ def detect_construction(title, variant_title, product_tags):
     if "PE" in combined:
         return "PE"
 
-    return "FutureFlex"
+    return None
 
 
 def detect_fin_setup(title, variant_title):
@@ -189,32 +256,45 @@ def should_skip_product(product):
 
     combined = f"{title} {product_type} {tags}"
 
+    if title in ["misc", "misc futureflex archive"]:
+        return True
+
     return any(term in combined for term in SKIP_TERMS)
 
 
 def fetch_products():
-    products = []
-    page = 1
+    products_by_handle = {}
 
-    while True:
-        url = f"{BASE_URL}/collections/{COLLECTION}/products.json?limit=250&page={page}"
-        response = requests.get(url, headers=HEADERS, timeout=(10, 30))
-        response.raise_for_status()
+    for collection in COLLECTIONS:
+        page = 1
 
-        batch = response.json().get("products", [])
+        while True:
+            url = f"{BASE_URL}/collections/{collection}/products.json?limit=250&page={page}"
 
-        if not batch:
-            break
+            try:
+                response = requests.get(url, headers=HEADERS, timeout=(10, 30))
+                response.raise_for_status()
+            except requests.RequestException as exc:
+                print(f"Skipping collection {collection}: {exc}")
+                break
 
-        products.extend(batch)
+            batch = response.json().get("products", [])
 
-        if len(batch) < 250:
-            break
+            if not batch:
+                break
 
-        page += 1
-        time.sleep(0.3)
+            for product in batch:
+                handle = product.get("handle")
+                if handle:
+                    products_by_handle[handle] = product
 
-    return products
+            if len(batch) < 250:
+                break
+
+            page += 1
+            time.sleep(0.3)
+
+    return list(products_by_handle.values())
 
 
 def build_catalogue():
@@ -268,7 +348,7 @@ def build_catalogue():
 
             construction = detect_construction(title, variant_title, tags)
 
-            if construction.lower() == "softboard":
+            if construction and construction.lower() == "softboard":
                 skipped += 1
                 continue
 
@@ -286,7 +366,9 @@ def build_catalogue():
                 "width": dimensions["width"],
                 "thickness": dimensions["thickness"],
                 "volume_litres": float(dimensions["volume_litres"]) if dimensions["volume_litres"] is not None else None,
-                "construction": construction,
+                "construction": construction or "Unknown",
+                "price_amount": float(variant.get("price")) if variant.get("price") else None,
+                "price_currency": "AUD",
                 "fin_setup": detect_fin_setup(title, variant_title),
                 "tail_shape": None,
                 "source_product_title": title,
@@ -333,7 +415,7 @@ def build_catalogue():
     report = {
         "brand": BRAND,
         "source": BASE_URL,
-        "collection": COLLECTION,
+        "collections": COLLECTIONS,
         "products_seen": len(products),
         "products_skipped": skipped,
         "rows": len(deduped),
