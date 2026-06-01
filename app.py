@@ -761,6 +761,46 @@ def search_inventory(boardSizeId: int):
                     )
                     THEN 2
 
+                WHEN mi.BrandName = 'DHD'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                    THEN 2
+
+                WHEN mi.BrandName = 'Firewire'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                    THEN 2
+
                 WHEN :manufacturer_mode = 'generic'
                     AND mi.BrandId = :brand_id
                     AND mi.LengthFeetInches = :length
@@ -888,7 +928,49 @@ def search_inventory(boardSizeId: int):
                 )
                 OR
                 (
-                    mi.BrandName IN ('DHD', 'Pyzel', 'Firewire', 'Lost', 'Sharp Eye', 'Misfit Shapes', 'Christenson')
+                    mi.BrandName = 'DHD'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                )
+                OR
+                (
+                    mi.BrandName = 'Firewire'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                    AND (
+                        mi.VolumeLitres IS NULL
+                        OR :volume IS NULL
+                        OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    )
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                )
+                OR
+                (
+                    mi.BrandName IN ('Pyzel', 'Lost', 'Sharp Eye', 'Misfit Shapes', 'Christenson')
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
