@@ -137,12 +137,32 @@ def find_board_size_id(cursor, board_model_id, item):
         params.append(thickness)
 
     if volume is not None:
-        query += " AND VolumeLitres IS NOT NULL AND ABS(CAST(VolumeLitres AS float) - ?) <= 0.15"
+        query += " AND VolumeLitres IS NOT NULL AND ABS(CAST(VolumeLitres AS float) - ?) <= 0.35"
         params.append(volume)
 
     if construction:
-        query += " AND (Construction = ? OR Construction IS NULL)"
-        params.append(construction)
+        normalised = construction.lower().strip()
+
+        if normalised == "pe":
+            query += """
+                AND (
+                    LOWER(Construction) = 'pe'
+                    OR LOWER(Construction) = 'standard'
+                    OR Construction IS NULL
+                )
+            """
+        elif normalised == "eps":
+            query += """
+                AND (
+                    LOWER(Construction) = 'eps'
+                    OR LOWER(Construction) = 'futureflex'
+                    OR Construction IS NULL
+                )
+            """
+
+        else:
+            query += " AND (LOWER(Construction) = LOWER(?) OR Construction IS NULL)"
+            params.append(construction)
 
     query += " ORDER BY BoardSizeId"
 
