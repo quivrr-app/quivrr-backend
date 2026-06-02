@@ -1,8 +1,12 @@
-﻿import json
+import json
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
+
+import requests
+
 
 SOURCE_PATH = Path("scrapers/brands/haydenshapes/output/haydenshapes_master_catalogue_clean.json")
 OUTPUT_PATH = Path("scrapers/manufacturers/availability/output/haydenshapes/haydenshapes_au_manufacturer_inventory.json")
@@ -10,7 +14,12 @@ OUTPUT_PATH = Path("scrapers/manufacturers/availability/output/haydenshapes/hayd
 BRAND_NAME = "Haydenshapes"
 REGION_CODE = "AU"
 AVAILABILITY_SOURCE = "manufacturer_direct"
-FIREWIRE_AU_BASE_URL = "https://au.haydenshapes.com"
+HAYDENSHAPES_AU_BASE_URL = "https://au.haydenshapes.com"
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)",
+    "Accept": "application/json,text/html,application/xhtml+xml",
+}
 
 
 def normalise_text(value):
@@ -28,6 +37,14 @@ def normalise_text(value):
     return value
 
 
+def normalise_key(value):
+    value = normalise_text(value) or ""
+    value = value.lower()
+    value = value.replace('"', "")
+    value = re.sub(r"\s+", " ", value).strip()
+    return value
+
+
 def normalise_construction(value, title=None, description=None):
     combined = " ".join([
         str(value or ""),
@@ -35,61 +52,19 @@ def normalise_construction(value, title=None, description=None):
         str(description or ""),
     ]).lower()
 
-    if "i-bolic 2.0" in combined or "ibolic 2.0" in combined:
-        return "I-Bolic 2.0"
+    if "futureflex" in combined or "future flex" in combined:
+        return "FutureFlex"
 
-    if "i-bolic" in combined or "ibolic" in combined:
-        return "I-Bolic"
+    if "pu" in combined:
+        return "PU"
 
-    if "volcanic" in combined:
-        return "Volcanic"
-
-    if "helium" in combined:
-        return "Helium"
-
-    if "timbertek" in combined or "timber tek" in combined:
-        return "TimberTek"
-
-    if "thunderbolt" in combined:
-        return "Thunderbolt"
-
-    if "g-flex" in combined or "g flex" in combined:
-        return "G-Flex"
-
-    if "proflex" in combined or "pro flex" in combined:
-        return "Proflex"
-
-    if "fst" in combined:
-        return "FST"
-
-    if "lft" in combined:
-        return "LFT"
+    if "pe" in combined:
+        return "PE"
 
     if "eps" in combined:
         return "EPS"
 
     return normalise_text(value) or None
-
-
-def normalise_fin_system(value, title=None, description=None):
-    combined = " ".join([
-        str(value or ""),
-        str(title or ""),
-        str(description or ""),
-    ]).lower()
-
-    if "fcs ii" in combined or "fcs2" in combined or "fcsii" in combined:
-        return "FCS II"
-
-    if "futures" in combined or "future" in combined:
-        return "Futures"
-
-    value = normalise_text(value)
-
-    if value:
-        return value
-
-    return None
 
 
 def is_valid_volume(value):
@@ -104,28 +79,47 @@ def is_valid_volume(value):
     return 10.0 <= value <= 90.0
 
 
-def build_au_product_url(base_url, handle, variant_id):
-    handle = normalise_text(handle)
-    base_url = normalise_text(base_url)
+def clean_product_url(url):
+    url = normalise_text(url)
 
-    if handle:
-        base_url = f"{FIREWIRE_AU_BASE_URL}/products/{handle}"
+    if not url:
+        return None
 
-    elif base_url:
-        try:
-            parsed = urlparse(base_url)
-            path = parsed.path or ""
+    try:
+        parsed = urlparse(url)
+        parsed = parsed._replace(
+            scheme="https",
+            netloc="au.haydenshapes.com",
+            query="",
+            fragment="",
+        )
+        return urlunparse(parsed)
+    except Exception:
+        return url
 
-            if path.startswith("/products/"):
-                parsed = parsed._replace(
-                    scheme="https",
-                    netloc="au.haydenshapes.com",
-                    query="",
-                    fragment="",
-                )
-                base_url = urlunparse(parsed)
-        except Exception:
-            pass
+
+def product_json_url(product_url):
+    product_url = clean_product_url(product_url)
+
+    if not product_url:
+        return None
+
+    parsed = urlparse(product_url)
+    path = parsed.path or ""
+
+    if not path.startswith("/products/"):
+        return None
+
+    handle = path.split("/products/", 1)[1].strip("/")
+
+    if not handle:
+        return None
+
+    return f"{HAYDENSHAPES_AU_BASE_URL}/products/{handle}.json"
+
+
+def build_au_product_url(base_url, variant_id):
+    base_url = clean_product_url(base_url)
 
     if not base_url:
         return None
@@ -133,10 +127,100 @@ def build_au_product_url(base_url, handle, variant_id):
     if not variant_id:
         return base_url
 
-    if "?variant=" in base_url:
-        return base_url
-
     return f"{base_url}?variant={variant_id}"
+
+
+def parse_int(value):
+    if value in [None, ""]:
+        return None
+
+    try:
+        return int(value)
+    except Exception:
+        return None
+
+
+def variant_stock_state(variant):
+    available = bool(variant.get("available"))
+    inventory_quantity = parse_int(variant.get("inventory_quantity"))
+    inventory_policy = normalise_key(variant.get("inventory_policy"))
+    inventory_management = normalise_key(variant.get("inventory_management"))
+
+    if available:
+        return True, "available"
+
+    if inventory_quantity is not None and inventory_quantity > 0:
+        return True, "available"
+
+    if inventory_management in ["", "none", "null"]:
+        return True, "available"
+
+    if inventory_policy == "continue":
+        return False, "made_to_order"
+
+    return False, "sold_out"
+
+
+def fetch_product(product_url, cache):
+    json_url = product_json_url(product_url)
+
+    if not json_url:
+        return None
+
+    if json_url in cache:
+        return cache[json_url]
+
+    try:
+        response = requests.get(json_url, headers=HEADERS, timeout=(10, 30))
+        response.raise_for_status()
+        product = response.json().get("product")
+        cache[json_url] = product
+        time.sleep(0.25)
+        return product
+
+    except Exception as exc:
+        print(f"Failed to fetch Haydenshapes product JSON: {json_url} :: {exc}")
+        cache[json_url] = None
+        return None
+
+
+def find_matching_variant(product, row):
+    if not product:
+        return None
+
+    variants = product.get("variants") or []
+    source_variant_title = normalise_key(row.get("source_variant_title"))
+
+    if source_variant_title:
+        for variant in variants:
+            if normalise_key(variant.get("title")) == source_variant_title:
+                return variant
+
+    row_length = normalise_key(row.get("length_feet_inches"))
+    row_width = normalise_key(row.get("width"))
+    row_thickness = normalise_key(row.get("thickness"))
+    row_volume = row.get("volume_litres")
+
+    for variant in variants:
+        variant_title = normalise_key(variant.get("title"))
+
+        if row_length and row_length not in variant_title:
+            continue
+
+        if row_width and normalise_key(row_width) not in variant_title:
+            continue
+
+        if row_thickness and normalise_key(row_thickness) not in variant_title:
+            continue
+
+        if row_volume is not None:
+            volume_text = str(float(row_volume)).rstrip("0").rstrip(".")
+            if volume_text not in variant_title:
+                continue
+
+        return variant
+
+    return None
 
 
 def main():
@@ -149,6 +233,8 @@ def main():
 
     output_rows = []
     skipped_invalid_volume = 0
+    unmatched_variants = 0
+    product_cache = {}
     seen = set()
 
     for row in rows:
@@ -163,20 +249,30 @@ def main():
         source_title = normalise_text(row.get("source_product_title") or row.get("source_variant_title"))
         description = normalise_text(row.get("description"))
         construction = normalise_construction(row.get("construction"), source_title, description)
-        fin_system = None
-        variant_id = row.get("source_variant_id")
-        product_url = build_au_product_url(
-            row.get("official_product_url"),
-            None,
-            variant_id,
-        )
 
-        if not model or not length or not product_url:
+        base_product_url = clean_product_url(row.get("official_product_url"))
+        product = fetch_product(base_product_url, product_cache)
+        variant = find_matching_variant(product, row)
+
+        if not model or not length or not base_product_url:
             continue
 
         if not is_valid_volume(volume_litres):
             skipped_invalid_volume += 1
             continue
+
+        if variant:
+            variant_id = variant.get("id")
+            is_available, stock_status = variant_stock_state(variant)
+            price_amount = variant.get("price") or row.get("price_amount")
+            product_url = build_au_product_url(base_product_url, variant_id)
+        else:
+            unmatched_variants += 1
+            variant_id = None
+            is_available = False
+            stock_status = "unknown"
+            price_amount = row.get("price_amount")
+            product_url = base_product_url
 
         dedupe_key = (
             model,
@@ -185,7 +281,6 @@ def main():
             thickness,
             str(volume_litres),
             construction,
-            fin_system,
             str(variant_id),
             product_url,
         )
@@ -203,30 +298,35 @@ def main():
             "thickness": thickness,
             "volumeLitres": volume_litres,
             "construction": construction,
-            "finSetup": fin_system,
+            "finSetup": row.get("fin_setup"),
             "tailShape": row.get("tail_shape"),
             "productUrl": product_url,
             "productImageUrl": row.get("official_image_url") or row.get("image_url") or row.get("image"),
-            "priceAmount": row.get("price") or row.get("price_amount"),
+            "priceAmount": price_amount,
             "priceCurrency": "AUD",
-            "stockStatus": "available",
-            "isAvailable": True,
+            "stockStatus": stock_status,
+            "isAvailable": is_available,
             "availabilitySource": AVAILABILITY_SOURCE,
             "regionCode": REGION_CODE,
-            "sourceProductId": row.get("source_product_id"),
+            "sourceProductId": product.get("id") if product else row.get("source_product_id"),
             "sourceVariantId": variant_id,
             "sourceVariantTitle": row.get("source_variant_title"),
             "sourceCataloguePath": str(SOURCE_PATH),
-            "sourceStorefront": FIREWIRE_AU_BASE_URL,
+            "sourceStorefront": HAYDENSHAPES_AU_BASE_URL,
             "snapshotUtc": now,
         })
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(output_rows, indent=2), encoding="utf-8")
 
+    available_count = sum(1 for row in output_rows if row.get("isAvailable"))
+
     print("Haydenshapes AU manufacturer availability build complete")
     print(f"Source rows: {len(rows)}")
     print(f"Output rows: {len(output_rows)}")
+    print(f"Available rows: {available_count}")
+    print(f"Unavailable rows: {len(output_rows) - available_count}")
+    print(f"Unmatched variants: {unmatched_variants}")
     print(f"Skipped invalid volume: {skipped_invalid_volume}")
     print(f"Output: {OUTPUT_PATH}")
 
