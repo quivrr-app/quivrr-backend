@@ -158,6 +158,22 @@ def normalise_model_name(value):
     value = value.replace("RNF '96", "RNF 96")
     value = value.replace("RNF 96Er", "RNF 96er")
 
+    aliases = {
+        "Formula 1 Round Pin": "Formula 1 Round",
+        "Formula 1 Round Pin Surfboard": "Formula 1 Round",
+        "Formula 1 X Yago Dora": "Formula 1 Round",
+        "F1 Round": "Formula 1 Round",
+        "Mini Driver": "Mini Driver (Re Issue)",
+        "Original Puddle Jumper 25": "Original Puddle Jumper '25",
+        "Original Puddle Jumper": "Original Puddle Jumper '25",
+        "RNF Twinzer 96er": "RNF Twinzer+ '96er",
+        "RNF Twinzer 96Er": "RNF Twinzer+ '96er",
+        "Ripper Squash": "The Ripper Squash",
+        "The Ripper": "The Ripper Squash",
+    }
+
+    value = aliases.get(value, value)
+
     return clean(value)
 
 
@@ -326,9 +342,9 @@ def build_catalogue():
 
             variant_summary.append({
                 "brand": BRAND_NAME,
-                "model": model,
+                "model_name": model,
                 "construction": construction,
-                "length": parsed["length"],
+                "length_feet_inches": parsed["length"],
                 "width": parsed["width"],
                 "thickness": parsed["thickness"],
                 "volume_litres": parsed["volume_litres"],
@@ -343,16 +359,16 @@ def build_catalogue():
 
             rows.append({
                 "brand": BRAND_NAME,
-                "model": model,
+                "model_name": model,
                 "model_family": model,
                 "board_category": "Surfboard",
                 "description": description,
-                "length": parsed["length"],
+                "length_feet_inches": parsed["length"],
                 "width": parsed["width"],
                 "thickness": parsed["thickness"],
                 "volume_litres": parsed["volume_litres"],
                 "construction": construction,
-                "fin_system": None,
+                "fin_setup": None,
                 "tail_shape": None,
                 "official_product_url": product_url,
                 "official_image_url": get_product_image(product, variant),
@@ -364,9 +380,9 @@ def build_catalogue():
 
     for row in rows:
         key = (
-            row["model"].lower(),
+            row["model_name"].lower(),
             row["construction"].lower(),
-            row["length"],
+            row["length_feet_inches"],
             row["width"],
             row["thickness"],
             row["volume_litres"],
@@ -387,9 +403,9 @@ def build_catalogue():
     deduped = sorted(
         deduped_by_key.values(),
         key=lambda row: (
-            row["model"].lower(),
+            row["model_name"].lower(),
             row["construction"].lower(),
-            row["length"],
+            row["length_feet_inches"],
         ),
     )
 
@@ -397,7 +413,7 @@ def build_catalogue():
     VARIANT_SUMMARY_FILE.write_text(json.dumps(variant_summary, indent=2, ensure_ascii=False), encoding="utf-8")
     CATALOGUE_FILE.write_text(json.dumps(deduped, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    models = sorted(set(row["model"] for row in deduped))
+    models = sorted(set(row["model_name"] for row in deduped))
     constructions = sorted(set(row["construction"] for row in deduped))
     official_domains = sorted(set(row["official_product_url"].split("/products/")[0] for row in deduped))
 

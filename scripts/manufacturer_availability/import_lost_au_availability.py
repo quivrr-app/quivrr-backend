@@ -1,10 +1,19 @@
 ﻿import json
 import os
+import sys
+from pathlib import Path
+
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
 import time
 from pathlib import Path
 
 import pyodbc
 from dotenv import load_dotenv
+
+from utils.dimensions import dimension_to_decimal
 
 load_dotenv()
 
@@ -127,6 +136,8 @@ def find_board_size_id(cursor, board_model_id, item):
     length = clean(item.get("lengthFeetInches"))
     width = clean(item.get("width"))
     thickness = clean(item.get("thickness"))
+    width_decimal = dimension_to_decimal(width)
+    thickness_decimal = dimension_to_decimal(thickness)
     volume = to_float(item.get("volumeLitres"))
     construction = clean(item.get("construction"))
 
@@ -140,11 +151,19 @@ def find_board_size_id(cursor, board_model_id, item):
           AND LengthFeetInches = ?
     """
 
-    if width:
+    if width_decimal is not None:
+        query += """
+          AND Width IS NOT NULL
+        """
+    elif width:
         query += " AND Width = ?"
         params.append(width)
 
-    if thickness:
+    if thickness_decimal is not None:
+        query += """
+          AND Thickness IS NOT NULL
+        """
+    elif thickness:
         query += " AND Thickness = ?"
         params.append(thickness)
 
@@ -160,9 +179,44 @@ def find_board_size_id(cursor, board_model_id, item):
 
     cursor.execute(query, params)
 
-    row = cursor.fetchone()
+    candidates = cursor.fetchall()
 
-    return row[0] if row else None
+    if not candidates:
+        return None
+
+    for candidate in candidates:
+        candidate_id = candidate[0]
+
+        cursor.execute("""
+            SELECT Width, Thickness
+            FROM dbo.BoardSizes
+            WHERE BoardSizeId = ?
+        """, candidate_id)
+
+        candidate_size = cursor.fetchone()
+
+        if not candidate_size:
+            continue
+
+        candidate_width_decimal = dimension_to_decimal(candidate_size[0])
+        candidate_thickness_decimal = dimension_to_decimal(candidate_size[1])
+
+        width_ok = (
+            width_decimal is None
+            or candidate_width_decimal is None
+            or abs(candidate_width_decimal - width_decimal) <= 0.015
+        )
+
+        thickness_ok = (
+            thickness_decimal is None
+            or candidate_thickness_decimal is None
+            or abs(candidate_thickness_decimal - thickness_decimal) <= 0.015
+        )
+
+        if width_ok and thickness_ok:
+            return candidate_id
+
+    return None
 
 
 def insert_row(cursor, columns, item, brand_id, board_model_id, board_size_id):
