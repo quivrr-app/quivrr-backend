@@ -801,6 +801,17 @@ def search_inventory(boardSizeId: int):
                     )
                     THEN 2
 
+                WHEN mi.BrandName = 'Lost'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.BoardSizeId = :board_size_id
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                    THEN 2
+
                 WHEN :manufacturer_mode = 'generic'
                     AND mi.BrandId = :brand_id
                     AND mi.LengthFeetInches = :length
@@ -968,9 +979,22 @@ def search_inventory(boardSizeId: int):
                             LOWER(LTRIM(RTRIM(:construction)))
                     )
                 )
+
                 OR
                 (
-                    mi.BrandName IN ('Pyzel', 'Lost', 'Sharp Eye', 'Misfit Shapes', 'Christenson')
+                    mi.BrandName = 'Lost'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.BoardSizeId = :board_size_id
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                )
+                OR
+                (
+                    mi.BrandName IN ('Pyzel', 'Sharp Eye', 'Misfit Shapes', 'Christenson')
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
