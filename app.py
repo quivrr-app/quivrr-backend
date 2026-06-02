@@ -994,7 +994,17 @@ def search_inventory(boardSizeId: int):
                 )
                 OR
                 (
-                    mi.BrandName IN ('Pyzel', 'Sharp Eye', 'Misfit Shapes', 'Christenson')
+                    mi.BrandName = 'Misfit Shapes'
+                    AND mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                    AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                        REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                )
+                OR
+                (
+                    mi.BrandName IN ('Pyzel', 'Sharp Eye', 'Christenson')
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =

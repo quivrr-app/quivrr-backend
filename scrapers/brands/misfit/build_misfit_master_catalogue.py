@@ -169,8 +169,75 @@ def extract_fin(rest):
     return normalise_fin(match.group("fin"))
 
 
+def parse_sizes_from_dom(soup):
+    rows = []
+    seen = set()
+
+    for table in soup.find_all("table"):
+        headers = [
+            clean(cell.get_text(" ", strip=True))
+            for cell in table.find_all("th")
+        ]
+        header_text = " ".join([h or "" for h in headers]).lower()
+
+        if "height" not in header_text or "volume" not in header_text:
+            continue
+
+        for tr in table.find_all("tr"):
+            cells = [
+                clean(cell.get_text(" ", strip=True))
+                for cell in tr.find_all(["td", "th"])
+            ]
+            cells = [cell for cell in cells if cell is not None]
+
+            if len(cells) < 7:
+                continue
+
+            length = clean(cells[0])
+            width = clean(cells[1])
+            thickness = clean(cells[2])
+            volume_text = clean(cells[3])
+            tail = clean(cells[5])
+            fin = clean(cells[6])
+
+            if not length or not re.match(r"^[4-9]'\d{1,2}$", length):
+                continue
+
+            try:
+                volume = float(str(volume_text).replace("L", "").strip())
+            except ValueError:
+                continue
+
+            row = {
+                "length": length,
+                "width": width,
+                "thickness": thickness,
+                "volume_litres": volume,
+                "tail_shape": tail,
+                "fin_system": normalise_fin(fin),
+            }
+
+            key = (
+                row["length"],
+                row["width"],
+                row["thickness"],
+                row["volume_litres"],
+                row.get("tail_shape"),
+                row.get("fin_system"),
+            )
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+            rows.append(row)
+
+    return rows
+
+
 def parse_sizes(text):
     rows = []
+    seen = set()
 
     stock_index = text.lower().find("stock dimensions")
 
@@ -185,14 +252,29 @@ def parse_sizes(text):
         except ValueError:
             continue
 
-        rows.append({
+        row = {
             "length": clean(match.group("length")),
             "width": clean(match.group("width")),
             "thickness": clean(match.group("thickness")),
             "volume_litres": volume,
             "tail_shape": extract_tail(rest),
             "fin_system": extract_fin(rest),
-        })
+        }
+
+        key = (
+            row["length"],
+            row["width"],
+            row["thickness"],
+            row["volume_litres"],
+            row.get("tail_shape"),
+            row.get("fin_system"),
+        )
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        rows.append(row)
 
     return rows
 
@@ -220,7 +302,10 @@ def build_catalogue():
 
         model = extract_title(soup, product_url)
         image_url = extract_image(soup)
-        sizes = parse_sizes(text)
+        sizes = parse_sizes_from_dom(soup)
+
+        if not sizes:
+            sizes = parse_sizes(text)
 
         print(f"{model}: {len(sizes)} stock sizes")
 

@@ -2,7 +2,7 @@
   "brand": "Misfit Shapes",
   "collection_url": "https://misfitshapes.com/collections/current-models",
   "products_seen": 12,
-  "catalogue_rows": 80,
+  "catalogue_rows": 102,
   "models": [
     "(NEO) SPEED EGG",
     "BEACH CLOUD",
@@ -18,5 +18,5 @@
     "YANDINA SPEEDWAY"
   ],
   "output_file": "scrapers\\brands\\misfit\\output\\misfit_master_catalogue_clean.json",
-  "created_at_utc": "2026-05-27T07:31:04.190491+00:00"
+  "created_at_utc": "2026-06-02T22:39:54.108196+00:00"
 }
