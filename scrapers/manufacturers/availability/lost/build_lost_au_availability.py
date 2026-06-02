@@ -11,7 +11,7 @@ BRAND_NAME = "Lost"
 REGION_CODE = "AU"
 AVAILABILITY_SOURCE = "manufacturer_direct"
 LOST_AU_BASE_URL = "https://lostsurfboards.com.au"
-LOST_AU_PRODUCTS_URL = "https://lostsurfboards.com.au/collections/shop-all/products.json"
+LOST_AU_PRODUCTS_URL = "https://lostsurfboards.com.au/collections/shop-all/products.json?limit=250"
 
 SURFBOARD_KEYWORDS = [
     "surfboard",

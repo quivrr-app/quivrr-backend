@@ -1,195 +1,126 @@
 {
   "brand": "Lost",
-  "board_urls_found": 122,
-  "rows": 3335,
-  "models": 82,
+  "region": "AU",
+  "source": "lostsurfboards.com.au",
+  "source_url": "https://lostsurfboards.com.au/collections/shop-all/products.json?limit=250",
+  "products_found": 124,
+  "catalogue_rows": 1472,
+  "variant_rows": 3578,
+  "models": 79,
+  "model_names": [
+    "3.0 Stub Driver",
+    "3.0 Stub Thumb",
+    "3.0 Stub Thumb Driver",
+    "Beach Buggy 2",
+    "Big Rig Driver",
+    "Cali Twin",
+    "Cali Twin Pin",
+    "California Mid",
+    "Crowd Killer",
+    "Crowd Killer Round",
+    "Double Up",
+    "Driver 2.0",
+    "Driver 2.0 Round",
+    "Driver 2.0 Squash",
+    "Driver 3.0 Grom",
+    "Driver 3.0 Round",
+    "Driver 3.0 Squash",
+    "El Patron",
+    "Evil Twin",
+    "Formula 1 Round",
+    "Formula 1 Squash",
+    "Glydra",
+    "Hydra",
+    "Lazy Toy",
+    "Little Wing",
+    "Maysym Goofy",
+    "Maysym Regular",
+    "Micks Tape Goofy",
+    "Micks Tape Regular",
+    "Micks Tape Sym",
+    "Mini Driver (Re Issue)",
+    "Mod Quad",
+    "Party Crasher",
+    "Party Platter",
+    "Pick Up Stick",
+    "Pisces",
+    "Pocket Rocket Round",
+    "Pocket Rocket Squash",
+    "Psycho Killer",
+    "Puddle Fish",
+    "Puddle Jumper",
+    "Puddle Jumper HP",
+    "Puddle Jumper Pro",
+    "Puddle Jumper Sting",
+    "Quiver Killer",
+    "RNF 96",
+    "RNF 96 King Fish",
+    "RNF 96 Long Toe",
+    "RNF Redux",
+    "RNF Retro",
+    "RNF Twinzer '96Er",
+    "RV",
+    "Rad Ripper",
+    "Rad Zapper",
+    "Retro Gun",
+    "Retro Ripper",
+    "Retro Tripper",
+    "Rocket Redux",
+    "Round Up",
+    "Sabotaj",
+    "Sabotaj Legacy",
+    "Smooth Operator",
+    "Smooth Operator Long Toe",
+    "Speed Demon",
+    "Step Driver",
+    "Sub Driver",
+    "Sub Driver 2.0",
+    "Sub Driver 3.0 Swallow",
+    "Sub Driver Swallow Tail",
+    "Sub Scorcher Sting",
+    "Swordfish",
+    "Terrapin",
+    "The Original Puddle Jumper",
+    "The Ripper Round",
+    "The Ripper Squash",
+    "Tube Pig",
+    "Uber Driver",
+    "Uber Driver XL",
+    "V3 Rocket"
+  ],
   "constructions": [
     "Black Sheep",
+    "Epoxy",
     "Lib Tech",
     "LightSpeed",
     "PU"
   ],
+  "official_domains": [
+    "https://lostsurfboards.com.au"
+  ],
   "failures": [
     {
-      "url": "https://lostsurfboards.net/surfboards/3-0-stub/",
-      "reason": "no dimensions found",
-      "model": "3.0 Stub Squash"
+      "product": "Puddle Jumper HP Stringered Epoxy",
+      "variant": "custom / FCS",
+      "reason": "no dimensions found"
     },
     {
-      "url": "https://lostsurfboards.net/surfboards/bottom-feeder/",
-      "reason": "no dimensions found",
-      "model": "Bottom Feeder"
+      "product": "Lib Tech - Lost RNF 96",
+      "variant": "5'9\" 20 13/16\"2 5/8\" 35.0L / FCS II",
+      "reason": "no dimensions found"
     },
     {
-      "url": "https://lostsurfboards.net/surfboards/f1-stub/",
-      "reason": "no dimensions found",
-      "model": "F1 Stub"
+      "product": "Pocket Rocket Round",
+      "variant": "FCS II / 5'9\" 18 5/8\" 23/8\" 26.3L",
+      "reason": "no dimensions found"
     },
     {
-      "url": "https://lostsurfboards.net/surfboards/f1/",
-      "reason": "no dimensions found",
-      "model": "F1"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/glydra/",
-      "reason": "no dimensions found",
-      "model": "Glydra"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/grocket/",
-      "reason": "no dimensions found",
-      "model": "Grocket"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-crowd-killer/",
-      "reason": "no dimensions found",
-      "model": "Crowd Killer"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-glydra/",
-      "reason": "no dimensions found",
-      "model": "Glydra"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-hydra/",
-      "reason": "no dimensions found",
-      "model": "Hydra"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-little-wing/",
-      "reason": "no dimensions found",
-      "model": "Little Wing"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-mr-x-mayhem-california-pin/",
-      "reason": "no dimensions found",
-      "model": "MR X Mayhem California Pin"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-party-platter/",
-      "reason": "no dimensions found",
-      "model": "Party Platter"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-puddle-jumper/",
-      "reason": "no dimensions found",
-      "model": "Puddle Jumper"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-rad-ripper/",
-      "reason": "no dimensions found",
-      "model": "Rad Ripper"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-rnf-96/",
-      "reason": "no dimensions found",
-      "model": "RNF 96"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-rnf-retro-fish/",
-      "reason": "no dimensions found",
-      "model": "RNF Retro Fish"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-sabo-taj/",
-      "reason": "no dimensions found",
-      "model": "Sabo Taj"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/lib-tech-super-smooth-operator/",
-      "reason": "no dimensions found",
-      "model": "Super Smooth Operator"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/libtech-micks-tape/",
-      "reason": "no dimensions found",
-      "model": "Micks Tape"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-1979-retro-single-fin/",
-      "reason": "no dimensions found",
-      "model": "MR 1979 Retro Single Fin"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-1980-retro-pro/",
-      "reason": "no dimensions found",
-      "model": "MR 1980 Retro Pro"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-bumble-bee-2/",
-      "reason": "no dimensions found",
-      "model": "MR Bumble Bee"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-bush-ranger-step-up/",
-      "reason": "no dimensions found",
-      "model": "MR Bush Ranger Step Up"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-flying-fish/",
-      "reason": "no dimensions found",
-      "model": "MR Flying Fish"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-super-twin-2/",
-      "reason": "no dimensions found",
-      "model": "MR Super Twin 2"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/mr-turbo-channel-twin-1/",
-      "reason": "no dimensions found",
-      "model": "MR Turbo Channel Twin + 1"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/pelagic/",
-      "reason": "no dimensions found",
-      "model": "Pelagic"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/quiver-killer/",
-      "reason": "no dimensions found",
-      "model": "Quiver Killer '25"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/rnf-96-kingfish/",
-      "reason": "no dimensions found",
-      "model": "RNF '96 Kingfish"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/rocket/",
-      "reason": "no dimensions found",
-      "model": "Rocket"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/scorcher/",
-      "reason": "no dimensions found",
-      "model": "Scorcher"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/short-round/",
-      "reason": "no dimensions found",
-      "model": "Short Round"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/sub-blasterr/",
-      "reason": "no dimensions found",
-      "model": "Sub Blaster"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/sub-scorcher-2-hip-squash/",
-      "reason": "no dimensions found",
-      "model": "Sub Scorcher 2 (Hip Squash)"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/sub-scorcher/",
-      "reason": "no dimensions found",
-      "model": "Sub Scorcher"
-    },
-    {
-      "url": "https://lostsurfboards.net/surfboards/tb-whiplash/",
-      "reason": "no dimensions found",
-      "model": "TB Whiplash"
+      "product": "Pocket Rocket Round",
+      "variant": "Futures / 5'9\" 18 5/8\" 23/8\" 26.3L",
+      "reason": "no dimensions found"
     }
   ],
-  "output_file": "scrapers\\brands\\lost\\output\\lost_master_catalogue_clean.json"
+  "catalogue_output_file": "scrapers\\brands\\lost\\output\\lost_master_catalogue_clean.json",
+  "variant_summary_file": "scrapers\\brands\\lost\\output\\lost_au_variant_summary.json",
+  "raw_products_file": "scrapers\\brands\\lost\\output\\lost_au_shopify_products_raw.json"
 }
