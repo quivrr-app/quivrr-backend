@@ -176,6 +176,99 @@ def build_au_product_url(base_url, variant_id):
     return f"{base_url}?variant={variant_id}"
 
 
+
+def normalise_pyzel_model_url_slug(value):
+    value = normalise_text(value)
+    value = value.lower() if value else ""
+    value = re.sub(r"[^a-z0-9]+", "-", value)
+    value = re.sub(r"-+", "-", value).strip("-")
+    return value
+
+
+def repair_pyzel_product_url(model, product_url):
+    model_slug = normalise_pyzel_model_url_slug(model)
+
+    if not model_slug or not product_url:
+        return product_url
+
+    if model_slug == "tiger-twin":
+        return product_url.replace(
+            "/products/tiger-twin-with-spray",
+            "/products/tiger-twin"
+        )
+
+    return product_url
+
+
+
+def normalise_pyzel_slug(value):
+    value = normalise_text(value)
+
+    if not value:
+        return ""
+
+    value = value.lower()
+    value = re.sub(r"[^a-z0-9]+", "-", value)
+    value = re.sub(r"-+", "-", value).strip("-")
+
+    return value
+
+
+def extract_pyzel_product_slug(product_url):
+    product_url = normalise_text(product_url)
+
+    if not product_url:
+        return ""
+
+    try:
+        parsed = urlparse(product_url)
+        parts = [
+            part for part in parsed.path.split("/")
+            if part
+        ]
+
+        if "products" in parts:
+            index = parts.index("products")
+            if index + 1 < len(parts):
+                return normalise_pyzel_slug(parts[index + 1])
+
+    except Exception:
+        return ""
+
+    return ""
+
+
+def pyzel_product_url_matches_model(model, product_url):
+    model_slug = normalise_pyzel_slug(model)
+    product_slug = extract_pyzel_product_slug(product_url)
+
+    if not model_slug or not product_slug:
+        return True
+
+    return product_slug == model_slug
+
+
+def build_pyzel_model_product_url(model, variant_id):
+    model_slug = normalise_pyzel_slug(model)
+
+    if not model_slug:
+        return None
+
+    url = f"https://pyzelsurf.com.au/products/{model_slug}"
+
+    if variant_id:
+        url = f"{url}?variant={variant_id}"
+
+    return url
+
+
+def align_pyzel_product_url_to_model(model, product_url, variant_id):
+    if pyzel_product_url_matches_model(model, product_url):
+        return product_url
+
+    return build_pyzel_model_product_url(model, variant_id)
+
+
 def main():
     if not SOURCE_PATH.exists():
         raise SystemExit(f"Missing source catalogue file: {SOURCE_PATH}")
@@ -202,6 +295,8 @@ def main():
         fin_system = normalise_fin_system(row.get("fin_system"), source_title)
         variant_id = row.get("source_variant_id")
         product_url = build_au_product_url(row.get("official_product_url"), variant_id)
+        product_url = align_pyzel_product_url_to_model(model, product_url, variant_id)
+        product_url = repair_pyzel_product_url(model, product_url)
 
         if not model or not length or not product_url:
             continue
