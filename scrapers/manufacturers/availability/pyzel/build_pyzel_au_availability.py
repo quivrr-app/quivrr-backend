@@ -85,6 +85,67 @@ def is_valid_volume(value):
     return 10.0 <= value <= 70.0
 
 
+
+def normalise_pyzel_dimension(value):
+    value = normalise_text(value)
+
+    if not value:
+        return None
+
+    value = value.replace("″", "")
+    value = value.replace('"', "")
+    value = value.replace("\u2044", "/")
+    value = " ".join(value.split())
+
+    fraction_repairs = {
+        " 1/1": " 1/16",
+        " 3/1": " 3/16",
+        " 5/1": " 5/16",
+        " 7/1": " 7/16",
+        " 9/1": " 9/16",
+        " 11/1": " 11/16",
+        " 13/1": " 13/16",
+        " 15/1": " 15/16",
+    }
+
+    for broken, fixed in fraction_repairs.items():
+        if value.endswith(broken):
+            value = value[: -len(broken)] + fixed
+
+    return value
+
+
+def pyzel_output_dedupe_key(row):
+    return (
+        str(row.get("modelName") or "").strip().lower(),
+        str(row.get("construction") or "").strip().lower(),
+        str(row.get("lengthFeetInches") or "").strip(),
+        str(row.get("width") or "").strip(),
+        str(row.get("thickness") or "").strip(),
+        str(row.get("volumeLitres") or "").strip(),
+        str(row.get("finSetup") or "").strip().lower(),
+    )
+
+
+def normalise_and_dedupe_output_rows(output_rows):
+    normalised_rows = []
+    seen = set()
+
+    for row in output_rows:
+        row["width"] = normalise_pyzel_dimension(row.get("width"))
+        row["thickness"] = normalise_pyzel_dimension(row.get("thickness"))
+
+        key = pyzel_output_dedupe_key(row)
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        normalised_rows.append(row)
+
+    return normalised_rows
+
+
 def build_au_product_url(base_url, variant_id):
     base_url = normalise_text(base_url)
 
@@ -191,6 +252,8 @@ def main():
             "sourceStorefront": PYZEL_AU_BASE_URL,
             "snapshotUtc": now,
         })
+
+    output_rows = normalise_and_dedupe_output_rows(output_rows)
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(output_rows, indent=2), encoding="utf-8")
