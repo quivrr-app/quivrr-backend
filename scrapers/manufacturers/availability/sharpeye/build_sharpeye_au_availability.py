@@ -35,12 +35,14 @@ def clean(value):
         return None
 
     value = value.replace("×", "x")
+    value = value.replace("\\", "")
     value = value.replace("’", "'")
     value = value.replace("‘", "'")
     value = value.replace("“", '"')
     value = value.replace("”", '"')
     value = value.replace("Â", "")
     value = value.replace("â€“", "-")
+    value = value.replace("&quot;", '"')
     value = re.sub(r"\s+", " ", value)
 
     return value.strip() or None
@@ -160,41 +162,52 @@ def fetch_product(handle):
     if not handle:
         return None
 
-    url = f"{BASE_URL}/products/{handle}.json"
+    urls = [
+        f"{BASE_URL}/products/{handle}.js",
+        f"{BASE_URL}/products/{handle}.json",
+    ]
 
-    for attempt in range(1, 4):
-        try:
-            response = requests.get(url, headers=HEADERS, timeout=(10, 30))
+    for url in urls:
+        for attempt in range(1, 4):
+            try:
+                response = requests.get(url, headers=HEADERS, timeout=(10, 30))
 
-            if response.status_code == 404:
-                return None
+                if response.status_code == 404:
+                    break
 
-            response.raise_for_status()
+                response.raise_for_status()
 
-            data = response.json()
-            product = data.get("product")
+                data = response.json()
 
-            if product:
-                return product
+                if isinstance(data, dict) and data.get("product"):
+                    return data.get("product")
 
-            return data
+                if isinstance(data, dict) and data.get("handle"):
+                    return data
 
-        except Exception:
-            if attempt == 3:
-                return None
+                return data
 
-            time.sleep(0.5 * attempt)
+            except Exception:
+                if attempt == 3:
+                    break
+
+                time.sleep(0.5 * attempt)
 
     return None
 
 
 def variant_text(variant):
+    if not variant:
+        return ""
+
     values = [
         variant.get("title"),
         variant.get("option1"),
         variant.get("option2"),
         variant.get("option3"),
         variant.get("sku"),
+        variant.get("name"),
+        variant.get("public_title"),
     ]
 
     return " ".join(str(value or "") for value in values)
@@ -253,9 +266,6 @@ def find_matching_variant(product, row):
 
         if len(length_matches) == 1:
             return length_matches[0]
-
-    if len(variants) == 1:
-        return variants[0]
 
     return None
 
@@ -351,6 +361,7 @@ def main():
     matched_variants = 0
     available_rows = 0
     priced_rows = 0
+    missing_variant_rows = 0
 
     for row in rows:
         if row.get("is_active") is False:
@@ -380,11 +391,14 @@ def main():
 
         product = product_cache.get(handle)
         variant = find_matching_variant(product, row)
-        is_available = variant_available(variant, product)
-        price_amount = variant_price(variant)
 
         if variant:
             matched_variants += 1
+        else:
+            missing_variant_rows += 1
+
+        is_available = variant_available(variant, product)
+        price_amount = variant_price(variant)
 
         if is_available:
             available_rows += 1
@@ -448,6 +462,13 @@ def main():
         encoding="utf-8",
     )
 
+    bad_dimension_rows = [
+        item for item in output_rows
+        if "\\" in str(item.get("lengthFeetInches"))
+        or "\\" in str(item.get("width"))
+        or "\\" in str(item.get("thickness"))
+    ]
+
     report = {
         "brandName": BRAND_NAME,
         "sourceCataloguePath": str(SOURCE_PATH),
@@ -455,10 +476,12 @@ def main():
         "sourceRows": len(rows),
         "outputRows": len(output_rows),
         "matchedVariants": matched_variants,
+        "missingVariantRows": missing_variant_rows,
         "availableRows": available_rows,
         "pricedRows": priced_rows,
         "skippedNoUrl": skipped_no_url,
         "skippedInvalidVolume": skipped_invalid_volume,
+        "badDimensionRows": bad_dimension_rows[:20],
         "badUrlRows": [
             item for item in output_rows
             if "aus.sharpeyesurfboards.com" in str(item.get("productUrl"))
@@ -477,10 +500,12 @@ def main():
     print(f"Source rows: {len(rows)}")
     print(f"Output rows: {len(output_rows)}")
     print(f"Matched variants: {matched_variants}")
+    print(f"Missing variant rows: {missing_variant_rows}")
     print(f"Available rows: {available_rows}")
     print(f"Priced rows: {priced_rows}")
     print(f"Skipped no URL: {skipped_no_url}")
     print(f"Skipped invalid volume: {skipped_invalid_volume}")
+    print(f"Bad dimension rows: {len(bad_dimension_rows)}")
     print(f"Output: {OUTPUT_PATH}")
     print(f"Report: {REPORT_PATH}")
 
