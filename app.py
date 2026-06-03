@@ -240,17 +240,16 @@ def format_size_label(row):
 
     volume = format_volume(row.VolumeLitres)
 
-    if volume is None:
-        volume_text = ""
-    else:
-        volume_text = f"{volume:g}L"
-
-    return (
+    base_label = (
         f"{row.LengthFeetInches} x "
         f"{row.Width} x "
-        f"{row.Thickness} / "
-        f"{volume_text}"
+        f"{row.Thickness}"
     )
+
+    if volume is None:
+        return base_label
+
+    return f"{base_label} | {volume:g}L"
 
 
 def format_price(value):
@@ -534,9 +533,9 @@ def manufacturer_search_policy(brand_name):
         },
         "Sharp Eye": {
             "direct_enabled": True,
-            "manufacturer_mode": "strict",
+            "manufacturer_mode": "strict_sharpeye",
             "retailer_exact_construction_mode": "strict",
-            "allow_alternate_manufacturer_construction": True,
+            "allow_alternate_manufacturer_construction": False,
         },
         "Haydenshapes": {
             "direct_enabled": True,
@@ -835,6 +834,31 @@ def search_inventory(boardSizeId: int):
                     )
                     THEN 2
 
+                WHEN mi.BrandName = 'Sharp Eye'
+                    AND mi.BoardModelId = :board_model_id
+                    AND (
+                        mi.BoardSizeId = :board_size_id
+                        OR (
+                            mi.LengthFeetInches = :length
+                            AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                            AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                            AND (
+                                mi.VolumeLitres IS NULL
+                                OR :volume IS NULL
+                                OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.15
+                            )
+                        )
+                    )
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                    THEN 2
+
                 WHEN :manufacturer_mode = 'generic'
                     AND mi.BrandId = :brand_id
                     AND mi.LengthFeetInches = :length
@@ -1050,7 +1074,33 @@ def search_inventory(boardSizeId: int):
                 )
                 OR
                 (
-                    mi.BrandName IN ('Sharp Eye', 'Christenson')
+                    mi.BrandName = 'Sharp Eye'
+                    AND mi.BoardModelId = :board_model_id
+                    AND (
+                        mi.BoardSizeId = :board_size_id
+                        OR (
+                            mi.LengthFeetInches = :length
+                            AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                            AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                            AND (
+                                mi.VolumeLitres IS NULL
+                                OR :volume IS NULL
+                                OR ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.15
+                            )
+                        )
+                    )
+                    AND (
+                        mi.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(mi.Construction))) =
+                            LOWER(LTRIM(RTRIM(:construction)))
+                    )
+                )
+                OR
+                (
+                    mi.BrandName = 'Christenson'
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
                     AND REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
