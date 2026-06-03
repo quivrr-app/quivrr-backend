@@ -314,15 +314,24 @@ def variant_available(variant, product):
     return False
 
 
-def variant_price(variant):
-    if not variant:
+def variant_price(variant, product=None):
+    if not variant and not product:
         return None
 
-    for key in ("price", "price_amount", "compare_at_price"):
-        price = normalise_price(variant.get(key))
+    candidates = []
 
-        if price is not None:
-            return price
+    if variant:
+        candidates.append(variant)
+
+    if product:
+        candidates.append(product)
+
+    for source in candidates:
+        for key in ("price", "price_amount", "price_min", "compare_at_price"):
+            price = normalise_price(source.get(key))
+
+            if price is not None:
+                return price
 
     return None
 
@@ -398,7 +407,7 @@ def main():
             missing_variant_rows += 1
 
         is_available = variant_available(variant, product)
-        price_amount = variant_price(variant)
+        price_amount = variant_price(variant, product)
 
         if is_available:
             available_rows += 1

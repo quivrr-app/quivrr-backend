@@ -31,12 +31,14 @@ HEADERS = {
 def clean(value):
     value = str(value or "")
     value = value.replace("×", "x")
+    value = value.replace("\\", "")
     value = value.replace("’", "'")
     value = value.replace("‘", "'")
     value = value.replace("“", '"')
     value = value.replace("”", '"')
     value = value.replace("Â", "")
     value = value.replace("â€“", "-")
+    value = value.replace("&quot;", '"')
     return re.sub(r"\s+", " ", value).strip()
 
 
