@@ -72,7 +72,10 @@ def is_surfboard_stock(product):
 
     combined = f"{title} {handle} {product_type} {vendor}".lower()
 
-    if product_type.lower() != "surfboard stock":
+    if product_type.lower() not in {
+        "surfboard stock",
+        "surfboards",
+    }:
         return False
 
     blocked = [
