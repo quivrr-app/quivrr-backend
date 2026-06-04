@@ -354,8 +354,173 @@ def extract_fin_setups(
     return fins
 
 
+def model_key(value: str | None) -> str:
+    text = clean_text(value)
+    text = text.lower()
+    text = text.replace("&", " and ")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = re.sub(r"\bthe\b", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
+
+
+def append_unique(values: list[str], value: str | None) -> None:
+    if value and value not in values:
+        values.append(value)
+
+
+def construction_from_stock_text(value: str) -> str | None:
+    text = value.lower()
+
+    if "pu/pe" in text or "pu pe" in text:
+        return "PU"
+
+    if re.search(r"\bpu\b", text):
+        return "PU"
+
+    if "spine-tek" in text or "spinetek" in text or "spine tek" in text:
+        return "Spine-Tek"
+
+    if "eco carbon tech" in text or "ect" in text:
+        return "ECT"
+
+    if "epoxy" in text:
+        return "Epoxy"
+
+    if "eps" in text:
+        return "EPS"
+
+    return None
+
+
+def fetch_shopify_products() -> list[dict[str, Any]]:
+    products = []
+    page = 1
+
+    while True:
+        url = f"{BASE_URL}/products.json?limit=250&page={page}"
+
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            timeout=60,
+        )
+
+        response.raise_for_status()
+
+        page_products = response.json().get("products", [])
+
+        if not page_products:
+            break
+
+        products.extend(page_products)
+        page += 1
+
+        if page > 30:
+            break
+
+    return products
+
+
+def build_stock_construction_map(
+    model_links: list[dict[str, Any]],
+) -> dict[str, list[str]]:
+    model_lookup = {}
+
+    for item in model_links:
+        slug = item.get("slug")
+        model_name = item.get("model_name")
+
+        if not slug:
+            continue
+
+        for value in [model_name, slug]:
+            key = model_key(value)
+
+            if key:
+                model_lookup[key] = slug
+
+    construction_map: dict[str, list[str]] = {}
+
+    for product in fetch_shopify_products():
+        product_type = clean_text(product.get("product_type"))
+
+        if product_type.lower() not in {
+            "surfboard stock",
+            "surfboards",
+        }:
+            continue
+
+        title = clean_text(product.get("title"))
+        handle = clean_text(product.get("handle"))
+        tags = [
+            clean_text(str(tag))
+            for tag in product.get("tags") or []
+        ]
+
+        combined = " ".join([title, handle] + tags)
+
+        construction = construction_from_stock_text(combined)
+
+        if not construction:
+            continue
+
+        matched_model = None
+
+        for tag in tags:
+            key = model_key(tag)
+
+            if key in model_lookup:
+                matched_model = model_lookup[key]
+                break
+
+        if not matched_model:
+            product_key = model_key(title)
+
+            for key, model_name in sorted(
+                model_lookup.items(),
+                key=lambda item: len(item[0]),
+                reverse=True,
+            ):
+                if key and key in product_key:
+                    matched_model = model_name
+                    break
+
+        if not matched_model:
+            continue
+
+        construction_key = matched_model
+
+        if construction_key not in construction_map:
+            construction_map[construction_key] = []
+
+        append_unique(
+            construction_map[construction_key],
+            construction,
+        )
+
+    return construction_map
+
+
+def merge_constructions(
+    base_constructions: list[str],
+    extra_constructions: list[str],
+) -> list[str]:
+    merged = []
+
+    for value in base_constructions or []:
+        append_unique(merged, value)
+
+    for value in extra_constructions or []:
+        append_unique(merged, value)
+
+    return merged
+
+
 def scrape_product(
     item: dict[str, Any],
+    construction_map: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     url = item["product_url"]
 
@@ -390,6 +555,19 @@ def scrape_product(
 
     constructions = extract_constructions(
         page_text
+    )
+
+    extra_constructions = []
+
+    if construction_map:
+        extra_constructions = construction_map.get(
+            item.get("slug"),
+            [],
+        )
+
+    constructions = merge_constructions(
+        constructions,
+        extra_constructions,
     )
 
     fin_setups = extract_fin_setups(
@@ -450,6 +628,13 @@ def main() -> None:
         f"Loading {len(links)} CI model links"
     )
 
+    print("Loading CI AU stock construction evidence")
+    construction_map = build_stock_construction_map(links)
+    print(
+        f"Stock construction evidence models: "
+        f"{len(construction_map)}"
+    )
+
     for index, item in enumerate(
         links,
         start=1,
@@ -460,7 +645,10 @@ def main() -> None:
         )
 
         try:
-            record = scrape_product(item)
+            record = scrape_product(
+                item,
+                construction_map,
+            )
 
             catalogue.append(record)
 

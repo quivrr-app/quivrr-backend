@@ -1,5 +1,6 @@
 ﻿import json
 import os
+import time
 from pathlib import Path
 from urllib.parse import quote_plus
 
@@ -66,6 +67,24 @@ def clean(value):
     cleaned = str(value).strip()
 
     return cleaned or None
+
+
+def begin_with_retry(max_attempts=4, delay_seconds=8):
+    last_error = None
+
+    for attempt in range(1, max_attempts + 1):
+        try:
+            return engine.begin()
+        except Exception as exc:
+            last_error = exc
+            print(
+                f"SQL connection attempt {attempt}/{max_attempts} failed: {exc}"
+            )
+
+            if attempt < max_attempts:
+                time.sleep(delay_seconds)
+
+    raise last_error
 
 
 def load_catalogue():
@@ -229,7 +248,7 @@ def main():
     print(f"Catalogue models loaded: {len(catalogue)}")
     print(f"Models prepared: {len(models)}")
 
-    with engine.begin() as connection:
+    with begin_with_retry() as connection:
         verify_brand(connection)
 
         print("Cleaning existing Channel Islands catalogue...")
