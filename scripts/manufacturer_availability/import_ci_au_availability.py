@@ -69,8 +69,56 @@ def get_brand_id(cursor):
     return row[0] if row else None
 
 
+CI_MODEL_ALIASES = {
+    "solution": "the-solution",
+    "solution-spinetek": "the-solution",
+    "happy-traveler": "happy-traveler-1",
+    "m23": "m-23",
+    "feb-s-fish": "febs-fish",
+    "feb-s-fish-spine-tek": "febs-fish",
+    "black-beauty": "the-black-beauty",
+    "dumpster-diver-2-spinetek": "dumpster-diver-2",
+    "og-flyer-ect-epoxy": "og-flyer",
+    "og-flyer-ect-epoxy-fcsii": "og-flyer",
+    "og-flyer-ect-epoxy-futures": "og-flyer",
+}
+
+
+def normalise_ci_model_name(value):
+    model_name = clean(value)
+
+    if not model_name:
+        return model_name
+
+    model_name = model_name.lower().strip()
+
+    if model_name in CI_MODEL_ALIASES:
+        return CI_MODEL_ALIASES[model_name]
+
+    for suffix in [
+        "-spinetek-futures",
+        "-spinetek-fcsii",
+        "-spine-tek",
+        "-spinetek",
+        "-ect-epoxy-futures",
+        "-ect-epoxy-fcsii",
+        "-ect-epoxy",
+        "-futures",
+        "-fcsii",
+    ]:
+        if model_name.endswith(suffix):
+            candidate = model_name[: -len(suffix)]
+
+            if candidate in CI_MODEL_ALIASES:
+                return CI_MODEL_ALIASES[candidate]
+
+            return candidate
+
+    return model_name
+
+
 def resolve_catalogue(cursor, brand_id, row):
-    model_name = clean(row.get("modelName"))
+    model_name = normalise_ci_model_name(row.get("modelName"))
     length = clean(row.get("length"))
     construction = clean(row.get("construction"))
 
