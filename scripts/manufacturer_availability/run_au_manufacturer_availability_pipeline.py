@@ -34,6 +34,20 @@ PIPELINES = [
         ],
     },
     {
+        "name": "Chilli AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_chilli_au_availability_pipeline.py",
+        ],
+    },
+    {
+        "name": "Christenson AU manufacturer availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_christenson_au_availability_pipeline.py",
+        ],
+    },
+    {
         "name": "DHD AU manufacturer availability",
         "command": [
             PYTHON,
