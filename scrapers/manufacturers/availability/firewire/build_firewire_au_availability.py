@@ -35,6 +35,18 @@ def normalise_construction(value, title=None, description=None):
         str(description or ""),
     ]).lower()
 
+    if (
+        ("i-bolic 2.0" in combined or "ibolic 2.0" in combined)
+        and "volcanic" in combined
+    ):
+        return "I-Bolic 2.0 Volcanic"
+
+    if (
+        ("i-bolic" in combined or "ibolic" in combined)
+        and "volcanic" in combined
+    ):
+        return "I-Bolic Volcanic"
+
     if "i-bolic 2.0" in combined or "ibolic 2.0" in combined:
         return "I-Bolic 2.0"
 
@@ -233,3 +245,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
