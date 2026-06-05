@@ -1,5 +1,4 @@
-
-import json
+﻿import json
 import os
 import time
 from datetime import datetime, timezone
@@ -9,6 +8,89 @@ import pyodbc
 from dotenv import load_dotenv
 
 INPUT_PATH = Path("scrapers/manufacturers/availability/output/channel_islands/ci_au_manufacturer_inventory.json")
+
+
+CI_MODEL_DISPLAY_NAMES = {
+    "average-joe": "Average Joe",
+    "better-everyday": "Better Everyday",
+    "better-everyday-spinetek": "Better Everyday",
+    "big-happy": "Big Happy",
+    "black-and-white": "Black/White",
+    "black-beauty": "Black Beauty",
+    "bobby-quad": "Bobby Quad",
+    "ci-2-pro": "CI 2.Pro",
+    "ci-2-pro-spinetek": "CI 2.Pro",
+    "ci-pro": "CI Pro",
+    "ci-pro-step-up": "CI Pro Step Up",
+    "ci-2-pro-step-up": "CI Pro Step Up",
+    "ci-mid": "CI Mid",
+    "ci-mid-twin": "CI Mid Twin",
+    "dumpster-diver": "Dumpster Diver",
+    "dumpster-diver-2": "Dumpster Diver 2",
+    "dumpster-diver-2-spinetek": "Dumpster Diver 2",
+    "febs-fish": "Feb's Fish",
+    "feb-s-fish": "Feb's Fish",
+    "fishbeard": "Fish Beard",
+    "fish-beard": "Fish Beard",
+    "fever": "Fever",
+    "g-skate": "G Skate",
+    "girabbit": "Girabbit",
+    "goldie": "Goldie",
+    "happy": "Happy",
+    "happy-everyday": "Happy Everyday",
+    "happy-everyday-spinetek": "Happy Everyday",
+    "happy-everyday-fcsii": "Happy Everyday",
+    "happy-traveler": "Happy Traveler",
+    "happy-traveler-1": "Happy Traveler",
+    "m23": "M23",
+    "m-23": "M23",
+    "mavs-gun": "Mavs Gun",
+    "mikey-february-shorty": "Mikey February Shorty",
+    "neckbeard": "The Neckbeard",
+    "neckbeard-2": "Neckbeard 2",
+    "neckbeard-3": "NeckBeard 3",
+    "og-flyer": "OG Flyer",
+    "og-flyer-ect-epoxy": "OG Flyer",
+    "og-flyer-ect-epoxy-fcsii": "OG Flyer",
+    "og-flyer-ect-epoxy-futures": "OG Flyer",
+    "pod-mod": "Pod Mod",
+    "pod-mod-1": "Pod Mod",
+    "rocket-wide": "Rocket Wide",
+    "rocket-wide-squash": "Rocket Wide Squash",
+    "rook-15": "Rook 15",
+    "sampler": "Sampler",
+    "semi-pro-12": "Semi Pro 12",
+    "solution": "The Solution",
+    "solution-spinetek": "The Solution",
+    "the-solution": "The Solution",
+    "taco-grinder": "Taco Grinder",
+    "taco-grinder-1": "Taco Grinder",
+    "the-black-beauty": "Black Beauty",
+    "the-proton": "The Proton",
+    "the-water-hog": "Waterhog",
+    "tph-single-fin-1": "Tri Plane Hull",
+    "twin-fin": "Twin Fin",
+    "twin-pin": "Twin Pin",
+    "two-happy": "Two Happy",
+    "ultra-joe": "Ultra Joe",
+    "ultra-joe-1": "Ultra Joe",
+    "waterhog": "Waterhog",
+}
+
+
+MODEL_SUFFIXES = [
+    "-spinetek-futures",
+    "-spinetek-fcsii",
+    "-spine-tek-futures",
+    "-spine-tek-fcsii",
+    "-spine-tek",
+    "-spinetek",
+    "-ect-epoxy-futures",
+    "-ect-epoxy-fcsii",
+    "-ect-epoxy",
+    "-futures",
+    "-fcsii",
+]
 
 
 def now_utc():
@@ -24,6 +106,40 @@ def clean(value):
     return value or None
 
 
+def normalise_slug(value):
+    value = clean(value)
+
+    if not value:
+        return None
+
+    return value.lower().strip()
+
+
+def resolve_ci_display_name(value):
+    slug = normalise_slug(value)
+
+    if not slug:
+        return None
+
+    if slug in CI_MODEL_DISPLAY_NAMES:
+        return CI_MODEL_DISPLAY_NAMES[slug]
+
+    for suffix in MODEL_SUFFIXES:
+        if slug.endswith(suffix):
+            base_slug = slug[: -len(suffix)]
+
+            if base_slug in CI_MODEL_DISPLAY_NAMES:
+                return CI_MODEL_DISPLAY_NAMES[base_slug]
+
+            slug = base_slug
+            break
+
+    if slug in CI_MODEL_DISPLAY_NAMES:
+        return CI_MODEL_DISPLAY_NAMES[slug]
+
+    return slug.replace("-", " ").title()
+
+
 def get_connection():
     load_dotenv()
 
@@ -35,6 +151,7 @@ def get_connection():
         f"PWD={os.getenv('SQL_PASSWORD')};"
         "Encrypt=yes;"
         "TrustServerCertificate=no;"
+        "Connection Timeout=30;"
     )
 
     for attempt in range(1, 6):
@@ -46,8 +163,31 @@ def get_connection():
             time.sleep(10)
 
 
+def execute_with_retry(cursor, sql, *params, attempts=5, delay_seconds=10):
+    last_error = None
+
+    for attempt in range(1, attempts + 1):
+        try:
+            if not params:
+                return cursor.execute(sql)
+
+            if len(params) == 1 and isinstance(params[0], (list, tuple)):
+                return cursor.execute(sql, params[0])
+
+            return cursor.execute(sql, params)
+        except Exception as exc:
+            last_error = exc
+
+            if attempt == attempts:
+                raise
+
+            time.sleep(delay_seconds)
+
+    raise last_error
+
+
 def get_columns(cursor):
-    cursor.execute("""
+    execute_with_retry(cursor, """
         SELECT COLUMN_NAME
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_SCHEMA = 'dbo'
@@ -58,7 +198,7 @@ def get_columns(cursor):
 
 
 def get_brand_id(cursor):
-    cursor.execute("""
+    execute_with_retry(cursor, """
         SELECT BrandId
         FROM dbo.Brands
         WHERE BrandName = ?
@@ -69,56 +209,8 @@ def get_brand_id(cursor):
     return row[0] if row else None
 
 
-CI_MODEL_ALIASES = {
-    "solution": "the-solution",
-    "solution-spinetek": "the-solution",
-    "happy-traveler": "happy-traveler-1",
-    "m23": "m-23",
-    "feb-s-fish": "febs-fish",
-    "feb-s-fish-spine-tek": "febs-fish",
-    "black-beauty": "the-black-beauty",
-    "dumpster-diver-2-spinetek": "dumpster-diver-2",
-    "og-flyer-ect-epoxy": "og-flyer",
-    "og-flyer-ect-epoxy-fcsii": "og-flyer",
-    "og-flyer-ect-epoxy-futures": "og-flyer",
-}
-
-
-def normalise_ci_model_name(value):
-    model_name = clean(value)
-
-    if not model_name:
-        return model_name
-
-    model_name = model_name.lower().strip()
-
-    if model_name in CI_MODEL_ALIASES:
-        return CI_MODEL_ALIASES[model_name]
-
-    for suffix in [
-        "-spinetek-futures",
-        "-spinetek-fcsii",
-        "-spine-tek",
-        "-spinetek",
-        "-ect-epoxy-futures",
-        "-ect-epoxy-fcsii",
-        "-ect-epoxy",
-        "-futures",
-        "-fcsii",
-    ]:
-        if model_name.endswith(suffix):
-            candidate = model_name[: -len(suffix)]
-
-            if candidate in CI_MODEL_ALIASES:
-                return CI_MODEL_ALIASES[candidate]
-
-            return candidate
-
-    return model_name
-
-
 def resolve_catalogue(cursor, brand_id, row):
-    model_name = normalise_ci_model_name(row.get("modelName"))
+    model_name = resolve_ci_display_name(row.get("modelName"))
     length = clean(row.get("length"))
     construction = clean(row.get("construction"))
 
@@ -128,16 +220,17 @@ def resolve_catalogue(cursor, brand_id, row):
         "Width": row.get("width"),
         "Thickness": row.get("thickness"),
         "VolumeLitres": row.get("volumeLitres"),
+        "CanonicalModelName": model_name,
     }
 
     if not brand_id or not model_name or not length:
         return resolved
 
-    cursor.execute("""
+    execute_with_retry(cursor, """
         SELECT BoardModelId, ModelName
         FROM dbo.BoardModels
         WHERE BrandId = ?
-          AND LOWER(ModelName) = LOWER(?)
+          AND LOWER(LTRIM(RTRIM(ModelName))) = LOWER(LTRIM(RTRIM(?)))
     """, brand_id, model_name)
 
     model = cursor.fetchone()
@@ -148,7 +241,7 @@ def resolve_catalogue(cursor, brand_id, row):
     board_model_id = model[0]
     resolved["BoardModelId"] = board_model_id
 
-    cursor.execute("""
+    execute_with_retry(cursor, """
         SELECT TOP 1
             BoardSizeId,
             Width,
@@ -189,7 +282,7 @@ def insert_row(cursor, columns, row, resolved, brand_id):
     values = {
         "BrandId": brand_id,
         "BrandName": "Channel Islands",
-        "ModelName": clean(row.get("modelName")),
+        "ModelName": resolved.get("CanonicalModelName") or clean(row.get("modelName")),
         "BoardModelId": resolved.get("BoardModelId"),
         "BoardSizeId": resolved.get("BoardSizeId"),
         "LengthFeetInches": clean(row.get("length")),
@@ -207,6 +300,7 @@ def insert_row(cursor, columns, row, resolved, brand_id):
         "AvailabilitySource": "manufacturer_direct",
         "RegionCode": "AU",
         "RawProductTitle": clean(row.get("rawProductTitle")),
+        "NormalisedProductTitle": clean(row.get("modelName")),
         "Source": clean(row.get("source")) or "ci_au_products_json_paginated",
         "ScrapedAtUtc": clean(row.get("scrapedAtUtc")),
         "UpdatedAtUtc": now_utc(),
@@ -222,7 +316,8 @@ def insert_row(cursor, columns, row, resolved, brand_id):
     placeholders = ", ".join(["?"] * len(insert_cols))
     col_sql = ", ".join(insert_cols)
 
-    cursor.execute(
+    execute_with_retry(
+        cursor,
         f"INSERT INTO dbo.ManufacturerInventory ({col_sql}) VALUES ({placeholders})",
         [values[column] for column in insert_cols],
     )
@@ -240,7 +335,7 @@ def main():
     columns = get_columns(cursor)
     brand_id = get_brand_id(cursor)
 
-    cursor.execute("""
+    execute_with_retry(cursor, """
         DELETE FROM dbo.ManufacturerInventory
         WHERE BrandName = 'Channel Islands'
           AND RegionCode = 'AU'

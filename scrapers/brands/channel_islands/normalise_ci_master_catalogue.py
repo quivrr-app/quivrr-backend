@@ -56,21 +56,70 @@ def dedupe_sizes(sizes):
 
 
 def clean_model_name(item):
-    name = item.get("model_name") or item.get("raw_title_hint") or item.get("slug")
+    slug = str(item.get("slug") or "").strip()
+    raw_name = str(item.get("model_name") or "").strip()
+    raw_hint = str(item.get("raw_title_hint") or "").strip()
+
+    if not hasattr(clean_model_name, "_display_name_map"):
+        links_file = Path(__file__).resolve().parent / "output" / "ci_canonical_model_links.json"
+        display_name_map = {}
+
+        if links_file.exists():
+            try:
+                links = json.loads(links_file.read_text(encoding="utf-8"))
+                for link in links:
+                    link_slug = str(link.get("slug") or "").strip()
+                    link_name = str(link.get("model_name") or "").strip()
+
+                    if link_slug and link_name:
+                        display_name_map[link_slug] = link_name
+            except Exception:
+                display_name_map = {}
+
+        clean_model_name._display_name_map = display_name_map
+
+    display_name_map = clean_model_name._display_name_map
+
+    explicit_overrides = {
+        "black-and-white": "Black/White",
+        "ci-2-pro": "CI 2.Pro",
+        "ci-2-pro-step-up": "CI Pro Step Up",
+        "ci-pro-step-up": "CI Pro Step Up",
+        "febs-fish": "Feb's Fish",
+        "fishbeard": "Fish Beard",
+        "happy-traveler-1": "Happy Traveler",
+        "m-23": "M23",
+        "mikey-february-shorty": "Mikey February Shorty",
+        "pod-mod-1": "Pod Mod",
+        "taco-grinder-1": "Taco Grinder",
+        "the-black-beauty": "Black Beauty",
+        "the-solution": "The Solution",
+        "the-water-hog": "Waterhog",
+        "tph-single-fin-1": "Tri Plane Hull",
+        "ultra-joe-1": "Ultra Joe",
+    }
+
+    if slug in explicit_overrides:
+        return explicit_overrides[slug]
+
+    if slug in display_name_map:
+        return display_name_map[slug]
+
+    name = raw_name or raw_hint or slug
 
     if not name:
         return ""
 
-    name = str(name).strip()
-
     junk_titles = {
-        "channel islands surfboards",
-        "board models",
+        "surfboard",
         "surfboards",
     }
 
     if name.lower() in junk_titles:
-        return str(item.get("slug", "")).replace("-", " ").title()
+        name = slug
+
+    if "-" in name and " " not in name:
+        return name.replace("-", " ").title()
 
     return name
 

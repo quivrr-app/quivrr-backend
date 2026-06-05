@@ -1,4 +1,4 @@
-﻿import subprocess
+import subprocess
 import sys
 from pathlib import Path
 
@@ -12,6 +12,13 @@ STEPS = [
         "command": [
             sys.executable,
             "scrapers/brands/channel_islands/build_ci_canonical_model_links.py",
+        ],
+    },
+    {
+        "name": "Ensure CI supplemental model links",
+        "command": [
+            sys.executable,
+            "scrapers/brands/channel_islands/ensure_ci_supplemental_model_links.py",
         ],
     },
     {
@@ -33,6 +40,13 @@ STEPS = [
         "command": [
             sys.executable,
             "scripts/import_ci_catalogue.py",
+        ],
+    },
+    {
+        "name": "Refresh CI AU manufacturer availability after catalogue import",
+        "command": [
+            sys.executable,
+            "scripts/manufacturer_availability/run_ci_au_availability_pipeline.py",
         ],
     },
 ]
