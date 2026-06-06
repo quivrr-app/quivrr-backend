@@ -64,6 +64,16 @@ STEPS = [
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")
 
+POST_CATALOGUE_STEPS = [
+    {
+        "name": "AU Manufacturer Direct Availability",
+        "command": [
+            PYTHON,
+            "scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py",
+        ],
+    },
+]
+
 
 def run_step(step):
     command_path = Path(step["command"][1])
@@ -116,6 +126,20 @@ def main():
             })
             break
 
+    if not failed:
+        for post_step in POST_CATALOGUE_STEPS:
+            try:
+                results.append(run_step(post_step))
+            except Exception as exc:
+                failed = True
+                results.append({
+                    "brand": post_step["name"],
+                    "status": "failed",
+                    "message": str(exc),
+                    "ended_at_utc": datetime.now(timezone.utc).isoformat(),
+                })
+                break
+
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     REPORT_PATH.write_text(
@@ -140,3 +164,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
