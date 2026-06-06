@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 from pathlib import Path
 from urllib.parse import quote_plus
@@ -10,7 +10,7 @@ from sqlalchemy import create_engine, event, text
 load_dotenv()
 
 BRAND_ID = 4
-CATALOGUE_PATH = Path("scrapers/brands/output/js_page_catalogue.json")
+CATALOGUE_PATH = Path("scrapers/brands/js/output/js_page_catalogue.json")
 LEGACY_OVERRIDE_PATH = Path(
     "scrapers/brands/manual_catalogue_overrides/js_industries_legacy_models.json"
 )
