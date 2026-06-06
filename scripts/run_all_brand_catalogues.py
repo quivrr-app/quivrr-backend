@@ -60,6 +60,18 @@ STEPS = [
         "name": "Simon Anderson",
         "command": [PYTHON, "scripts/run_simon_anderson_pipeline.py"],
     },
+    {
+        "name": "Chilli",
+        "command": [PYTHON, "scripts/run_chilli_pipeline.py"],
+    },
+    {
+        "name": "Album",
+        "command": [PYTHON, "scripts/run_album_pipeline.py"],
+    },
+    {
+        "name": "Christenson",
+        "command": [PYTHON, "scripts/run_christenson_pipeline.py"],
+    },
 ]
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")
