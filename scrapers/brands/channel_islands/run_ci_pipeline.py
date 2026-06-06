@@ -42,13 +42,6 @@ STEPS = [
             "scripts/import_ci_catalogue.py",
         ],
     },
-    {
-        "name": "Refresh CI AU manufacturer availability after catalogue import",
-        "command": [
-            sys.executable,
-            "scripts/manufacturer_availability/run_ci_au_availability_pipeline.py",
-        ],
-    },
 ]
 
 
@@ -85,3 +78,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
