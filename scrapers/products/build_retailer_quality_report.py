@@ -3,27 +3,47 @@ from collections import defaultdict
 from pathlib import Path
 
 
-SHOPIFY_DIR = Path("scrapers/products/output/shopify")
-WOOCOMMERCE_DIR = Path("scrapers/products/output/woocommerce")
+OUTPUT_ROOT = Path("scrapers/products/output")
 
-LIKELY_SURFBOARDS_FILE = Path(
-    "scrapers/products/output/likely_surfboards.json"
-)
+SCRAPE_SOURCES = [
+    ("shopify", OUTPUT_ROOT / "shopify"),
+    ("woocommerce", OUTPUT_ROOT / "woocommerce"),
+    ("bigcommerce", OUTPUT_ROOT / "bigcommerce"),
+    ("magento", OUTPUT_ROOT / "magento"),
+    ("neto_maropost", OUTPUT_ROOT / "neto_maropost"),
+    ("squarespace", OUTPUT_ROOT / "squarespace"),
+    ("ecwid", OUTPUT_ROOT / "ecwid"),
+    ("coopers", OUTPUT_ROOT / "coopers"),
+]
 
-NORMALISED_FILE = Path(
-    "scrapers/products/output/normalised_surfboards.json"
-)
+LIKELY_SURFBOARDS_FILE = OUTPUT_ROOT / "likely_surfboards.json"
+NORMALISED_FILE = OUTPUT_ROOT / "normalised_surfboards.json"
+OUTPUT_FILE = OUTPUT_ROOT / "retailer_scrape_health.json"
 
-OUTPUT_FILE = Path(
-    "scrapers/products/output/retailer_scrape_health.json"
-)
+EXCLUDED_NON_BOARD_RETAILERS = {
+    "surf_dive_n_ski",
+    "rip_curl_australia",
+    "ocean_and_earth",
+}
 
 
 def clean(value):
     if value is None:
         return ""
-
     return str(value).strip()
+
+
+def make_slug(value):
+    return (
+        clean(value)
+        .lower()
+        .replace("&", "and")
+        .replace("'", "")
+        .replace("’", "")
+        .replace("-", "_")
+        .replace("/", "_")
+        .replace(" ", "_")
+    )
 
 
 def retailer_slug_to_name(slug):
@@ -36,7 +56,17 @@ def load_json(path):
 
     try:
         with open(path, "r", encoding="utf-8") as file:
-            return json.load(file)
+            data = json.load(file)
+
+        if isinstance(data, list):
+            return data
+
+        if isinstance(data, dict):
+            for key in ["products", "items", "data", "results"]:
+                if isinstance(data.get(key), list):
+                    return data[key]
+
+        return []
     except Exception:
         return []
 
@@ -44,19 +74,17 @@ def load_json(path):
 def collect_raw_counts():
     retailer_stats = {}
 
-    scrape_sources = [
-        ("shopify", SHOPIFY_DIR),
-        ("woocommerce", WOOCOMMERCE_DIR),
-    ]
-
-    for platform, directory in scrape_sources:
+    for platform, directory in SCRAPE_SOURCES:
         if not directory.exists():
             continue
 
         for file_path in directory.glob("*.json"):
             retailer_slug = file_path.stem
-            retailer_name = retailer_slug_to_name(retailer_slug)
 
+            if retailer_slug in EXCLUDED_NON_BOARD_RETAILERS:
+                continue
+
+            retailer_name = retailer_slug_to_name(retailer_slug)
             raw_products = load_json(file_path)
 
             retailer_stats[retailer_slug] = {
@@ -90,7 +118,10 @@ def add_verified_counts(retailer_stats):
         if not retailer:
             continue
 
-        retailer_slug = retailer.lower().replace(" ", "_")
+        retailer_slug = make_slug(retailer)
+
+        if retailer_slug in EXCLUDED_NON_BOARD_RETAILERS:
+            continue
 
         if retailer_slug not in retailer_stats:
             retailer_stats[retailer_slug] = {
@@ -114,7 +145,6 @@ def add_verified_counts(retailer_stats):
 
 def add_normalised_counts(retailer_stats):
     normalised = load_json(NORMALISED_FILE)
-
     dedupe_tracker = defaultdict(set)
 
     for item in normalised:
@@ -123,7 +153,7 @@ def add_normalised_counts(retailer_stats):
         if not retailer:
             continue
 
-        retailer_slug = retailer.lower().replace(" ", "_")
+        retailer_slug = make_slug(retailer)
 
         if retailer_slug not in retailer_stats:
             continue
@@ -213,9 +243,7 @@ def main():
     retailer_stats = collect_raw_counts()
 
     add_verified_counts(retailer_stats)
-
     add_normalised_counts(retailer_stats)
-
     classify_health(retailer_stats)
 
     ordered = sorted(
@@ -230,14 +258,11 @@ def main():
     report = {
         "summary": build_summary(retailer_stats),
         "retailers": ordered,
+        "excluded_non_board_retailers": sorted(EXCLUDED_NON_BOARD_RETAILERS),
     }
 
     OUTPUT_FILE.write_text(
-        json.dumps(
-            report,
-            indent=2,
-            ensure_ascii=False,
-        ),
+        json.dumps(report, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -245,9 +270,7 @@ def main():
     print("Retailer scrape health report")
     print("=" * 60)
 
-    summary = report["summary"]
-
-    for key, value in summary.items():
+    for key, value in report["summary"].items():
         print(f"{key}: {value}")
 
     print("")
@@ -263,7 +286,8 @@ def main():
         print(
             f"- {retailer['retailer_name']} | "
             f"{retailer['available_inventory']} available | "
-            f"{retailer['health']}"
+            f"{retailer['health']} | "
+            f"{retailer['platform']}"
         )
 
     print("")
