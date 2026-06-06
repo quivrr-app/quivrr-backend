@@ -304,7 +304,7 @@ def build_catalogue():
                     "width": dimension["width"],
                     "thickness": dimension["thickness"],
                     "volume_litres": dimension["volume_litres"],
-                    "construction": None,
+                    "construction": "Standard",
                     "fin_system": None,
                     "tail_shape": None,
                     "official_product_url": url,
@@ -395,3 +395,4 @@ def build_catalogue():
 
 if __name__ == "__main__":
     build_catalogue()
+
