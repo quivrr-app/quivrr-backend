@@ -1294,6 +1294,13 @@ def search_inventory(boardSizeId: int):
                 AND LOWER(LTRIM(RTRIM(ri.Construction))) =
                     LOWER(LTRIM(RTRIM(:construction)))
             )
+            OR (
+                (
+                    ri.Construction IS NULL
+                    OR LTRIM(RTRIM(ri.Construction)) = ''
+                )
+                AND :brand_name NOT IN ('JS Industries', 'Channel Islands')
+            )
         )
         AND (
             :brand_name NOT IN ('JS Industries', 'Channel Islands')
