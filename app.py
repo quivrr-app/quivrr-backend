@@ -584,6 +584,14 @@ def normalise_construction_key(value):
         "spine tek": "spine tek",
         "spinetek": "spine tek",
         "standard": "standard",
+        "i bolic": "i bolic",
+        "ibolic": "i bolic",
+        "i bolic 2 0": "i bolic",
+        "ibolic 2 0": "i bolic",
+        "i bolic core with fiberglass lamination": "i bolic",
+        "ibolic core with fiberglass lamination": "i bolic",
+        "i bolic volcanic": "i bolic volcanic",
+        "ibolic volcanic": "i bolic volcanic",
     }
 
     return aliases.get(value, value)
@@ -820,6 +828,24 @@ def search_inventory(boardSizeId: int):
                         OR :construction IS NULL
                         OR LOWER(LTRIM(RTRIM(mi.Construction))) =
                             LOWER(LTRIM(RTRIM(:construction)))
+                        OR (
+                            LOWER(REPLACE(REPLACE(LTRIM(RTRIM(mi.Construction)), '-', ' '), '.', ' ')) IN (
+                                'i bolic',
+                                'ibolic',
+                                'i bolic 2 0',
+                                'ibolic 2 0',
+                                'i bolic core with fiberglass lamination',
+                                'ibolic core with fiberglass lamination'
+                            )
+                            AND LOWER(REPLACE(REPLACE(LTRIM(RTRIM(:construction)), '-', ' '), '.', ' ')) IN (
+                                'i bolic',
+                                'ibolic',
+                                'i bolic 2 0',
+                                'ibolic 2 0',
+                                'i bolic core with fiberglass lamination',
+                                'ibolic core with fiberglass lamination'
+                            )
+                        )
                     )
                     THEN 2
 
@@ -1024,6 +1050,24 @@ def search_inventory(boardSizeId: int):
                         OR :construction IS NULL
                         OR LOWER(LTRIM(RTRIM(mi.Construction))) =
                             LOWER(LTRIM(RTRIM(:construction)))
+                        OR (
+                            LOWER(REPLACE(REPLACE(LTRIM(RTRIM(mi.Construction)), '-', ' '), '.', ' ')) IN (
+                                'i bolic',
+                                'ibolic',
+                                'i bolic 2 0',
+                                'ibolic 2 0',
+                                'i bolic core with fiberglass lamination',
+                                'ibolic core with fiberglass lamination'
+                            )
+                            AND LOWER(REPLACE(REPLACE(LTRIM(RTRIM(:construction)), '-', ' '), '.', ' ')) IN (
+                                'i bolic',
+                                'ibolic',
+                                'i bolic 2 0',
+                                'ibolic 2 0',
+                                'i bolic core with fiberglass lamination',
+                                'ibolic core with fiberglass lamination'
+                            )
+                        )
                     )
                 )
 
