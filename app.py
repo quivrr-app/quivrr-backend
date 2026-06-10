@@ -133,19 +133,40 @@ def model_family_name(model_name):
     if not model:
         return ""
 
+    if model.startswith("the "):
+        model = model[4:]
+
     parts = model.split()
-    family_parts = []
 
-    for part in parts:
-        if re.search(r"\d", part):
-            break
+    descriptive_suffixes = {
+        "round",
+        "squash",
+        "swallow",
+        "tail",
+        "grom",
+        "king",
+        "fish",
+        "long",
+        "toe",
+        "step",
+        "up",
+        "gun",
+        "xl",
+        "eps",
+        "pu",
+        "softboard",
+        "soft",
+        "futureflex",
+        "futures",
+        "fcs",
+        "carbon",
+        "wrap",
+    }
 
-        family_parts.append(part)
+    while len(parts) > 1 and parts[-1] in descriptive_suffixes:
+        parts.pop()
 
-    if family_parts:
-        return " ".join(family_parts)
-
-    return model
+    return " ".join(parts)
 
 
 def text_contains_phrase(title, normalised_title, phrase):
