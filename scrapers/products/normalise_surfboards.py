@@ -17,10 +17,11 @@ OUTPUT_FILE = Path("scrapers/products/output/normalised_surfboards.json")
 
 DIMENSION_PATTERN = re.compile(
     r"(?P<length>\d['’]\d{1,2})"
-    r'(?:["”]?)\s*'
-    r"(?P<width>\d{1,2}(?:\s?\d\/\d)?(?:\.\d+)?)?"
-    r'?(?:["”]?)?\s*'
-    r"(?P<thickness>\d(?:\s?\d\/\d)?(?:\.\d+)?)?"
+    r'(?:["”]?)\s*(?:x\s*)?'
+    r"(?P<width>\d{1,2}(?:\.\d+)?(?:\s+\d{1,2}\/\d{1,2})?)"
+    r'(?:["”]?)\s*(?:x\s*)?'
+    r"(?P<thickness>\d(?:\.\d+)?(?:\s+\d{1,2}\/\d{1,2})?)"
+    r'(?:["”]?)'
 )
 
 LITRE_PATTERN = re.compile(
@@ -143,7 +144,7 @@ def is_valid_thickness(value):
     if "stock" in value.lower():
         return False
 
-    if re.fullmatch(r"\d(?:\.\d+)?(?:\s\d\/\d)?", value):
+    if re.fullmatch(r"\d(?:\.\d+)?(?:\s\d{1,2}\/\d{1,2})?", value):
         try:
             whole = float(value.split()[0])
         except Exception:
@@ -242,7 +243,11 @@ def create_model_key(vendor, title, parsed_brand=None):
         remove_terms.append(parsed_brand.lower())
 
     for term in remove_terms:
-        base = base.replace(term, "")
+        term_pattern = re.compile(
+            rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])",
+            re.IGNORECASE,
+        )
+        base = term_pattern.sub(" ", base)
 
     base = re.sub(r"\d{1,2}['’]\d{1,2}", "", base)
     base = re.sub(r"\d{2}(?:\.\d+)?\s?l", "", base, flags=re.IGNORECASE)
