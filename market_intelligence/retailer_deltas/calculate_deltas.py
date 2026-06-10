@@ -75,17 +75,9 @@ SELECT
 FROM dbo.RetailerInventorySnapshot prev
 LEFT JOIN dbo.RetailerInventorySnapshot cur
     ON cur.SnapshotDate = :current_snapshot_date
-    AND cur.ProductUrl = prev.ProductUrl
+    AND ISNULL(cur.RetailerName, '') = ISNULL(prev.RetailerName, '')
+    AND ISNULL(cur.ProductUrl, '') = ISNULL(prev.ProductUrl, '')
     AND ISNULL(cur.LengthFeetInches, '') = ISNULL(prev.LengthFeetInches, '')
-    AND ISNULL(cur.Width, '') = ISNULL(prev.Width, '')
-    AND ISNULL(cur.Thickness, '') = ISNULL(prev.Thickness, '')
-    AND ISNULL(CAST(cur.VolumeLitres AS decimal(10,2)), -1) = ISNULL(CAST(prev.VolumeLitres AS decimal(10,2)), -1)
-    AND ISNULL(cur.Construction, '') = ISNULL(prev.Construction, '')
-    AND ISNULL(cur.LengthFeetInches, '') = ISNULL(prev.LengthFeetInches, '')
-    AND ISNULL(cur.Width, '') = ISNULL(prev.Width, '')
-    AND ISNULL(cur.Thickness, '') = ISNULL(prev.Thickness, '')
-    AND ISNULL(CAST(cur.VolumeLitres AS decimal(10,2)), -1) = ISNULL(CAST(prev.VolumeLitres AS decimal(10,2)), -1)
-    AND ISNULL(cur.Construction, '') = ISNULL(prev.Construction, '')
 WHERE prev.SnapshotDate = :previous_snapshot_date
 AND cur.SnapshotId IS NULL;
 """)
@@ -141,7 +133,9 @@ SELECT
 FROM dbo.RetailerInventorySnapshot cur
 LEFT JOIN dbo.RetailerInventorySnapshot prev
     ON prev.SnapshotDate = :previous_snapshot_date
-    AND prev.ProductUrl = cur.ProductUrl
+    AND ISNULL(prev.RetailerName, '') = ISNULL(cur.RetailerName, '')
+    AND ISNULL(prev.ProductUrl, '') = ISNULL(cur.ProductUrl, '')
+    AND ISNULL(prev.LengthFeetInches, '') = ISNULL(cur.LengthFeetInches, '')
 WHERE cur.SnapshotDate = :current_snapshot_date
 AND prev.SnapshotId IS NULL;
 """)
