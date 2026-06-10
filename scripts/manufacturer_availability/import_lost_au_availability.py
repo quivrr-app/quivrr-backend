@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import sys
 from pathlib import Path
@@ -110,7 +110,23 @@ def find_brand_id(cursor):
     return row[0]
 
 
+def normalise_lost_model_name(model_name):
+    model_name = clean(model_name)
+
+    if not model_name:
+        return None
+
+    aliases = {
+        "Original Puddle Jumper '25": "The Original Puddle Jumper",
+        "Original Puddle Jumper": "The Original Puddle Jumper",
+    }
+
+    return aliases.get(model_name, model_name)
+
+
 def find_board_model_id(cursor, model_name):
+    model_name = normalise_lost_model_name(model_name)
+
     if not model_name:
         return None
 
@@ -223,7 +239,7 @@ def insert_row(cursor, columns, item, brand_id, board_model_id, board_size_id):
     values = {
         "BrandId": brand_id,
         "BrandName": BRAND_NAME,
-        "ModelName": clean(item.get("modelName")),
+        "ModelName": normalise_lost_model_name(item.get("modelName")),
         "BoardModelId": board_model_id,
         "BoardSizeId": board_size_id,
         "LengthFeetInches": clean(item.get("lengthFeetInches")),
