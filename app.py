@@ -1360,6 +1360,22 @@ def search_inventory(boardSizeId: int):
                     LOWER(LTRIM(RTRIM(:construction)))
             )
             OR (
+                :brand_name = 'Channel Islands'
+                AND LOWER(LTRIM(RTRIM(:construction))) IN ('ect-carbon', 'ect carbon')
+                AND (
+                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%ect%'
+                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%ect%'
+                )
+            )
+            OR (
+                :brand_name = 'Channel Islands'
+                AND LOWER(LTRIM(RTRIM(:construction))) IN ('spine-tek', 'spine tek', 'spinetek')
+                AND (
+                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%spine%'
+                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%spine%'
+                )
+            )
+            OR (
                 (
                     ri.Construction IS NULL
                     OR LTRIM(RTRIM(ri.Construction)) = ''
@@ -1374,6 +1390,22 @@ def search_inventory(boardSizeId: int):
                 ri.Construction IS NOT NULL
                 AND LOWER(LTRIM(RTRIM(ri.Construction))) =
                     LOWER(LTRIM(RTRIM(:construction)))
+            )
+            OR (
+                :brand_name = 'Channel Islands'
+                AND LOWER(LTRIM(RTRIM(:construction))) IN ('ect-carbon', 'ect carbon')
+                AND (
+                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%ect%'
+                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%ect%'
+                )
+            )
+            OR (
+                :brand_name = 'Channel Islands'
+                AND LOWER(LTRIM(RTRIM(:construction))) IN ('spine-tek', 'spine tek', 'spinetek')
+                AND (
+                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%spine%'
+                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%spine%'
+                )
             )
         )
         AND (
