@@ -623,7 +623,12 @@ def constructions_match(left, right):
 
 
 @app.get("/api/search")
-def search_inventory(boardSizeId: int):
+def search_inventory(boardSizeId: int, regionCode: str = "AU"):
+
+    region_code = (regionCode or "AU").strip().upper()
+
+    if region_code not in {"AU", "ID"}:
+        region_code = "AU"
 
     official_query = text("""
         SELECT
@@ -1326,6 +1331,7 @@ def search_inventory(boardSizeId: int):
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
+        AND :region_code = 'AU'
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
@@ -1519,6 +1525,7 @@ def search_inventory(boardSizeId: int):
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
+        AND :region_code = 'AU'
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
@@ -1661,7 +1668,7 @@ def search_inventory(boardSizeId: int):
             "direct_enabled": direct_enabled,
             "manufacturer_mode": manufacturer_mode,
             "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
-            "region_code": "AU"
+            "region_code": region_code
         }
     )
 
@@ -1678,7 +1685,7 @@ def search_inventory(boardSizeId: int):
             "direct_enabled": direct_enabled,
             "manufacturer_mode": manufacturer_mode,
             "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
-            "region_code": "AU"
+            "region_code": region_code
         }
     )
 
@@ -1771,7 +1778,8 @@ def search_inventory(boardSizeId: int):
             "construction": official.Construction,
             "fin_setup": official.FinSetup,
             "brand_name": official.BrandName,
-            "retailer_exact_construction_strict": retailer_exact_construction_strict
+            "retailer_exact_construction_strict": retailer_exact_construction_strict,
+            "region_code": region_code
         }
     )
 
@@ -1811,7 +1819,8 @@ def search_inventory(boardSizeId: int):
             "length_title_match": length_title_match,
             "volume": official.VolumeLitres,
             "construction": official.Construction,
-            "target_length_inches": target_length_inches or 0
+            "target_length_inches": target_length_inches or 0,
+            "region_code": region_code
         }
     )
 
@@ -1878,6 +1887,7 @@ def search_inventory(boardSizeId: int):
 
     return {
         "apiBuild": "manufacturer-policy-v1",
+        "regionCode": region_code,
         "manufacturerSearchPolicy": {
             "brandName": official.BrandName,
             "manufacturerMode": manufacturer_mode,
