@@ -1358,7 +1358,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
             OR ri.NormalisedProductTitle LIKE :model_match
         )
         AND (
-            :retailer_exact_construction_strict = 0
+            :region_code = 'ID'
+            OR :retailer_exact_construction_strict = 0
             OR :construction IS NULL
             OR (
                 ri.Construction IS NOT NULL
@@ -1390,7 +1391,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
             )
         )
         AND (
-            :brand_name NOT IN ('JS Industries', 'Channel Islands')
+            :region_code = 'ID'
+            OR :brand_name NOT IN ('JS Industries', 'Channel Islands')
             OR :construction IS NULL
             OR (
                 ri.Construction IS NOT NULL
@@ -1415,7 +1417,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
             )
         )
         AND (
-            ri.VolumeLitres IS NULL
+            :region_code = 'ID'
+            OR ri.VolumeLitres IS NULL
             OR ABS(
                 CAST(ri.VolumeLitres AS float)
                 - CAST(:volume AS float)
