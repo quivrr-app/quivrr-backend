@@ -1,187 +1,243 @@
-﻿import html
+import html
 import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
-SOURCE_URL = "https://www.onboardstore.id/shop?shop=surfboards&id_usedstate=0%2C1%2C4"
 BASE_URL = "https://www.onboardstore.id"
+API_URL = "https://onboardbali.shaperbuddy.com/api/v1/shop/surfboards"
 
 OUT_DIR = Path("scrapers/retailers/indonesia/onboard_store/output")
-RAW_PATH = OUT_DIR / "onboard_store_raw.html"
+RAW_PATH = OUT_DIR / "onboard_store_raw_api.json"
 SURFBOARDS_PATH = OUT_DIR / "onboard_store_surfboards.json"
 
-PRICE_RE = re.compile(r"\b(\d{1,2}(?:\s\d{3}){2})\b")
-SIZE_RE = re.compile(
+DIM_RE = re.compile(
     r"(?P<length>[4-9]'\d{1,2})\"?\s*x\s*"
-    r"(?P<width>[^x]+?)\"\s*x\s*"
-    r"(?P<thickness>[^-]+?)\"\s*-\s*"
-    r"(?P<volume>\d+(?:\.\d+)?)\s*L",
+    r"(?P<width>[^x]+?)\"?\s*x\s*"
+    r"(?P<thickness>[^-]+?)\"?\s*-\s*"
+    r"(?P<volume>\d+(?:\.\d+)?)?\s*L",
     re.I,
 )
 
-FIN_RE = re.compile(r"(FCS|Futures)\s+Fin System", re.I)
-
 KNOWN_BRANDS = [
     "Channel Islands",
+    "Surf A Billy by Jared Mel",
+    "Chris Christenson",
     "Crowe Surfboards",
-    "Christenson",
-    "Pyzel",
-    "Lost",
-    "DHD",
-    "JS Industries",
-    "Album",
-    "Firewire",
     "Sharp Eye",
     "Sharpeye",
-    "Chilli",
+    "Lost",
+    "Pyzel",
+    "JS Industries",
+    "DHD",
 ]
 
 
 def clean_text(value):
     value = html.unescape(str(value or ""))
-    value = value.replace("’", "'").replace("“", '"').replace("”", '"')
+    value = value.replace("?", "'").replace("?", '"').replace("?", '"')
+    value = re.sub(r"<[^>]+>", " ", value)
     value = re.sub(r"\s+", " ", value).strip()
     return value
 
 
-def absolute_url(href):
-    if href.startswith("http"):
-        return href
-    return BASE_URL + href
+def parse_price(value):
+    value = clean_text(value)
+    value = re.sub(r"[^\d]", "", value)
+    return float(value) if value else None
 
 
-def parse_brand(text):
+def parse_brand(row):
+    value = clean_text(
+        row.get("brand")
+        or row.get("brandname")
+        or row.get("surfboardbrand")
+        or row.get("label_brand")
+    )
+
+    if value:
+        return value
+
+    title = clean_text(row.get("name") or row.get("model") or row.get("title"))
+
     for brand in KNOWN_BRANDS:
-        if text.lower().startswith(brand.lower()):
+        if title.lower().startswith(brand.lower()):
             return brand
-    return text.split(" ", 1)[0] if text else None
+
+    return None
 
 
-def parse_model(text, brand):
-    if not brand:
-        return text
+def parse_model(row, brand):
+    value = clean_text(
+        row.get("model")
+        or row.get("modelname")
+        or row.get("surfboardmodel")
+        or row.get("label_model")
+        or row.get("name")
+        or row.get("title")
+    )
 
-    model = text[len(brand):].strip()
+    if brand and value.lower().startswith(brand.lower()):
+        value = value[len(brand):].strip()
 
-    size_match = re.search(r"\b[4-9]'\d{1,2}", model)
-    if size_match:
-        model = model[:size_match.start()].strip()
-
-    return model.strip(" -")
+    return value or None
 
 
-def parse_price(text):
-    matches = PRICE_RE.findall(text)
-    if not matches:
+def parse_fin(row, text):
+    value = clean_text(
+        row.get("finsystem")
+        or row.get("fin_system")
+        or row.get("fin")
+        or row.get("label_finsystem")
+    )
+
+    if value:
+        return value.replace("FCS", "FCS").replace("Futures", "Futures")
+
+    if "Futures Fin System" in text:
+        return "Futures"
+    if "FCS" in text:
+        return "FCS"
+
+    return None
+
+
+def parse_dimensions(text):
+    match = DIM_RE.search(text)
+    if not match:
         return None
-    raw = matches[-1].replace(" ", "")
-    try:
-        return float(raw)
-    except ValueError:
-        return None
 
-
-def parse_row(href, text):
-    text = clean_text(text)
-
-    size_match = SIZE_RE.search(text)
-    if not size_match:
-        return None
-
-    brand = parse_brand(text)
-    model = parse_model(text, brand)
-    price = parse_price(text)
-    fin_match = FIN_RE.search(text)
-
-    stock_status = "in stock"
-    if re.search(r"\bout of stock\b|\bsold\b", text, re.I):
-        stock_status = "out of stock"
+    volume = match.group("volume")
 
     return {
-        "retailerName": "Onboard Store Indonesia",
-        "regionCode": "ID",
-        "countryCode": "ID",
-        "currencyCode": "IDR",
-        "brandName": brand,
-        "modelName": model,
-        "rawProductTitle": text,
-        "variantTitle": None,
-        "productUrl": absolute_url(href),
-        "productImageUrl": None,
-        "priceAmount": price,
-        "stockStatus": stock_status,
-        "isAvailable": stock_status == "in stock",
-        "lengthFeetInches": size_match.group("length"),
-        "width": clean_text(size_match.group("width")),
-        "thickness": clean_text(size_match.group("thickness")),
-        "volumeLitres": float(size_match.group("volume")),
-        "finSetup": fin_match.group(1).title() if fin_match else None,
-        "construction": None,
-        "sourcePlatform": "custom_html",
-        "sourceProductId": re.search(r"id=(\d+)", href).group(1) if re.search(r"id=(\d+)", href) else None,
-        "sourceVariantId": None,
-        "lastCheckedUtc": datetime.now(timezone.utc).isoformat(),
+        "lengthFeetInches": match.group("length"),
+        "width": clean_text(match.group("width")),
+        "thickness": clean_text(match.group("thickness")),
+        "volumeLitres": float(volume) if volume else None,
     }
 
 
-def fetch_html():
-    response = requests.get(
-        SOURCE_URL,
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,*/*",
-        },
-        timeout=30,
-    )
-    response.raise_for_status()
-    return response.text
+def fetch_all():
+    rows = []
+
+    for page in range(1, 50):
+        response = requests.get(
+            API_URL,
+            params={
+                "page": page,
+                "per_page": 100,
+                "id_usedstate": "0,1,4",
+            },
+            headers={
+                "User-Agent": "Mozilla/5.0",
+                "Accept": "application/json,text/plain,*/*",
+                "X-Requested-With": "XMLHttpRequest",
+                "Referer": "https://www.onboardstore.id/shop?shop=surfboards&id_usedstate=0%2C1%2C4",
+            },
+            timeout=30,
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        if not data:
+            break
+
+        print(f"Onboard API page {page}: {len(data)}")
+        rows.extend(data)
+
+    return rows
+
+
+def row_text(row):
+    parts = []
+
+    for key, value in row.items():
+        if isinstance(value, (str, int, float)):
+            parts.append(str(value))
+
+    return clean_text(" ".join(parts))
 
 
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    page = fetch_html()
-    RAW_PATH.write_text(page, encoding="utf-8")
+    api_rows = fetch_all()
 
-    soup = BeautifulSoup(page, "html.parser")
+    RAW_PATH.write_text(
+        json.dumps(api_rows, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    checked_at = datetime.now(timezone.utc).isoformat()
     rows = []
-    seen = set()
 
-    for a in soup.find_all("a", href=True):
-        href = a["href"]
+    for item in api_rows:
+        text = row_text(item)
 
-        if "/shop/details/" not in href:
+        brand = clean_text(item.get("brand"))
+        model = clean_text(item.get("surfboardmodel"))
+
+        product_id = item.get("id_surfboard") or item.get("id")
+        product_url = f"{BASE_URL}/shop/details/?shop=surfboards&id={product_id}" if product_id else BASE_URL
+
+        img = item.get("img") or {}
+        image_url = img.get("deck") or img.get("bottom") or img.get("default") if isinstance(img, dict) else None
+
+        price = item.get("price") or item.get("webprice")
+
+        dims = {
+            "lengthFeetInches": clean_text(item.get("length_inches")).replace('"', ""),
+            "width": clean_text(item.get("width_display")).replace('"', ""),
+            "thickness": clean_text(item.get("thickness_display")).replace('"', ""),
+            "volumeLitres": float(item.get("volume")) if clean_text(item.get("volume")) else None,
+        }
+
+        if not dims["lengthFeetInches"]:
             continue
 
-        row = parse_row(href, a.get_text(" ", strip=True))
+        rows.append({
+            "retailerName": "Onboard Store Indonesia",
+            "regionCode": "ID",
+            "countryCode": "ID",
+            "currencyCode": "IDR",
+            "brandName": brand,
+            "modelName": model,
+            "rawProductTitle": text,
+            "variantTitle": None,
+            "productUrl": product_url,
+            "productImageUrl": image_url,
+            "priceAmount": parse_price(price) or parse_price(text),
+            "stockStatus": "in stock",
+            "isAvailable": True,
+            "lengthFeetInches": dims["lengthFeetInches"],
+            "width": dims["width"],
+            "thickness": dims["thickness"],
+            "volumeLitres": dims["volumeLitres"],
+            "finSetup": clean_text(item.get("finsystem")),
+            "construction": clean_text(item.get("surfboardconstructiontype")),
+            "sourcePlatform": "shaperbuddy_api",
+            "sourceProductId": product_id,
+            "sourceVariantId": None,
+            "lastCheckedUtc": checked_at,
+        })
 
-        if not row:
-            continue
+    SURFBOARDS_PATH.write_text(
+        json.dumps(rows, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
-        key = (row["sourceProductId"], row["rawProductTitle"])
-        if key in seen:
-            continue
-
-        seen.add(key)
-        rows.append(row)
-
-    SURFBOARDS_PATH.write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
-
-    print(f"Onboard rows: {len(rows)}")
-    print(f"In stock: {sum(1 for row in rows if row.get('isAvailable'))}")
-    print(f"With price: {sum(1 for row in rows if row.get('priceAmount'))}")
-    print(f"With length: {sum(1 for row in rows if row.get('lengthFeetInches'))}")
-    print(f"With volume: {sum(1 for row in rows if row.get('volumeLitres'))}")
+    print(f"Onboard API rows: {len(api_rows)}")
+    print(f"Onboard parsed rows: {len(rows)}")
+    print(f"With price: {sum(1 for r in rows if r.get('priceAmount'))}")
+    print(f"With volume: {sum(1 for r in rows if r.get('volumeLitres') is not None)}")
 
     for row in rows[:20]:
         print(
-            f"{row['stockStatus']} | {row['brandName']} | {row['modelName']} | "
+            f"{row['brandName']} | {row['modelName']} | "
             f"{row['lengthFeetInches']} | {row['volumeLitres']}L | "
-            f"{row['finSetup']} | {row['priceAmount']} {row['currencyCode']}"
+            f"{row['priceAmount']} IDR"
         )
 
 
