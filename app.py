@@ -1331,7 +1331,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
-        AND :region_code = 'AU'
+        AND ISNULL(ri.RegionCode, 'AU') = :region_code
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
@@ -1525,7 +1525,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
-        AND :region_code = 'AU'
+        AND ISNULL(ri.RegionCode, 'AU') = :region_code
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
