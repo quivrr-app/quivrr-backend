@@ -5,10 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-SOURCE_URLS = [
-    "https://freefallsurfindustries.com/wp-json/wc/store/products?per_page=100",
-    "https://freefallsurfindustries.com/wp-json/wc/store/products?per_page=100&page=2",
-]
+BASE_API_URL = "https://freefallsurfindustries.com/wp-json/wc/store/products?per_page=100"
 
 OUT_DIR = Path("scrapers/retailers/indonesia/freefall/output")
 RAW_PATH = OUT_DIR / "freefall_raw_products.json"
@@ -100,8 +97,15 @@ def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     products = []
-    for url in SOURCE_URLS:
-        products.extend(fetch_json(url))
+    for page in range(1, 20):
+        url = f"{BASE_API_URL}&page={page}"
+        batch = fetch_json(url)
+
+        if not batch:
+            break
+
+        print(f"Freefall API page {page}: {len(batch)}")
+        products.extend(batch)
 
     rows = build_rows(products)
 
