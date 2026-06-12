@@ -1541,11 +1541,17 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
         AND (
             ri.RawProductTitle LIKE :model_match
             OR ri.NormalisedProductTitle LIKE :model_match
-            OR ri.RawProductTitle LIKE :model_match
-            OR ri.NormalisedProductTitle LIKE :model_match
+            OR (
+                :region_code = 'ID'
+                AND (
+                    ri.RawProductTitle LIKE :model_family_match
+                    OR ri.NormalisedProductTitle LIKE :model_family_match
+                )
+            )
         )
         AND (
-            ri.LengthFeetInches = :length
+            :region_code = 'ID'
+            OR ri.LengthFeetInches = :length
             OR ri.LengthFeetInches = :one_down_length
             OR ri.LengthFeetInches = :one_up_length
             OR (
@@ -1557,7 +1563,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
             )
         )
         AND (
-            ri.VolumeLitres IS NULL
+            :region_code = 'ID'
+            OR ri.VolumeLitres IS NULL
             OR ABS(
                 CAST(ri.VolumeLitres AS float)
                 - CAST(:volume AS float)
