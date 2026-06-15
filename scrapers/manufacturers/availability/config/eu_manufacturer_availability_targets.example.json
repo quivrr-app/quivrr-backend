@@ -1,0 +1,43 @@
+{
+  "example": true,
+  "enabled": false,
+  "regionCode": "EU",
+  "description": "Non-live example scaffold for mainland European Union manufacturer direct availability targets. These targets are placeholders only and are not validated.",
+  "notes": [
+    "EU means mainland European Union fulfilment.",
+    "Initial market focus may include Portugal, Spain, and France as submarkets or metadata.",
+    "Do not create PT, ES, or FR as primary RegionCode values yet.",
+    "UK is excluded and must use RegionCode UK.",
+    "Do not run this file as production configuration."
+  ],
+  "targets": [
+    {
+      "brandName": "JS Industries",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm EU fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    },
+    {
+      "brandName": "Channel Islands",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm EU fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    },
+    {
+      "brandName": "Firewire",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm EU fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    },
+    {
+      "brandName": "DHD",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm EU fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    }
+  ]
+}

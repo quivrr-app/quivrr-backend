@@ -6,5 +6,6 @@ Start here:
 
 - [Architecture](ARCHITECTURE.md) explains the platform map, API, Azure resources, regional model, production jobs, pipeline boundaries, market intelligence flow, and Bodhi boundary.
 - [Engineering Guide](ENGINEERING_GUIDE.md) covers local setup, environment variables, validation commands, SQL notes, deployment notes, operational runbook items, and generated output hygiene.
+- [Regional Rollout](REGIONAL_ROLLOUT.md) defines RegionCode rules, AU/ID state, EU/UK scaffolds, validation steps, and activation guardrails.
 
 Production logic lives in `app.py`, `scripts/`, `scrapers/`, and `market_intelligence/`. Do not run live scrapers, imports, or database migrations unless the task explicitly calls for it.

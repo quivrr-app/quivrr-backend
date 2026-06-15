@@ -1,0 +1,42 @@
+{
+  "example": true,
+  "enabled": false,
+  "regionCode": "UK",
+  "description": "Non-live example scaffold for United Kingdom manufacturer direct availability targets. These targets are placeholders only and are not validated.",
+  "notes": [
+    "UK means United Kingdom fulfilment.",
+    "UK must not be grouped into EU.",
+    "Tax, duty, fulfilment, shipping rules, currency, and retailer relevance differ from EU.",
+    "Do not run this file as production configuration."
+  ],
+  "targets": [
+    {
+      "brandName": "JS Industries",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm UK fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    },
+    {
+      "brandName": "Channel Islands",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm UK fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    },
+    {
+      "brandName": "Firewire",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm UK fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    },
+    {
+      "brandName": "DHD",
+      "enabled": false,
+      "validated": false,
+      "marketNotes": "Placeholder only. Confirm UK fulfilment source, currency, product format, and stock semantics before use.",
+      "sourceUrl": null
+    }
+  ]
+}
