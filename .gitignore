@@ -20,6 +20,7 @@ scrapers/products/output/
 scrapers/brands/output/
 scrapers/retailers/stockists/output/
 scrapers/retailers/europe/output/
+scrapers/retailers/europe/shopify/output/
 
 # Raw downloaded stockist pages
 scrapers/retailers/stockists/raw/

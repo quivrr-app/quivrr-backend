@@ -1,0 +1,98 @@
+[
+  {
+    "retailerSlug": "pukas_surf_shop",
+    "retailerName": "Pukas Surf Shop",
+    "regionCode": "EU",
+    "country": "Spain",
+    "website": "https://pukassurfshop.com",
+    "collectionUrl": "https://pukassurfshop.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+  },
+  {
+    "retailerSlug": "bell_surf",
+    "retailerName": "Bell Surf",
+    "regionCode": "EU",
+    "country": "Portugal",
+    "website": "https://bellsurf.com",
+    "collectionUrl": "https://bellsurf.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Keep disabled until EU output fields and currency are reviewed."
+  },
+  {
+    "retailerSlug": "board_exchange",
+    "retailerName": "Board Exchange",
+    "regionCode": "EU",
+    "country": "Portugal",
+    "website": "https://boardexchange.pt",
+    "collectionUrl": "https://boardexchange.pt/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Keep disabled until EU output fields and currency are reviewed."
+  },
+  {
+    "retailerSlug": "guincho_wind_factory",
+    "retailerName": "Guincho Wind Factory",
+    "regionCode": "EU",
+    "country": "Portugal",
+    "website": "https://www.guinchowindfactory.com",
+    "collectionUrl": "https://www.guinchowindfactory.com/collections/boards-surf",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Keep disabled until EU output fields and currency are reviewed."
+  },
+  {
+    "retailerSlug": "hawaiisurf",
+    "retailerName": "HawaiiSurf",
+    "regionCode": "EU",
+    "country": "France",
+    "website": "https://www.hawaiisurf.com",
+    "collectionUrl": "https://www.hawaiisurf.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+  },
+  {
+    "retailerSlug": "hart_beach",
+    "retailerName": "Hart Beach",
+    "regionCode": "EU",
+    "country": "Netherlands",
+    "website": "https://hartbeach.nl",
+    "collectionUrl": "https://hartbeach.nl/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+  },
+  {
+    "retailerSlug": "deeply",
+    "retailerName": "Deeply",
+    "regionCode": "EU",
+    "country": "Portugal",
+    "website": "https://deeply.com",
+    "collectionUrl": "https://deeply.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+  },
+  {
+    "retailerSlug": "santoloco",
+    "retailerName": "SantoLoco",
+    "regionCode": "EU",
+    "country": "Germany",
+    "website": "https://santoloco.com",
+    "collectionUrl": "https://santoloco.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+  }
+]
