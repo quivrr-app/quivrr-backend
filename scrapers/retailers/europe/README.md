@@ -1,36 +1,73 @@
-# Quivrr Europe Retailer Ingestion
+# Quivrr Europe Retailer Onboarding
 
-## RegionCode
+## Region And Currency
 
-`RegionCode = EU`
+- `RegionCode = EU`
+- `PriceCurrency = EUR`
+- UK is excluded. UK fulfilment must use `RegionCode = UK` and must not be grouped into EU.
 
-EU means the mainland European Union fulfilment market. It represents fulfilment and search relevance, not only geography.
-
-Initial market focus:
-
-- Portugal
-- Spain
-- France
-
-The United Kingdom is excluded. UK fulfilment must use `RegionCode = UK` and must not be grouped into EU.
+EU means the mainland European Union fulfilment market. Country values such as Portugal, Spain, France, Germany, and the Netherlands are source metadata, not primary `RegionCode` values.
 
 ## Current State
 
-This folder is a scaffold for future EU retailer onboarding and scraper development. There are no live EU retailer scraper entrypoints yet.
+This folder is a scaffold for EU retailer onboarding and discovery only. There are no live EU retailer scrapers, SQL imports, Azure jobs, or production activation paths enabled from this folder.
 
 Do not move AU runtime files into this structure. AU remains the production reference implementation, but EU must be validated separately for retailer relevance, shipping, tax, duty, currency, and data quality.
 
-## Future Retailer Scraper Expectations
+## Top 20 Targets
 
-Future EU retailer scrapers should:
+| Retailer | Country | Priority | Surfboard category |
+| --- | --- | --- | --- |
+| Mundo Surf | Spain | Wave 1 | https://www.mundo-surf.com/en/45-surfboards |
+| Single Quiver | Spain | Wave 1 | https://www.singlequiver.com/en/surfboards/ |
+| Pukas Surf Shop | Spain | Wave 1 | https://pukassurfshop.com/ |
+| Full & Cas | Spain | Wave 1 | https://www.fullandcas.com/ |
+| Tablas Surf Shop | Spain | Wave 1 | https://www.tablassurfshop.com/ |
+| 58 Surf | Portugal | Wave 1 | https://58surf.com/prt/surfboards |
+| Bell Surf | Portugal | Wave 1 | https://bellsurf.com/collections/surfboards |
+| Board Exchange | Portugal | Wave 1 | https://boardexchange.pt/collections/surfboards |
+| Guincho Wind Factory | Portugal | Wave 1 | https://www.guinchowindfactory.com/collections/boards-surf |
+| Ericeira Surf & Skate | Portugal | Wave 1 | https://www.ericeirasurfskate.pt/ |
+| Deeply | Portugal | Wave 2 | https://deeply.com/ |
+| HawaiiSurf | France | Wave 1 | https://www.hawaiisurf.com/ |
+| Glisshop | France | Wave 2 | https://www.glisshop.com/ |
+| Flysurf | France | Wave 2 | https://www.flysurf.com/ |
+| Surfshop.fr | France | Wave 2 | https://www.surfshop.fr/ |
+| Hart Beach | Netherlands | Wave 1 | https://www.hartbeach.nl/ |
+| Warehouse One | Germany | Wave 2 | https://www.warehouse-one.de/ |
+| SantoLoco | Germany | Wave 2 | https://www.santoloco.com/ |
+| Surf Pirates | Germany | Wave 2 | https://www.surfpirates.de/en/surfbords |
+| Blue Tomato | EU / Austria / Germany fulfilment | Wave 2 | https://www.blue-tomato.com/ |
 
-- write `RegionCode = EU`
-- preserve native currency in `PriceAmount` and `PriceCurrency`
-- capture country or submarket metadata such as Portugal, Spain, or France without creating primary `PT`, `ES`, or `FR` RegionCode values
-- avoid assuming AU title, price, or shipping conventions
-- emit generated output under an `output/` folder
-- provide a small reviewed fixture only if needed for tests
-- remain disconnected from production imports until explicitly approved
+The source register is `eu_retailer_targets.json`. Every target is disabled with `enabled: false` until reviewed and explicitly activated.
+
+## Discovery Tooling
+
+Run discovery from the backend repository root only when a light external fetch is intended:
+
+```powershell
+venv\Scripts\python.exe scrapers/retailers/europe/discover_eu_retailer_platforms.py
+```
+
+The script reads:
+
+- `scrapers/retailers/europe/eu_retailer_targets.json`
+
+It writes discovery output only:
+
+- `scrapers/retailers/europe/output/eu_retailer_discovery.json`
+
+The discovery script does not import to SQL, write production tables, create Azure resources, or enable retailer scrapers.
+
+## Next Step
+
+After discovery, review Wave 1 platform results and choose the first EU scraper candidates. Any scraper implementation should stay disabled until:
+
+- output fields are reviewed for EU inventory shape
+- `RegionCode = EU` is verified
+- `PriceCurrency = EUR` or native source currency handling is verified
+- UK sources are confirmed excluded
+- a non-production import path is explicitly approved
 
 ## Generated Output Hygiene
 
