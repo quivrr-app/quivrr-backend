@@ -4,12 +4,12 @@ This folder contains the disabled EU retailer import dry-run scaffold.
 
 ## Scope
 
-- Input: `scrapers/retailers/europe/shopify/output/eu_shopify_normalised_inventory.json`
+- Input: `scrapers/retailers/europe/output/eu_normalised_inventory.json`
 - Output: `scripts/europe/output/eu_retailer_import_dry_run_report.json`
 - Region: `RegionCode = EU`
 - Currency: `PriceCurrency = EUR`
-- No SQL writes
-- No `RetailerInventory` writes
+- Dry-run is the default
+- No `RetailerInventory` writes unless a future run is explicitly approved with `--apply`
 - No Azure resources or jobs
 - No changes to AU or ID importers
 
@@ -41,15 +41,35 @@ Rows with complete raw retail data are marked `importableRaw: true`. Rows with u
 
 True rejects are reserved for missing or invalid raw import fields, including missing URL, missing title, missing price, missing stock status, missing all dimensions, wrong region, or wrong currency.
 
-## Dry Run
+## Discovery And Normalisation
 
-Run against one retailer only:
+Run the non-production EU discovery orchestration and normalisation:
+
+```powershell
+venv\Scripts\python.exe scrapers\retailers\europe\run_eu_retailer_discovery.py
+```
+
+This refreshes ignored discovery output files and writes:
+
+```text
+scrapers/retailers/europe/output/eu_normalised_inventory.json
+```
+
+## Dry Run Import
+
+Run against all EU rows:
+
+```powershell
+venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py
+```
+
+Or narrow to one retailer:
 
 ```powershell
 venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py --retailer board_exchange
 ```
 
-The `--retailer` argument is required so this scaffold cannot accidentally process all EU retailers during validation.
+The importer refuses `--apply` in the current scaffold until explicit approval is given for SQL writes.
 
 ## Report
 
@@ -78,3 +98,4 @@ Before enabling SQL writes:
 - use `PriceAmount` and `PriceCurrency`, not `PriceAud`
 - preserve `RegionCode = EU`
 - avoid deleting AU or ID inventory
+- use idempotent upsert keys based on retailer slug, product URL, raw title, length, and volume

@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 DISCOVERY_FILES = [
+    Path("scrapers/retailers/europe/shopify/output/eu_shopify_product_discovery.json"),
     Path("scrapers/retailers/europe/magento/output/eu_magento_product_discovery.json"),
     Path("scrapers/retailers/europe/prestashop/output/eu_prestashop_product_discovery.json"),
     Path("scrapers/retailers/europe/custom/output/eu_custom_product_discovery.json"),
@@ -29,6 +30,7 @@ KNOWN_BRANDS = [
     "GO-Softboards",
     "Hayden Shapes",
     "Haydenshapes",
+    "Haydenshapes Surfboards",
     "Indio",
     "JS",
     "JS Industries",
@@ -40,7 +42,9 @@ KNOWN_BRANDS = [
     "Pyzel",
     "Rusty",
     "Sharpeye",
+    "Sharp Eye",
     "Slater Designs",
+    "Semente",
     "Torq",
     "Zeus",
 ]
@@ -172,6 +176,8 @@ def stock_status(row: dict) -> str:
         return status
 
     available = row.get("isAvailable")
+    if available is None and isinstance(row.get("availability"), bool):
+        available = row.get("availability")
     if available is True:
         return "in_stock"
     if available is False:
@@ -211,6 +217,10 @@ def normalise_row(row: dict) -> dict:
     text = combined_text(row)
     brand = parse_brand(row)
     price_currency = clean(row.get("priceCurrency")) or DEFAULT_PRICE_CURRENCY
+    is_available = row.get("isAvailable")
+    if is_available is None and isinstance(row.get("availability"), bool):
+        is_available = row.get("availability")
+
     normalised = {
         "retailerSlug": clean(row.get("retailerSlug")),
         "retailerName": clean(row.get("retailerName")),
@@ -225,7 +235,7 @@ def normalise_row(row: dict) -> dict:
         "productImageUrl": clean(row.get("productImageUrl")),
         "priceAmount": decimal_string(row.get("priceAmount")),
         "priceCurrency": price_currency,
-        "isAvailable": row.get("isAvailable") if isinstance(row.get("isAvailable"), bool) else None,
+        "isAvailable": is_available if isinstance(is_available, bool) else None,
         "stockStatus": stock_status(row),
         "sku": clean(row.get("sku")),
         "lengthFeetInches": parse_length(text),
