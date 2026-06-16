@@ -1,0 +1,16 @@
+[
+  {
+    "retailerSlug": "surf_boss",
+    "retailerName": "Surf Boss",
+    "regionCode": "EU",
+    "country": "Europe / EU",
+    "website": "https://surfboss.eu",
+    "categoryUrls": [
+      "https://surfboss.eu/language/en/product-category/all/surfboards/"
+    ],
+    "platform": "woocommerce",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Wave 1 WooCommerce target. Rusty-heavy surfboard catalogue with product URLs visible in category HTML."
+  }
+]

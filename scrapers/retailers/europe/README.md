@@ -59,6 +59,32 @@ It writes discovery output only:
 
 The discovery script does not import to SQL, write production tables, create Azure resources, or enable retailer scrapers.
 
+## Wave 1 Platform Groups
+
+Shopify discovery is kept under `shopify/`. Additional disabled discovery adapters are grouped by source platform:
+
+| Platform | Folder | Retailers |
+| --- | --- | --- |
+| WooCommerce | `woocommerce/` | Surf Boss |
+| PrestaShop | `prestashop/` | Mundo Surf, Single Quiver |
+| Magento/html | `magento/` | 58 Surf |
+| Structured/custom | `custom/` | Surf Pirates |
+| Cloudflare deferred | `custom/` | Surfshop Deutschland |
+
+Each adapter writes only to its own ignored `output/` folder and is discovery-only. The output shape is intended to remain compatible with future generic EU normalisation, but no SQL importer or `RetailerInventory` write path is enabled here.
+
+## Cloudflare Handling Policy
+
+Do not attempt to bypass CAPTCHA, Cloudflare managed challenges, browser integrity checks, or anti-bot protection. If a site returns challenge markers such as `Just a moment`, `__cf_chl`, `cf_chl`, or `Enable JavaScript and cookies to continue`, record `blocked_by_cloudflare` with the URL, HTTP status, and short reason, then stop.
+
+Allowed fallback paths are official public APIs, `sitemap.xml`, robots-allowed URLs, structured JSON-LD already present in public HTML, RSS/product feeds, normal rendering where no challenge is presented, manual review notes, and future retailer partnership/API access.
+
+## Deferred Retailers
+
+- Surfshop Deutschland: deferred because manual research returned Cloudflare managed challenge markers.
+- Ericeira Surf & Skate: deferred because the online surfboard catalogue is unclear or unstable from current testing.
+- Deeply: deferred/removed from the surfboard wave because the site appears focused on clothing, wetsuits, and accessories rather than surfboard inventory.
+
 ## Next Step
 
 After discovery, review Wave 1 platform results and choose the first EU scraper candidates. Any scraper implementation should stay disabled until:

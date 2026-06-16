@@ -1,0 +1,33 @@
+[
+  {
+    "retailerSlug": "58_surf",
+    "retailerName": "58 Surf",
+    "regionCode": "EU",
+    "country": "Portugal",
+    "website": "https://58surf.com",
+    "categoryUrls": [
+      "https://58surf.com/eng/surfboards"
+    ],
+    "relatedCategoryUrls": [
+      "https://58surf.com/eng/surfboards/shortboards",
+      "https://58surf.com/eng/surfboards/mid-lenght-and-evolution",
+      "https://58surf.com/eng/surfboards/twin-fins",
+      "https://58surf.com/eng/surfboards/longboards"
+    ],
+    "liveSearch": {
+      "apiUrl": "https://catalog-service.adobe.io/graphql",
+      "environmentId": "5e36a7df-088d-4300-9892-c5c76558c94b",
+      "websiteCode": "surf_58",
+      "storeCode": "surf_58",
+      "storeViewCode": "eng",
+      "apiKey": "search_gql",
+      "customerGroup": "b6589fc6ab0dc82cf12099d1c2d40ab994e8410c",
+      "categoryPath": "surfboards",
+      "pageSize": 36
+    },
+    "platform": "magento",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Wave 1 Magento/html target. Product cards visible in category HTML; pagination/load-more likely needed later."
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "retailerSlug": "mundo_surf",
+    "retailerName": "Mundo Surf",
+    "regionCode": "EU",
+    "country": "Spain",
+    "website": "https://www.mundo-surf.com",
+    "categoryUrls": [
+      "https://www.mundo-surf.com/en/45-surfboards"
+    ],
+    "platform": "prestashop",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Wave 1 PrestaShop target. JSON-LD ItemList exposes product names and URLs."
+  },
+  {
+    "retailerSlug": "single_quiver",
+    "retailerName": "Single Quiver",
+    "regionCode": "EU",
+    "country": "Spain",
+    "website": "https://www.singlequiver.com",
+    "categoryUrls": [
+      "https://www.singlequiver.com/en/surfboards/"
+    ],
+    "platform": "prestashop",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Wave 1 PrestaShop target with strong Quivrr brand overlap."
+  }
+]

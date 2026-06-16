@@ -1,0 +1,34 @@
+[
+  {
+    "retailerSlug": "surf_pirates",
+    "retailerName": "Surf Pirates",
+    "regionCode": "EU",
+    "country": "Germany",
+    "website": "https://www.surfpirates.de",
+    "categoryUrls": [
+      "https://www.surfpirates.de/en/surfbords",
+      "https://www.surfpirates.de/en/surfboards/shortboards",
+      "https://www.surfpirates.de/en/surfboards/funboards",
+      "https://www.surfpirates.de/en/surfboards/longboard"
+    ],
+    "platform": "custom_structured",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Wave 1 structured/custom target. Prefer JSON-LD ItemList and product structured data before custom search APIs."
+  },
+  {
+    "retailerSlug": "surfshop_deutschland",
+    "retailerName": "Surfshop Deutschland",
+    "regionCode": "EU",
+    "country": "Germany",
+    "website": "https://www.surfshop-deutschland.de",
+    "categoryUrls": [
+      "https://www.surfshop-deutschland.de/short-surfboards"
+    ],
+    "platform": "cloudflare_blocked",
+    "enabled": false,
+    "priceCurrency": "EUR",
+    "discoveryStatus": "blocked_by_cloudflare",
+    "notes": "Deferred. Manual research found Cloudflare managed challenge markers; do not bypass."
+  }
+]

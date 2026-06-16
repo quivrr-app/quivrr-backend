@@ -76,6 +76,15 @@ For likely surfboard products, the output attempts to capture:
 
 The script applies conservative filtering for likely surfboards and excludes obvious non-board products such as fins, leashes, wax, traction pads, board bags, wetsuits, clothing, accessories, skateboards, snowboards, soft racks, and bodyboards unless a future reviewed rule explicitly allows them.
 
+## Collection Discovery Order
+
+Prefer category collections over brand collections. Check collection handles in this order:
+
+1. shortboards
+2. surfboards
+3. boards
+4. brand collections
+
 ## Future Import Path
 
 This discovery output is not an importer input yet. After review, a future EU `RetailerInventory` importer should consume reviewed rows only, preserve `RegionCode = EU`, preserve source pricing as `PriceAmount`, set `PriceCurrency`, and remain separate from AU and ID import behavior.
