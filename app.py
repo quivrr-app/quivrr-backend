@@ -625,11 +625,11 @@ def constructions_match(left, right):
 
 
 @app.get("/api/search")
-def search_inventory(boardSizeId: int, regionCode: str = "AU"):
+def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | None = None):
 
-    region_code = (regionCode or "AU").strip().upper()
+    region_code = (region or regionCode or "AU").strip().upper()
 
-    if region_code not in {"AU", "ID"}:
+    if region_code not in {"AU", "ID", "EU"}:
         region_code = "AU"
 
     official_query = text("""
@@ -1335,12 +1335,13 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
-        AND ISNULL(ri.RegionCode, 'AU') = :region_code
+        AND ri.RegionCode = :region_code
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
                 'in stock',
                 'instock',
+                'in_stock',
                 'available',
                 'true'
             )
@@ -1534,12 +1535,13 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU"):
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
-        AND ISNULL(ri.RegionCode, 'AU') = :region_code
+        AND ri.RegionCode = :region_code
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
                 'in stock',
                 'instock',
+                'in_stock',
                 'available',
                 'true'
             )

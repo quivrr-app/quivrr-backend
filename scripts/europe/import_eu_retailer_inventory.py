@@ -18,6 +18,8 @@ BRANDS_FILE = Path("scrapers/brands/brands_seed.json")
 BRAND_OUTPUT_ROOT = Path("scrapers/brands")
 OUTPUT_FILE = Path("scripts/europe/output/eu_retailer_import_dry_run_report.json")
 APPLY_OUTPUT_FILE = Path("scripts/europe/output/eu_retailer_import_apply_report.json")
+LINK_REPORT_FILE = Path("scripts/europe/output/eu_retailer_canonical_link_report.json")
+SQL_OUTPUT_FILE = Path("scripts/europe/output/eu_import.sql")
 
 REGION_CODE = "EU"
 PRICE_CURRENCY = "EUR"
@@ -34,6 +36,18 @@ BRAND_ALIASES = {
     "sharpeye": "Sharp Eye",
 }
 
+GENERIC_MODEL_NAMES = {
+    "fish",
+    "log",
+    "longboard",
+    "mid",
+    "mid length",
+    "shortboard",
+    "softboard",
+    "twin",
+    "twin fin",
+}
+
 
 def clean(value: object) -> str:
     if value is None:
@@ -46,6 +60,14 @@ def clean_key(value: object) -> str:
     text = text.replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def contains_phrase(text_value: object, phrase_value: object) -> bool:
+    text_key = clean_key(text_value)
+    phrase_key = clean_key(phrase_value)
+    if not text_key or not phrase_key:
+        return False
+    return f" {phrase_key} " in f" {text_key} "
 
 
 def load_json(path: Path) -> object:
@@ -104,6 +126,13 @@ def decimal_or_none(value: object) -> Decimal | None:
         return Decimal(str(value).replace(",", "."))
     except (InvalidOperation, ValueError):
         return None
+
+
+def decimal_key(value: object) -> str:
+    number = decimal_or_none(value)
+    if number is None:
+        return ""
+    return str(number.quantize(Decimal("0.01")))
 
 
 def float_or_none(value: object) -> float | None:
@@ -438,25 +467,25 @@ def assert_apply_safety(report: dict) -> None:
 def count_inventory_by_region(conn, region_code: str) -> int:
     row = conn.execute(
         text("""
-            SELECT COUNT(*) AS RowCount
+            SELECT COUNT(*) AS row_count
             FROM dbo.RetailerInventory
             WHERE ISNULL(RegionCode, 'AU') = :region_code
         """),
         {"region_code": region_code},
     ).fetchone()
-    return int(row.RowCount)
+    return int(row_field(row, "row_count"))
 
 
 def count_retailers_by_region(conn, region_code: str) -> int:
     row = conn.execute(
         text("""
-            SELECT COUNT(*) AS RowCount
+            SELECT COUNT(*) AS row_count
             FROM dbo.Retailers
             WHERE ISNULL(RegionCode, 'AU') = :region_code
         """),
         {"region_code": region_code},
     ).fetchone()
-    return int(row.RowCount)
+    return int(row_field(row, "row_count"))
 
 
 def sample_eu_rows(conn) -> list[dict]:
@@ -472,7 +501,7 @@ def sample_eu_rows(conn) -> list[dict]:
             JOIN dbo.Retailers r
                 ON r.RetailerId = ri.RetailerId
             WHERE ri.RegionCode = 'EU'
-            ORDER BY ri.UpdatedAtUtc DESC, ri.RetailerInventoryId DESC
+            ORDER BY ri.UpdatedAtUtc DESC, ri.InventoryId DESC
         """)
     ).fetchall()
     return [
@@ -487,17 +516,30 @@ def sample_eu_rows(conn) -> list[dict]:
     ]
 
 
+def row_field(row: object, field_name: str, index: int = 0) -> object:
+    mapping = getattr(row, "_mapping", None)
+    if mapping is not None and field_name in mapping:
+        return mapping[field_name]
+    if hasattr(row, field_name):
+        return getattr(row, field_name)
+    try:
+        return row[index]
+    except (IndexError, KeyError, TypeError):
+        return None
+
+
 def schema_columns(conn, table_name: str) -> set[str]:
     rows = conn.execute(
         text("""
-            SELECT COLUMN_NAME
+            SELECT COLUMN_NAME AS column_name
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = 'dbo'
               AND TABLE_NAME = :table_name
+            ORDER BY ORDINAL_POSITION
         """),
         {"table_name": table_name},
     ).fetchall()
-    return {row.COLUMN_NAME for row in rows}
+    return {clean(row_field(row, "column_name")) for row in rows if clean(row_field(row, "column_name"))}
 
 
 def assert_schema(conn) -> None:
@@ -514,9 +556,11 @@ def assert_schema(conn) -> None:
         "UpdatedAtUtc",
     }
     required_inventory = {
-        "RetailerInventoryId",
+        "InventoryId",
         "RetailerId",
         "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
         "RawProductTitle",
         "NormalisedProductTitle",
         "ProductUrl",
@@ -544,6 +588,19 @@ def assert_schema(conn) -> None:
         )
 
 
+def schema_check() -> dict:
+    engine = build_engine()
+    with engine.connect() as conn:
+        retailers = sorted(schema_columns(conn, "Retailers"))
+        inventory = sorted(schema_columns(conn, "RetailerInventory"))
+        assert_schema(conn)
+    return {
+        "retailersColumns": retailers,
+        "retailerInventoryColumns": inventory,
+        "schemaAssertionPassed": True,
+    }
+
+
 def brand_lookup(conn) -> dict[str, int]:
     rows = conn.execute(
         text("""
@@ -555,13 +612,671 @@ def brand_lookup(conn) -> dict[str, int]:
     return {clean_key(row.BrandName): row.BrandId for row in rows}
 
 
+def load_board_models(conn) -> dict[int, list[dict]]:
+    rows = conn.execute(
+        text("""
+            SELECT
+                BoardModelId,
+                BrandId,
+                ModelName
+            FROM dbo.BoardModels
+            WHERE IsActive = 1
+        """)
+    ).fetchall()
+    models: dict[int, list[dict]] = {}
+    for row in rows:
+        model = {
+            "boardModelId": int(row_field(row, "BoardModelId")),
+            "brandId": int(row_field(row, "BrandId")),
+            "modelName": clean(row_field(row, "ModelName")),
+            "modelKey": clean_key(row_field(row, "ModelName")),
+        }
+        if model["modelName"] and model["modelKey"]:
+            models.setdefault(model["brandId"], []).append(model)
+    return models
+
+
+def load_board_sizes(conn) -> dict[int, list[dict]]:
+    rows = conn.execute(
+        text("""
+            SELECT
+                BoardSizeId,
+                BoardModelId,
+                LengthFeetInches,
+                VolumeLitres
+            FROM dbo.BoardSizes
+        """)
+    ).fetchall()
+    sizes: dict[int, list[dict]] = {}
+    for row in rows:
+        model_id = row_field(row, "BoardModelId")
+        if model_id is None:
+            continue
+        size = {
+            "boardSizeId": int(row_field(row, "BoardSizeId")),
+            "boardModelId": int(model_id),
+            "lengthFeetInches": clean(row_field(row, "LengthFeetInches")),
+            "volumeLitres": decimal_or_none(row_field(row, "VolumeLitres")),
+        }
+        sizes.setdefault(size["boardModelId"], []).append(size)
+    return sizes
+
+
+def load_eu_inventory_rows(conn) -> list[dict]:
+    rows = conn.execute(
+        text("""
+            SELECT
+                ri.InventoryId,
+                ri.RetailerId,
+                r.RetailerName,
+                ri.BrandId,
+                b.BrandName,
+                ri.BoardModelId,
+                ri.BoardSizeId,
+                ri.RawProductTitle,
+                ri.NormalisedProductTitle,
+                ri.LengthFeetInches,
+                ri.VolumeLitres,
+                ri.PriceCurrency,
+                ri.RegionCode
+            FROM dbo.RetailerInventory ri
+            INNER JOIN dbo.Retailers r
+                ON r.RetailerId = ri.RetailerId
+            LEFT JOIN dbo.Brands b
+                ON b.BrandId = ri.BrandId
+            WHERE ri.RegionCode = 'EU'
+              AND ri.IsActive = 1
+        """)
+    ).fetchall()
+    inventory = []
+    for row in rows:
+        inventory.append({
+            "inventoryId": int(row_field(row, "InventoryId")),
+            "retailerId": int(row_field(row, "RetailerId")),
+            "retailerName": clean(row_field(row, "RetailerName")),
+            "brandId": int(row_field(row, "BrandId")) if row_field(row, "BrandId") is not None else None,
+            "brandName": clean(row_field(row, "BrandName")),
+            "boardModelId": int(row_field(row, "BoardModelId")) if row_field(row, "BoardModelId") is not None else None,
+            "boardSizeId": int(row_field(row, "BoardSizeId")) if row_field(row, "BoardSizeId") is not None else None,
+            "rawProductTitle": clean(row_field(row, "RawProductTitle")),
+            "normalisedProductTitle": clean(row_field(row, "NormalisedProductTitle")),
+            "lengthFeetInches": clean(row_field(row, "LengthFeetInches")),
+            "volumeLitres": decimal_or_none(row_field(row, "VolumeLitres")),
+            "priceCurrency": clean(row_field(row, "PriceCurrency")),
+            "regionCode": clean(row_field(row, "RegionCode")),
+        })
+    return inventory
+
+
+def score_model_candidate(row: dict, model: dict) -> int | None:
+    model_key = model["modelKey"]
+    raw_key = clean_key(row.get("rawProductTitle"))
+    normalised_key = clean_key(row.get("normalisedProductTitle"))
+    score = None
+
+    if normalised_key and normalised_key == model_key:
+        score = 10000
+    elif contains_phrase(normalised_key, model_key):
+        score = 7000
+    elif contains_phrase(raw_key, model_key):
+        score = 5000
+
+    if score is None:
+        return None
+
+    score += len(model_key) * 10
+    if model_key in GENERIC_MODEL_NAMES:
+        score -= 1500
+    return score
+
+
+def model_candidates_for_row(row: dict, models_by_brand: dict[int, list[dict]]) -> list[dict]:
+    brand_id = row.get("brandId")
+    if brand_id is None:
+        return []
+    candidates = []
+    for model in models_by_brand.get(brand_id, []):
+        score = score_model_candidate(row, model)
+        if score is None:
+            continue
+        candidates.append({
+            "boardModelId": model["boardModelId"],
+            "modelName": model["modelName"],
+            "score": score,
+            "isGeneric": model["modelKey"] in GENERIC_MODEL_NAMES,
+        })
+    candidates.sort(key=lambda item: (item["score"], len(clean_key(item["modelName"]))), reverse=True)
+    return candidates
+
+
+def select_model_candidate(row: dict, models_by_brand: dict[int, list[dict]]) -> dict | None:
+    candidates = model_candidates_for_row(row, models_by_brand)
+    if not candidates:
+        return None
+    selected = dict(candidates[0])
+    selected["candidateCount"] = len(candidates)
+    selected["ambiguous"] = len(candidates) > 1
+    selected["candidates"] = candidates[:5]
+    return selected
+
+
+def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[int, list[dict]]) -> dict | None:
+    length = clean(row.get("lengthFeetInches"))
+    if not length:
+        return None
+
+    row_volume = decimal_or_none(row.get("volumeLitres"))
+    candidates = []
+    for size in sizes_by_model.get(board_model_id, []):
+        if clean(size.get("lengthFeetInches")) != length:
+            continue
+        size_volume = decimal_or_none(size.get("volumeLitres"))
+        volume_delta = None
+        if row_volume is not None and size_volume is not None:
+            volume_delta = abs(row_volume - size_volume)
+            if volume_delta > Decimal("0.4"):
+                continue
+        candidates.append({
+            "boardSizeId": size["boardSizeId"],
+            "lengthFeetInches": size["lengthFeetInches"],
+            "volumeLitres": float(size_volume) if size_volume is not None else None,
+            "volumeDelta": float(volume_delta) if volume_delta is not None else None,
+        })
+
+    if not candidates:
+        return None
+
+    candidates.sort(
+        key=lambda item: (
+            item["volumeDelta"] is None,
+            item["volumeDelta"] if item["volumeDelta"] is not None else 999,
+            item["boardSizeId"],
+        )
+    )
+    selected = dict(candidates[0])
+    selected["candidateCount"] = len(candidates)
+    return selected
+
+
+def build_canonical_link_report(conn) -> dict:
+    inventory_rows = load_eu_inventory_rows(conn)
+    models_by_brand = load_board_models(conn)
+    sizes_by_model = load_board_sizes(conn)
+    model_updates = []
+    size_updates = []
+    ambiguous = []
+    unmatched_by_retailer = Counter()
+    unmatched_by_brand = Counter()
+
+    linked_models = 0
+    linked_sizes = 0
+
+    for row in inventory_rows:
+        selected_model = None
+        effective_model_id = row.get("boardModelId")
+
+        if effective_model_id is not None:
+            linked_models += 1
+        else:
+            selected_model = select_model_candidate(row, models_by_brand)
+            if selected_model:
+                effective_model_id = selected_model["boardModelId"]
+                model_updates.append({
+                    "inventory_id": row["inventoryId"],
+                    "board_model_id": effective_model_id,
+                })
+                if selected_model["ambiguous"]:
+                    ambiguous.append({
+                        "inventoryId": row["inventoryId"],
+                        "retailerName": row["retailerName"],
+                        "brandName": row["brandName"],
+                        "rawProductTitle": row["rawProductTitle"],
+                        "normalisedProductTitle": row["normalisedProductTitle"],
+                        "selectedModelName": selected_model["modelName"],
+                        "candidates": selected_model["candidates"],
+                    })
+            else:
+                unmatched_by_retailer[row["retailerName"] or "missing"] += 1
+                unmatched_by_brand[row["brandName"] or "missing"] += 1
+
+        if row.get("boardSizeId") is not None:
+            linked_sizes += 1
+            continue
+
+        if effective_model_id is None:
+            continue
+
+        selected_size = select_size_candidate(row, effective_model_id, sizes_by_model)
+        if selected_size:
+            size_updates.append({
+                "inventory_id": row["inventoryId"],
+                "board_size_id": selected_size["boardSizeId"],
+            })
+
+    return {
+        "regionCode": REGION_CODE,
+        "totalEuRows": len(inventory_rows),
+        "linkedModels": linked_models,
+        "linkedSizes": linked_sizes,
+        "modelLinkCandidates": len(model_updates),
+        "sizeLinkCandidates": len(size_updates),
+        "ambiguousModelMatches": len(ambiguous),
+        "ambiguousModelMatchSample": ambiguous[:50],
+        "unmatchedRowsByRetailer": [
+            {"retailerName": key, "count": value}
+            for key, value in unmatched_by_retailer.most_common(50)
+        ],
+        "unmatchedRowsByBrand": [
+            {"brandName": key, "count": value}
+            for key, value in unmatched_by_brand.most_common(50)
+        ],
+        "modelUpdates": model_updates,
+        "sizeUpdates": size_updates,
+    }
+
+
+def write_link_report(report: dict, output_file: Path = LINK_REPORT_FILE) -> None:
+    public_report = {key: value for key, value in report.items() if key not in {"modelUpdates", "sizeUpdates"}}
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    output_file.write_text(json.dumps(public_report, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def public_link_report(report: dict) -> dict:
+    return {key: value for key, value in report.items() if key not in {"modelUpdates", "sizeUpdates"}}
+
+
+def sql_string(value: object) -> str:
+    value = clean(value)
+    if not value:
+        return "NULL"
+    return "N'" + value.replace("'", "''") + "'"
+
+
+def sql_decimal(value: object) -> str:
+    number = decimal_or_none(value)
+    if number is None:
+        return "NULL"
+    return str(number.quantize(Decimal("0.01")))
+
+
+def sql_float(value: object) -> str:
+    number = decimal_or_none(value)
+    if number is None:
+        return "NULL"
+    return str(number)
+
+
+def sql_values_rows(rows: list[dict]) -> str:
+    values = []
+    for row in rows:
+        values.append(
+            "("
+            + ", ".join([
+                sql_string(row.get("retailerName")),
+                sql_string(website_from_product_url(row.get("productUrl"))),
+                sql_string(row.get("country") or "Europe"),
+                sql_string(row.get("matchedBrandName")),
+                sql_string(row.get("rawProductTitle") or "Unknown EU surfboard"),
+                sql_string(row.get("modelName") or row.get("rawProductTitle")),
+                sql_string(row.get("productUrl")),
+                sql_string(row.get("productImageUrl")),
+                sql_decimal(row.get("priceAmount")),
+                sql_string(import_stock_status(row)),
+                sql_string(row.get("construction")),
+                sql_string(row.get("finSetup")),
+                sql_string(row.get("lengthFeetInches")),
+                sql_decimal(row.get("volumeLitres")),
+                sql_float(row.get("parseConfidence") or 0),
+            ])
+            + ")"
+        )
+    return ",\n".join(values)
+
+
+def export_import_sql(report: dict, output_file: Path = SQL_OUTPUT_FILE) -> None:
+    assert_apply_safety(report)
+    rows = build_apply_rows(report)
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    sql = f"""-- Quivrr EU retailer inventory import
+-- Generated locally without connecting to Azure SQL.
+-- Scope: EU only. No AU or ID writes.
+SET XACT_ABORT ON;
+BEGIN TRANSACTION;
+
+DECLARE @Rows TABLE (
+    RetailerName nvarchar(255) NOT NULL,
+    WebsiteUrl nvarchar(1024) NULL,
+    Country nvarchar(100) NULL,
+    BrandName nvarchar(255) NULL,
+    RawProductTitle nvarchar(1024) NOT NULL,
+    NormalisedProductTitle nvarchar(1024) NULL,
+    ProductUrl nvarchar(2048) NULL,
+    ProductImageUrl nvarchar(2048) NULL,
+    PriceAmount decimal(18,2) NULL,
+    StockStatus nvarchar(100) NULL,
+    Construction nvarchar(255) NULL,
+    FinSetup nvarchar(255) NULL,
+    LengthFeetInches nvarchar(50) NULL,
+    VolumeLitres decimal(10,2) NULL,
+    InventoryConfidenceScore decimal(10,4) NULL
+);
+
+INSERT INTO @Rows (
+    RetailerName,
+    WebsiteUrl,
+    Country,
+    BrandName,
+    RawProductTitle,
+    NormalisedProductTitle,
+    ProductUrl,
+    ProductImageUrl,
+    PriceAmount,
+    StockStatus,
+    Construction,
+    FinSetup,
+    LengthFeetInches,
+    VolumeLitres,
+    InventoryConfidenceScore
+)
+VALUES
+{sql_values_rows(rows)};
+
+;WITH DuplicateKeys AS (
+    SELECT
+        r.RetailerName,
+        LOWER(LTRIM(RTRIM(ISNULL(ri.ProductUrl, '')))) AS ProductUrlKey,
+        LOWER(LTRIM(RTRIM(ISNULL(ri.RawProductTitle, '')))) AS RawTitleKey,
+        LOWER(LTRIM(RTRIM(ISNULL(ri.LengthFeetInches, '')))) AS LengthKey,
+        CAST(ri.VolumeLitres AS decimal(10,2)) AS VolumeKey,
+        COUNT(*) AS DuplicateCount
+    FROM dbo.RetailerInventory ri
+    INNER JOIN dbo.Retailers r
+        ON r.RetailerId = ri.RetailerId
+    WHERE ri.RegionCode = 'EU'
+    GROUP BY
+        r.RetailerName,
+        LOWER(LTRIM(RTRIM(ISNULL(ri.ProductUrl, '')))),
+        LOWER(LTRIM(RTRIM(ISNULL(ri.RawProductTitle, '')))),
+        LOWER(LTRIM(RTRIM(ISNULL(ri.LengthFeetInches, '')))),
+        CAST(ri.VolumeLitres AS decimal(10,2))
+    HAVING COUNT(*) > 1
+)
+SELECT *
+FROM DuplicateKeys
+ORDER BY DuplicateCount DESC;
+
+INSERT INTO dbo.Retailers (
+    RetailerName,
+    WebsiteUrl,
+    Country,
+    RegionCode,
+    IsActive,
+    CreatedAtUtc,
+    UpdatedAtUtc
+)
+SELECT
+    src.RetailerName,
+    MAX(src.WebsiteUrl),
+    MAX(src.Country),
+    'EU',
+    1,
+    SYSUTCDATETIME(),
+    SYSUTCDATETIME()
+FROM @Rows src
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM dbo.Retailers existing
+    WHERE existing.RegionCode = 'EU'
+      AND existing.RetailerName = src.RetailerName
+)
+GROUP BY src.RetailerName;
+
+UPDATE existing
+SET
+    BrandId = b.BrandId,
+    NormalisedProductTitle = src.NormalisedProductTitle,
+    ProductImageUrl = src.ProductImageUrl,
+    PriceAmount = src.PriceAmount,
+    PriceCurrency = 'EUR',
+    StockStatus = src.StockStatus,
+    Construction = src.Construction,
+    FinSetup = src.FinSetup,
+    InventoryConfidenceScore = src.InventoryConfidenceScore,
+    LastCheckedUtc = SYSUTCDATETIME(),
+    IsActive = 1,
+    UpdatedAtUtc = SYSUTCDATETIME()
+FROM dbo.RetailerInventory existing
+INNER JOIN dbo.Retailers r
+    ON r.RetailerId = existing.RetailerId
+   AND r.RegionCode = 'EU'
+INNER JOIN @Rows src
+    ON src.RetailerName = r.RetailerName
+   AND LOWER(LTRIM(RTRIM(ISNULL(src.ProductUrl, '')))) = LOWER(LTRIM(RTRIM(ISNULL(existing.ProductUrl, ''))))
+   AND LOWER(LTRIM(RTRIM(ISNULL(src.RawProductTitle, '')))) = LOWER(LTRIM(RTRIM(ISNULL(existing.RawProductTitle, ''))))
+   AND LOWER(LTRIM(RTRIM(ISNULL(src.LengthFeetInches, '')))) = LOWER(LTRIM(RTRIM(ISNULL(existing.LengthFeetInches, ''))))
+   AND (
+        (src.VolumeLitres IS NULL AND existing.VolumeLitres IS NULL)
+        OR CAST(src.VolumeLitres AS decimal(10,2)) = CAST(existing.VolumeLitres AS decimal(10,2))
+   )
+LEFT JOIN dbo.Brands b
+    ON b.IsActive = 1
+   AND LOWER(LTRIM(RTRIM(b.BrandName))) = LOWER(LTRIM(RTRIM(src.BrandName)))
+WHERE existing.RegionCode = 'EU';
+
+INSERT INTO dbo.RetailerInventory (
+    RetailerId,
+    BrandId,
+    BoardModelId,
+    BoardSizeId,
+    RawProductTitle,
+    NormalisedProductTitle,
+    ProductUrl,
+    ProductImageUrl,
+    PriceAud,
+    PriceAmount,
+    PriceCurrency,
+    StockStatus,
+    StockQuantity,
+    Construction,
+    FinSetup,
+    LengthFeetInches,
+    Width,
+    Thickness,
+    VolumeLitres,
+    EstimatedShippingAud,
+    InventoryConfidenceScore,
+    LastCheckedUtc,
+    IsActive,
+    CreatedAtUtc,
+    UpdatedAtUtc,
+    RegionCode
+)
+SELECT
+    r.RetailerId,
+    b.BrandId,
+    NULL,
+    NULL,
+    src.RawProductTitle,
+    src.NormalisedProductTitle,
+    src.ProductUrl,
+    src.ProductImageUrl,
+    NULL,
+    src.PriceAmount,
+    'EUR',
+    src.StockStatus,
+    NULL,
+    src.Construction,
+    src.FinSetup,
+    src.LengthFeetInches,
+    NULL,
+    NULL,
+    src.VolumeLitres,
+    NULL,
+    src.InventoryConfidenceScore,
+    SYSUTCDATETIME(),
+    1,
+    SYSUTCDATETIME(),
+    SYSUTCDATETIME(),
+    'EU'
+FROM @Rows src
+INNER JOIN dbo.Retailers r
+    ON r.RegionCode = 'EU'
+   AND r.RetailerName = src.RetailerName
+LEFT JOIN dbo.Brands b
+    ON b.IsActive = 1
+   AND LOWER(LTRIM(RTRIM(b.BrandName))) = LOWER(LTRIM(RTRIM(src.BrandName)))
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM dbo.RetailerInventory existing
+    WHERE existing.RegionCode = 'EU'
+      AND existing.RetailerId = r.RetailerId
+      AND LOWER(LTRIM(RTRIM(ISNULL(existing.ProductUrl, '')))) = LOWER(LTRIM(RTRIM(ISNULL(src.ProductUrl, ''))))
+      AND LOWER(LTRIM(RTRIM(ISNULL(existing.RawProductTitle, '')))) = LOWER(LTRIM(RTRIM(ISNULL(src.RawProductTitle, ''))))
+      AND LOWER(LTRIM(RTRIM(ISNULL(existing.LengthFeetInches, '')))) = LOWER(LTRIM(RTRIM(ISNULL(src.LengthFeetInches, ''))))
+      AND (
+            (existing.VolumeLitres IS NULL AND src.VolumeLitres IS NULL)
+            OR CAST(existing.VolumeLitres AS decimal(10,2)) = CAST(src.VolumeLitres AS decimal(10,2))
+      )
+);
+
+-- Canonical model link pass: exact and longest phrase match only.
+UPDATE ri
+SET
+    ri.BoardModelId = matched.BoardModelId,
+    ri.UpdatedAtUtc = SYSUTCDATETIME()
+FROM dbo.RetailerInventory ri
+CROSS APPLY (
+    SELECT TOP 1
+        bm.BoardModelId,
+        bm.ModelName
+    FROM dbo.BoardModels bm
+    WHERE bm.BrandId = ri.BrandId
+      AND bm.IsActive = 1
+      AND (
+            LOWER(LTRIM(RTRIM(ISNULL(ri.NormalisedProductTitle, '')))) = LOWER(LTRIM(RTRIM(bm.ModelName)))
+         OR ' ' + LOWER(LTRIM(RTRIM(ISNULL(ri.RawProductTitle, '')))) + ' ' LIKE '% ' + LOWER(LTRIM(RTRIM(bm.ModelName))) + ' %'
+         OR ' ' + LOWER(LTRIM(RTRIM(ISNULL(ri.NormalisedProductTitle, '')))) + ' ' LIKE '% ' + LOWER(LTRIM(RTRIM(bm.ModelName))) + ' %'
+      )
+    ORDER BY
+        CASE
+            WHEN LOWER(LTRIM(RTRIM(ISNULL(ri.NormalisedProductTitle, '')))) = LOWER(LTRIM(RTRIM(bm.ModelName))) THEN 0
+            ELSE 1
+        END,
+        LEN(bm.ModelName) DESC,
+        bm.BoardModelId
+) matched
+WHERE ri.RegionCode = 'EU'
+  AND ri.BrandId IS NOT NULL
+  AND ri.BoardModelId IS NULL;
+
+UPDATE ri
+SET
+    ri.BoardSizeId = bs.BoardSizeId,
+    ri.UpdatedAtUtc = SYSUTCDATETIME()
+FROM dbo.RetailerInventory ri
+INNER JOIN dbo.BoardSizes bs
+    ON bs.BoardModelId = ri.BoardModelId
+   AND bs.LengthFeetInches = ri.LengthFeetInches
+   AND (
+        ri.VolumeLitres IS NULL
+     OR bs.VolumeLitres IS NULL
+     OR ABS(CAST(bs.VolumeLitres AS decimal(10,2)) - CAST(ri.VolumeLitres AS decimal(10,2))) <= 0.4
+   )
+WHERE ri.RegionCode = 'EU'
+  AND ri.BoardModelId IS NOT NULL
+  AND ri.BoardSizeId IS NULL;
+
+COMMIT TRANSACTION;
+"""
+    output_file.write_text(sql, encoding="utf-8")
+
+
+def print_azure_run_command(script_name: str = "scripts/europe/import_eu_retailer_inventory.py --export-sql") -> None:
+    print("Local Azure SQL execution is disabled.")
+    print("Run from an approved Azure environment instead, for example:")
+    print("az containerapp job start --name quivrr-eu-retailer-inventory --resource-group quivrr-production-rg")
+    print("Suggested container command:")
+    print(f"venv\\Scripts\\python.exe {script_name}")
+
+
+def apply_model_links(conn, model_updates: list[dict]) -> int:
+    if not model_updates:
+        return 0
+    conn.execute(
+        text("""
+            UPDATE dbo.RetailerInventory
+            SET BoardModelId = :board_model_id,
+                UpdatedAtUtc = SYSUTCDATETIME()
+            WHERE InventoryId = :inventory_id
+              AND RegionCode = 'EU'
+              AND BoardModelId IS NULL
+        """),
+        model_updates,
+    )
+    return len(model_updates)
+
+
+def apply_size_links(conn, size_updates: list[dict]) -> int:
+    if not size_updates:
+        return 0
+    conn.execute(
+        text("""
+            UPDATE dbo.RetailerInventory
+            SET BoardSizeId = :board_size_id,
+                UpdatedAtUtc = SYSUTCDATETIME()
+            WHERE InventoryId = :inventory_id
+              AND RegionCode = 'EU'
+              AND BoardModelId IS NOT NULL
+              AND BoardSizeId IS NULL
+        """),
+        size_updates,
+    )
+    return len(size_updates)
+
+
+def run_link_tests() -> dict:
+    models_by_brand = {
+        1: [
+            {"boardModelId": 1, "brandId": 1, "modelName": "Happy", "modelKey": "happy"},
+            {"boardModelId": 2, "brandId": 1, "modelName": "Two Happy", "modelKey": "two happy"},
+            {"boardModelId": 3, "brandId": 1, "modelName": "Happy Everyday", "modelKey": "happy everyday"},
+            {"boardModelId": 4, "brandId": 1, "modelName": "Dumpster Diver", "modelKey": "dumpster diver"},
+            {"boardModelId": 5, "brandId": 1, "modelName": "Dumpster Diver 2", "modelKey": "dumpster diver 2"},
+            {"boardModelId": 6, "brandId": 1, "modelName": "CI Mid", "modelKey": "ci mid"},
+            {"boardModelId": 7, "brandId": 1, "modelName": "CI Mid Twin", "modelKey": "ci mid twin"},
+            {"boardModelId": 8, "brandId": 1, "modelName": "Fish", "modelKey": "fish"},
+            {"boardModelId": 9, "brandId": 1, "modelName": "Lane Splitter", "modelKey": "lane splitter"},
+        ]
+    }
+    cases = [
+        ("Big Happy should not beat Two Happy", "Channel Islands Two Happy 5'10", "Two Happy"),
+        ("Dumpster Diver 2 beats Dumpster Diver", "CI Dumpster Diver 2 5'8", "Dumpster Diver 2"),
+        ("Happy Everyday beats Happy", "Channel Islands Happy Everyday 6'0", "Happy Everyday"),
+        ("CI Mid Twin beats CI Mid", "Channel Islands CI Mid Twin 6'7", "CI Mid Twin"),
+        ("Lane Splitter beats generic Fish", "Lane Splitter Fish 5'8", "Lane Splitter"),
+    ]
+    failures = []
+    for name, title, expected in cases:
+        row = {"brandId": 1, "rawProductTitle": title, "normalisedProductTitle": title}
+        selected = select_model_candidate(row, models_by_brand)
+        actual = selected["modelName"] if selected else None
+        if actual != expected:
+            failures.append({"case": name, "expected": expected, "actual": actual})
+    return {
+        "testsRun": len(cases),
+        "testsPassed": len(cases) - len(failures),
+        "failures": failures,
+    }
+
+
 def get_or_create_retailer(conn, retailer: dict) -> tuple[int, bool]:
     existing = conn.execute(
         text("""
-            SELECT RetailerId
+            SELECT TOP 1 RetailerId
             FROM dbo.Retailers
             WHERE RetailerName = :retailer_name
               AND RegionCode = 'EU'
+            ORDER BY RetailerId
         """),
         retailer,
     ).fetchone()
@@ -610,7 +1325,7 @@ def get_or_create_retailer(conn, retailer: dict) -> tuple[int, bool]:
 def existing_inventory_id(conn, row: dict) -> int | None:
     existing = conn.execute(
         text("""
-            SELECT TOP 1 RetailerInventoryId
+            SELECT TOP 1 InventoryId
             FROM dbo.RetailerInventory
             WHERE RetailerId = :retailer_id
               AND RegionCode = 'EU'
@@ -621,11 +1336,48 @@ def existing_inventory_id(conn, row: dict) -> int | None:
                     (VolumeLitres IS NULL AND :volume IS NULL)
                     OR VolumeLitres = :volume
                   )
-            ORDER BY RetailerInventoryId
+            ORDER BY InventoryId
         """),
         row,
     ).fetchone()
-    return int(existing.RetailerInventoryId) if existing else None
+    return int(row_field(existing, "InventoryId")) if existing else None
+
+
+def inventory_key(row: dict) -> tuple:
+    return (
+        int(row.get("retailer_id")),
+        clean_key(row.get("product_url")),
+        clean_key(row.get("raw_title")),
+        clean_key(row.get("length")),
+        decimal_key(row.get("volume")),
+    )
+
+
+def load_existing_eu_inventory(conn) -> dict[tuple, int]:
+    rows = conn.execute(
+        text("""
+            SELECT
+                InventoryId,
+                RetailerId,
+                ProductUrl,
+                RawProductTitle,
+                LengthFeetInches,
+                VolumeLitres
+            FROM dbo.RetailerInventory
+            WHERE RegionCode = 'EU'
+        """)
+    ).fetchall()
+    existing = {}
+    for row in rows:
+        payload = {
+            "retailer_id": row_field(row, "RetailerId"),
+            "product_url": row_field(row, "ProductUrl"),
+            "raw_title": row_field(row, "RawProductTitle"),
+            "length": row_field(row, "LengthFeetInches"),
+            "volume": row_field(row, "VolumeLitres"),
+        }
+        existing[inventory_key(payload)] = int(row_field(row, "InventoryId"))
+    return existing
 
 
 def apply_inventory_row(conn, row: dict) -> str:
@@ -646,7 +1398,7 @@ def apply_inventory_row(conn, row: dict) -> str:
                     LastCheckedUtc = SYSUTCDATETIME(),
                     IsActive = 1,
                     UpdatedAtUtc = SYSUTCDATETIME()
-                WHERE RetailerInventoryId = :inventory_id
+                WHERE InventoryId = :inventory_id
                   AND RegionCode = 'EU'
             """),
             {**row, "inventory_id": inventory_id},
@@ -717,6 +1469,97 @@ def apply_inventory_row(conn, row: dict) -> str:
     return "inserted"
 
 
+def batch_update_inventory(conn, rows: list[dict]) -> None:
+    if not rows:
+        return
+    conn.execute(
+        text("""
+            UPDATE dbo.RetailerInventory
+            SET BrandId = :brand_id,
+                NormalisedProductTitle = :normalised_title,
+                ProductImageUrl = :product_image_url,
+                PriceAmount = :price_amount,
+                PriceCurrency = 'EUR',
+                StockStatus = :stock_status,
+                Construction = :construction,
+                FinSetup = :fin_setup,
+                InventoryConfidenceScore = :confidence,
+                LastCheckedUtc = SYSUTCDATETIME(),
+                IsActive = 1,
+                UpdatedAtUtc = SYSUTCDATETIME()
+            WHERE InventoryId = :inventory_id
+              AND RegionCode = 'EU'
+        """),
+        rows,
+    )
+
+
+def batch_insert_inventory(conn, rows: list[dict]) -> None:
+    if not rows:
+        return
+    conn.execute(
+        text("""
+            INSERT INTO dbo.RetailerInventory (
+                RetailerId,
+                BrandId,
+                BoardModelId,
+                BoardSizeId,
+                RawProductTitle,
+                NormalisedProductTitle,
+                ProductUrl,
+                ProductImageUrl,
+                PriceAud,
+                PriceAmount,
+                PriceCurrency,
+                StockStatus,
+                StockQuantity,
+                Construction,
+                FinSetup,
+                LengthFeetInches,
+                Width,
+                Thickness,
+                VolumeLitres,
+                EstimatedShippingAud,
+                InventoryConfidenceScore,
+                LastCheckedUtc,
+                IsActive,
+                CreatedAtUtc,
+                UpdatedAtUtc,
+                RegionCode
+            )
+            VALUES (
+                :retailer_id,
+                :brand_id,
+                NULL,
+                NULL,
+                :raw_title,
+                :normalised_title,
+                :product_url,
+                :product_image_url,
+                NULL,
+                :price_amount,
+                'EUR',
+                :stock_status,
+                NULL,
+                :construction,
+                :fin_setup,
+                :length,
+                NULL,
+                NULL,
+                :volume,
+                NULL,
+                :confidence,
+                SYSUTCDATETIME(),
+                1,
+                SYSUTCDATETIME(),
+                SYSUTCDATETIME(),
+                'EU'
+            )
+        """),
+        rows,
+    )
+
+
 def build_apply_rows(report: dict) -> list[dict]:
     rows = []
     for row in report.get("importableRowsForApply", []):
@@ -758,6 +1601,9 @@ def apply_to_sql(report: dict, output_file: Path) -> dict:
             retailer_ids[slug] = retailer_id
             apply_counts["retailersInserted" if created else "retailersUpdated"] += 1
 
+        existing_inventory = load_existing_eu_inventory(conn)
+        insert_rows = []
+        update_rows = []
         for row in rows:
             retailer_slug = clean(row.get("retailerSlug"))
             retailer_id = retailer_ids.get(retailer_slug)
@@ -782,8 +1628,23 @@ def apply_to_sql(report: dict, output_file: Path) -> dict:
                 "volume": decimal_or_none(row.get("volumeLitres")),
                 "confidence": float_or_none(row.get("parseConfidence")) or 0,
             }
-            action = apply_inventory_row(conn, payload)
-            apply_counts[f"inventoryRows{action.title()}"] += 1
+            inventory_id = existing_inventory.get(inventory_key(payload))
+            if inventory_id is None:
+                insert_rows.append(payload)
+            else:
+                update_rows.append({**payload, "inventory_id": inventory_id})
+
+        batch_insert_inventory(conn, insert_rows)
+        batch_update_inventory(conn, update_rows)
+        apply_counts["inventoryRowsInserted"] = len(insert_rows)
+        apply_counts["inventoryRowsUpdated"] = len(update_rows)
+
+        link_report_before = build_canonical_link_report(conn)
+        model_links_applied = apply_model_links(conn, link_report_before["modelUpdates"])
+        size_links_applied = apply_size_links(conn, link_report_before["sizeUpdates"])
+        apply_counts["modelLinksApplied"] = model_links_applied
+        apply_counts["sizeLinksApplied"] = size_links_applied
+        link_report_after = build_canonical_link_report(conn)
 
         after = {
             "euInventoryRows": count_inventory_by_region(conn, "EU"),
@@ -811,10 +1672,13 @@ def apply_to_sql(report: dict, output_file: Path) -> dict:
         "beforeCounts": before,
         "afterCounts": after,
         "validation": validation,
+        "canonicalLinkingBeforeApply": public_link_report(link_report_before),
+        "canonicalLinkingAfterApply": public_link_report(link_report_after),
         "sampleEuRows": samples,
     }
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(json.dumps(apply_report, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_link_report(link_report_after)
     return apply_report
 
 
@@ -824,33 +1688,70 @@ def main() -> None:
     parser.add_argument("--output", default=str(OUTPUT_FILE), help="Dry-run report output path.")
     parser.add_argument("--apply-output", default=str(APPLY_OUTPUT_FILE), help="Apply report output path.")
     parser.add_argument("--retailer", default="", help="Optional retailerSlug filter.")
-    parser.add_argument("--apply", action="store_true", help="Apply SQL writes. Requires explicit approval before use.")
+    parser.add_argument("--apply", action="store_true", help="Disabled for local safety. Use --export-sql or --azure-run.")
+    parser.add_argument("--schema-check", action="store_true", help="Disabled locally; schema checks must run remotely.")
+    parser.add_argument("--link-tests", action="store_true", help="Run local canonical model matching tests.")
+    parser.add_argument("--export-sql", action="store_true", help="Generate SQL file only. Does not connect to SQL.")
+    parser.add_argument("--sql-output", default=str(SQL_OUTPUT_FILE), help="SQL output path for --export-sql.")
+    parser.add_argument("--azure-run", action="store_true", help="Print remote Azure execution command only.")
     args = parser.parse_args()
 
+    if args.link_tests:
+        result = run_link_tests()
+        print("EU canonical linker tests complete")
+        print(f"Tests run: {result['testsRun']}")
+        print(f"Tests passed: {result['testsPassed']}")
+        if result["failures"]:
+            print(json.dumps(result["failures"], indent=2))
+            raise RuntimeError("Canonical linker tests failed.")
+        return
+
+    if args.schema_check:
+        raise RuntimeError("Local SQL schema checks are disabled. Run schema checks from Azure.")
+
+    if args.apply:
+        raise RuntimeError("Local --apply is disabled. Use --export-sql or --azure-run.")
+
+    if args.azure_run:
+        print_azure_run_command("scripts/europe/import_eu_retailer_inventory.py --export-sql")
+        return
+
     input_file = Path(args.input)
-    output_file = Path(args.apply_output if args.apply else args.output)
+    output_file = Path(args.output)
     rows = load_input_rows(input_file, args.retailer)
     report = build_report(rows, input_file, args.retailer)
 
-    if args.apply:
-        report = apply_to_sql(report, output_file)
-    else:
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        output_file.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    if args.export_sql:
+        sql_output = Path(args.sql_output)
+        export_import_sql(report, sql_output)
+        print("EU retailer import SQL export complete")
+        print(f"Rows after dedupe: {report['rowsAfterDedupe']}")
+        print(f"Importable rows: {report['metrics']['importableRows']}")
+        print(f"SQL output: {sql_output}")
+        return
 
-    print("EU retailer import apply complete" if args.apply else "EU retailer import dry-run complete")
+    report["canonicalLinking"] = {
+        "status": "not_checked_locally",
+        "reason": "Local Azure SQL connections are disabled. Use --export-sql or --azure-run.",
+    }
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    output_file.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    print("EU retailer import dry-run complete")
     print(f"Retailer: {args.retailer or 'all'}")
     print(f"Rows after dedupe: {report['rowsAfterDedupe']}")
     print(f"Importable rows: {report['metrics']['importableRows']}")
     print(f"Needs canonical review: {report['metrics']['needsCanonicalReviewRows']}")
     print(f"Rejected rows: {report['metrics']['rejectedRows']}")
-    if args.apply:
-        print(f"Inventory rows inserted: {report['applyCounts'].get('inventoryRowsInserted', 0)}")
-        print(f"Inventory rows updated: {report['applyCounts'].get('inventoryRowsUpdated', 0)}")
-        print(f"EU RetailerInventory rows: {report['afterCounts']['euInventoryRows']}")
-        print(f"EU retailers: {report['afterCounts']['euRetailers']}")
-        print(f"AU RetailerInventory rows: {report['afterCounts']['auInventoryRows']}")
-        print(f"ID RetailerInventory rows: {report['afterCounts']['idInventoryRows']}")
+    link_summary = report.get("canonicalLinkingAfterApply") or report.get("canonicalLinking")
+    if link_summary and "modelLinkCandidates" in link_summary:
+        print(f"Model link candidates: {link_summary['modelLinkCandidates']}")
+        print(f"Size link candidates: {link_summary['sizeLinkCandidates']}")
+        print(f"Linked models: {link_summary['linkedModels']}")
+        print(f"Linked sizes: {link_summary['linkedSizes']}")
+        print(f"Ambiguous model matches: {link_summary['ambiguousModelMatches']}")
+    elif link_summary:
+        print(f"Canonical linking: {link_summary['status']}")
     print(f"Recommendation: {report['recommendation']}")
     print(f"Report: {output_file}")
 
