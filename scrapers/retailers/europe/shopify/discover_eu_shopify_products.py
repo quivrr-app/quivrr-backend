@@ -3,11 +3,21 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 import requests
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scrapers.retailers.europe.normalise_eu_retailer_inventory import normalise_row
 
 
 INPUT_FILE = Path("scrapers/retailers/europe/shopify/eu_shopify_targets.json")
@@ -25,8 +35,10 @@ HEADERS = {
 }
 
 PAGE_LIMIT = 250
-DEFAULT_MAX_PAGES = 2
+DEFAULT_MAX_PAGES = 0
 TIMEOUT_SECONDS = 20
+REGION_CODE = "EU"
+HTML_WORKERS = 6
 
 BOARD_TERMS = [
     "surfboard",
@@ -360,7 +372,11 @@ def convert_product(product: dict, variant: dict, target: dict) -> dict:
         "retailerSlug": target["retailerSlug"],
         "retailerName": target["retailerName"],
         "regionCode": target["regionCode"],
+        "country": clean(target.get("country")),
+        "platform": "shopify",
+        "sourceUrl": clean(target.get("collectionUrl")),
         "productTitle": clean(product.get("title")),
+        "productId": clean(product.get("id")),
         "productUrl": product_url(target, handle),
         "productImageUrl": first_image(product),
         "vendor": clean(product.get("vendor")),
@@ -371,18 +387,164 @@ def convert_product(product: dict, variant: dict, target: dict) -> dict:
         "optionNames": option_names(product),
         "variantTitles": variant_titles(product),
         "rawHandle": handle,
+        "sku": clean(variant.get("sku")),
         "suspectedSurfboard": score["suspectedSurfboard"],
         "parseConfidence": score["parseConfidence"],
         "filterReasons": score["filterReasons"],
     }
 
 
+class CollectionPageParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.product_handles: list[str] = []
+        self.page_numbers: set[int] = set()
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        href = clean(values.get("href"))
+        if tag == "a" and href:
+            parsed = urlparse(href)
+            page_values = parse_qs(parsed.query).get("page", [])
+            for value in page_values:
+                if value.isdigit():
+                    self.page_numbers.add(int(value))
+
+            match = re.search(r"/collections/[^/]+/products/([^/?#]+)", parsed.path)
+            if match and match.group(1) not in self.product_handles:
+                self.product_handles.append(match.group(1))
+
+
+def html_page_url(collection_url: str, page: int) -> str:
+    separator = "&" if "?" in collection_url else "?"
+    return f"{collection_url}{separator}page={page}"
+
+
+def fetch_collection_html_page(collection_url: str, page: int) -> dict:
+    url = html_page_url(collection_url, page)
+    try:
+        response = requests.get(url, timeout=TIMEOUT_SECONDS, headers=HEADERS)
+        parser = CollectionPageParser()
+        if response.status_code == 200:
+            parser.feed(response.text)
+        return {
+            "page": page,
+            "url": url,
+            "ok": response.status_code == 200,
+            "statusCode": response.status_code,
+            "error": "",
+            "handles": parser.product_handles,
+            "pageNumbers": sorted(parser.page_numbers),
+        }
+    except Exception as error:
+        return {
+            "page": page,
+            "url": url,
+            "ok": False,
+            "statusCode": None,
+            "error": f"{type(error).__name__}: {error}",
+            "handles": [],
+            "pageNumbers": [],
+        }
+
+
+def crawl_visible_collection(target: dict) -> dict:
+    collection_url = clean(target.get("collectionUrl"))
+    first = fetch_collection_html_page(collection_url, 1)
+    discovered_pages = max(first["pageNumbers"] or [1])
+    expected_pages = int(target.get("visiblePages") or discovered_pages)
+    total_pages = max(discovered_pages, expected_pages)
+    pages = {1: first}
+
+    with ThreadPoolExecutor(max_workers=HTML_WORKERS) as executor:
+        futures = {
+            executor.submit(fetch_collection_html_page, collection_url, page): page
+            for page in range(2, total_pages + 1)
+        }
+        for future in as_completed(futures):
+            result = future.result()
+            pages[result["page"]] = result
+
+    ordered = [pages[page] for page in sorted(pages)]
+    failures = [page for page in ordered if not page["ok"]]
+    occurrences = Counter(
+        handle for page in ordered for handle in set(page.get("handles", []))
+    )
+    shared_handles = {
+        handle for handle, count in occurrences.items() if count == len(ordered)
+    }
+    unique_handles = {
+        handle
+        for page in ordered
+        for handle in page.get("handles", [])
+        if handle not in shared_handles
+    }
+    return {
+        "discoveredPages": discovered_pages,
+        "expectedPages": expected_pages,
+        "pagesCrawled": len(ordered),
+        "firstPageUrl": ordered[0]["url"],
+        "lastPageUrl": ordered[-1]["url"],
+        "paginationMethod": "Shopify collection HTML ?page=N",
+        "uniqueCollectionHandles": len(unique_handles),
+        "sharedNonCollectionHandlesRemoved": sorted(shared_handles),
+        "handles": sorted(unique_handles),
+        "failures": failures,
+        "pages": [
+            {
+                "page": page["page"],
+                "url": page["url"],
+                "statusCode": page["statusCode"],
+                "productHandles": len(page["handles"]),
+                "error": page["error"],
+            }
+            for page in ordered
+        ],
+    }
+
+
+def canonical_product_key(product: dict) -> str:
+    product_id = clean(product.get("id"))
+    if product_id:
+        return f"id:{product_id}"
+    handle = clean(product.get("handle")).lower()
+    if handle:
+        return f"handle:{handle}"
+    for variant in product.get("variants") or []:
+        sku = clean(variant.get("sku")).lower()
+        if sku:
+            return f"sku:{sku}"
+    return ""
+
+
+def enrich_product(row: dict) -> tuple[dict, dict]:
+    normalised = normalise_row(row)
+    return {
+        **row,
+        "brand": normalised.get("brandName") or row.get("brand") or "",
+        "model": normalised.get("modelName") or "",
+        "lengthFeetInches": normalised.get("lengthFeetInches"),
+        "volumeLitres": normalised.get("volumeLitres"),
+    }, normalised
+
+
 def discover_target(target: dict, max_pages: int) -> dict:
+    if target.get("regionCode") != REGION_CODE:
+        raise RuntimeError(
+            f"EU Shopify discovery requires RegionCode 'EU', got {target.get('regionCode')!r}."
+        )
+
+    visible_collection = None
+    if target.get("visiblePages"):
+        visible_collection = crawl_visible_collection(target)
+
     accepted = []
     rejected_count = 0
     fetches = []
+    raw_products = []
+    page = 1
 
-    for page in range(1, max_pages + 1):
+    while True:
         url = collection_products_url(target, page)
         result = fetch_products(url)
 
@@ -397,24 +559,95 @@ def discover_target(target: dict, max_pages: int) -> dict:
         if not result["ok"] or not result["products"]:
             break
 
-        for product in result["products"]:
-            variants = product.get("variants") or [{}]
-            primary_variant = variants[0] if variants else {}
-            row = convert_product(product, primary_variant, target)
-
-            if row["suspectedSurfboard"]:
-                accepted.append(row)
-            else:
-                rejected_count += 1
+        raw_products.extend(result["products"])
 
         if len(result["products"]) < PAGE_LIMIT:
             break
+        if max_pages > 0 and page >= max_pages:
+            break
+        page += 1
+
+    unique_products = {}
+    for product in raw_products:
+        key = canonical_product_key(product)
+        if key and key not in unique_products:
+            unique_products[key] = product
+
+    normalised_rows = []
+    for product in unique_products.values():
+        variants = product.get("variants") or [{}]
+        primary_variant = variants[0] if variants else {}
+        row = convert_product(product, primary_variant, target)
+
+        if row["suspectedSurfboard"]:
+            enriched, normalised = enrich_product(row)
+            accepted.append(enriched)
+            normalised_rows.append(normalised)
+        else:
+            rejected_count += 1
+
+    coverage_ok = True
+    coverage_blocker = ""
+    if visible_collection:
+        api_handles = {
+            clean(product.get("handle")) for product in unique_products.values()
+        }
+        visible_handles = set(visible_collection["handles"])
+        missing_handles = sorted(visible_handles - api_handles)
+        coverage_ok = all([
+            not visible_collection["failures"],
+            visible_collection["pagesCrawled"] >= visible_collection["expectedPages"],
+            len(api_handles) >= visible_collection["uniqueCollectionHandles"],
+            not missing_handles,
+        ])
+        if not coverage_ok:
+            coverage_blocker = (
+                f"html_pages={visible_collection['pagesCrawled']}/"
+                f"{visible_collection['expectedPages']}, "
+                f"html_unique={visible_collection['uniqueCollectionHandles']}, "
+                f"api_unique={len(api_handles)}, missing_handles={len(missing_handles)}, "
+                f"failed_pages={len(visible_collection['failures'])}"
+            )
+        visible_collection["apiMissingHandles"] = missing_handles[:100]
+
+    diagnostics = {
+        "pagesCrawled": visible_collection["pagesCrawled"] if visible_collection else len(fetches),
+        "rawCategoryRows": len(raw_products),
+        "uniqueCanonicalProducts": len(unique_products),
+        "likelySurfboards": len(accepted),
+        "normalisedRows": len(normalised_rows),
+        "missingDimensions": sum(
+            1
+            for row in normalised_rows
+            if not row.get("lengthFeetInches") and row.get("volumeLitres") is None
+        ),
+        "importableRows": sum(1 for row in normalised_rows if row.get("importableRaw")),
+        "firstPageUrl": (
+            visible_collection["firstPageUrl"] if visible_collection else fetches[0]["url"]
+        ),
+        "lastPageUrl": (
+            visible_collection["lastPageUrl"] if visible_collection else fetches[-1]["url"]
+        ),
+        "paginationMethod": (
+            "49-page Shopify collection HTML coverage check plus "
+            "collection products.json limit=250&page=N to exhaustion"
+            if visible_collection
+            else "Shopify collection products.json limit=250&page=N to exhaustion"
+        ),
+        "coveragePassed": coverage_ok,
+        "coverageBlocker": coverage_blocker,
+    }
 
     return {
         "target": target["retailerSlug"],
+        "diagnostics": diagnostics,
+        "visibleCollection": visible_collection,
+        "rawFetched": len(raw_products),
+        "uniqueProducts": len(unique_products),
         "productsAccepted": len(accepted),
         "productsRejected": rejected_count,
         "fetches": fetches,
+        "coveragePassed": coverage_ok,
         "products": accepted,
     }
 
@@ -485,7 +718,7 @@ def main() -> None:
         "--max-pages",
         type=int,
         default=DEFAULT_MAX_PAGES,
-        help="Maximum Shopify products.json pages per enabled target.",
+        help="Optional Shopify JSON page cap. Default 0 fetches until exhausted.",
     )
 
     args = parser.parse_args()
@@ -496,7 +729,7 @@ def main() -> None:
         report = build_dry_run_report(targets)
     else:
         results = [
-            discover_target(target, max(1, args.max_pages))
+            discover_target(target, max(0, args.max_pages))
             for target in targets_to_run
         ]
         products = [
@@ -533,7 +766,31 @@ def main() -> None:
     print("EU Shopify product discovery")
     print(f"Mode: {report['mode']}")
     print(f"Targets configured: {report['targetsConfigured']}")
+    for result in report.get("results", []):
+        diagnostics = result.get("diagnostics", {})
+        print(
+            f"{result['target']}: pages={diagnostics.get('pagesCrawled', 0)} "
+            f"raw={diagnostics.get('rawCategoryRows', 0)} "
+            f"unique={diagnostics.get('uniqueCanonicalProducts', 0)} "
+            f"likely={diagnostics.get('likelySurfboards', 0)} "
+            f"normalised={diagnostics.get('normalisedRows', 0)} "
+            f"missing_dimensions={diagnostics.get('missingDimensions', 0)} "
+            f"importable={diagnostics.get('importableRows', 0)}"
+        )
     print(f"Output: {OUTPUT_FILE}")
+    failed = [
+        result for result in report.get("results", [])
+        if not result.get("coveragePassed", True)
+    ]
+    if failed:
+        diagnostics = failed[0].get("diagnostics", {})
+        raise RuntimeError(
+            f"{failed[0]['target']} collection coverage failed: "
+            f"first={diagnostics.get('firstPageUrl')}, "
+            f"last={diagnostics.get('lastPageUrl')}, "
+            f"pagination={diagnostics.get('paginationMethod')}, "
+            f"blocker={diagnostics.get('coverageBlocker') or 'unknown'}"
+        )
 
 
 if __name__ == "__main__":

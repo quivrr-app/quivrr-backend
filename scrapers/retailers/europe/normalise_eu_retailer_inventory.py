@@ -213,6 +213,13 @@ def combined_text(row: dict) -> str:
 
 
 def normalise_row(row: dict) -> dict:
+    source_region = row.get("regionCode")
+    if source_region != REGION_CODE:
+        raise RuntimeError(
+            "EU normalisation safety failed for "
+            f"{row.get('retailerSlug', '<missing>')}: RegionCode must be 'EU', "
+            f"got {source_region!r}."
+        )
     title = clean(row.get("productTitle"))
     text = combined_text(row)
     brand = parse_brand(row)
@@ -275,6 +282,8 @@ def run_self_tests() -> None:
         ("Surfboard TORQ TET 7.2 MOD Fish", "7'2", None),
         ("PRO DIMS - 5’0 x 17.13 x 2.13 x 19.15L", "5'0", 19.15),
         ("Volume: 33,2 litres", None, 33.2),
+        ("6'7 X 20 7/8 X 2 11/16 - 40.70L", "6'7", 40.70),
+        ("9'6 X 21 3/8 X 3 5/8 - 77,60L", "9'6", 77.60),
     ]
     for text, expected_length, expected_volume in cases:
         if expected_length and parse_length(text) != expected_length:

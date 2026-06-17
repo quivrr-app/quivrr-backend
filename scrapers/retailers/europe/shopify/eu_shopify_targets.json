@@ -5,11 +5,12 @@
     "regionCode": "EU",
     "country": "Spain",
     "website": "https://pukassurfshop.com",
-    "collectionUrl": "https://pukassurfshop.com/collections/surfboards",
+    "collectionUrl": "https://pukassurfshop.com/collections/new-drop-surfboards-best-surfboard-brands",
+    "visiblePages": 49,
     "platform": "shopify",
-    "enabled": false,
+    "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+    "notes": "Priority EU Shopify target. Crawl all 49 visible collection pages and exhaust the collection products.json feed before filtering likely surfboards."
   },
   {
     "retailerSlug": "bell_surf",
@@ -19,9 +20,9 @@
     "website": "https://bellsurf.com",
     "collectionUrl": "https://bellsurf.com/collections/surfboards",
     "platform": "shopify",
-    "enabled": false,
+    "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Discovery detected Shopify markers. Keep disabled until EU output fields and currency are reviewed."
+    "notes": "Priority EU Shopify target. Collection endpoint is verified by the EU discovery audit."
   },
   {
     "retailerSlug": "board_exchange",

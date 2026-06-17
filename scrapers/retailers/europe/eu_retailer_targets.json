@@ -24,16 +24,28 @@
     "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
   },
   {
+    "retailerSlug": "surf_boss",
+    "retailerName": "Surf Boss",
+    "regionCode": "EU",
+    "country": "Europe / EU",
+    "website": "https://surfboss.eu",
+    "surfboardCategoryUrl": "https://surfboss.eu/language/en/product-category/all/surfboards/",
+    "priority": "Wave 1",
+    "enabled": true,
+    "platform": "woocommerce",
+    "notes": "Priority EU WooCommerce target. Region-scoped discovery and import only."
+  },
+  {
     "retailerSlug": "pukas_surf_shop",
     "retailerName": "Pukas Surf Shop",
     "regionCode": "EU",
     "country": "Spain",
     "website": "https://pukassurfshop.com",
-    "surfboardCategoryUrl": "https://pukassurfshop.com/",
+    "surfboardCategoryUrl": "https://pukassurfshop.com/collections/new-drop-surfboards-best-surfboard-brands",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Priority EU Shopify target. Region-scoped discovery and import only."
   },
   {
     "retailerSlug": "full_and_cas",
@@ -65,11 +77,11 @@
     "regionCode": "EU",
     "country": "Portugal",
     "website": "https://58surf.com",
-    "surfboardCategoryUrl": "https://58surf.com/prt/surfboards",
+    "surfboardCategoryUrl": "https://58surf.com/eng/surfboards/shortboards",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "magento",
+    "notes": "Priority EU Magento target. Region-scoped discovery and import only."
   },
   {
     "retailerSlug": "bell_surf",
@@ -79,9 +91,9 @@
     "website": "https://bellsurf.com",
     "surfboardCategoryUrl": "https://bellsurf.com/collections/surfboards",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Priority EU Shopify target. Region-scoped discovery and import only."
   },
   {
     "retailerSlug": "board_exchange",

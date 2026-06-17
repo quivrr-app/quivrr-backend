@@ -6,13 +6,16 @@
     "country": "Portugal",
     "website": "https://58surf.com",
     "categoryUrls": [
-      "https://58surf.com/eng/surfboards"
+      "https://58surf.com/eng/surfboards/shortboards"
     ],
+    "startingCategoryUrl": "https://58surf.com/eng/surfboards/shortboards",
     "relatedCategoryUrls": [
       "https://58surf.com/eng/surfboards/shortboards",
       "https://58surf.com/eng/surfboards/mid-lenght-and-evolution",
       "https://58surf.com/eng/surfboards/twin-fins",
-      "https://58surf.com/eng/surfboards/longboards"
+      "https://58surf.com/eng/surfboards/longboards",
+      "https://58surf.com/eng/surfboards/softboards",
+      "https://58surf.com/eng/surfboards"
     ],
     "liveSearch": {
       "apiUrl": "https://catalog-service.adobe.io/graphql",
@@ -22,12 +25,12 @@
       "storeViewCode": "eng",
       "apiKey": "search_gql",
       "customerGroup": "b6589fc6ab0dc82cf12099d1c2d40ab994e8410c",
-      "categoryPath": "surfboards",
-      "pageSize": 36
+      "categoryPath": "surfboards/shortboards",
+      "pageSize": 500
     },
     "platform": "magento",
     "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Wave 1 Magento/html target. Product cards visible in category HTML; pagination/load-more likely needed later."
+    "notes": "Priority EU Adobe Commerce target. Category routes are discovered from the English Surfboards navigation and paged to exhaustion through Adobe Live Search."
   }
 ]

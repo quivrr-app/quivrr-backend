@@ -44,17 +44,25 @@ from scrapers.retailers.europe.woocommerce.discover_eu_woocommerce_products impo
 OUTPUT_FILE = Path("scrapers/retailers/europe/output/eu_discovery_orchestration_report.json")
 
 SHOPIFY_TARGETS = {
+    "pukas_surf_shop",
     "bell_surf",
-    "board_exchange",
-    "guincho_wind_factory",
-    "hawaiisurf",
-    "hart_beach",
-    "santoloco",
 }
+
+REGION_CODE = "EU"
+PRIORITY_TARGETS = {"58_surf", "surf_boss", "pukas_surf_shop", "bell_surf"}
 
 
 def load_targets(path: Path) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def assert_eu_target(target: dict, source: Path) -> None:
+    region_code = target.get("regionCode")
+    if region_code != REGION_CODE:
+        raise RuntimeError(
+            f"EU discovery safety failed for {target.get('retailerSlug', '<missing>')} "
+            f"in {source}: RegionCode must be 'EU', got {region_code!r}."
+        )
 
 
 def write_platform_report(path: Path, platform: str, results: list[dict]) -> None:
@@ -95,6 +103,8 @@ def run_platform(
         if (target.get("enabled") is True or not require_enabled)
         and (target_slugs is None or target.get("retailerSlug") in target_slugs)
     ]
+    for target in selected:
+        assert_eu_target(target, input_file)
     results = [discover(target, max_pages) for target in selected]
     write_platform_report(output_file, name, results)
 
@@ -111,12 +121,41 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Run EU retailer discovery adapters and generic normalisation without SQL writes."
     )
-    parser.add_argument("--magento-pages", type=int, default=5)
-    parser.add_argument("--shopify-pages", type=int, default=1)
+    parser.add_argument(
+        "--magento-pages",
+        type=int,
+        default=0,
+        help="Optional 58 Surf category page cap. Default 0 fetches until exhausted.",
+    )
+    parser.add_argument(
+        "--shopify-pages",
+        type=int,
+        default=0,
+        help="Optional Shopify JSON page cap. Default 0 fetches until exhausted.",
+    )
     parser.add_argument("--prestashop-pages", type=int, default=1)
     parser.add_argument("--custom-pages", type=int, default=1)
     parser.add_argument("--woocommerce-pages", type=int, default=2)
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate priority EU target metadata without network fetches or output writes.",
+    )
     args = parser.parse_args()
+
+    if args.dry_run:
+        configured = []
+        for input_file in [SHOPIFY_INPUT, MAGENTO_INPUT, WOOCOMMERCE_INPUT]:
+            for target in load_targets(input_file):
+                if target.get("retailerSlug") in PRIORITY_TARGETS:
+                    assert_eu_target(target, input_file)
+                    configured.append(target.get("retailerSlug"))
+        missing = sorted(PRIORITY_TARGETS - set(configured))
+        if missing:
+            raise RuntimeError(f"Missing priority EU targets: {', '.join(missing)}")
+        print("EU retailer discovery dry-run complete")
+        print(f"Priority targets validated: {', '.join(sorted(configured))}")
+        return
 
     platform_reports = [
         run_platform(
@@ -125,8 +164,8 @@ def main() -> None:
             output_file=SHOPIFY_OUTPUT,
             discover=discover_shopify_target,
             target_slugs=SHOPIFY_TARGETS,
-            max_pages=max(1, args.shopify_pages),
-            require_enabled=False,
+            max_pages=max(0, args.shopify_pages),
+            require_enabled=True,
         ),
         run_platform(
             name="Magento/html",
@@ -134,7 +173,7 @@ def main() -> None:
             output_file=MAGENTO_OUTPUT,
             discover=discover_magento_target,
             target_slugs=None,
-            max_pages=max(1, args.magento_pages),
+            max_pages=max(0, args.magento_pages),
         ),
         run_platform(
             name="PrestaShop",
