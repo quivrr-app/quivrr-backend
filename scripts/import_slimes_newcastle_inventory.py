@@ -10,6 +10,7 @@ from sqlalchemy import create_engine, text
 
 
 RETAILER_NAME = "Slimes Newcastle"
+REGION_CODE = "AU"
 BASE_URL = "https://www.slimesnewcastle.com.au"
 COLLECTION = "surfboards"
 
@@ -266,8 +267,12 @@ def main():
         retailer = conn.execute(text("""
             SELECT RetailerId
             FROM dbo.Retailers
-            WHERE RetailerName = :retailer_name;
-        """), {"retailer_name": RETAILER_NAME}).fetchone()
+            WHERE RetailerName = :retailer_name
+              AND RegionCode = :region_code;
+        """), {
+            "retailer_name": RETAILER_NAME,
+            "region_code": REGION_CODE,
+        }).fetchone()
 
         if not retailer:
             raise RuntimeError("Slimes Newcastle retailer record not found in SQL")
@@ -286,8 +291,12 @@ def main():
 
         conn.execute(text("""
             DELETE FROM dbo.RetailerInventory
-            WHERE RetailerId = :retailer_id;
-        """), {"retailer_id": retailer_id})
+            WHERE RetailerId = :retailer_id
+              AND RegionCode = :region_code;
+        """), {
+            "retailer_id": retailer_id,
+            "region_code": REGION_CODE,
+        })
 
         inserted = 0
         skipped_unavailable = 0
@@ -340,6 +349,7 @@ def main():
                 conn.execute(text("""
                     INSERT INTO dbo.RetailerInventory (
                         RetailerId,
+                        RegionCode,
                         BrandId,
                         BoardModelId,
                         BoardSizeId,
@@ -365,6 +375,7 @@ def main():
                     )
                     VALUES (
                         :retailer_id,
+                        :region_code,
                         :brand_id,
                         NULL,
                         NULL,
@@ -390,6 +401,7 @@ def main():
                     );
                 """), {
                     "retailer_id": retailer_id,
+                    "region_code": REGION_CODE,
                     "brand_id": brand_id,
                     "raw_title": title,
                     "normalised_title": title.upper(),

@@ -37,6 +37,8 @@ EXCLUDED_RETAILERS = {
     "dark arts",
 }
 
+REGION_CODE = "AU"
+
 
 def require_env(name):
     value = os.getenv(name)
@@ -368,7 +370,9 @@ def main():
                         RetailerId,
                         RetailerName
                     FROM dbo.Retailers
-                """)
+                    WHERE RegionCode = :region_code
+                """),
+                {"region_code": REGION_CODE},
             )
         }
 
@@ -382,6 +386,7 @@ def main():
                         RetailerName,
                         WebsiteUrl,
                         Country,
+                        RegionCode,
                         IsActive,
                         CreatedAtUtc,
                         UpdatedAtUtc
@@ -391,12 +396,13 @@ def main():
                         :retailer_name,
                         :website_url,
                         'Australia',
+                        :region_code,
                         1,
                         GETUTCDATE(),
                         GETUTCDATE()
                     )
                 """),
-                retailer,
+                {**retailer, "region_code": REGION_CODE},
             ).fetchone()
 
             existing_retailers[key] = result.RetailerId
@@ -418,8 +424,10 @@ def main():
 
         connection.execute(
             text("""
-                DELETE FROM dbo.RetailerInventory;
-            """)
+                DELETE FROM dbo.RetailerInventory
+                WHERE RegionCode = :region_code;
+            """),
+            {"region_code": REGION_CODE},
         )
 
         insert_rows = []
@@ -461,6 +469,7 @@ def main():
                 "thickness": clean(row.get("thickness")),
                 "volume": row.get("volume"),
                 "confidence": row.get("confidence"),
+                "region_code": REGION_CODE,
             })
 
         print(f"Batch inserting available inventory rows: {len(insert_rows)}")
@@ -470,6 +479,7 @@ def main():
                 text("""
                     INSERT INTO dbo.RetailerInventory (
                         RetailerId,
+                        RegionCode,
                         BrandId,
                         BoardModelId,
                         BoardSizeId,
@@ -495,6 +505,7 @@ def main():
                     )
                     VALUES (
                         :retailer_id,
+                        :region_code,
                         :brand_id,
                         NULL,
                         NULL,

@@ -66,6 +66,7 @@ with engine.begin() as conn:
                 UPDATE dbo.RetailerInventory
                 SET BrandId = :brand_id
                 WHERE IsActive = 1
+                  AND RegionCode = 'AU'
                   AND (
                       BrandId IS NULL
                       OR BrandId <> :brand_id
@@ -96,6 +97,7 @@ with engine.begin() as conn:
         FROM dbo.RetailerInventory ri
         JOIN dbo.Brands b ON b.BrandId = ri.BrandId
         WHERE ri.IsActive = 1
+          AND ri.RegionCode = 'AU'
         GROUP BY b.BrandName
         ORDER BY b.BrandName
     """)).fetchall()
