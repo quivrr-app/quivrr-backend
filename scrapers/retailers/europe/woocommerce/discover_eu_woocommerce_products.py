@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+from html import unescape
 from pathlib import Path
 
 
@@ -12,10 +15,12 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scrapers.retailers.europe.common.discovery_utils import (  # noqa: E402
+    dedupe_rows,
     decorate_rows,
     product_rows_from_json_ld,
     product_rows_from_links,
     product_rows_from_woocommerce_cards,
+    strip_tags,
 )
 from scrapers.retailers.europe.common.fetch_utils import fetch_text  # noqa: E402
 
@@ -30,13 +35,65 @@ def page_url(url: str, page: int) -> str:
     return f"{url.rstrip('/')}/page/{page}/"
 
 
+def variation_size(value: object) -> str:
+    text_value = str(value or "").strip().lower()
+    match = re.fullmatch(r"([4-9]|1[0-2])[-_']?(\d{1,2})", text_value)
+    return f"{match.group(1)}'{int(match.group(2))}" if match else text_value
+
+
+def enrich_product_variants(row: dict) -> list[dict]:
+    response = fetch_text(row.get("productUrl", ""), retries=0)
+    if not response.ok:
+        return [{**row, "detailFetchStatus": response.status}]
+
+    html = response.text
+    match = re.search(r'data-product_variations=["\'](.*?)["\']', html, re.I | re.S)
+    page_text = strip_tags(html)[:30000]
+    if not match:
+        return [{**row, "sourceSnippet": f"{row.get('sourceSnippet', '')} {page_text}"}]
+
+    try:
+        variations = json.loads(unescape(match.group(1)))
+    except (json.JSONDecodeError, TypeError):
+        return [{**row, "sourceSnippet": f"{row.get('sourceSnippet', '')} {page_text}"}]
+    if not isinstance(variations, list):
+        return [{**row, "sourceSnippet": f"{row.get('sourceSnippet', '')} {page_text}"}]
+
+    expanded = []
+    for variation in variations:
+        attributes = variation.get("attributes") or {}
+        attribute_values = [variation_size(value) for value in attributes.values() if value]
+        title_suffix = " - ".join(value for value in attribute_values if value)
+        availability = unescape(str(variation.get("availability_html") or ""))
+        is_available = "in-stock" in availability or bool(variation.get("is_in_stock"))
+        image = variation.get("image") if isinstance(variation.get("image"), dict) else {}
+        expanded.append({
+            **row,
+            "productTitle": f"{row.get('productTitle')} - {title_suffix}" if title_suffix else row.get("productTitle"),
+            "productImageUrl": image.get("src") or row.get("productImageUrl"),
+            "priceAmount": variation.get("display_price") or row.get("priceAmount"),
+            "isAvailable": is_available,
+            "stockStatus": "in_stock" if is_available else "out_of_stock",
+            "sku": variation.get("sku") or row.get("sku"),
+            "sourceSnippet": " ".join([
+                row.get("sourceSnippet", ""),
+                title_suffix,
+                strip_tags(unescape(str(variation.get("variation_description") or ""))),
+                page_text,
+            ])[:40000],
+        })
+    return expanded or [{**row, "sourceSnippet": f"{row.get('sourceSnippet', '')} {page_text}"}]
+
+
 def discover_target(target: dict, max_pages: int) -> dict:
     products = []
     rejected = 0
     fetches = []
 
     for category_url in target.get("categoryUrls", []):
-        for page in range(1, max_pages + 1):
+        page = 1
+        seen_urls = set()
+        while max_pages <= 0 or page <= max_pages:
             source_url = page_url(category_url, page)
             response = fetch_text(source_url)
             fetches.append({
@@ -54,15 +111,40 @@ def discover_target(target: dict, max_pages: int) -> dict:
             rows.extend(product_rows_from_json_ld(response.text, source_url))
             rows.extend(product_rows_from_links(response.text, source_url, ["/product/"]))
             accepted, rejected_count = decorate_rows(rows, target, source_url)
+            new_urls = {
+                row.get("productUrl", "").split("#", 1)[0].rstrip("/").lower()
+                for row in accepted
+                if row.get("productUrl")
+            } - seen_urls
+            if not rows or not new_urls:
+                break
             products.extend(accepted)
             rejected += rejected_count
+            seen_urls.update(new_urls)
+            page += 1
+
+    unique_products = dedupe_rows(products)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        enriched_groups = list(executor.map(enrich_product_variants, unique_products))
+    enriched_products = {}
+    for row in [row for group in enriched_groups for row in group]:
+        key = (
+            str(row.get("productUrl") or "").lower().rstrip("/"),
+            str(row.get("sku") or row.get("productTitle") or "").lower(),
+        )
+        enriched_products.setdefault(key, row)
+    enriched_products = list(enriched_products.values())
 
     return {
         "target": target["retailerSlug"],
-        "productsAccepted": len(products),
+        "pagesCrawled": sum(1 for fetch in fetches if fetch["status"] == "ok"),
+        "rawCategoryRows": len(products),
+        "uniqueCanonicalProducts": len(unique_products),
+        "paginationMethod": "WooCommerce /page/{page}/ until empty or duplicate page",
+        "productsAccepted": len(enriched_products),
         "productsRejected": rejected,
         "fetches": fetches,
-        "products": products,
+        "products": enriched_products,
     }
 
 
@@ -88,7 +170,7 @@ def main() -> None:
 
     targets = load_targets()
     targets_to_run = selected_targets(targets, args.run_enabled, args.target)
-    results = [discover_target(target, max(1, args.max_pages)) for target in targets_to_run]
+    results = [discover_target(target, max(0, args.max_pages)) for target in targets_to_run]
     products = [product for result in results for product in result["products"]]
 
     report = {

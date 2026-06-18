@@ -10,6 +10,8 @@
     ],
     "platform": "prestashop",
     "enabled": true,
+    "productUrlRegex": "\\.html$",
+    "expandAvailableSizes": true,
     "priceCurrency": "EUR",
     "notes": "Wave 1 PrestaShop target. JSON-LD ItemList exposes product names and URLs."
   },
@@ -20,7 +22,7 @@
     "country": "Spain",
     "website": "https://www.singlequiver.com",
     "categoryUrls": [
-      "https://www.singlequiver.com/en/surfboards/"
+      "https://singlequiver.com/en/surfboards"
     ],
     "platform": "prestashop",
     "enabled": true,

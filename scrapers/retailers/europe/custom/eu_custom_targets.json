@@ -1,5 +1,23 @@
 [
   {
+    "retailerSlug": "surf_corner",
+    "retailerName": "Surf Corner",
+    "regionCode": "EU",
+    "country": "Italy",
+    "website": "https://www.surfcornerstore.com",
+    "categoryUrls": [
+      "https://www.surfcornerstore.com/surfboards_skateboards_buy_online_sale"
+    ],
+    "platform": "custom_daisuke",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "paginationParam": "pag",
+    "visibleProductCount": 374,
+    "pageSize": 16,
+    "productPathMarkers": ["surfboard", "surfboards"],
+    "notes": "Surf Corner Store uses the Daisuke ecommerce platform. Crawl ?pag=N until the listing is exhausted."
+  },
+  {
     "retailerSlug": "surf_pirates",
     "retailerName": "Surf Pirates",
     "regionCode": "EU",

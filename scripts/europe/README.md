@@ -69,7 +69,26 @@ Or narrow to one retailer:
 venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py --retailer board_exchange
 ```
 
-The importer refuses `--apply` in the current scaffold until explicit approval is given for SQL writes.
+The importer is dry-run by default. `--apply` performs idempotent EU-only upserts,
+rejects non-EU or non-EUR input, and rolls back if protected AU or ID inventory
+counts change during the transaction.
+
+For the validated 58 Surf and Pukas combined input:
+
+```powershell
+venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py --apply
+```
+
+## Priority Retailer Audit
+
+Run the file-only diagnostics after discovery and importer dry-run:
+
+```powershell
+venv\Scripts\python.exe scripts\europe\audit_eu_retailer_inventory.py
+```
+
+Add `--sql-read-only --expected-au <count> --expected-id <count>` during controlled
+validation to report linked model/size rows and fail if either protected region count changes.
 
 ## Report
 

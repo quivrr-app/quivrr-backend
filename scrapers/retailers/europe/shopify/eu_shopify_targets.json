@@ -21,6 +21,7 @@
     "collectionUrl": "https://bellsurf.com/collections/surfboards",
     "platform": "shopify",
     "enabled": true,
+    "expandVariants": true,
     "priceCurrency": "EUR",
     "notes": "Priority EU Shopify target. Collection endpoint is verified by the EU discovery audit."
   },

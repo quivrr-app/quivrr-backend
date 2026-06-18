@@ -15,6 +15,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.europe.import_eu_retailer_inventory import (  # noqa: E402
     build_canonical_link_report,
     build_engine,
+    connect_with_retry,
     count_inventory_by_region,
     priority_retailer_counts,
     public_link_report,
@@ -29,7 +30,7 @@ def main() -> None:
     parser.add_argument("--output", default=str(OUTPUT_FILE))
     args = parser.parse_args()
 
-    with build_engine().connect() as conn:
+    with connect_with_retry(build_engine()) as conn:
         region_counts = {
             region: count_inventory_by_region(conn, region)
             for region in ("AU", "ID", "EU")

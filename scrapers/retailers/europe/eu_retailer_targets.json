@@ -1,5 +1,17 @@
 [
   {
+    "retailerSlug": "surf_corner",
+    "retailerName": "Surf Corner",
+    "regionCode": "EU",
+    "country": "Italy",
+    "website": "https://www.surfcornerstore.com",
+    "surfboardCategoryUrl": "https://www.surfcornerstore.com/surfboards_skateboards_buy_online_sale",
+    "priority": "Wave 1",
+    "enabled": true,
+    "platform": "custom_daisuke",
+    "notes": "EU-only Daisuke storefront discovery target."
+  },
+  {
     "retailerSlug": "mundo_surf",
     "retailerName": "Mundo Surf",
     "regionCode": "EU",

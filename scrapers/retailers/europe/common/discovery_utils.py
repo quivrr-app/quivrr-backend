@@ -409,6 +409,47 @@ def product_rows_from_woocommerce_cards(html: str, source_url: str) -> list[dict
     return dedupe_rows(rows)
 
 
+def product_rows_from_daisuke_cards(html: str, source_url: str) -> list[dict]:
+    """Parse Surf Corner's Daisuke listing cards without accepting nav links."""
+    rows = []
+    card_re = re.compile(
+        r'<div\b[^>]*class=["\'][^"\']*prod-cont[^"\']*["\'][^>]*>.*?(?=<div\b[^>]*class=["\'][^"\']*prod-cont|\Z)',
+        re.I | re.S,
+    )
+    for match in card_re.finditer(html):
+        card = match.group(0)
+        link = re.search(
+            r'<div\b[^>]*class=["\'][^"\']*prod-title[^"\']*["\'][^>]*>\s*<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+            card,
+            re.I | re.S,
+        )
+        if not link:
+            continue
+        brand = re.search(
+            r'<div\b[^>]*class=["\'][^"\']*brand[^"\']*["\'][^>]*>.*?<a[^>]*>(.*?)</a>',
+            card,
+            re.I | re.S,
+        )
+        image = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', card, re.I)
+        quantity = re.search(r'data-tagmanager-quantity=["\'](\d+)["\']', card, re.I)
+        product_id = re.search(r'data-tagmanager-id=["\']([^"\']+)["\']', card, re.I)
+        available = int(quantity.group(1)) > 0 if quantity else None
+        rows.append({
+            "productTitle": strip_tags(link.group(2)),
+            "productUrl": urljoin(source_url, clean(link.group(1))),
+            "productImageUrl": urljoin(source_url, clean(image.group(1))) if image else "",
+            "brand": strip_tags(brand.group(1)) if brand else "",
+            "vendor": strip_tags(brand.group(1)) if brand else "",
+            "priceAmount": parse_price(strip_tags(card)),
+            "isAvailable": available,
+            "stockStatus": "in_stock" if available is True else "out_of_stock" if available is False else "",
+            "sku": clean(product_id.group(1)) if product_id else "",
+            "sourceSnippet": strip_tags(card)[:1000],
+            "sourceUrl": source_url,
+        })
+    return dedupe_rows(rows)
+
+
 def product_rows_from_links(html: str, source_url: str, product_path_markers: list[str]) -> list[dict]:
     rows = []
     html = html.replace('\\"', '"').replace("\\/", "/").replace("\\n", " ").replace("\\t", " ")

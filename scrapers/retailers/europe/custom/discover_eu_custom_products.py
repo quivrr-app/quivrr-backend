@@ -3,8 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import math
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlencode
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -12,7 +14,9 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scrapers.retailers.europe.common.discovery_utils import (  # noqa: E402
+    dedupe_rows,
     decorate_rows,
+    product_rows_from_daisuke_cards,
     product_rows_from_json_ld,
     product_rows_from_links,
 )
@@ -32,35 +36,65 @@ def discover_target(target: dict, max_pages: int, confirm_blocked: bool = False)
     if confirm_blocked:
         urls = urls[:1]
 
-    for source_url in urls:
-        response = fetch_text(source_url, retries=0)
-        fetches.append({
-            "url": source_url,
-            "status": response.status,
-            "httpStatus": response.http_status,
-            "finalUrl": response.final_url,
-            "reason": response.reason,
-        })
+    for category_url in urls:
+        page = 1
+        seen_urls = set()
+        visible_pages = math.ceil(
+            int(target.get("visibleProductCount") or 0)
+            / max(1, int(target.get("pageSize") or 1))
+        )
+        page_cap = max_pages or (visible_pages + 1 if visible_pages else 0)
+        while page_cap <= 0 or page <= page_cap:
+            pagination_param = target.get("paginationParam")
+            if page > 1 and pagination_param:
+                separator = "&" if "?" in category_url else "?"
+                source_url = f"{category_url}{separator}{urlencode({pagination_param: page})}"
+            else:
+                source_url = category_url
+            response = fetch_text(source_url, retries=0)
+            fetches.append({
+                "url": source_url,
+                "status": response.status,
+                "httpStatus": response.http_status,
+                "finalUrl": response.final_url,
+                "reason": response.reason,
+            })
 
-        if confirm_blocked or not response.ok:
-            continue
+            if confirm_blocked or not response.ok:
+                break
 
-        rows = product_rows_from_json_ld(response.text, source_url)
-        if not rows:
-            rows.extend(product_rows_from_links(response.text, source_url, ["/en/surfboards/", "/en/"]))
-        accepted, rejected_count = decorate_rows(rows, target, source_url)
-        products.extend(accepted)
-        rejected += rejected_count
+            rows = (
+                product_rows_from_daisuke_cards(response.text, source_url)
+                if target.get("platform") == "custom_daisuke"
+                else product_rows_from_json_ld(response.text, source_url)
+            )
+            markers = target.get("productPathMarkers") or ["/en/surfboards/", "/en/"]
+            rows.extend(product_rows_from_links(response.text, source_url, markers))
+            accepted, rejected_count = decorate_rows(rows, target, source_url)
+            new_urls = {
+                row.get("productUrl", "").split("#", 1)[0].rstrip("/").lower()
+                for row in accepted
+                if row.get("productUrl")
+            } - seen_urls
+            if not rows or not new_urls:
+                break
+            products.extend(accepted)
+            rejected += rejected_count
+            seen_urls.update(new_urls)
+            page += 1
 
-        if max_pages <= 1:
-            continue
+    unique_products = dedupe_rows(products)
 
     return {
         "target": target["retailerSlug"],
-        "productsAccepted": len(products),
+        "pagesCrawled": sum(1 for fetch in fetches if fetch["status"] == "ok"),
+        "rawCategoryRows": len(products),
+        "uniqueCanonicalProducts": len(unique_products),
+        "paginationMethod": f"?{target.get('paginationParam')}={{page}} until empty or duplicate page" if target.get("paginationParam") else "configured category routes",
+        "productsAccepted": len(unique_products),
         "productsRejected": rejected,
         "fetches": fetches,
-        "products": products,
+        "products": unique_products,
     }
 
 
@@ -80,7 +114,7 @@ def main() -> None:
     if args.target:
         selected = [target for target in selected if target.get("retailerSlug") == args.target]
 
-    results = [discover_target(target, max(1, args.max_pages), args.confirm_blocked) for target in selected]
+    results = [discover_target(target, max(0, args.max_pages), args.confirm_blocked) for target in selected]
     products = [product for result in results for product in result["products"]]
     report = {
         "generatedAtUtc": datetime.now(timezone.utc).isoformat(),

@@ -5,13 +5,16 @@ import json
 import os
 import re
 import sys
+import time
 from collections import Counter, defaultdict
+from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import quote_plus, urlparse
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, event, text
+from sqlalchemy.exc import OperationalError
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -32,6 +35,7 @@ REGION_CODE = "EU"
 PRICE_CURRENCY = "EUR"
 
 BRAND_ALIASES = {
+    "aloha": "Aloha",
     "al merrick": "Channel Islands",
     "channel islands": "Channel Islands",
     "channel islands surfboards": "Channel Islands",
@@ -55,6 +59,18 @@ BRAND_ALIASES = {
     "pukas surfboards": "Pukas",
     "christenson": "Christenson",
     "christenson surfboards": "Christenson",
+    "chilli": "Chilli",
+    "chilli surfboards": "Chilli",
+    "haydenshapes": "Haydenshapes",
+    "haydenshapes surfboards": "Haydenshapes",
+    "nsp": "NSP",
+    "nsp surfboards": "NSP",
+    "rusty": "Rusty",
+    "rusty surfboards": "Rusty",
+    "slater designs": "Slater Designs",
+    "slater designs surfboards": "Slater Designs",
+    "torq": "Torq",
+    "torq surfboards": "Torq",
     "sharp eye": "Sharp Eye",
     "sharpeye": "Sharp Eye",
     "sharpeye surfboards": "Sharp Eye",
@@ -100,6 +116,20 @@ def model_key(value: object) -> str:
     text_value = re.sub(r"[^a-z0-9]+", " ", text_value)
     text_value = re.sub(r"\bii\b", "2", text_value)
     return re.sub(r"\s+", " ", text_value).strip()
+
+
+def tolerant_model_key(value: object) -> str:
+    """Remove only obvious merchandising suffixes after brand confidence exists."""
+    key = model_key(value)
+    key = re.sub(r"\s+by\s+[a-z][a-z ]+$", "", key)
+    key = re.sub(
+        r"\s+(?:white|black|blue|navy|red|orange|yellow|green|grey|gray|pink|sand|"
+        r"clear|color|colour|new|used|in stock|out of stock|pre order)$",
+        "",
+        key,
+    )
+    key = re.sub(r"\s+[a-z]{1,4}\d{4,}$", "", key)
+    return key.strip()
 
 
 def catalogue_model_key(model_name: object, brand_name: object) -> str:
@@ -190,13 +220,13 @@ def require_env(name: str) -> str:
 
 def build_connection_string() -> str:
     load_dotenv()
-    server = require_env("SQL_SERVER")
+    server = require_env("SQL_SERVER").replace("tcp:", "").strip()
     database = require_env("SQL_DATABASE")
     username = require_env("SQL_USERNAME")
     password = require_env("SQL_PASSWORD")
     driver = os.getenv("SQL_DRIVER", "ODBC Driver 18 for SQL Server").strip()
 
-    if not server.replace("tcp:", "").strip().endswith(".database.windows.net"):
+    if not server.endswith(".database.windows.net"):
         raise RuntimeError(
             "SQL_SERVER must be the Azure SQL server host only, for example "
             "quivrr-sql-prod.database.windows.net"
@@ -204,19 +234,26 @@ def build_connection_string() -> str:
 
     odbc_string = (
         f"DRIVER={{{driver}}};"
-        f"SERVER={server};"
+        f"SERVER=tcp:{server},1433;"
         f"DATABASE={database};"
         f"UID={username};"
         f"PWD={password};"
         "Encrypt=yes;"
         "TrustServerCertificate=no;"
-        "Connection Timeout=30;"
+        "Connection Timeout=60;"
     )
     return "mssql+pyodbc:///?odbc_connect=" + quote_plus(odbc_string)
 
 
 def build_engine():
-    engine = create_engine(build_connection_string(), pool_pre_ping=True, pool_recycle=1800)
+    engine = create_engine(
+        build_connection_string(),
+        pool_pre_ping=True,
+        pool_recycle=120,
+        pool_size=5,
+        max_overflow=10,
+        connect_args={"timeout": 60},
+    )
 
     @event.listens_for(engine, "before_cursor_execute")
     def enable_fast_executemany(conn, cursor, statement, parameters, context, executemany):
@@ -224,6 +261,35 @@ def build_engine():
             cursor.fast_executemany = True
 
     return engine
+
+
+def connect_with_retry(engine, attempts: int = 5):
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        connection = None
+        try:
+            connection = engine.connect()
+            connection.execute(text("SELECT 1"))
+            connection.rollback()
+            return connection
+        except OperationalError as error:
+            if connection is not None:
+                connection.close()
+            last_error = error
+            if attempt == attempts:
+                raise
+            time.sleep(min(10, 1.5 * attempt))
+    raise last_error
+
+
+@contextmanager
+def begin_with_retry(engine, attempts: int = 5):
+    connection = connect_with_retry(engine, attempts=attempts)
+    try:
+        with connection.begin():
+            yield connection
+    finally:
+        connection.close()
 
 
 def decimal_or_none(value: object) -> Decimal | None:
@@ -757,7 +823,7 @@ def assert_schema(conn) -> None:
 
 def schema_check() -> dict:
     engine = build_engine()
-    with engine.connect() as conn:
+    with connect_with_retry(engine) as conn:
         retailers = sorted(schema_columns(conn, "Retailers"))
         inventory = sorted(schema_columns(conn, "RetailerInventory"))
         assert_schema(conn)
@@ -889,7 +955,7 @@ def score_model_candidate(row: dict, model: dict) -> int | None:
     candidate_key = model["modelKey"]
     raw_key = model_key(row.get("rawProductTitle"))
     normalised_key = model_key(row.get("normalisedProductTitle"))
-    hint_key = model_key(
+    hint_key = tolerant_model_key(
         row.get("parsedModel")
         or extract_model_hint(row.get("rawProductTitle"), row.get("brandName"))
     )
@@ -962,7 +1028,9 @@ def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[i
         return None
 
     if row_volume is None:
-        size = sorted(same_length, key=lambda item: item["boardSizeId"])[0]
+        if len(same_length) != 1:
+            return None
+        size = same_length[0]
         size_volume = decimal_or_none(size.get("volumeLitres"))
         return {
             "boardSizeId": size["boardSizeId"],
@@ -979,7 +1047,7 @@ def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[i
         if size_volume is None:
             continue
         volume_delta = abs(row_volume - size_volume)
-        if volume_delta > Decimal("0.10"):
+        if volume_delta > Decimal("0.20"):
             continue
         tolerance = (
             "exact"
@@ -987,6 +1055,8 @@ def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[i
             else "plus_minus_0_05"
             if volume_delta <= Decimal("0.05")
             else "plus_minus_0_10"
+            if volume_delta <= Decimal("0.10")
+            else "plus_minus_0_20"
         )
         candidates.append({
             "boardSizeId": size["boardSizeId"],
@@ -999,14 +1069,13 @@ def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[i
     if not candidates:
         return None
 
-    candidates.sort(
-        key=lambda item: (
-            {"exact": 0, "plus_minus_0_05": 1, "plus_minus_0_10": 2}[item["volumeTolerance"]],
-            item["volumeDelta"],
-            item["boardSizeId"],
-        )
-    )
-    selected = dict(candidates[0])
+    minimum_delta = min(item["volumeDelta"] for item in candidates)
+    closest = [item for item in candidates if item["volumeDelta"] == minimum_delta]
+    if len(closest) != 1:
+        return None
+    selected = dict(closest[0])
+    if selected["volumeTolerance"] == "plus_minus_0_20" and len(candidates) != 1:
+        return None
     selected["candidateCount"] = len(candidates)
     return selected
 
@@ -1672,7 +1741,8 @@ def run_link_tests() -> dict:
         ("exact", {"lengthFeetInches": "6'0", "volumeLitres": "29.10"}, 100, "exact"),
         ("tolerance 0.05", {"lengthFeetInches": "6'0", "volumeLitres": "29.15"}, 100, "plus_minus_0_05"),
         ("tolerance 0.10", {"lengthFeetInches": "6'0", "volumeLitres": "29.20"}, 100, "plus_minus_0_10"),
-        ("reject over tolerance", {"lengthFeetInches": "6'0", "volumeLitres": "29.21"}, None, None),
+        ("tolerance 0.20 unique", {"lengthFeetInches": "6'0", "volumeLitres": "29.21"}, 100, "plus_minus_0_20"),
+        ("reject over tolerance", {"lengthFeetInches": "6'0", "volumeLitres": "29.31"}, None, None),
         ("reject other length", {"lengthFeetInches": "5'11", "volumeLitres": "29.10"}, None, None),
         ("length only when volume missing", {"lengthFeetInches": "6'0", "volumeLitres": None}, 100, "length_only_no_retailer_volume"),
     ]
@@ -1687,6 +1757,16 @@ def run_link_tests() -> dict:
                 "expected": [expected_id, expected_tolerance],
                 "actual": [actual_id, actual_tolerance],
             })
+
+    tests_run += 1
+    ambiguous_sizes = {
+        10: [
+            {"boardSizeId": 100, "lengthFeetInches": "6'0", "volumeLitres": Decimal("29.10")},
+            {"boardSizeId": 102, "lengthFeetInches": "6'0", "volumeLitres": Decimal("29.30")},
+        ]
+    }
+    if select_size_candidate({"lengthFeetInches": "6'0", "volumeLitres": "29.20"}, 10, ambiguous_sizes):
+        failures.append({"case": "reject equally close sizes", "expected": None, "actual": "matched"})
 
     for invalid_region in ("AU", "ID", None):
         tests_run += 1
@@ -2019,7 +2099,7 @@ def apply_to_sql(report: dict, output_file: Path) -> dict:
     engine = build_engine()
     apply_counts = Counter()
 
-    with engine.begin() as conn:
+    with begin_with_retry(engine) as conn:
         assert_schema(conn)
         before = {
             "euInventoryRows": count_inventory_by_region(conn, "EU"),
@@ -2142,7 +2222,7 @@ def apply_to_sql(report: dict, output_file: Path) -> dict:
 
 def apply_eu_canonical_links(output_file: Path = LINK_APPLY_REPORT_FILE) -> dict:
     engine = build_engine()
-    with engine.begin() as conn:
+    with begin_with_retry(engine) as conn:
         assert_schema(conn)
         before_counts = {
             region: count_inventory_by_region(conn, region)

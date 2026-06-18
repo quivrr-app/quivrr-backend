@@ -367,6 +367,17 @@ def variant_titles(product: dict) -> list[str]:
 def convert_product(product: dict, variant: dict, target: dict) -> dict:
     score = score_product(product, variant)
     handle = clean(product.get("handle"))
+    variant_title = clean(variant.get("title"))
+    product_title = clean(product.get("title"))
+    if target.get("expandVariants") and variant_title.lower() not in {"", "default title"}:
+        product_title = f"{product_title} - {variant_title}"
+    source_snippet = " ".join(
+        part for part in [
+            clean(product.get("body_html")),
+            variant_title,
+            clean(variant.get("sku")),
+        ] if part
+    )
 
     return {
         "retailerSlug": target["retailerSlug"],
@@ -375,7 +386,7 @@ def convert_product(product: dict, variant: dict, target: dict) -> dict:
         "country": clean(target.get("country")),
         "platform": "shopify",
         "sourceUrl": clean(target.get("collectionUrl")),
-        "productTitle": clean(product.get("title")),
+        "productTitle": product_title,
         "productId": clean(product.get("id")),
         "productUrl": product_url(target, handle),
         "productImageUrl": first_image(product),
@@ -388,6 +399,7 @@ def convert_product(product: dict, variant: dict, target: dict) -> dict:
         "variantTitles": variant_titles(product),
         "rawHandle": handle,
         "sku": clean(variant.get("sku")),
+        "sourceSnippet": source_snippet,
         "suspectedSurfboard": score["suspectedSurfboard"],
         "parseConfidence": score["parseConfidence"],
         "filterReasons": score["filterReasons"],
@@ -576,15 +588,16 @@ def discover_target(target: dict, max_pages: int) -> dict:
     normalised_rows = []
     for product in unique_products.values():
         variants = product.get("variants") or [{}]
-        primary_variant = variants[0] if variants else {}
-        row = convert_product(product, primary_variant, target)
+        rows_to_parse = variants if target.get("expandVariants") else variants[:1]
+        for variant in rows_to_parse:
+            row = convert_product(product, variant, target)
 
-        if row["suspectedSurfboard"]:
-            enriched, normalised = enrich_product(row)
-            accepted.append(enriched)
-            normalised_rows.append(normalised)
-        else:
-            rejected_count += 1
+            if row["suspectedSurfboard"]:
+                enriched, normalised = enrich_product(row)
+                accepted.append(enriched)
+                normalised_rows.append(normalised)
+            else:
+                rejected_count += 1
 
     coverage_ok = True
     coverage_blocker = ""

@@ -47,9 +47,13 @@ SHOPIFY_TARGETS = {
     "pukas_surf_shop",
     "bell_surf",
 }
+PRESTASHOP_TARGETS = {"mundo_surf", "single_quiver"}
+CUSTOM_TARGETS = {"surf_corner"}
+WOOCOMMERCE_TARGETS = {"surf_boss"}
 
 REGION_CODE = "EU"
-PRIORITY_TARGETS = {"58_surf", "surf_boss", "pukas_surf_shop", "bell_surf"}
+ROLLOUT_TARGETS = {"bell_surf", "surf_boss", "surf_corner", "mundo_surf", "single_quiver"}
+PRIORITY_TARGETS = {"58_surf", "pukas_surf_shop", *ROLLOUT_TARGETS}
 
 
 def load_targets(path: Path) -> list[dict]:
@@ -133,9 +137,9 @@ def main() -> None:
         default=0,
         help="Optional Shopify JSON page cap. Default 0 fetches until exhausted.",
     )
-    parser.add_argument("--prestashop-pages", type=int, default=1)
-    parser.add_argument("--custom-pages", type=int, default=1)
-    parser.add_argument("--woocommerce-pages", type=int, default=2)
+    parser.add_argument("--prestashop-pages", type=int, default=0, help="0 crawls until exhausted.")
+    parser.add_argument("--custom-pages", type=int, default=0, help="0 crawls until exhausted.")
+    parser.add_argument("--woocommerce-pages", type=int, default=0, help="0 crawls until exhausted.")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -145,7 +149,13 @@ def main() -> None:
 
     if args.dry_run:
         configured = []
-        for input_file in [SHOPIFY_INPUT, MAGENTO_INPUT, WOOCOMMERCE_INPUT]:
+        for input_file in [
+            SHOPIFY_INPUT,
+            MAGENTO_INPUT,
+            WOOCOMMERCE_INPUT,
+            PRESTASHOP_INPUT,
+            CUSTOM_INPUT,
+        ]:
             for target in load_targets(input_file):
                 if target.get("retailerSlug") in PRIORITY_TARGETS:
                     assert_eu_target(target, input_file)
@@ -180,24 +190,24 @@ def main() -> None:
             input_file=PRESTASHOP_INPUT,
             output_file=PRESTASHOP_OUTPUT,
             discover=discover_prestashop_target,
-            target_slugs=None,
-            max_pages=max(1, args.prestashop_pages),
+            target_slugs=PRESTASHOP_TARGETS,
+            max_pages=max(0, args.prestashop_pages),
         ),
         run_platform(
             name="Structured/custom",
             input_file=CUSTOM_INPUT,
             output_file=CUSTOM_OUTPUT,
             discover=lambda target, pages: discover_custom_target(target, pages),
-            target_slugs={"surf_pirates"},
-            max_pages=max(1, args.custom_pages),
+            target_slugs=CUSTOM_TARGETS,
+            max_pages=max(0, args.custom_pages),
         ),
         run_platform(
             name="WooCommerce",
             input_file=WOOCOMMERCE_INPUT,
             output_file=WOOCOMMERCE_OUTPUT,
             discover=discover_woocommerce_target,
-            target_slugs=None,
-            max_pages=max(1, args.woocommerce_pages),
+            target_slugs=WOOCOMMERCE_TARGETS,
+            max_pages=max(0, args.woocommerce_pages),
         ),
     ]
 
