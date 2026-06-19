@@ -9,6 +9,7 @@ import time
 from collections import Counter, defaultdict
 from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation
+from fractions import Fraction
 from pathlib import Path
 from urllib.parse import quote_plus, urlparse
 
@@ -126,6 +127,37 @@ def model_key(value: object) -> str:
     text_value = re.sub(r"[^a-z0-9]+", " ", text_value)
     text_value = re.sub(r"\bii\b", "2", text_value)
     return re.sub(r"\s+", " ", text_value).strip()
+
+
+def measurement_key(value: object) -> Fraction | None:
+    """Normalise decimal and surf-fraction measurements for exact comparison."""
+    value = clean(value).replace('"', "").strip()
+    if not value:
+        return None
+    match = re.fullmatch(r"(\d+)(?:\s+(\d+)\s*/\s*(\d+))?", value)
+    if match:
+        result = Fraction(int(match.group(1)), 1)
+        if match.group(2):
+            result += Fraction(int(match.group(2)), int(match.group(3)))
+        return result
+    try:
+        return Fraction(Decimal(value)).limit_denominator(16)
+    except (InvalidOperation, ValueError, ZeroDivisionError):
+        return None
+
+
+def construction_key(value: object) -> str:
+    key = clean_key(value)
+    aliases = {
+        "carbon tune": "carbotune",
+        "hyfi 3": "hyfi",
+        "hyfi 3 0": "hyfi",
+        "i bolic": "ibolic",
+        "i bolic 2 0": "ibolic",
+        "pu stringer": "pu",
+        "polyester": "pu",
+    }
+    return aliases.get(key, key)
 
 
 def tolerant_model_key(value: object) -> str:
@@ -927,7 +959,10 @@ def load_board_sizes(conn) -> dict[int, list[dict]]:
                 BoardSizeId,
                 BoardModelId,
                 LengthFeetInches,
-                VolumeLitres
+                Width,
+                Thickness,
+                VolumeLitres,
+                Construction
             FROM dbo.BoardSizes
         """)
     ).fetchall()
@@ -940,7 +975,10 @@ def load_board_sizes(conn) -> dict[int, list[dict]]:
             "boardSizeId": int(row_field(row, "BoardSizeId")),
             "boardModelId": int(model_id),
             "lengthFeetInches": clean(row_field(row, "LengthFeetInches")),
+            "width": clean(row_field(row, "Width")),
+            "thickness": clean(row_field(row, "Thickness")),
             "volumeLitres": decimal_or_none(row_field(row, "VolumeLitres")),
+            "construction": clean(row_field(row, "Construction")),
         }
         sizes.setdefault(size["boardModelId"], []).append(size)
     return sizes
@@ -1075,56 +1113,62 @@ def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[i
         return None
 
     if row_volume is None:
-        if len(same_length) != 1:
+        candidates = [dict(size) for size in same_length]
+        tolerance = "length_only_no_retailer_volume"
+    else:
+        measured = []
+        for size in same_length:
+            size_volume = decimal_or_none(size.get("volumeLitres"))
+            if size_volume is None:
+                continue
+            item = dict(size)
+            item["volumeDelta"] = abs(row_volume - size_volume)
+            measured.append(item)
+
+        tiers = [
+            ("exact", lambda delta: delta == 0),
+            ("plus_minus_0_05", lambda delta: delta <= Decimal("0.05")),
+            ("plus_minus_0_10", lambda delta: delta <= Decimal("0.10")),
+            ("plus_minus_0_20", lambda delta: delta <= Decimal("0.20")),
+        ]
+        candidates = []
+        tolerance = None
+        for tier_name, predicate in tiers:
+            candidates = [item for item in measured if predicate(item["volumeDelta"])]
+            if candidates:
+                tolerance = tier_name
+                break
+        if not candidates:
             return None
-        size = same_length[0]
-        size_volume = decimal_or_none(size.get("volumeLitres"))
-        return {
-            "boardSizeId": size["boardSizeId"],
-            "lengthFeetInches": size["lengthFeetInches"],
-            "volumeLitres": float(size_volume) if size_volume is not None else None,
-            "volumeDelta": None,
-            "volumeTolerance": "length_only_no_retailer_volume",
-            "candidateCount": len(same_length),
-        }
 
-    candidates = []
-    for size in same_length:
-        size_volume = decimal_or_none(size.get("volumeLitres"))
-        if size_volume is None:
+    initial_count = len(candidates)
+    filters = (
+        ("width", measurement_key),
+        ("thickness", measurement_key),
+        ("construction", construction_key),
+    )
+    for field, normaliser in filters:
+        source_key = normaliser(row.get(field))
+        if source_key in (None, ""):
             continue
-        volume_delta = abs(row_volume - size_volume)
-        if volume_delta > Decimal("0.20"):
-            continue
-        tolerance = (
-            "exact"
-            if volume_delta == 0
-            else "plus_minus_0_05"
-            if volume_delta <= Decimal("0.05")
-            else "plus_minus_0_10"
-            if volume_delta <= Decimal("0.10")
-            else "plus_minus_0_20"
-        )
-        candidates.append({
-            "boardSizeId": size["boardSizeId"],
-            "lengthFeetInches": size["lengthFeetInches"],
-            "volumeLitres": float(size_volume) if size_volume is not None else None,
-            "volumeDelta": float(volume_delta) if volume_delta is not None else None,
-            "volumeTolerance": tolerance,
-        })
+        exact = [item for item in candidates if normaliser(item.get(field)) == source_key]
+        if exact:
+            candidates = exact
 
-    if not candidates:
+    if len(candidates) != 1:
         return None
 
-    minimum_delta = min(item["volumeDelta"] for item in candidates)
-    closest = [item for item in candidates if item["volumeDelta"] == minimum_delta]
-    if len(closest) != 1:
-        return None
-    selected = dict(closest[0])
-    if selected["volumeTolerance"] == "plus_minus_0_20" and len(candidates) != 1:
-        return None
-    selected["candidateCount"] = len(candidates)
-    return selected
+    selected_size = candidates[0]
+    size_volume = decimal_or_none(selected_size.get("volumeLitres"))
+    volume_delta = selected_size.get("volumeDelta")
+    return {
+        "boardSizeId": selected_size["boardSizeId"],
+        "lengthFeetInches": selected_size["lengthFeetInches"],
+        "volumeLitres": float(size_volume) if size_volume is not None else None,
+        "volumeDelta": float(volume_delta) if volume_delta is not None else None,
+        "volumeTolerance": tolerance,
+        "candidateCount": initial_count,
+    }
 
 
 def build_canonical_link_report(conn) -> dict:
@@ -1839,6 +1883,21 @@ def run_link_tests() -> dict:
     }
     if select_size_candidate({"lengthFeetInches": "6'0", "volumeLitres": "29.20"}, 10, ambiguous_sizes):
         failures.append({"case": "reject equally close sizes", "expected": None, "actual": "matched"})
+
+    tests_run += 1
+    dimension_sizes = {
+        10: [
+            {"boardSizeId": 103, "lengthFeetInches": "6'0", "width": "19 1/4", "thickness": "2 7/16", "volumeLitres": Decimal("29.10"), "construction": "PU"},
+            {"boardSizeId": 104, "lengthFeetInches": "6'0", "width": "19.25", "thickness": "2.50", "volumeLitres": Decimal("29.10"), "construction": "EPS"},
+        ]
+    }
+    selected = select_size_candidate(
+        {"lengthFeetInches": "6'0", "width": "19.25", "thickness": "2 7/16", "volumeLitres": "29.10", "construction": "PU"},
+        10,
+        dimension_sizes,
+    )
+    if not selected or selected["boardSizeId"] != 103:
+        failures.append({"case": "dimensions break same-volume tie", "expected": 103, "actual": selected})
 
     for invalid_region in ("AU", "ID", None):
         tests_run += 1
