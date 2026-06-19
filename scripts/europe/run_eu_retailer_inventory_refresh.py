@@ -122,6 +122,7 @@ def region_counts() -> dict[str, int]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="EU-only retailer discovery and SQL refresh.")
+    parser.add_argument("execution_mode", nargs="?", choices=["apply", "dry-run"])
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--apply", action="store_true", help="Apply EU-only SQL upserts.")
     mode.add_argument("--dry-run", action="store_true", help="Validate without SQL writes.")
@@ -132,6 +133,10 @@ def main() -> None:
     )
     parser.add_argument("--input", type=Path)
     args = parser.parse_args()
+    if args.execution_mode == "apply":
+        args.apply = True
+    elif args.execution_mode == "dry-run":
+        args.dry_run = True
     input_path = args.input or DEFAULT_INPUT
 
     assert_region_scope()

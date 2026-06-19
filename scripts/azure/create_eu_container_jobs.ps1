@@ -29,7 +29,14 @@ function Show-Plan {
     Write-Host "Job:      $($Job.Name)"
     Write-Host "Schedule: $($Job.Cron) UTC"
     Write-Host "Image:    $Image"
-    Write-Host "Command:  python $($Job.Runner) --apply"
+    Write-Host "Command:  python $($Job.Runner) apply"
+}
+
+function Assert-AzSuccess {
+    param([string]$Operation)
+    if ($LASTEXITCODE -ne 0) {
+        throw "Azure CLI failed during: $Operation"
+    }
 }
 
 foreach ($job in $jobs) {
@@ -74,16 +81,20 @@ if ([string]::IsNullOrWhiteSpace($env:QUIVRR_SQL_PASSWORD)) {
 }
 
 az account show --only-show-errors --output none
+Assert-AzSuccess -Operation "Azure account validation"
 az containerapp env show `
     --name $Environment `
     --resource-group $ResourceGroup `
     --only-show-errors `
     --output none
+Assert-AzSuccess -Operation "Container Apps environment validation"
 
 $acrName = ($Image -split "\.")[0]
 $acrServer = "$acrName.azurecr.io"
 $acrUsername = az acr credential show --name $acrName --query username --output tsv
+Assert-AzSuccess -Operation "ACR username lookup"
 $acrPassword = az acr credential show --name $acrName --query "passwords[0].value" --output tsv
+Assert-AzSuccess -Operation "ACR password lookup"
 if ([string]::IsNullOrWhiteSpace($acrUsername) -or [string]::IsNullOrWhiteSpace($acrPassword)) {
     throw "Could not obtain ACR credentials for $acrName."
 }
@@ -103,6 +114,7 @@ foreach ($job in $jobs) {
         --query "[?name=='$($job.Name)'] | length(@)" `
         --output tsv `
         --only-show-errors
+    Assert-AzSuccess -Operation "existing job lookup for $($job.Name)"
     $exists = [int]$matchingJobs -gt 0
 
     if (-not $exists) {
@@ -120,7 +132,7 @@ foreach ($job in $jobs) {
             --cpu 2.0 `
             --memory 4Gi `
             --command python `
-            --args $job.Runner --apply `
+            --args $job.Runner apply `
             --registry-server $acrServer `
             --registry-username $acrUsername `
             --registry-password secretref:acr-password `
@@ -128,6 +140,7 @@ foreach ($job in $jobs) {
             --env-vars $commonEnv `
             --only-show-errors `
             --output none
+        Assert-AzSuccess -Operation "create $($job.Name)"
     }
     else {
         az containerapp job secret set `
@@ -136,6 +149,7 @@ foreach ($job in $jobs) {
             --secrets "sql-password=$($env:QUIVRR_SQL_PASSWORD)" "acr-password=$acrPassword" `
             --only-show-errors `
             --output none
+        Assert-AzSuccess -Operation "set secrets for $($job.Name)"
         az containerapp job registry set `
             --name $job.Name `
             --resource-group $ResourceGroup `
@@ -144,6 +158,7 @@ foreach ($job in $jobs) {
             --password $acrPassword `
             --only-show-errors `
             --output none
+        Assert-AzSuccess -Operation "set registry for $($job.Name)"
         az containerapp job update `
             --name $job.Name `
             --resource-group $ResourceGroup `
@@ -156,10 +171,11 @@ foreach ($job in $jobs) {
             --cpu 2.0 `
             --memory 4Gi `
             --command python `
-            --args $job.Runner --apply `
+            --args $job.Runner apply `
             --replace-env-vars $commonEnv `
             --only-show-errors `
             --output none
+        Assert-AzSuccess -Operation "update $($job.Name)"
     }
 }
 
@@ -171,6 +187,7 @@ foreach ($job in $jobs) {
         --resource-group $ResourceGroup `
         --query "{name:name,schedule:properties.configuration.scheduleTriggerConfig.cronExpression,image:properties.template.containers[0].image,command:properties.template.containers[0].command,args:properties.template.containers[0].args}" `
         --output json
+    Assert-AzSuccess -Operation "validate $($job.Name)"
 }
 
 Write-Host ""
@@ -179,8 +196,8 @@ Write-Host "Safe manual start after image deployment:"
 Write-Host "az containerapp job start -n quivrr-nightly-eu-inventory -g $ResourceGroup"
 Write-Host "az containerapp job start -n quivrr-eu-mfr-availability -g $ResourceGroup"
 Write-Host "Read-only/dry-run execution with scheduled --apply args overridden:"
-Write-Host "az containerapp job start -n quivrr-nightly-eu-inventory -g $ResourceGroup --command python --args scripts/europe/run_eu_retailer_inventory_refresh.py"
-Write-Host "az containerapp job start -n quivrr-eu-mfr-availability -g $ResourceGroup --command python --args scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py"
+Write-Host "az containerapp job start -n quivrr-nightly-eu-inventory -g $ResourceGroup --command python --args scripts/europe/run_eu_retailer_inventory_refresh.py dry-run"
+Write-Host "az containerapp job start -n quivrr-eu-mfr-availability -g $ResourceGroup --command python --args scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py dry-run"
 Write-Host "Execution status:"
 Write-Host "az containerapp job execution list -n <job-name> -g $ResourceGroup -o table"
 Write-Host "Log Analytics query:"

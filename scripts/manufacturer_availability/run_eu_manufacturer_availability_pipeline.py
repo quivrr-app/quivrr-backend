@@ -100,6 +100,7 @@ def validate_output(slug: str) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validated EU manufacturer availability pipeline.")
+    parser.add_argument("execution_mode", nargs="?", choices=["apply", "dry-run"])
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--apply", action="store_true", help="Apply EU-only manufacturer inventory.")
     mode.add_argument("--dry-run", action="store_true", help="Build and validate without SQL writes.")
@@ -109,6 +110,10 @@ def main() -> None:
         help="Validate and import existing EU MFA outputs without fetching sources.",
     )
     args = parser.parse_args()
+    if args.execution_mode == "apply":
+        args.apply = True
+    elif args.execution_mode == "dry-run":
+        args.dry_run = True
 
     assert_region_scope()
     before = region_counts()
