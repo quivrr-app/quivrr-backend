@@ -245,10 +245,16 @@ def normalise_row(row: dict) -> dict:
         "isAvailable": is_available if isinstance(is_available, bool) else None,
         "stockStatus": stock_status(row),
         "sku": clean(row.get("sku")),
-        "lengthFeetInches": parse_length(text),
-        "volumeLitres": parse_volume(text),
-        "construction": first_pattern(text, CONSTRUCTION_PATTERNS),
-        "finSetup": first_pattern(text, FIN_PATTERNS),
+        "lengthFeetInches": clean(row.get("lengthFeetInches")) or parse_length(text),
+        "width": clean(row.get("width")),
+        "thickness": clean(row.get("thickness")),
+        "volumeLitres": (
+            row.get("volumeLitres")
+            if row.get("volumeLitres") is not None
+            else parse_volume(text)
+        ),
+        "construction": clean(row.get("construction")) or first_pattern(text, CONSTRUCTION_PATTERNS),
+        "finSetup": clean(row.get("finSetup")) or first_pattern(text, FIN_PATTERNS),
         "parseConfidence": row.get("parseConfidence"),
         "discoveryStatus": clean(row.get("discoveryStatus")) or "accepted",
         "needsCanonicalReview": True,

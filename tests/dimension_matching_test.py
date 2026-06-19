@@ -12,7 +12,16 @@ from utils.dimensions import (
     volume_to_decimal,
 )
 from utils.retailer_matching import classify_retailer_exact
-from scripts.europe.import_eu_retailer_inventory import select_size_candidate
+from scripts.europe.import_eu_retailer_inventory import (
+    batch_update_inventory,
+    inventory_key,
+    inventory_missing_volume_key,
+    select_size_candidate,
+)
+from scrapers.retailers.europe.magento.discover_eu_magento_products import (
+    parse_58surf_product_detail,
+)
+from scrapers.retailers.europe.normalise_eu_retailer_inventory import normalise_row
 
 
 class DimensionMatchingTests(unittest.TestCase):
@@ -171,6 +180,95 @@ class DimensionMatchingTests(unittest.TestCase):
         )
         duplicate = {**canonical, "boardSizeId": 11}
         self.assertIsNone(select_size_candidate(row, 1, {1: [canonical, duplicate]}))
+
+    def test_58surf_monsta_carbotune_detail_is_exact(self):
+        page_html = """
+            <h2 class="product attribute body-sm"><strong class="type">Fabrics</strong><span class="value">Carbotune</span></h2>
+            <h2 class="product attribute body-sm"><strong class="type">SKU</strong><span class="value">JS0BO5604SQHTW</span></h2>
+            <h2 class="product attribute body-sm"><strong class="type">Features</strong><span class="value">FCS II Thruster</span></h2>
+            <h2 class="product attribute body-sm"><strong class="type">Surfboard Volume</strong><span class="value">28.00</span></h2>
+            <h2 class="product attribute body-sm"><strong class="type">Surfboard Thickness</strong><span class="value">2.44</span></h2>
+            <h2 class="product attribute body-sm"><strong class="type">Surfboard Width</strong><span class="value">18.75</span></h2>
+        """
+        detail = parse_58surf_product_detail(page_html)
+        self.assertEqual(
+            detail,
+            {
+                "sku": "JS0BO5604SQHTW",
+                "width": "18.75",
+                "thickness": "2.44",
+                "volumeLitres": "28.00",
+                "construction": "Carbotune",
+                "finSetup": "FCS II Thruster",
+            },
+        )
+        normalised = normalise_row({
+            "retailerSlug": "58_surf",
+            "retailerName": "58 Surf",
+            "regionCode": "EU",
+            "country": "Portugal",
+            "platform": "magento",
+            "productTitle": "JS Surfboard 5'11 MONSTA CARBOTUNE Squash Tail - White",
+            "productUrl": "https://58surf.com/eng/js-surfboard-5-11-monsta-10-carbotune-squash-tail-white",
+            "brand": "JS",
+            "priceAmount": "1150.0",
+            "priceCurrency": "EUR",
+            "isAvailable": True,
+            "stockStatus": "in_stock",
+            "lengthFeetInches": "5'11",
+            **detail,
+        })
+        self.assertEqual(normalised["width"], "18.75")
+        self.assertEqual(normalised["thickness"], "2.44")
+        self.assertEqual(normalised["volumeLitres"], "28.00")
+        self.assertEqual(normalised["construction"], "Carbotune")
+        self.assertEqual(normalised["finSetup"], "FCS II Thruster")
+
+        exact, reason = classify_retailer_exact(
+            {
+                "boardSizeId": None,
+                "title": normalised["rawProductTitle"],
+                "length": normalised["lengthFeetInches"],
+                "width": normalised["width"],
+                "thickness": normalised["thickness"],
+                "volume": normalised["volumeLitres"],
+                "construction": normalised["construction"],
+            },
+            {
+                "boardSizeId": 179464,
+                "length": "5'11",
+                "width": "18 3/4",
+                "thickness": "2 7/16",
+                "volume": 28,
+                "construction": "CarboTune",
+            },
+            brand_matches=True,
+            model_matches=True,
+            strong_model_title=True,
+        )
+        self.assertTrue(exact)
+        self.assertEqual(reason, "equivalent_dimensions")
+
+    def test_eu_importer_enriches_existing_missing_volume_row(self):
+        existing = {
+            "retailer_id": 58,
+            "product_url": "https://58surf.com/eng/monsta",
+            "raw_title": "JS Monsta CarboTune",
+            "length": "5'11",
+            "volume": None,
+        }
+        enriched = {**existing, "volume": 28}
+        self.assertNotEqual(inventory_key(existing), inventory_key(enriched))
+        self.assertEqual(
+            inventory_missing_volume_key(existing),
+            inventory_missing_volume_key(enriched),
+        )
+        update_source = inspect.getsource(batch_update_inventory)
+        self.assertIn("LengthFeetInches = :length", update_source)
+        self.assertIn("Width = :width", update_source)
+        self.assertIn("Thickness = :thickness", update_source)
+        self.assertIn("VolumeLitres = :volume", update_source)
+        self.assertIn("RegionCode = 'EU'", update_source)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
+import re
 import sys
 import uuid
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -277,6 +280,73 @@ def canonical_product_key(row: dict) -> str:
     return clean(row.get("productId") or row.get("sku")).lower()
 
 
+PRODUCT_ATTRIBUTE_PATTERN = re.compile(
+    r'<strong[^>]*class=["\'][^"\']*\btype\b[^"\']*["\'][^>]*>'
+    r'(.*?)</strong>\s*'
+    r'<span[^>]*class=["\'][^"\']*\bvalue\b[^"\']*["\'][^>]*>'
+    r'(.*?)</span>',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def clean_html_text(value: str) -> str:
+    return clean(html.unescape(re.sub(r"<[^>]+>", " ", value)))
+
+
+def parse_58surf_product_detail(page_html: str) -> dict:
+    attributes = {}
+    for raw_name, raw_value in PRODUCT_ATTRIBUTE_PATTERN.findall(page_html or ""):
+        name = clean_html_text(raw_name).lower()
+        value = clean_html_text(raw_value)
+        if name and value and name not in attributes:
+            attributes[name] = value
+
+    return {
+        "sku": attributes.get("sku", ""),
+        "width": attributes.get("surfboard width", ""),
+        "thickness": attributes.get("surfboard thickness", ""),
+        "volumeLitres": attributes.get("surfboard volume") or None,
+        "construction": attributes.get("fabrics", ""),
+        "finSetup": attributes.get("features", ""),
+    }
+
+
+def fetch_58surf_product_detail(row: dict) -> tuple[dict, dict]:
+    product_url = clean(row.get("productUrl"))
+    response = fetch_text(product_url, timeout_seconds=30, retries=1)
+    detail = parse_58surf_product_detail(response.text) if response.ok else {}
+    enriched = {
+        **row,
+        **{key: value for key, value in detail.items() if value not in (None, "")},
+    }
+    return enriched, {
+        "productUrl": product_url,
+        "status": response.status,
+        "httpStatus": response.http_status,
+        "reason": response.reason,
+        "dimensionsFound": bool(
+            detail.get("width") and detail.get("thickness") and detail.get("volumeLitres")
+        ),
+    }
+
+
+def enrich_58surf_product_details(rows: list[dict], workers: int = 12) -> tuple[list[dict], list[dict]]:
+    enriched_by_index = {}
+    diagnostics_by_index = {}
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+        futures = {
+            executor.submit(fetch_58surf_product_detail, row): index
+            for index, row in enumerate(rows)
+        }
+        for future in as_completed(futures):
+            index = futures[future]
+            enriched_by_index[index], diagnostics_by_index[index] = future.result()
+    return (
+        [enriched_by_index[index] for index in range(len(rows))],
+        [diagnostics_by_index[index] for index in range(len(rows))],
+    )
+
+
 def enrich_product(row: dict) -> tuple[dict, dict]:
     normalised = normalise_row(row)
     enriched = {
@@ -370,6 +440,12 @@ def discover_target(target: dict, max_pages: int) -> dict:
         accepted, rejected = decorate_rows(
             list(unique_rows.values()), target, navigation["startUrl"]
         )
+        detail_diagnostics = []
+        if target.get("detailEnrichment", False):
+            accepted, detail_diagnostics = enrich_58surf_product_details(
+                accepted,
+                workers=int(target.get("detailWorkers") or 12),
+            )
         normalised_rows = []
         for row in accepted:
             enriched, normalised = enrich_product(row)
@@ -402,6 +478,13 @@ def discover_target(target: dict, max_pages: int) -> dict:
             "importableRows": sum(
                 1 for row in normalised_rows if row.get("importableRaw")
             ),
+            "detailPagesFetched": len(detail_diagnostics),
+            "detailFetchFailures": sum(
+                1 for item in detail_diagnostics if item["status"] != "ok"
+            ),
+            "detailRowsWithDimensions": sum(
+                1 for item in detail_diagnostics if item["dimensionsFound"]
+            ),
             "shortboardBenchmark": {
                 "expected": SHORTBOARD_BENCHMARK,
                 "minimum": SHORTBOARD_MINIMUM,
@@ -420,6 +503,7 @@ def discover_target(target: dict, max_pages: int) -> dict:
             "productsAccepted": len(products),
             "productsRejected": rejected,
             "fetches": fetches,
+            "detailFetches": detail_diagnostics,
             "benchmarkPassed": benchmark_ok,
             "products": products,
         }

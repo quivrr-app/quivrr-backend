@@ -600,6 +600,8 @@ def build_report(rows: list[dict], input_file: Path, retailer_slug: str = "") ->
             "priceAmount": clean(row.get("priceAmount")),
             "priceCurrency": clean(row.get("priceCurrency")),
             "lengthFeetInches": clean(row.get("lengthFeetInches")),
+            "width": clean(row.get("width")),
+            "thickness": clean(row.get("thickness")),
             "volumeLitres": row.get("volumeLitres"),
             "construction": clean(row.get("construction")),
             "finSetup": clean(row.get("finSetup")),
@@ -1418,6 +1420,8 @@ def sql_values_rows(rows: list[dict]) -> str:
                 sql_string(row.get("construction")),
                 sql_string(row.get("finSetup")),
                 sql_string(row.get("lengthFeetInches")),
+                sql_string(row.get("width")),
+                sql_string(row.get("thickness")),
                 sql_decimal(row.get("volumeLitres")),
                 sql_float(row.get("parseConfidence") or 0),
             ])
@@ -1450,6 +1454,8 @@ DECLARE @Rows TABLE (
     Construction nvarchar(255) NULL,
     FinSetup nvarchar(255) NULL,
     LengthFeetInches nvarchar(50) NULL,
+    Width nvarchar(50) NULL,
+    Thickness nvarchar(50) NULL,
     VolumeLitres decimal(10,2) NULL,
     InventoryConfidenceScore decimal(10,4) NULL
 );
@@ -1468,6 +1474,8 @@ INSERT INTO @Rows (
     Construction,
     FinSetup,
     LengthFeetInches,
+    Width,
+    Thickness,
     VolumeLitres,
     InventoryConfidenceScore
 )
@@ -1534,6 +1542,10 @@ SET
     StockStatus = src.StockStatus,
     Construction = src.Construction,
     FinSetup = src.FinSetup,
+    LengthFeetInches = src.LengthFeetInches,
+    Width = src.Width,
+    Thickness = src.Thickness,
+    VolumeLitres = src.VolumeLitres,
     InventoryConfidenceScore = src.InventoryConfidenceScore,
     LastCheckedUtc = SYSUTCDATETIME(),
     IsActive = 1,
@@ -1601,8 +1613,8 @@ SELECT
     src.Construction,
     src.FinSetup,
     src.LengthFeetInches,
-    NULL,
-    NULL,
+    src.Width,
+    src.Thickness,
     src.VolumeLitres,
     NULL,
     src.InventoryConfidenceScore,
@@ -1997,6 +2009,7 @@ def existing_inventory_id(conn, row: dict) -> int | None:
               AND (
                     (VolumeLitres IS NULL AND :volume IS NULL)
                     OR VolumeLitres = :volume
+                    OR (VolumeLitres IS NULL AND :volume IS NOT NULL)
                   )
             ORDER BY InventoryId
         """),
@@ -2012,6 +2025,16 @@ def inventory_key(row: dict) -> tuple:
         clean_key(row.get("raw_title")),
         clean_key(row.get("length")),
         decimal_key(row.get("volume")),
+    )
+
+
+def inventory_missing_volume_key(row: dict) -> tuple:
+    return (
+        "missing_volume",
+        int(row.get("retailer_id")),
+        clean_key(row.get("product_url")),
+        clean_key(row.get("raw_title")),
+        clean_key(row.get("length")),
     )
 
 
@@ -2038,7 +2061,10 @@ def load_existing_eu_inventory(conn) -> dict[tuple, int]:
             "length": row_field(row, "LengthFeetInches"),
             "volume": row_field(row, "VolumeLitres"),
         }
-        existing[inventory_key(payload)] = int(row_field(row, "InventoryId"))
+        inventory_id = int(row_field(row, "InventoryId"))
+        existing[inventory_key(payload)] = inventory_id
+        if decimal_or_none(payload["volume"]) is None:
+            existing[inventory_missing_volume_key(payload)] = inventory_id
     return existing
 
 
@@ -2056,6 +2082,10 @@ def apply_inventory_row(conn, row: dict) -> str:
                     StockStatus = :stock_status,
                     Construction = :construction,
                     FinSetup = :fin_setup,
+                    LengthFeetInches = :length,
+                    Width = :width,
+                    Thickness = :thickness,
+                    VolumeLitres = :volume,
                     InventoryConfidenceScore = :confidence,
                     LastCheckedUtc = SYSUTCDATETIME(),
                     IsActive = 1,
@@ -2114,8 +2144,8 @@ def apply_inventory_row(conn, row: dict) -> str:
                 :construction,
                 :fin_setup,
                 :length,
-                NULL,
-                NULL,
+                :width,
+                :thickness,
                 :volume,
                 NULL,
                 :confidence,
@@ -2145,6 +2175,10 @@ def batch_update_inventory(conn, rows: list[dict]) -> None:
                 StockStatus = :stock_status,
                 Construction = :construction,
                 FinSetup = :fin_setup,
+                LengthFeetInches = :length,
+                Width = :width,
+                Thickness = :thickness,
+                VolumeLitres = :volume,
                 InventoryConfidenceScore = :confidence,
                 LastCheckedUtc = SYSUTCDATETIME(),
                 IsActive = 1,
@@ -2206,8 +2240,8 @@ def batch_insert_inventory(conn, rows: list[dict]) -> None:
                 :construction,
                 :fin_setup,
                 :length,
-                NULL,
-                NULL,
+                :width,
+                :thickness,
                 :volume,
                 NULL,
                 :confidence,
@@ -2290,10 +2324,14 @@ def apply_to_sql(report: dict, output_file: Path) -> dict:
                 "construction": clean(row.get("construction")),
                 "fin_setup": clean(row.get("finSetup")),
                 "length": clean(row.get("lengthFeetInches")),
+                "width": clean(row.get("width")),
+                "thickness": clean(row.get("thickness")),
                 "volume": decimal_or_none(row.get("volumeLitres")),
                 "confidence": float_or_none(row.get("parseConfidence")) or 0,
             }
             inventory_id = existing_inventory.get(inventory_key(payload))
+            if inventory_id is None and payload["volume"] is not None:
+                inventory_id = existing_inventory.get(inventory_missing_volume_key(payload))
             if inventory_id is None:
                 insert_rows.append(payload)
             else:

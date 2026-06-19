@@ -29,6 +29,8 @@
       "pageSize": 500
     },
     "platform": "magento",
+    "detailEnrichment": true,
+    "detailWorkers": 12,
     "enabled": true,
     "priceCurrency": "EUR",
     "notes": "Priority EU Adobe Commerce target. Category routes are discovered from the English Surfboards navigation and paged to exhaustion through Adobe Live Search."
