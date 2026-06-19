@@ -38,6 +38,8 @@ BRAND_ALIASES = {
     "aloha": "Aloha",
     "al merrick": "Channel Islands",
     "channel islands": "Channel Islands",
+    "channel island": "Channel Islands",
+    "channel island surfboards": "Channel Islands",
     "channel islands surfboards": "Channel Islands",
     "ci": "Channel Islands",
     "ci surfboards": "Channel Islands",
@@ -88,6 +90,14 @@ GENERIC_MODEL_NAMES = {
     "twin fin",
 }
 
+DETERMINISTIC_MODEL_ALIASES = {
+    "fishbeard": "fish beard",
+    "high line": "highline",
+    "hk twin": "hk twin pin",
+    "mav s gun": "mavs gun",
+    "mikey s shorty": "mikey february shorty",
+}
+
 
 def clean(value: object) -> str:
     if value is None:
@@ -129,7 +139,28 @@ def tolerant_model_key(value: object) -> str:
         key,
     )
     key = re.sub(r"\s+[a-z]{1,4}\d{4,}$", "", key)
-    return key.strip()
+    key = key.strip()
+    return DETERMINISTIC_MODEL_ALIASES.get(key, key)
+
+
+def clean_model_hint(value: object) -> str:
+    """Remove deterministic retailer metadata after isolating the model text."""
+    model = clean(value)
+    model = re.sub(
+        r"\s+-\s+(?=(?:[4-9]|1[0-2])\s*['’]\s*\d{1,2}\b).*$",
+        "",
+        model,
+        flags=re.IGNORECASE,
+    )
+    model = re.sub(r"\s+by\s+[A-Za-z][A-Za-z .'-]*$", "", model, flags=re.IGNORECASE)
+    model = re.sub(
+        r"\s+(?:white|black|blue|navy|red|orange|yellow|green|grey|gray|pink|"
+        r"sand|coral|mustard|burgundy|cream|taupe|olive|mint|clear|color|colour)$",
+        "",
+        model,
+        flags=re.IGNORECASE,
+    )
+    return clean(model)
 
 
 def catalogue_model_key(model_name: object, brand_name: object) -> str:
@@ -146,7 +177,7 @@ def extract_canonical_brand_name(title: object, existing_brand: object = "") -> 
         if existing_key == clean_key(alias) or existing_key == clean_key(canonical):
             return canonical
 
-    title_key = clean_key(title)
+    title_key = re.sub(r"^surfboards?\s+", "", clean_key(title))
     for alias, canonical in sorted(
         BRAND_ALIASES.items(), key=lambda item: len(clean_key(item[0])), reverse=True
     ):
@@ -164,10 +195,10 @@ def extract_model_hint(title: object, brand_name: object = "") -> str:
     parts = [clean(part) for part in re.split(r"\s+-\s+", value) if clean(part)]
     if (
         len(parts) >= 2
-        and re.search(r"surfboards?", parts[0], re.IGNORECASE)
+        and re.fullmatch(r".+?\s+surfboards?", parts[0], re.IGNORECASE)
         and not re.search(r"\d\s*['’]", parts[0])
     ):
-        return parts[1]
+        return clean_model_hint(parts[1])
 
     value = re.sub(r"^PRE\s*ORDER\s*\|\s*", "", value, flags=re.IGNORECASE)
     aliases = sorted(
@@ -185,6 +216,17 @@ def extract_model_hint(title: object, brand_name: object = "") -> str:
                 break
 
     value = re.sub(r"^surfboards?\s*[-|:]?\s*", "", value, flags=re.IGNORECASE)
+    for alias in aliases:
+        if alias:
+            updated = re.sub(
+                rf"^{re.escape(alias)}(?:\s+surfboards?)?\s*[-|:]?\s*",
+                "",
+                value,
+                flags=re.IGNORECASE,
+            )
+            if updated != value:
+                value = updated
+                break
     value = re.sub(
         r"^(?:[4-9]|1[0-2])\s*['’]\s*\d{1,2}\s*",
         "",
@@ -193,7 +235,7 @@ def extract_model_hint(title: object, brand_name: object = "") -> str:
     )
     value = re.split(
         r"\b(?:PU|EPS|SPINE\s*-?\s*TEK|LIGHT\s*SPEED|LIGHTSPEED|"
-        r"HELIUM|IBOLIC|VOLCANIC|LFT|FST|TIMBERTEK|THUNDERBOLT)\b",
+        r"HELIUM|IBOLIC|VOLCANIC|LFT|FST|PE|TIMBERTEK|THUNDERBOLT)\b",
         value,
         maxsplit=1,
         flags=re.IGNORECASE,
@@ -204,7 +246,8 @@ def extract_model_hint(title: object, brand_name: object = "") -> str:
         maxsplit=1,
         flags=re.IGNORECASE,
     )[0]
-    return clean(re.sub(r"\s+[-|]\s+(?:white|color|colour).*$", "", value, flags=re.IGNORECASE))
+    value = re.sub(r"\s+[-|]\s+(?:white|color|colour).*$", "", value, flags=re.IGNORECASE)
+    return clean_model_hint(value)
 
 
 def load_json(path: Path) -> object:
@@ -1688,6 +1731,7 @@ def run_link_tests() -> dict:
         ("PUKAS SURFBOARDS - TWIN PIN", "Pukas"),
         ("CHRISTENSON SURFBOARDS - FISH", "Christenson"),
         ("SHARPEYE SURFBOARDS - INFERNO 72", "Sharp Eye"),
+        ("Surfboard Channel Island Happy Everyday - 6'0", "Channel Islands"),
     ]
     for title, expected in brand_cases:
         tests_run += 1
@@ -1704,12 +1748,36 @@ def run_link_tests() -> dict:
         ("PYZEL SURFBOARDS - GHOST - 6'0 X 19 X 2 1/2 - 29.10L", "Pyzel", "GHOST"),
         ("FIREWIRE SURFBOARDS - DOMINATOR 2 - 5'10 X 19 3/4 X 2 7/16 - 31.00L", "Firewire", "DOMINATOR 2"),
         ("LOST SURFBOARDS - RAD RIPPER - 5'11 X 19 1/4 X 2 7/16 - 29.50L", "Lost", "RAD RIPPER"),
+        ("Surfboard Lost Round Nose Fish Redux - 5'10", "Lost", "Round Nose Fish Redux"),
+        ("Surfboard Lost Mini Driver - 5'10", "Lost", "Mini Driver"),
+        ("Lost Surfboards - F1 by Matt Biolos - FCS II - GREEN - PRO - 5'11\" x 18.88\"", "Lost", "F1"),
+        ("Pukas Surfboards - Balloon by David Santos - 5'7\" x 20.5 x 2.73", "Pukas", "Balloon"),
+        ("Aloha Surfboard 5'6 KEEL TWIN 2F CORAL PU Fish Tail - Color", "Aloha", "KEEL TWIN 2F"),
+        ("JS Surfboard 5'10 RED BARON PE Swallow Tail - White", "JS Industries", "RED BARON"),
     ]
     for title, brand, expected in model_cases:
         tests_run += 1
         actual = extract_model_hint(title, brand)
         if model_key(actual) != model_key(expected):
             failures.append({"case": f"model parse {title}", "expected": expected, "actual": actual})
+
+    alias_cases = [
+        ("FISHBEARD", "Fish Beard"),
+        ("HIGH LINE", "Highline"),
+        ("MAV´S GUN", "Mavs Gun"),
+        ("MIKEY'S SHORTY", "Mikey February Shorty"),
+        ("HK TWIN", "HK Twin Pin"),
+    ]
+    for retailer_model, canonical_model in alias_cases:
+        tests_run += 1
+        actual = tolerant_model_key(retailer_model)
+        expected = tolerant_model_key(canonical_model)
+        if actual != expected:
+            failures.append({
+                "case": f"deterministic model alias {retailer_model}",
+                "expected": expected,
+                "actual": actual,
+            })
 
     from scrapers.retailers.europe.normalise_eu_retailer_inventory import (
         parse_length,

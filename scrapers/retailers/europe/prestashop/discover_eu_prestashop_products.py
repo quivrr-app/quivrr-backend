@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from html import unescape
@@ -41,15 +42,27 @@ def page_url(url: str, page: int) -> str:
 
 
 def enrich_available_sizes(row: dict) -> list[dict]:
-    try:
-        response = requests.get(
-            row.get("productUrl", ""),
-            timeout=12,
-            headers={"User-Agent": "Mozilla/5.0 QuivrrEUPrestaDiscovery/1.0"},
-        )
-        response.raise_for_status()
-    except requests.RequestException as error:
-        return [{**row, "detailFetchStatus": f"{type(error).__name__}: {error}"}]
+    response = None
+    last_error = None
+    for attempt in range(1, 4):
+        try:
+            response = requests.get(
+                row.get("productUrl", ""),
+                timeout=30,
+                headers={"User-Agent": "Mozilla/5.0 QuivrrEUPrestaDiscovery/1.0"},
+            )
+            response.raise_for_status()
+            break
+        except requests.RequestException as error:
+            last_error = error
+            response = None
+            if attempt < 3:
+                time.sleep(attempt * 1.5)
+    if response is None:
+        return [{
+            **row,
+            "detailFetchStatus": f"{type(last_error).__name__}: {last_error}",
+        }]
 
     html = response.text
     available_sizes = []
@@ -131,7 +144,7 @@ def discover_target(target: dict, max_pages: int) -> dict:
             if re.search(product_url_regex, row.get("productUrl", ""), re.I)
         ]
     if target.get("expandAvailableSizes"):
-        with ThreadPoolExecutor(max_workers=40) as executor:
+        with ThreadPoolExecutor(max_workers=8) as executor:
             groups = list(executor.map(enrich_available_sizes, unique_products))
         expanded = {}
         for row in [item for group in groups for item in group]:
@@ -142,6 +155,8 @@ def discover_target(target: dict, max_pages: int) -> dict:
             expanded.setdefault(key, row)
         unique_products = list(expanded.values())
 
+    detail_fetch_failures = sum(bool(row.get("detailFetchStatus")) for row in unique_products)
+
     return {
         "target": target["retailerSlug"],
         "pagesCrawled": sum(1 for fetch in fetches if fetch["status"] == "ok"),
@@ -150,6 +165,7 @@ def discover_target(target: dict, max_pages: int) -> dict:
         "paginationMethod": "PrestaShop ?page={page} until empty or duplicate page",
         "productsAccepted": len(unique_products),
         "productsRejected": rejected,
+        "detailFetchFailures": detail_fetch_failures,
         "fetches": fetches,
         "products": unique_products,
     }
@@ -179,7 +195,7 @@ def main() -> None:
         for target in selected:
             rows = [row for row in saved_products if row.get("retailerSlug") == target["retailerSlug"]]
             if target.get("expandAvailableSizes"):
-                with ThreadPoolExecutor(max_workers=40) as executor:
+                with ThreadPoolExecutor(max_workers=8) as executor:
                     groups = list(executor.map(enrich_available_sizes, rows))
                 rows = [item for group in groups for item in group]
             prior = next(
@@ -191,6 +207,9 @@ def main() -> None:
                 "target": target["retailerSlug"],
                 "uniqueCanonicalProducts": len(rows),
                 "productsAccepted": len(rows),
+                "detailFetchFailures": sum(
+                    bool(row.get("detailFetchStatus")) for row in rows
+                ),
                 "products": rows,
             })
     else:
