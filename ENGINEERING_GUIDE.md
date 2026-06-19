@@ -125,6 +125,17 @@ venv\Scripts\python.exe scripts/manufacturer_availability/run_id_manufacturer_av
 
 This currently runs JS Industries Indonesia availability and imports rows with `RegionCode = 'ID'` and IDR pricing. Treat it as a live external fetch and SQL import.
 
+## Run EU MFA Pipeline
+
+EU manufacturer direct availability is separate from AU and ID:
+
+```powershell
+venv\Scripts\python.exe scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py dry-run
+venv\Scripts\python.exe scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py apply
+```
+
+The implemented EU brands are JS Industries, Pyzel, Firewire, Haydenshapes, Rusty, Sharp Eye, and DHD. Apply mode writes only `RegionCode = 'EU'` / `AvailabilitySource = 'manufacturer_direct'`, uses batch SQL operations, and must fail closed on AU, ID, or `NULL` region drift.
+
 ## Run Nightly Retailer Refresh
 
 The nightly AU retailer inventory orchestrator is:
@@ -140,6 +151,15 @@ For syntax-only validation:
 ```powershell
 venv\Scripts\python.exe -m py_compile scripts/run_nightly_inventory_refresh.py
 ```
+
+The EU retailer runner is separate:
+
+```powershell
+venv\Scripts\python.exe scripts/europe/run_eu_retailer_inventory_refresh.py dry-run
+venv\Scripts\python.exe scripts/europe/run_eu_retailer_inventory_refresh.py apply
+```
+
+It covers 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver. It must not invoke or mutate AU or ID paths.
 
 ## Run Indonesia Retailer Import
 
@@ -175,7 +195,7 @@ All of these touch SQL, and the report path may send email. Use with care.
 
 ## Regional Rollout Procedure
 
-AU is the established production region. ID is present in code but should be treated as a still-maturing regional path.
+AU, EU, and ID are active runtime regions. `RegionCode` is mandatory on regional inventory and availability rows. Invalid or missing values must fail closed; they must never silently fall back to AU.
 
 For any region work:
 
@@ -185,9 +205,13 @@ For any region work:
 4. Confirm whether search matching should be strict or relaxed for that region.
 5. Compile-check relevant scripts before any live run.
 6. Run live scrapers/imports only after explicit approval and with the correct SQL target.
-7. Check generated output and import counts before considering the region healthy.
+7. Print region counts before and after, and fail if protected region counts drift or a `NULL` region appears.
 
 For Indonesia specifically, verify IDR pricing, `PriceAmount`, `PriceCurrency`, and `RegionCode = 'ID'`. Do not assume AU `PriceAud` behavior.
+
+For EU specifically, verify EUR pricing where a price exists, `RegionCode = 'EU'`, regional manufacturer and retailer URLs, and no AU fallback. Exact dimension matching may equate fractional and decimal inches and decimal-comma or decimal-point litres within bounded tolerances.
+
+The legacy AU retailer importer previously caused a Sev 1 incident by deleting all `RetailerInventory` rows and inserting AU rows without `RegionCode`. The supported AU importer must delete only `WHERE RegionCode = 'AU'` and every insert must explicitly set `RegionCode = 'AU'`. Keep the region guardrail tests in the validation suite.
 
 ## Deployment Notes
 
@@ -210,8 +234,10 @@ The WebJob folder `App_Data/jobs/triggered/au-inventory-refresh/` still exists. 
 | Job | Command | Purpose |
 | --- | --- | --- |
 | `quivrr-nightly-au-inventory` | `python scripts/run_nightly_inventory_refresh.py` | AU retailer inventory refresh. |
+| `quivrr-nightly-eu-inventory` | `python scripts/europe/run_eu_retailer_inventory_refresh.py apply` | EU retailer inventory refresh at `30 19 * * *`. |
 | `quivrr-weekly-brand-catalogues` | `python scripts/run_all_brand_catalogues.py` | Weekly canonical catalogue refresh. |
 | `quivrr-mfr-availability` | `python scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py` | AU manufacturer direct availability refresh. |
+| `quivrr-eu-mfr-availability` | `python scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py apply` | EU manufacturer direct availability refresh at `30 20 * * *`. |
 | `quivrr-market-intelligence` | `python run_market_intelligence_job.py` | Inventory snapshot, delta calculation, and report email. |
 
 ## Azure Resource Map
@@ -232,8 +258,10 @@ Backend, jobs, AI, email, and monitoring resources:
 - `quivrracrprod`
 - `quivrr-jobs-env`
 - `quivrr-nightly-au-inventory`
+- `quivrr-nightly-eu-inventory`
 - `quivrr-weekly-brand-catalogues`
 - `quivrr-mfr-availability`
+- `quivrr-eu-mfr-availability`
 - `quivrr-market-intelligence`
 - `workspace-quivrrproductionrgUkqI`
 - `quivrr-communication`
@@ -292,17 +320,20 @@ Temporary scripts should be moved to a quarantine folder or an explicit archive 
 
 Avoid leaving one-off scripts in the repository root.
 
-## Bodhi Boundary
+## Bodhi And Board Intelligence Boundary
 
 Bodhi lives in the separate `quivrr-board-guide-api` service and uses Azure OpenAI. This backend should not host Bodhi request handling or run Bodhi LLM calls.
 
-Bodhi Phase 1 should use controlled board guidance and must not claim live stock. Future phases can integrate with:
+Bodhi is deployed on `quivrr.surf`. It uses global canonical profiles, manufacturer descriptions, deterministic board intelligence, rider-fit guidance, and explicit region-aware inventory results. It may claim stock only when the backend returns that stock for the selected region.
 
-- canonical catalogue data for model-aware recommendations
-- `ManufacturerInventory` for manufacturer direct availability
-- `RetailerInventory` for retailer stock
+The architecture boundaries are:
 
-Availability-aware Bodhi behavior should be designed as an explicit integration, not an accidental dependency on generated scraper outputs.
+- canonical catalogue and board intelligence are global
+- `ManufacturerInventory` and `RetailerInventory` are regional
+- board identity, descriptions, categories, wave fit, and surfer fit do not vary by region
+- stock, price, currency, source, URL, and location do vary by region
+
+Intelligence precedence is manufacturer metadata, Quivrr-reviewed overrides, generated factual intelligence, then retailer descriptions only as non-authoritative fallback. Retailer descriptions must never become canonical board truth.
 
 ## Files That Should Not Be Committed
 

@@ -1,120 +1,51 @@
-# Europe Retailer Import Scaffold
+# Europe Retailer Inventory
 
-This folder contains the disabled EU retailer import dry-run scaffold.
+This folder contains the active EU retailer inventory importer, audit tools, linkers, and scheduled-job runner.
 
-## Scope
+## Runtime Contract
 
-- Input: `scrapers/retailers/europe/output/eu_normalised_inventory.json`
-- Output: `scripts/europe/output/eu_retailer_import_dry_run_report.json`
-- Region: `RegionCode = EU`
-- Currency: `PriceCurrency = EUR`
-- Dry-run is the default
-- No `RetailerInventory` writes unless a future run is explicitly approved with `--apply`
-- No Azure resources or jobs
-- No changes to AU or ID importers
+- Region: `RegionCode = 'EU'`
+- Native currency: EUR where price exists
+- Dry-run is the default for operational tools where supported
+- Apply mode must reject AU, ID, or `NULL` rows
+- AU and ID counts are protected before and after EU transactions
+- No delete or truncate may affect another region
 
-## AU Reference
+Active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver. Discovery and normalization remain under `scrapers/retailers/europe/`; generated outputs are not source files and should not be committed casually.
 
-The AU production path runs through `scripts/run_nightly_inventory_refresh.py`.
+## Import And Scheduled Runner
 
-Its importer, `scripts/import_retailer_inventory.py`, reads `scrapers/products/output/normalised_surfboards.json`, filters available rows, dedupes listings, maps retailers and brands through SQL, deletes existing retailer inventory, and inserts rows into `RetailerInventory`.
-
-The EU scaffold mirrors the decision points without connecting to SQL:
-
-- retailer mapping simulation
-- brand mapping simulation from local seed data
-- model mapping simulation from local catalogue outputs
-- duplicate handling
-- region and currency validation
-- import readiness metrics
-
-Raw retailer inventory can be importable even when canonical brand or model matching is incomplete. Canonical matching is reported separately through:
-
-- `canonicalBrandMatched`
-- `canonicalModelMatched`
-- `matchedBrandName`
-- `matchedModelName`
-- `matchConfidence`
-- `reviewReason`
-
-Rows with complete raw retail data are marked `importableRaw: true`. Rows with unknown brands or models are marked `needsCanonicalReview: true` instead of being rejected.
-
-True rejects are reserved for missing or invalid raw import fields, including missing URL, missing title, missing price, missing stock status, missing all dimensions, wrong region, or wrong currency.
-
-## Discovery And Normalisation
-
-Run the non-production EU discovery orchestration and normalisation:
+Dry run:
 
 ```powershell
-venv\Scripts\python.exe scrapers\retailers\europe\run_eu_retailer_discovery.py
+venv\Scripts\python.exe scripts/europe/import_eu_retailer_inventory.py
+venv\Scripts\python.exe scripts/europe/run_eu_retailer_inventory_refresh.py dry-run
 ```
 
-This refreshes ignored discovery output files and writes:
-
-```text
-scrapers/retailers/europe/output/eu_normalised_inventory.json
-```
-
-## Dry Run Import
-
-Run against all EU rows:
+Apply:
 
 ```powershell
-venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py
+venv\Scripts\python.exe scripts/europe/import_eu_retailer_inventory.py --apply
+venv\Scripts\python.exe scripts/europe/run_eu_retailer_inventory_refresh.py apply
 ```
 
-Or narrow to one retailer:
+The scheduled runner backs Azure Container Apps Job `quivrr-nightly-eu-inventory`, scheduled at `30 19 * * *`. It uses the existing production image, environment, and secret references and must exit non-zero on AU/ID drift, unexpected EU loss, or `NULL` regions.
 
-```powershell
-venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py --retailer board_exchange
-```
+## Matching And Diagnostics
 
-The importer is dry-run by default. `--apply` performs idempotent EU-only upserts,
-rejects non-EU or non-EUR input, and rolls back if protected AU or ID inventory
-counts change during the transaction.
+Raw retail rows can remain importable while canonical linking is incomplete. Diagnostics report fetched products, likely surfboards, normalized/importable rows, model and size links, and unresolved reasons.
 
-For the validated 58 Surf and Pukas combined input:
+Exact matching accepts equivalent representations:
 
-```powershell
-venv\Scripts\python.exe scripts\europe\import_eu_retailer_inventory.py --apply
-```
+- fractional and decimal inches
+- decimal-comma and decimal-point litres
+- bounded width, thickness, and volume differences
+- title evidence where canonical IDs are missing
 
-## Priority Retailer Audit
+For 58 Surf, the Magento discovery path fetches product-detail attributes. Width, thickness, volume, construction, and fin setup are retained through normalization and SQL import. Exact classification may use equivalent dimensions even when `BoardSizeId` is `NULL` because duplicate equivalent canonical sizes make a unique size link unsafe.
 
-Run the file-only diagnostics after discovery and importer dry-run:
+## Region Incident Guardrail
 
-```powershell
-venv\Scripts\python.exe scripts\europe\audit_eu_retailer_inventory.py
-```
+The legacy AU importer once ran an unscoped `DELETE FROM dbo.RetailerInventory` and recreated AU-shaped rows with `NULL` regions. The repaired AU path deletes only `RegionCode = 'AU'` and explicitly inserts AU on every row. Region guardrail tests prevent unscoped deletes and inserts without `RegionCode`; EU work must preserve those protections.
 
-Add `--sql-read-only --expected-au <count> --expected-id <count>` during controlled
-validation to report linked model/size rows and fail if either protected region count changes.
-
-## Report
-
-The dry-run report includes:
-
-- raw importable rows
-- canonical matched rows
-- rows needing canonical review
-- true rejects
-- unknown brands
-- unknown models
-- missing dimensions
-- missing prices
-- duplicate rows removed
-- review reason counts
-- sample importable and review rows
-- readiness recommendation
-
-## Future SQL Importer Path
-
-Before enabling SQL writes:
-
-- decide EU brand alias rules
-- decide whether retailer models must match canonical `BoardModels`
-- clean model names generated from retailer titles
-- use `PriceAmount` and `PriceCurrency`, not `PriceAud`
-- preserve `RegionCode = EU`
-- avoid deleting AU or ID inventory
-- use idempotent upsert keys based on retailer slug, product URL, raw title, length, and volume
+Validated June 2026 `RetailerInventory` baseline: AU 11,746; EU 9,105; ID 1,998; NULL 0.

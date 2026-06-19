@@ -10,12 +10,14 @@ Regional rollout must be deliberate. A region is not production-ready just becau
 
 `RegionCode` represents the fulfilment and search market, not just geography.
 
-Current and planned primary `RegionCode` values:
+Active and planned primary `RegionCode` values:
 
 - `AU` = Australia.
 - `ID` = Indonesia.
 - `EU` = mainland European Union fulfilment market.
 - `UK` = United Kingdom fulfilment market.
+
+AU, EU, and ID are active runtime values. UK remains planned. `RegionCode` is mandatory for regional retailer and manufacturer availability rows; `NULL`, missing, and unsupported values must fail closed and must never be silently converted to AU.
 
 EU and UK must stay separate. EU covers mainland European Union fulfilment. UK must not be grouped into EU because tax, duty, fulfilment, currency, shipping rules, and retailer relevance differ.
 
@@ -59,18 +61,32 @@ ID is active in code but should still be treated as a maturing regional implemen
 
 Do not assume the old Indonesia README text is authoritative if it says the folder is only reserved for future work. The code now contains active Indonesia scaffolding and import paths.
 
-## EU Planned State
+## EU Current State
 
-EU is planned as the mainland European Union fulfilment market.
+EU is an active mainland European Union fulfilment market.
 
-- Planned `RegionCode = EU`.
+- `RegionCode = EU`.
 - Initial market focus: Portugal, Spain, and France.
 - UK is explicitly excluded.
-- EU retailer scraper notes live under `scrapers/retailers/europe/`.
-- Future EU MFA builders should live under `scrapers/manufacturers/availability/eu/`.
-- Future non-live target examples live in `scrapers/manufacturers/availability/config/eu_manufacturer_availability_targets.example.json`.
+- EU retailer discovery and normalization live under `scrapers/retailers/europe/`.
+- The active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver.
+- EU MFA supports JS Industries, Pyzel, Firewire, Haydenshapes, Rusty, Sharp Eye, and DHD.
+- EU retailer and MFA importers are region-scoped, repeatable, and protect AU and ID counts.
+- `quivrr-nightly-eu-inventory` runs at `30 19 * * *`.
+- `quivrr-eu-mfr-availability` runs at `30 20 * * *`.
 
-No EU live scraper, importer, search behavior, or Azure production job is active from this scaffold alone.
+EU search must use only EU retailer and manufacturer inventory. Regional product URLs and EUR prices take precedence over canonical references; AU fallback is prohibited.
+
+Exact matching normalizes fractional and decimal inches, decimal-comma and decimal-point litres, and bounded width/thickness/volume differences. 58 Surf product-detail enrichment retains dimensions so equivalent-dimension matching can classify a product as exact even where duplicate canonical sizes prevent assignment of a unique `BoardSizeId`.
+
+## Production Baseline
+
+Validated June 2026 counts:
+
+| Table | AU | EU | ID | NULL |
+| --- | ---: | ---: | ---: | ---: |
+| `RetailerInventory` | 11,746 | 9,105 | 1,998 | 0 |
+| `ManufacturerInventory` | 6,498 | 2,736 | 185 | 0 |
 
 ## UK Planned State
 
@@ -113,7 +129,7 @@ For scaffold-only changes:
 - Confirm generated output folders were not touched.
 - Run `git status --short --untracked-files=all`.
 
-Before a future live region activation:
+Before a live region activation or material rollout change:
 
 - Compile-check new scripts.
 - Validate output JSON schema against expected importer fields.
@@ -123,24 +139,22 @@ Before a future live region activation:
 - Verify frontend behavior does not leak one region into another.
 - Define rollback steps for bad inventory or bad retailer activation.
 
-## Azure Container Apps Job Template Notes
+## Azure Container Apps Job Notes
 
-Do not create Azure resources from this scaffold. Future regional jobs should follow the existing Container Apps Jobs pattern:
+Regional jobs follow the existing Container Apps Jobs pattern:
 
 - Use the shared inventory image unless a region requires a different runtime.
 - Use explicit command and args, for example `python scripts/...`.
-- Set a region-specific job name, such as `quivrr-eu-mfr-availability` or `quivrr-uk-retailer-inventory`.
+- Set a region-specific job name. Existing EU jobs are `quivrr-nightly-eu-inventory` and `quivrr-eu-mfr-availability`.
 - Use a conservative schedule until data quality is proven.
 - Set retry and timeout values based on observed scrape duration.
 - Keep SQL credentials and secrets in Azure app/job settings, not source files.
 - Send logs to the existing Log Analytics workspace.
 - Disable or keep manual-only until validation is complete.
 
-Suggested future job categories:
+Suggested future job categories beyond the active AU/EU jobs:
 
-- EU manufacturer direct availability.
 - UK manufacturer direct availability.
-- EU retailer inventory.
 - UK retailer inventory.
 - EU market intelligence.
 - UK market intelligence.
@@ -167,5 +181,9 @@ If example files are needed, use `.example.json` and mark them as disabled/non-l
 - Do not add `PT`, `ES`, or `FR` as primary `RegionCode` values yet.
 - Do not change `app.py` search behavior as part of scaffold work.
 - Do not run live scrapers or database imports without explicit approval.
-- Do not create Azure jobs until the command, schedule, region, output, and rollback behavior are reviewed.
+- Do not create additional regional Azure jobs until the command, schedule, region, output, and rollback behavior are reviewed.
 - Do not let generated regional output slip into commits unintentionally.
+- Never run an unscoped `DELETE FROM dbo.RetailerInventory`.
+- Every regional insert must explicitly provide `RegionCode`.
+- The AU importer may delete only `RegionCode = 'AU'`; this guardrail exists because an earlier Sev 1 unscoped delete removed EU/ID rows and recreated AU inventory with `NULL` regions.
+- EU jobs must stop on AU or ID drift, unexpected EU loss, or any `NULL` region.
