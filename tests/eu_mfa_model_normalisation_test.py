@@ -9,7 +9,9 @@ from scrapers.manufacturers.availability.dhd.build_dhd_eu_availability import (
 )
 from scrapers.manufacturers.availability.eu.build_eu_shopify_availability import (
     construction,
+    js_dimensions,
     model_name,
+    parse_js_parent_inventory,
 )
 from scrapers.retailers.europe.shopify.discover_eu_shopify_products import (
     fetch_products,
@@ -55,6 +57,43 @@ class EuMfaModelNormalisationTests(unittest.TestCase):
         self.assertEqual(construction("XERO CARBOTUNE"), "CarboTune")
         self.assertEqual(construction("XERO PE 5ft9"), "PE")
         self.assertEqual(construction("XERO HYFI 3.0"), "HYFI")
+
+    def test_js_stock_product_tags_supply_exact_dimensions(self):
+        self.assertEqual(
+            js_dimensions(["Surfboard", "5ft11 X 18.75 X 2.44"]),
+            ("5'11", "18 3/4", "2 7/16"),
+        )
+
+    def test_js_parent_inventory_maps_stock_board_to_regional_variant(self):
+        page_html = """
+            var model = "";
+            construction = 'CARBOTUNE';
+            finSystem = 'FCS II THRUSTER';
+            tail = 'SQUASH TAIL';
+            boardLength = '5ft11';
+            boardVolume = '28';
+            boardWidth = parseFloat('18.75');
+            boardThickness = parseFloat('2.44');
+            var board = {"id":16067411607887,"variants":[{"id":57542326387023,"available":true}]};
+        """
+        parent_product = {
+            "variants": [
+                {
+                    "id": 57894083723599,
+                    "title": "CARBOTUNE / FCS II THRUSTER / SQUASH TAIL",
+                    "options": ["CARBOTUNE", "FCS II THRUSTER", "SQUASH TAIL"],
+                }
+            ]
+        }
+
+        row = parse_js_parent_inventory(page_html, parent_product)["16067411607887"]
+
+        self.assertEqual(row["lengthFeetInches"], "5'11")
+        self.assertEqual(row["width"], "18 3/4")
+        self.assertEqual(row["thickness"], "2 7/16")
+        self.assertEqual(row["volumeLitres"], 28.0)
+        self.assertTrue(row["stockAvailable"])
+        self.assertEqual(row["parentVariant"]["id"], 57894083723599)
 
     def test_dhd_construction_and_tail_aliases(self):
         self.assertEqual(dhd_model_name("EE JULIETTE RT FCS"), "EE Juliette")

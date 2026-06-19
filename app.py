@@ -491,6 +491,7 @@ SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
     "Lost",
     "Sharp Eye",
     "Haydenshapes",
+    "Rusty",
     "Misfit Shapes",
     "Chilli",
 }
@@ -563,6 +564,12 @@ def manufacturer_search_policy(brand_name):
         "Haydenshapes": {
             "direct_enabled": True,
             "manufacturer_mode": "strict",
+            "retailer_exact_construction_mode": "strict",
+            "allow_alternate_manufacturer_construction": True,
+        },
+        "Rusty": {
+            "direct_enabled": True,
+            "manufacturer_mode": "generic",
             "retailer_exact_construction_mode": "strict",
             "allow_alternate_manufacturer_construction": True,
         },
@@ -670,6 +677,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             mi.Thickness,
             mi.VolumeLitres,
             mi.Construction,
+            mi.FinSetup,
             mi.PriceAmount,
             mi.PriceCurrency,
             mi.StockStatus,
@@ -1224,6 +1232,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             mi.Thickness,
             mi.VolumeLitres,
             mi.Construction,
+            mi.FinSetup,
             mi.PriceAmount,
             mi.PriceCurrency,
             mi.StockStatus,
@@ -1726,6 +1735,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             "thickness": row.Thickness,
             "volumeLitres": format_volume(row.VolumeLitres),
             "construction": row.Construction,
+            "finSetup": row.FinSetup,
             "priceAmount": float(row.PriceAmount) if row.PriceAmount is not None else None,
             "priceCurrency": row.PriceCurrency,
             "stockStatus": row.StockStatus,
@@ -1748,6 +1758,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             "thickness": row.Thickness,
             "volumeLitres": format_volume(row.VolumeLitres),
             "construction": row.Construction,
+            "finSetup": row.FinSetup,
             "priceAmount": float(row.PriceAmount) if row.PriceAmount is not None else None,
             "priceCurrency": row.PriceCurrency,
             "stockStatus": row.StockStatus,
@@ -1784,6 +1795,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         official_result["stockStatus"] = first_direct.get("stockStatus")
         official_result["isAvailable"] = first_direct.get("isAvailable")
         official_result["manufacturerInventoryId"] = first_direct.get("manufacturerInventoryId")
+        official_result["regionCode"] = first_direct.get("regionCode")
+        official_result["finSetup"] = first_direct.get("finSetup") or official_result.get("finSetup")
 
     exact_rows = execute_with_retry(
         exact_query,

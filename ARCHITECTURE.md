@@ -97,6 +97,8 @@ The weekly job writes `scrapers/brands/output/weekly_brand_catalogue_report.json
 
 Manufacturer direct availability, abbreviated MFA, means current manufacturer direct stock. MFA is not the canonical catalogue. Catalogue data describes what exists; MFA describes what is currently available directly from manufacturers.
 
+The canonical catalogue is global, while manufacturer availability is regional. Manufacturer-direct cards must select `ManufacturerInventory` using the requested `RegionCode`. When a regional MFA row exists, its regional `ProductUrl`, image, price, currency, and stock state take precedence over canonical manufacturer metadata. Canonical manufacturer URLs are fallback references only. EU and ID requests must never fall back to AU manufacturer inventory or AU URLs.
+
 The AU MFA orchestrator is:
 
 ```powershell
