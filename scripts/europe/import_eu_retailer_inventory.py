@@ -9,7 +9,6 @@ import time
 from collections import Counter, defaultdict
 from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation
-from fractions import Fraction
 from pathlib import Path
 from urllib.parse import quote_plus, urlparse
 
@@ -21,6 +20,16 @@ from sqlalchemy.exc import DBAPIError, OperationalError
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+from utils.dimensions import (  # noqa: E402
+    DEFAULT_THICKNESS_TOLERANCE,
+    DEFAULT_WIDTH_TOLERANCE,
+    decimal_measurement,
+    dimensions_from_title,
+    length_to_inches,
+    measurements_within,
+)
+from utils.retailer_matching import construction_from_title, construction_key  # noqa: E402
 
 
 INPUT_FILE = Path("scrapers/retailers/europe/output/eu_normalised_inventory.json")
@@ -129,35 +138,9 @@ def model_key(value: object) -> str:
     return re.sub(r"\s+", " ", text_value).strip()
 
 
-def measurement_key(value: object) -> Fraction | None:
-    """Normalise decimal and surf-fraction measurements for exact comparison."""
-    value = clean(value).replace('"', "").strip()
-    if not value:
-        return None
-    match = re.fullmatch(r"(\d+)(?:\s+(\d+)\s*/\s*(\d+))?", value)
-    if match:
-        result = Fraction(int(match.group(1)), 1)
-        if match.group(2):
-            result += Fraction(int(match.group(2)), int(match.group(3)))
-        return result
-    try:
-        return Fraction(Decimal(value)).limit_denominator(16)
-    except (InvalidOperation, ValueError, ZeroDivisionError):
-        return None
-
-
-def construction_key(value: object) -> str:
-    key = clean_key(value)
-    aliases = {
-        "carbon tune": "carbotune",
-        "hyfi 3": "hyfi",
-        "hyfi 3 0": "hyfi",
-        "i bolic": "ibolic",
-        "i bolic 2 0": "ibolic",
-        "pu stringer": "pu",
-        "polyester": "pu",
-    }
-    return aliases.get(key, key)
+def measurement_key(value: object) -> Decimal | None:
+    """Compatibility wrapper around the shared regional measurement parser."""
+    return decimal_measurement(value)
 
 
 def tolerant_model_key(value: object) -> str:
@@ -1099,15 +1082,23 @@ def select_model_candidate(row: dict, models_by_brand: dict[int, list[dict]]) ->
 
 
 def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[int, list[dict]]) -> dict | None:
-    length = clean(row.get("lengthFeetInches"))
-    if not length:
+    title_dimensions = dimensions_from_title(row.get("rawProductTitle"))
+    source_dimensions = {
+        "lengthFeetInches": row.get("lengthFeetInches") or title_dimensions.get("length"),
+        "width": row.get("width") or title_dimensions.get("width"),
+        "thickness": row.get("thickness") or title_dimensions.get("thickness"),
+        "volumeLitres": row.get("volumeLitres") or title_dimensions.get("volume"),
+    }
+    length = clean(source_dimensions["lengthFeetInches"])
+    length_inches = length_to_inches(length)
+    if length_inches is None:
         return None
 
-    row_volume = decimal_or_none(row.get("volumeLitres"))
+    row_volume = decimal_or_none(source_dimensions["volumeLitres"])
     same_length = [
         size
         for size in sizes_by_model.get(board_model_id, [])
-        if clean(size.get("lengthFeetInches")) == length
+        if length_to_inches(size.get("lengthFeetInches")) == length_inches
     ]
     if not same_length:
         return None
@@ -1142,18 +1133,36 @@ def select_size_candidate(row: dict, board_model_id: int, sizes_by_model: dict[i
             return None
 
     initial_count = len(candidates)
-    filters = (
-        ("width", measurement_key),
-        ("thickness", measurement_key),
-        ("construction", construction_key),
-    )
-    for field, normaliser in filters:
-        source_key = normaliser(row.get(field))
-        if source_key in (None, ""):
+    for field, tolerance_value in (
+        ("width", DEFAULT_WIDTH_TOLERANCE),
+        ("thickness", DEFAULT_THICKNESS_TOLERANCE),
+    ):
+        if measurement_key(source_dimensions.get(field)) is None:
             continue
-        exact = [item for item in candidates if normaliser(item.get(field)) == source_key]
-        if exact:
-            candidates = exact
+        equivalent = [
+            item
+            for item in candidates
+            if measurements_within(source_dimensions.get(field), item.get(field), tolerance_value)
+        ]
+        if not equivalent:
+            return None
+        candidates = equivalent
+
+    title_constructions = construction_from_title(row.get("rawProductTitle"))
+    source_construction = (
+        next(iter(title_constructions))
+        if len(title_constructions) == 1
+        else construction_key(row.get("construction"))
+    )
+    if source_construction:
+        matching_construction = [
+            item
+            for item in candidates
+            if construction_key(item.get("construction")) == source_construction
+        ]
+        if not matching_construction:
+            return None
+        candidates = matching_construction
 
     if len(candidates) != 1:
         return None

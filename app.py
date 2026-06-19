@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 
+from utils.retailer_matching import classify_retailer_exact
+
 
 load_dotenv()
 
@@ -1268,7 +1270,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     """)
 
     exact_query = text("""
-        SELECT TOP 200
+        SELECT TOP 500
             ri.InventoryId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
@@ -1284,6 +1286,9 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             ri.Width,
             ri.Thickness,
             ri.VolumeLitres,
+            ri.BrandId,
+            ri.BoardModelId,
+            ri.BoardSizeId,
             r.RetailerName,
             r.WebsiteUrl,
             r.LogoUrl,
@@ -1345,6 +1350,17 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
         AND ri.RegionCode = :region_code
+        AND ri.BrandId = :brand_id
+        AND (
+            ri.BoardModelId = :board_model_id
+            OR (
+                ri.BoardModelId IS NULL
+                AND (
+                    ri.RawProductTitle LIKE :model_match
+                    OR ri.NormalisedProductTitle LIKE :model_match
+                )
+            )
+        )
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
@@ -1354,89 +1370,6 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                 'available',
                 'true'
             )
-        )
-        AND (
-            ri.LengthFeetInches = :length
-            OR (
-                ri.LengthFeetInches IS NULL
-                AND (
-                    ri.RawProductTitle LIKE :length_title_match
-                    OR ri.NormalisedProductTitle LIKE :length_title_match
-                )
-            )
-        )
-        AND (
-            ri.RawProductTitle LIKE :model_match
-            OR ri.NormalisedProductTitle LIKE :model_match
-            OR ri.RawProductTitle LIKE :model_match
-            OR ri.NormalisedProductTitle LIKE :model_match
-        )
-        AND (
-            :region_code = 'ID'
-            OR :retailer_exact_construction_strict = 0
-            OR :construction IS NULL
-            OR (
-                ri.Construction IS NOT NULL
-                AND LOWER(LTRIM(RTRIM(ri.Construction))) =
-                    LOWER(LTRIM(RTRIM(:construction)))
-            )
-            OR (
-                :brand_name = 'Channel Islands'
-                AND LOWER(LTRIM(RTRIM(:construction))) IN ('ect-carbon', 'ect carbon')
-                AND (
-                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%ect%'
-                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%ect%'
-                )
-            )
-            OR (
-                :brand_name = 'Channel Islands'
-                AND LOWER(LTRIM(RTRIM(:construction))) IN ('spine-tek', 'spine tek', 'spinetek')
-                AND (
-                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%spine%'
-                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%spine%'
-                )
-            )
-            OR (
-                (
-                    ri.Construction IS NULL
-                    OR LTRIM(RTRIM(ri.Construction)) = ''
-                )
-                AND :brand_name NOT IN ('JS Industries', 'Channel Islands')
-            )
-        )
-        AND (
-            :region_code = 'ID'
-            OR :brand_name NOT IN ('JS Industries', 'Channel Islands')
-            OR :construction IS NULL
-            OR (
-                ri.Construction IS NOT NULL
-                AND LOWER(LTRIM(RTRIM(ri.Construction))) =
-                    LOWER(LTRIM(RTRIM(:construction)))
-            )
-            OR (
-                :brand_name = 'Channel Islands'
-                AND LOWER(LTRIM(RTRIM(:construction))) IN ('ect-carbon', 'ect carbon')
-                AND (
-                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%ect%'
-                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%ect%'
-                )
-            )
-            OR (
-                :brand_name = 'Channel Islands'
-                AND LOWER(LTRIM(RTRIM(:construction))) IN ('spine-tek', 'spine tek', 'spinetek')
-                AND (
-                    LOWER(ISNULL(ri.RawProductTitle, '')) LIKE '%spine%'
-                    OR LOWER(ISNULL(ri.NormalisedProductTitle, '')) LIKE '%spine%'
-                )
-            )
-        )
-        AND (
-            :region_code = 'ID'
-            OR ri.VolumeLitres IS NULL
-            OR ABS(
-                CAST(ri.VolumeLitres AS float)
-                - CAST(:volume AS float)
-            ) <= 0.75
         )
         ORDER BY
             MatchScore DESC,
@@ -1545,6 +1478,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             ON ri.RetailerId = r.RetailerId
         WHERE ri.IsActive = 1
         AND ri.RegionCode = :region_code
+        AND ri.BrandId = :brand_id
         AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
@@ -1803,6 +1737,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         {
             "model_match": model_match,
             "model_family_match": model_family_match,
+            "brand_id": official.BrandId,
+            "board_model_id": official.BoardModelId,
             "length": official.LengthFeetInches,
             "length_title_match": length_title_match,
             "volume": official.VolumeLitres,
@@ -1815,21 +1751,73 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     )
 
     exact_matches = []
+    brand_model_names = [official.ModelName]
+    if any(row.BoardModelId is None for row in exact_rows):
+        brand_model_names = [
+            row.ModelName
+            for row in execute_with_retry(
+                text("""
+                    SELECT ModelName
+                    FROM dbo.BoardModels
+                    WHERE BrandId = :brand_id
+                      AND IsActive = 1
+                """),
+                {"brand_id": official.BrandId},
+            )
+        ]
 
     for row in exact_rows:
-        if not model_name_matches(
+        strong_model_title = text_contains_phrase(
             row.RawProductTitle,
             row.NormalisedProductTitle,
-            official.ModelName
-        ):
+            official.ModelName,
+        )
+        title_model_candidates = [
+            model_name
+            for model_name in brand_model_names
+            if text_contains_phrase(
+                row.RawProductTitle,
+                row.NormalisedProductTitle,
+                model_name,
+            )
+        ]
+        deterministic_title_model = (
+            row.BoardModelId is None
+            and strong_model_title
+            and len(title_model_candidates) == 1
+            and clean_text(title_model_candidates[0]) == clean_text(official.ModelName)
+        )
+        exact, exact_reason = classify_retailer_exact(
+            {
+                "boardSizeId": row.BoardSizeId,
+                "title": f"{row.RawProductTitle or ''} {row.NormalisedProductTitle or ''}",
+                "length": row.LengthFeetInches,
+                "width": row.Width,
+                "thickness": row.Thickness,
+                "volume": row.VolumeLitres,
+                "construction": row.Construction,
+            },
+            {
+                "boardSizeId": official.BoardSizeId,
+                "length": official.LengthFeetInches,
+                "width": official.Width,
+                "thickness": official.Thickness,
+                "volume": official.VolumeLitres,
+                "construction": official.Construction,
+            },
+            brand_matches=row.BrandId == official.BrandId,
+            model_matches=(
+                row.BoardModelId == official.BoardModelId
+                or deterministic_title_model
+            ),
+            strong_model_title=strong_model_title,
+        )
+        if not exact:
             continue
 
-        exact_matches.append(
-            retailer_result(
-                row,
-                "retailerExact"
-            )
-        )
+        result = retailer_result(row, "retailerExact")
+        result["exactMatchReason"] = exact_reason
+        exact_matches.append(result)
 
         if len(exact_matches) >= 50:
             break
@@ -1844,6 +1832,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         {
             "model_match": model_match,
             "model_family_match": model_family_match,
+            "brand_id": official.BrandId,
             "length": official.LengthFeetInches,
             "one_down_length": one_down_length,
             "one_up_length": one_up_length,
