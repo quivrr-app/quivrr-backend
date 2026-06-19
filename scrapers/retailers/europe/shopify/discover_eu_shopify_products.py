@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 import sys
+import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -36,7 +37,8 @@ HEADERS = {
 
 PAGE_LIMIT = 250
 DEFAULT_MAX_PAGES = 0
-TIMEOUT_SECONDS = 20
+TIMEOUT_SECONDS = 60
+FETCH_ATTEMPTS = 3
 REGION_CODE = "EU"
 HTML_WORKERS = 6
 
@@ -209,32 +211,39 @@ def product_url(target: dict, handle: str) -> str:
 
 
 def fetch_products(url: str) -> dict:
-    try:
-        response = requests.get(url, timeout=TIMEOUT_SECONDS, headers=HEADERS)
-
-        if response.status_code != 200:
-            return {
-                "ok": False,
-                "statusCode": response.status_code,
-                "error": "",
-                "products": [],
+    errors = []
+    for attempt in range(1, FETCH_ATTEMPTS + 1):
+        try:
+            response = requests.get(url, timeout=TIMEOUT_SECONDS, headers=HEADERS)
+            metadata = {
+                "finalUrl": response.url,
+                "responseBytes": len(response.content),
+                "responseHeaders": {
+                    key: value
+                    for key, value in response.headers.items()
+                    if key.lower() in {
+                        "cf-ray", "content-length", "content-type", "location",
+                        "retry-after", "server", "x-shopid", "x-shopify-stage",
+                    }
+                },
+                "attempts": attempt,
             }
-
-        data = response.json()
-
-        return {
-            "ok": True,
-            "statusCode": response.status_code,
-            "error": "",
-            "products": data.get("products", []),
-        }
-    except Exception as error:
-        return {
-            "ok": False,
-            "statusCode": None,
-            "error": f"{type(error).__name__}: {error}",
-            "products": [],
-        }
+            if response.status_code != 200:
+                errors.append(f"attempt {attempt}: HTTP {response.status_code}")
+                if response.status_code not in {408, 429, 500, 502, 503, 504}:
+                    return {"ok": False, "statusCode": response.status_code,
+                            "error": errors[-1], "products": [], **metadata}
+            else:
+                data = response.json()
+                return {"ok": True, "statusCode": response.status_code, "error": "",
+                        "products": data.get("products", []), **metadata}
+        except Exception as error:
+            errors.append(f"attempt {attempt}: {type(error).__name__}: {error}")
+        if attempt < FETCH_ATTEMPTS:
+            time.sleep(attempt * 2)
+    return {"ok": False, "statusCode": None, "error": "; ".join(errors),
+            "products": [], "finalUrl": url, "responseBytes": 0,
+            "responseHeaders": {}, "attempts": FETCH_ATTEMPTS}
 
 
 def product_text(product: dict, variant: dict) -> str:
@@ -434,30 +443,33 @@ def html_page_url(collection_url: str, page: int) -> str:
 
 def fetch_collection_html_page(collection_url: str, page: int) -> dict:
     url = html_page_url(collection_url, page)
-    try:
-        response = requests.get(url, timeout=TIMEOUT_SECONDS, headers=HEADERS)
-        parser = CollectionPageParser()
-        if response.status_code == 200:
-            parser.feed(response.text)
-        return {
-            "page": page,
-            "url": url,
-            "ok": response.status_code == 200,
-            "statusCode": response.status_code,
-            "error": "",
-            "handles": parser.product_handles,
-            "pageNumbers": sorted(parser.page_numbers),
-        }
-    except Exception as error:
-        return {
-            "page": page,
-            "url": url,
-            "ok": False,
-            "statusCode": None,
-            "error": f"{type(error).__name__}: {error}",
-            "handles": [],
-            "pageNumbers": [],
-        }
+    errors = []
+    for attempt in range(1, FETCH_ATTEMPTS + 1):
+        try:
+            response = requests.get(url, timeout=TIMEOUT_SECONDS, headers=HEADERS)
+            parser = CollectionPageParser()
+            if response.status_code == 200:
+                parser.feed(response.text)
+                return {
+                    "page": page, "url": url, "ok": True,
+                    "statusCode": response.status_code, "error": "",
+                    "handles": parser.product_handles,
+                    "pageNumbers": sorted(parser.page_numbers),
+                    "finalUrl": response.url, "responseBytes": len(response.content),
+                    "attempts": attempt,
+                }
+            errors.append(f"attempt {attempt}: HTTP {response.status_code}")
+            if response.status_code not in {408, 429, 500, 502, 503, 504}:
+                break
+        except Exception as error:
+            errors.append(f"attempt {attempt}: {type(error).__name__}: {error}")
+        if attempt < FETCH_ATTEMPTS:
+            time.sleep(attempt * 2)
+    return {
+        "page": page, "url": url, "ok": False, "statusCode": None,
+        "error": "; ".join(errors), "handles": [], "pageNumbers": [],
+        "finalUrl": url, "responseBytes": 0, "attempts": FETCH_ATTEMPTS,
+    }
 
 
 def crawl_visible_collection(target: dict) -> dict:
@@ -509,6 +521,9 @@ def crawl_visible_collection(target: dict) -> dict:
                 "statusCode": page["statusCode"],
                 "productHandles": len(page["handles"]),
                 "error": page["error"],
+                "finalUrl": page.get("finalUrl"),
+                "responseBytes": page.get("responseBytes"),
+                "attempts": page.get("attempts"),
             }
             for page in ordered
         ],
@@ -566,6 +581,10 @@ def discover_target(target: dict, max_pages: int) -> dict:
             "statusCode": result["statusCode"],
             "error": result["error"],
             "productCount": len(result["products"]),
+            "finalUrl": result.get("finalUrl"),
+            "responseBytes": result.get("responseBytes"),
+            "responseHeaders": result.get("responseHeaders", {}),
+            "attempts": result.get("attempts"),
         })
 
         if not result["ok"] or not result["products"]:

@@ -21,6 +21,17 @@ TARGETS = {
 }
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; Quivrr-EU-MFA/1.0)"}
 
+JS_MODEL_ALIASES = {
+    "BIG BARON CLEAR": "Big Baron",
+    "BIG BARON TAN": "Big Baron",
+    "BULL RUN SOFTBOARD SAGE": "Bull Run Softboard",
+    "GOLDEN CHILD ROUND EASY RIDER": "Golden Child Easy Rider",
+    "MONSTA ROUND EASY RIDER": "Monsta Easy Rider",
+    "MONSTA SQUASH EASY RIDER": "Monsta Easy Rider",
+    "XERO FUSION X SERIES": "Xero Fusion",
+    "XERO FUSION X SERIES EASY RIDER": "Xero Fusion Easy Rider",
+}
+
 
 def text(value):
     value = html.unescape(re.sub(r"<[^>]+>", " ", str(value or "")))
@@ -44,7 +55,7 @@ def model_name(brand, title):
     value = text(title)
     if brand == "JS Industries":
         value = re.sub(
-            r"^JS\s+(?:Surfboard|SoftBoard)\s+[4-9]'\d{1,2}\s+",
+            r"^JS\s+(?:Surfboard|SoftBoard)\s+[4-9](?:'\d{1,2})?\s+",
             "",
             value,
             flags=re.I,
@@ -58,7 +69,8 @@ def model_name(brand, title):
             flags=re.I,
         )
         value = re.sub(r"\s+SQUASH$", "", value, flags=re.I)
-        return re.sub(r"\s+", " ", value).strip(" -")
+        value = re.sub(r"\s+", " ", value).strip(" -")
+        return JS_MODEL_ALIASES.get(value.upper(), value)
     value = re.sub(r"^(?:JS(?:\s+Industries)?|Rusty)\s+", "", value, flags=re.I)
     value = re.sub(r"^Surfboards?\s+", "", value, flags=re.I)
     value = re.sub(r"^[4-9]'\d{1,2}\s+", "", value)
@@ -70,7 +82,7 @@ def model_name(brand, title):
 
 def construction(value):
     key = text(value).lower()
-    for token, label in (("futureflex", "FutureFlex"), ("helium", "Helium"), ("ibolic", "Ibolic"), ("hyfi", "HYFI"), ("eps", "EPS"), (" pu ", "PU")):
+    for token, label in (("futureflex", "FutureFlex"), ("carbotune", "CarboTune"), ("helium", "Helium"), ("ibolic", "Ibolic"), ("hyfi", "HYFI"), ("softboard", "Softboard"), ("eps", "EPS"), (" pe ", "PE"), (" pu ", "PU")):
         if token in f" {key} ": return label
     return None
 

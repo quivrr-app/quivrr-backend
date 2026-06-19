@@ -39,11 +39,13 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
         self.assertEqual(
             mfa_runner.APPROVED_BRANDS,
             {
+                "js_industries": "JS Industries",
                 "pyzel": "Pyzel",
                 "firewire": "Firewire",
                 "haydenshapes": "Haydenshapes",
                 "rusty": "Rusty",
                 "sharp_eye": "Sharp Eye",
+                "dhd": "DHD",
             },
         )
 

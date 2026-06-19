@@ -25,11 +25,13 @@ from scripts.europe.import_eu_retailer_inventory import (  # noqa: E402
 REGION_CODE = "EU"
 SOURCE = "manufacturer_direct"
 APPROVED_BRANDS = {
+    "js_industries": "JS Industries",
     "pyzel": "Pyzel",
     "firewire": "Firewire",
     "haydenshapes": "Haydenshapes",
     "rusty": "Rusty",
     "sharp_eye": "Sharp Eye",
+    "dhd": "DHD",
 }
 
 
@@ -123,12 +125,19 @@ def main() -> None:
 
     if not args.skip_build:
         for slug in APPROVED_BRANDS:
-            run([
-                sys.executable,
-                "scrapers/manufacturers/availability/eu/build_eu_shopify_availability.py",
-                "--brand",
-                slug,
-            ])
+            if slug == "dhd":
+                command = [
+                    sys.executable,
+                    "scrapers/manufacturers/availability/dhd/build_dhd_eu_availability.py",
+                ]
+            else:
+                command = [
+                    sys.executable,
+                    "scrapers/manufacturers/availability/eu/build_eu_shopify_availability.py",
+                    "--brand",
+                    slug,
+                ]
+            run(command)
 
     output_counts = {slug: validate_output(slug) for slug in APPROVED_BRANDS}
     print("Validated EU MFA outputs:", json.dumps(output_counts, sort_keys=True), flush=True)

@@ -14,7 +14,7 @@ from urllib.parse import quote_plus, urlparse
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, event, text
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import DBAPIError, OperationalError
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -315,12 +315,16 @@ def connect_with_retry(engine, attempts: int = 5):
             connection.execute(text("SELECT 1"))
             connection.rollback()
             return connection
-        except OperationalError as error:
+        except (OperationalError, DBAPIError) as error:
             if connection is not None:
                 connection.close()
             last_error = error
             if attempt == attempts:
                 raise
+            print(
+                f"SQL connection attempt {attempt}/{attempts} failed; retrying",
+                flush=True,
+            )
             time.sleep(min(10, 1.5 * attempt))
     raise last_error
 
