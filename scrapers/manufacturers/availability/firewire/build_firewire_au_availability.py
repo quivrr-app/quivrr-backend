@@ -12,6 +12,9 @@ BRAND_NAME = "Firewire"
 REGION_CODE = "AU"
 AVAILABILITY_SOURCE = "manufacturer_direct"
 FIREWIRE_AU_BASE_URL = "https://aus.firewiresurfboards.com"
+FIREWIRE_AU_COLLECTIONS = [
+    "prestige-surfboards",
+]
 
 
 def canonical_key(value):
@@ -34,35 +37,44 @@ def load_live_au_products():
         "Accept": "application/json",
     })
 
-    for page in range(1, 10):
-        url = f"{FIREWIRE_AU_BASE_URL}/products.json?limit=250&page={page}"
+    feed_urls = [
+        f"{FIREWIRE_AU_BASE_URL}/products.json?limit=250&page={{page}}",
+        *[
+            f"{FIREWIRE_AU_BASE_URL}/collections/{collection}/products.json?limit=250&page={{page}}"
+            for collection in FIREWIRE_AU_COLLECTIONS
+        ],
+    ]
 
-        try:
-            response = session.get(url, timeout=30)
-        except Exception:
-            break
+    for feed_url in feed_urls:
+        for page in range(1, 10):
+            url = feed_url.format(page=page)
 
-        if response.status_code != 200:
-            break
+            try:
+                response = session.get(url, timeout=30)
+            except Exception:
+                break
 
-        products = response.json().get("products", [])
+            if response.status_code != 200:
+                break
 
-        if not products:
-            break
+            products = response.json().get("products", [])
 
-        for product in products:
-            title = normalise_text(product.get("title"))
-            handle = normalise_text(product.get("handle"))
+            if not products:
+                break
 
-            if not handle:
-                continue
+            for product in products:
+                title = normalise_text(product.get("title"))
+                handle = normalise_text(product.get("handle"))
 
-            live_by_handle[handle] = handle
+                if not handle:
+                    continue
 
-            title_key = canonical_key(title)
+                live_by_handle[handle] = handle
 
-            if title_key:
-                live_by_title[title_key] = handle
+                title_key = canonical_key(title)
+
+                if title_key:
+                    live_by_title[title_key] = handle
 
     return live_by_title, live_by_handle
 
@@ -168,6 +180,119 @@ def is_valid_volume(value):
         return False
 
     return 10.0 <= value <= 90.0
+
+
+def parse_size_text(value):
+    value = normalise_text(value)
+    if not value:
+        return None, None, None, None
+
+    value = value.replace("?", '"').replace("?", "'").replace(" x ", " x ")
+    match = re.search(
+        r"([4-9]|1[0-2])'\s*(\d{1,2})\"?\s*x\s*"
+        r"([^x]+?)\"?\s*x\s*"
+        r"([^x]+?)\"?\s*x\s*"
+        r"(\d+(?:\.\d+)?)\s*L",
+        value,
+        re.I,
+    )
+
+    if not match:
+        return None, None, None, None
+
+    return (
+        f"{match.group(1)}'{int(match.group(2))}",
+        normalise_text(match.group(3)),
+        normalise_text(match.group(4)),
+        float(match.group(5)),
+    )
+
+
+def fetch_collection_products():
+    products = []
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+    })
+
+    for collection in FIREWIRE_AU_COLLECTIONS:
+        for page in range(1, 10):
+            url = f"{FIREWIRE_AU_BASE_URL}/collections/{collection}/products.json?limit=250&page={page}"
+
+            try:
+                response = session.get(url, timeout=30)
+            except Exception:
+                break
+
+            if response.status_code != 200:
+                break
+
+            batch = response.json().get("products", [])
+            if not batch:
+                break
+
+            products.extend(batch)
+
+            if len(batch) < 250:
+                break
+
+    return products
+
+
+def build_live_collection_rows(now):
+    rows = []
+
+    for product in fetch_collection_products():
+        model = normalise_text(product.get("title"))
+        handle = normalise_text(product.get("handle"))
+        description = normalise_text(product.get("body_html"))
+        image = ((product.get("images") or [{}])[0]).get("src")
+
+        if not model or not handle:
+            continue
+
+        for variant in product.get("variants", []):
+            if not variant.get("available"):
+                continue
+
+            variant_title = normalise_text(variant.get("title"))
+            size_text = normalise_text(variant.get("option3")) or variant_title
+            length, width, thickness, volume_litres = parse_size_text(size_text)
+
+            if not length or not is_valid_volume(volume_litres):
+                continue
+
+            product_url = f"{FIREWIRE_AU_BASE_URL}/products/{handle}?variant={variant.get('id')}"
+            variant_image = (variant.get("featured_image") or {}).get("src")
+
+            rows.append({
+                "brandName": BRAND_NAME,
+                "modelName": model,
+                "lengthFeetInches": length,
+                "width": width,
+                "thickness": thickness,
+                "volumeLitres": volume_litres,
+                "construction": normalise_construction(variant.get("option2"), variant_title, description),
+                "finSetup": normalise_fin_system(variant_title, variant_title, description),
+                "tailShape": None,
+                "productUrl": product_url,
+                "productImageUrl": variant_image or image,
+                "priceAmount": variant.get("price"),
+                "priceCurrency": "AUD",
+                "stockStatus": "available",
+                "isAvailable": True,
+                "availabilitySource": AVAILABILITY_SOURCE,
+                "regionCode": REGION_CODE,
+                "sourceProductId": product.get("id"),
+                "sourceVariantId": variant.get("id"),
+                "sourceVariantTitle": variant_title,
+                "sourceCataloguePath": f"{FIREWIRE_AU_BASE_URL}/collections/prestige-surfboards",
+                "sourceStorefront": FIREWIRE_AU_BASE_URL,
+                "snapshotUtc": now,
+            })
+
+    return rows
 
 
 def build_au_product_url(base_url, handle, variant_id, live_handle=None):
@@ -295,6 +420,25 @@ def main():
             "sourceStorefront": FIREWIRE_AU_BASE_URL,
             "snapshotUtc": now,
         })
+
+    for live_row in build_live_collection_rows(now):
+        dedupe_key = (
+            live_row.get("modelName"),
+            live_row.get("lengthFeetInches"),
+            live_row.get("width"),
+            live_row.get("thickness"),
+            str(live_row.get("volumeLitres")),
+            live_row.get("construction"),
+            live_row.get("finSetup"),
+            str(live_row.get("sourceVariantId")),
+            live_row.get("productUrl"),
+        )
+
+        if dedupe_key in seen:
+            continue
+
+        seen.add(dedupe_key)
+        output_rows.append(live_row)
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(output_rows, indent=2), encoding="utf-8")
