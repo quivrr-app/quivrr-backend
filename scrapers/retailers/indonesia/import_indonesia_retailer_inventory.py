@@ -315,6 +315,8 @@ def main():
 
     inserted, retailer_ids = run_sql(import_work)
 
+    run_linker()
+
     print(f"Indonesia inventory inserted: {inserted}")
     print(retailer_ids)
 
