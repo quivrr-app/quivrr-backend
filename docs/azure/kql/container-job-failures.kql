@@ -1,0 +1,4 @@
+ContainerAppConsoleLogs_CL
+| where Log_s has "\"status\":\"failed\""
+| project TimeGenerated, Log_s
+| order by TimeGenerated desc

@@ -17,6 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app import engine
+from utils.structured_logging import emit_event, update_job_state
 
 RETAILERS = [
     {
@@ -113,7 +114,9 @@ def run_scrapers():
             continue
 
         print(f"Running {retailer['name']}...")
+        emit_event("retailer_scrape_started", "retailer_inventory", region="ID", status="success", retailer=retailer["name"])
         subprocess.run([sys.executable, str(script)], check=True)
+        emit_event("retailer_scrape_completed", "retailer_inventory", region="ID", status="success", retailer=retailer["name"])
 
 
 
@@ -150,6 +153,8 @@ def load_rows():
 
 
 def main():
+    started = time.perf_counter()
+    emit_event("inventory_refresh_started", "retailer_inventory", region="ID", status="success")
     run_scrapers()
 
     rows = load_rows()
@@ -314,12 +319,68 @@ def main():
         return len(insert_rows), retailer_ids
 
     inserted, retailer_ids = run_sql(import_work)
+    emit_event(
+        "inventory_import_completed",
+        "retailer_inventory",
+        region="ID",
+        status="success",
+        rows_loaded=len(rows),
+        rows_inserted=inserted,
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
 
     run_linker()
+    emit_event(
+        "inventory_linking_completed",
+        "retailer_inventory",
+        region="ID",
+        status="success",
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
 
     print(f"Indonesia inventory inserted: {inserted}")
     print(retailer_ids)
+    emit_event(
+        "inventory_refresh_completed",
+        "retailer_inventory",
+        region="ID",
+        status="success",
+        rows_loaded=len(rows),
+        rows_inserted=inserted,
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
+    update_job_state(
+        "inventory_id",
+        "inventory",
+        "retailer_inventory",
+        "success",
+        region="ID",
+        rows_loaded=len(rows),
+        rows_inserted=inserted,
+        retailer_count=len(retailer_ids),
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        emit_event(
+            "inventory_refresh_failed",
+            "retailer_inventory",
+            region="ID",
+            status="failed",
+            error_type=type(exc).__name__,
+            error_message=str(exc),
+        )
+        update_job_state(
+            "inventory_id",
+            "inventory",
+            "retailer_inventory",
+            "failed",
+            region="ID",
+            error_type=type(exc).__name__,
+            error_message=str(exc),
+        )
+        raise

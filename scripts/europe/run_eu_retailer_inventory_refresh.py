@@ -22,6 +22,7 @@ from scripts.europe.import_eu_retailer_inventory import (  # noqa: E402
     build_engine,
     connect_with_retry,
 )
+from utils.structured_logging import emit_event, update_job_state
 
 
 REGION_CODE = "EU"
@@ -140,6 +141,8 @@ def main() -> None:
     input_path = args.input or DEFAULT_INPUT
 
     assert_region_scope()
+    started = time.perf_counter()
+    emit_event("inventory_refresh_started", "retailer_inventory", region=REGION_CODE, status="success")
     before = region_counts()
     print("RetailerInventory before:", json.dumps(before, sort_keys=True), flush=True)
     if before["<NULL>"]:
@@ -152,6 +155,7 @@ def main() -> None:
         ]
         if not args.apply:
             discovery_command.append("--dry-run")
+        emit_event("retailer_scrape_started", "retailer_inventory", region=REGION_CODE, status="success", retailer="eu_discovery")
         run(discovery_command)
         if args.apply:
             assert_detail_fetch_health()
@@ -169,6 +173,15 @@ def main() -> None:
     rows, retailer_counts = load_and_validate_rows(input_path)
     print("Validated EU normalised rows:", len(rows), flush=True)
     print("Rows by retailer:", json.dumps(retailer_counts, sort_keys=True), flush=True)
+    for retailer, count in sorted(retailer_counts.items()):
+        emit_event(
+            "retailer_scrape_completed",
+            "retailer_inventory",
+            region=REGION_CODE,
+            status="success",
+            retailer=retailer,
+            rows_loaded=count,
+        )
 
     with tempfile.TemporaryDirectory(prefix="quivrr-eu-retailer-") as temp_dir:
         command = [
@@ -186,6 +199,30 @@ def main() -> None:
                 str(Path(temp_dir) / "apply.json"),
             ])
         run(command, attempts=3)
+        if args.apply:
+            report_path = Path(temp_dir) / "apply.json"
+            if report_path.exists():
+                report = json.loads(report_path.read_text(encoding="utf-8"))
+                apply_counts = report.get("applyCounts", {})
+                emit_event(
+                    "inventory_import_completed",
+                    "retailer_inventory",
+                    region=REGION_CODE,
+                    status="success",
+                    rows_loaded=len(rows),
+                    rows_inserted=apply_counts.get("insertedRows") or apply_counts.get("upsertedRows") or apply_counts.get("inserted"),
+                    duration_seconds=round(time.perf_counter() - started, 3),
+                )
+                linking = report.get("canonicalLinkingAfterApply", {})
+                emit_event(
+                    "inventory_linking_completed",
+                    "retailer_inventory",
+                    region=REGION_CODE,
+                    status="success",
+                    model_links=linking.get("linkedBoardModelIdRows"),
+                    size_links=linking.get("linkedBoardSizeIdRows"),
+                    duration_seconds=round(time.perf_counter() - started, 3),
+                )
 
     after = region_counts()
     print("RetailerInventory after:", json.dumps(after, sort_keys=True), flush=True)
@@ -195,7 +232,46 @@ def main() -> None:
         raise RuntimeError("EU refresh created NULL RegionCode rows.")
     if args.apply and after["EU"] < before["EU"]:
         raise RuntimeError("EU RetailerInventory count unexpectedly decreased.")
+    emit_event(
+        "inventory_refresh_completed",
+        "retailer_inventory",
+        region=REGION_CODE,
+        status="success",
+        rows_loaded=len(rows),
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
+    update_job_state(
+        "inventory_eu",
+        "inventory",
+        "retailer_inventory",
+        "success",
+        region=REGION_CODE,
+        rows_loaded=len(rows),
+        before_rows=before["EU"],
+        after_rows=after["EU"],
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        emit_event(
+            "inventory_refresh_failed",
+            "retailer_inventory",
+            region=REGION_CODE,
+            status="failed",
+            error_type=type(exc).__name__,
+            error_message=str(exc),
+        )
+        update_job_state(
+            "inventory_eu",
+            "inventory",
+            "retailer_inventory",
+            "failed",
+            region=REGION_CODE,
+            error_type=type(exc).__name__,
+            error_message=str(exc),
+        )
+        raise

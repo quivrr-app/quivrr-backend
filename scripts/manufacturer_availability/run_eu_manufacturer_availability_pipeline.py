@@ -20,6 +20,7 @@ from scripts.europe.import_eu_retailer_inventory import (  # noqa: E402
     build_engine,
     connect_with_retry,
 )
+from utils.structured_logging import emit_event, update_job_state
 
 
 REGION_CODE = "EU"
@@ -118,6 +119,8 @@ def main() -> None:
         args.dry_run = True
 
     assert_region_scope()
+    started = time.perf_counter()
+    emit_event("mfa_refresh_started", "manufacturer_availability", region=REGION_CODE, status="success")
     before = region_counts()
     print("ManufacturerInventory before:", json.dumps(before, sort_keys=True), flush=True)
     if before["<NULL>"]:
@@ -125,6 +128,7 @@ def main() -> None:
 
     if not args.skip_build:
         for slug in APPROVED_BRANDS:
+            emit_event("mfa_brand_started", "manufacturer_availability", region=REGION_CODE, status="success", brand=APPROVED_BRANDS[slug])
             if slug == "dhd":
                 command = [
                     sys.executable,
@@ -138,6 +142,7 @@ def main() -> None:
                     slug,
                 ]
             run(command)
+            emit_event("mfa_brand_completed", "manufacturer_availability", region=REGION_CODE, status="success", brand=APPROVED_BRANDS[slug])
 
     output_counts = {slug: validate_output(slug) for slug in APPROVED_BRANDS}
     print("Validated EU MFA outputs:", json.dumps(output_counts, sort_keys=True), flush=True)
@@ -151,6 +156,24 @@ def main() -> None:
     if args.apply:
         command.append("--apply")
     run(command, attempts=3)
+    total_rows = sum(output_counts.values())
+    emit_event(
+        "mfa_refresh_completed",
+        "manufacturer_availability",
+        region=REGION_CODE,
+        status="success",
+        rows=total_rows,
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
+    update_job_state(
+        "mfa_eu",
+        "mfa",
+        "manufacturer_availability",
+        "success",
+        region=REGION_CODE,
+        rows=total_rows,
+        duration_seconds=round(time.perf_counter() - started, 3),
+    )
 
     after = region_counts()
     print("ManufacturerInventory after:", json.dumps(after, sort_keys=True), flush=True)
@@ -163,4 +186,24 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        emit_event(
+            "mfa_refresh_failed",
+            "manufacturer_availability",
+            region=REGION_CODE,
+            status="failed",
+            error_type=type(exc).__name__,
+            error_message=str(exc),
+        )
+        update_job_state(
+            "mfa_eu",
+            "mfa",
+            "manufacturer_availability",
+            "failed",
+            region=REGION_CODE,
+            error_type=type(exc).__name__,
+            error_message=str(exc),
+        )
+        raise

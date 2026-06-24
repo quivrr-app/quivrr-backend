@@ -1,0 +1,5 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where tostring(payload.status) == "failed"
+| summarize failures=count() by service=tostring(payload.service), event=tostring(payload.event), region=tostring(payload.region)
+| order by failures desc

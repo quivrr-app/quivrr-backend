@@ -1,0 +1,4 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where isnotempty(payload.event) and tostring(payload.service) in ("retailer_inventory","manufacturer_availability","brand_catalogue","market_intelligence")
+| summarize arg_max(TimeGenerated, payload) by tostring(payload.service), tostring(payload.region)

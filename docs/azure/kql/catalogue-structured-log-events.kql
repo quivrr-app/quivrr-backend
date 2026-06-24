@@ -1,0 +1,5 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where tostring(payload.service) == "brand_catalogue"
+| project TimeGenerated, event=tostring(payload.event), brand=tostring(payload.brand), status=tostring(payload.status), duration_seconds=toreal(payload.duration_seconds), error_type=tostring(payload.error_type)
+| order by TimeGenerated desc

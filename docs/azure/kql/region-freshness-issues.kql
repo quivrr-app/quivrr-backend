@@ -1,0 +1,6 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where tostring(payload.event) in ("inventory_refresh_completed","mfa_refresh_completed","catalogue_refresh_completed")
+| summarize last_seen=max(TimeGenerated) by event=tostring(payload.event), region=tostring(payload.region)
+| extend age_hours=datetime_diff("hour", now(), last_seen) * -1
+| order by age_hours desc

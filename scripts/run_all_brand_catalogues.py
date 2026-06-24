@@ -1,8 +1,11 @@
 import json
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
+
+from utils.structured_logging import emit_event, update_job_state
 
 
 PYTHON = sys.executable
@@ -122,12 +125,16 @@ def run_step(step):
 
 
 def main():
+    started = time.perf_counter()
+    emit_event("catalogue_refresh_started", "brand_catalogue", status="success")
     results = []
     failed = False
 
     for step in STEPS:
         try:
+            emit_event("catalogue_brand_started", "brand_catalogue", status="success", brand=step["name"])
             results.append(run_step(step))
+            emit_event("catalogue_brand_completed", "brand_catalogue", status="success", brand=step["name"])
         except Exception as exc:
             failed = True
             results.append({
@@ -136,12 +143,22 @@ def main():
                 "message": str(exc),
                 "ended_at_utc": datetime.now(timezone.utc).isoformat(),
             })
+            emit_event(
+                "catalogue_brand_failed",
+                "brand_catalogue",
+                status="failed",
+                brand=step["name"],
+                error_type=type(exc).__name__,
+                error_message=str(exc),
+            )
             break
 
     if not failed:
         for post_step in POST_CATALOGUE_STEPS:
             try:
+                emit_event("catalogue_brand_started", "brand_catalogue", status="success", brand=post_step["name"])
                 results.append(run_step(post_step))
+                emit_event("catalogue_brand_completed", "brand_catalogue", status="success", brand=post_step["name"])
             except Exception as exc:
                 failed = True
                 results.append({
@@ -150,6 +167,14 @@ def main():
                     "message": str(exc),
                     "ended_at_utc": datetime.now(timezone.utc).isoformat(),
                 })
+                emit_event(
+                    "catalogue_brand_failed",
+                    "brand_catalogue",
+                    status="failed",
+                    brand=post_step["name"],
+                    error_type=type(exc).__name__,
+                    error_message=str(exc),
+                )
                 break
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -171,7 +196,11 @@ def main():
     print("")
 
     if failed:
+        emit_event("catalogue_refresh_failed", "brand_catalogue", status="failed", duration_seconds=round(time.perf_counter() - started, 3))
+        update_job_state("weekly_brand_catalogues", "catalogue", "brand_catalogue", "failed", duration_seconds=round(time.perf_counter() - started, 3))
         sys.exit(1)
+    emit_event("catalogue_refresh_completed", "brand_catalogue", status="success", duration_seconds=round(time.perf_counter() - started, 3), row_count=len(results))
+    update_job_state("weekly_brand_catalogues", "catalogue", "brand_catalogue", "success", duration_seconds=round(time.perf_counter() - started, 3), row_count=len(results))
 
 
 if __name__ == "__main__":

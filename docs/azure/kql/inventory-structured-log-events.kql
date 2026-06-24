@@ -1,0 +1,5 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where tostring(payload.service) == "retailer_inventory"
+| project TimeGenerated, event=tostring(payload.event), region=tostring(payload.region), status=tostring(payload.status), rows=tolong(payload.rows), rows_loaded=tolong(payload.rows_loaded), rows_inserted=tolong(payload.rows_inserted), model_links=tolong(payload.model_links), size_links=tolong(payload.size_links)
+| order by TimeGenerated desc

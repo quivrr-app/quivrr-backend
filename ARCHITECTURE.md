@@ -22,6 +22,19 @@ Quivrr currently spans frontend, backend, data, scheduled jobs, AI, email, and m
 | Email | Azure Communication Services | `quivrr-communication`, `quivrr-email` | Market intelligence report email delivery. |
 | Monitoring | Log Analytics | `workspace-quivrrproductionrgUkqI` | Container Apps and platform observability. |
 
+## Observability Architecture
+
+Quivrr uses stdout JSON structured logs for scheduled jobs and Bodhi API events. Azure Log Analytics ingests those events without adding new infrastructure or creating a second monitoring stack.
+
+Operational health combines:
+
+- structured job state from the latest successful or failed run
+- SQL freshness and link-quality checks
+- region leakage checks
+- Board Guide API dependency checks
+
+Europe remains the Gen 3 reference architecture for dashboards, alert rules, and future monitoring rollout patterns.
+
 ## Azure Resource Map
 
 The platform is split across two resource groups.

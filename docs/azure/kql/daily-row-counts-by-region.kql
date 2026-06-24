@@ -1,0 +1,5 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where tostring(payload.event) in ("inventory_refresh_completed","mfa_refresh_completed")
+| summarize rows=max(tolong(coalesce(payload.rows_inserted, payload.rows_loaded, payload.rows))) by bin(TimeGenerated, 1d), service=tostring(payload.service), region=tostring(payload.region)
+| order by TimeGenerated desc

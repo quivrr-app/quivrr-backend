@@ -1,6 +1,9 @@
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
+
+from utils.structured_logging import emit_event, update_job_state
 
 PYTHON = sys.executable
 
@@ -121,14 +124,17 @@ def run_step(name, command):
 
 
 def main():
+    started = time.perf_counter()
     print("")
     print("Running AU manufacturer direct availability pipeline")
     print("=" * 100)
     print(f"UTC start: {datetime.now(timezone.utc).isoformat()}")
+    emit_event("mfa_refresh_started", "manufacturer_availability", region="AU", status="success")
 
     failures = []
 
     for pipeline in PIPELINES:
+        emit_event("mfa_brand_started", "manufacturer_availability", region="AU", status="success", brand=pipeline["name"])
         exit_code = run_step(
             pipeline["name"],
             pipeline["command"],
@@ -139,6 +145,23 @@ def main():
                 "name": pipeline["name"],
                 "exitCode": exit_code,
             })
+            emit_event(
+                "mfa_brand_failed",
+                "manufacturer_availability",
+                region="AU",
+                status="failed",
+                brand=pipeline["name"],
+                error_type="PipelineExit",
+                error_message=f"exit code {exit_code}",
+            )
+        else:
+            emit_event(
+                "mfa_brand_completed",
+                "manufacturer_availability",
+                region="AU",
+                status="success",
+                brand=pipeline["name"],
+            )
 
     print("")
     print("=" * 100)
@@ -151,8 +174,11 @@ def main():
     if failures:
         for failure in failures:
             print(f"FAILED: {failure['name']} exitCode={failure['exitCode']}")
-
+        emit_event("mfa_refresh_failed", "manufacturer_availability", region="AU", status="failed", duration_seconds=round(time.perf_counter() - started, 3))
+        update_job_state("mfa_au", "mfa", "manufacturer_availability", "failed", region="AU", duration_seconds=round(time.perf_counter() - started, 3))
         sys.exit(1)
+    emit_event("mfa_refresh_completed", "manufacturer_availability", region="AU", status="success", duration_seconds=round(time.perf_counter() - started, 3))
+    update_job_state("mfa_au", "mfa", "manufacturer_availability", "success", region="AU", duration_seconds=round(time.perf_counter() - started, 3))
 
 
 if __name__ == "__main__":

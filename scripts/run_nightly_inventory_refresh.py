@@ -1,9 +1,12 @@
 from pathlib import Path
 import json
+import re
 import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+
+from utils.structured_logging import emit_event, update_job_state
 
 PYTHON = sys.executable
 
@@ -87,6 +90,11 @@ def run_step(index, total, name, command, retry_count=0):
     }
 
 
+def parse_count(pattern, text):
+    match = re.search(pattern, text or "", re.IGNORECASE)
+    return int(match.group(1)) if match else None
+
+
 def active_target_count():
     if not ACTIVE_TARGETS_FILE.exists():
         return 0
@@ -106,6 +114,7 @@ def main():
     print("=" * 60)
 
     started_at = utc_now()
+    emit_event("inventory_refresh_started", "retailer_inventory", region="AU", status="success")
 
     steps = [
         {
@@ -286,6 +295,14 @@ def main():
     results = []
 
     for index, step in enumerate(steps, start=1):
+        if step["name"].startswith("Scrape "):
+            emit_event(
+                "retailer_scrape_started",
+                "retailer_inventory",
+                region="AU",
+                status="success",
+                retailer=step["name"].replace("Scrape ", ""),
+            )
         result = run_step(
             index=index,
             total=len(steps),
@@ -295,11 +312,40 @@ def main():
         )
 
         results.append(result)
+        output_tail = result.get("output_tail") or ""
+        if step["name"].startswith("Scrape "):
+            emit_event(
+                "retailer_scrape_completed",
+                "retailer_inventory",
+                region="AU",
+                status="success" if result["success"] else "failed",
+                retailer=step["name"].replace("Scrape ", ""),
+                duration_seconds=result["duration_seconds"],
+            )
+        if step["name"] == "Import available retailer inventory into Azure SQL":
+            emit_event(
+                "inventory_import_completed",
+                "retailer_inventory",
+                region="AU",
+                status="success" if result["success"] else "failed",
+                rows_loaded=parse_count(r"Rows loaded:\s*(\d+)", output_tail),
+                rows_inserted=parse_count(r"Available inventory rows inserted:\s*(\d+)", output_tail),
+                duration_seconds=result["duration_seconds"],
+            )
 
         if not result["success"]:
             print("")
             print("Nightly inventory job stopped because a step failed.")
             print(f"Failed step: {step['name']}")
+            emit_event(
+                "inventory_refresh_failed",
+                "retailer_inventory",
+                region="AU",
+                status="failed",
+                error_type="StepFailure",
+                error_message=step["name"],
+                duration_seconds=result["duration_seconds"],
+            )
             break
 
     completed_at = utc_now()
@@ -317,6 +363,33 @@ def main():
         "active_scrape_targets": active_target_count(),
         "steps": results,
     }
+
+    emit_event(
+        "inventory_linking_completed",
+        "retailer_inventory",
+        region="AU",
+        status="success" if success else "failed",
+        duration_seconds=int((completed_at - started_at).total_seconds()),
+    )
+    final_event = "inventory_refresh_completed" if success else "inventory_refresh_failed"
+    emit_event(
+        final_event,
+        "retailer_inventory",
+        region="AU",
+        status="success" if success else "failed",
+        duration_seconds=report["duration_seconds"],
+        rows_loaded=None,
+        rows_inserted=None,
+    )
+    update_job_state(
+        "inventory_au",
+        "inventory",
+        "retailer_inventory",
+        "success" if success else "failed",
+        region="AU",
+        duration_seconds=report["duration_seconds"],
+        active_scrape_targets=report["active_scrape_targets"],
+    )
 
     JOB_REPORT_FILE.write_text(
         json.dumps(

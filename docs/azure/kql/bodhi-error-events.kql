@@ -1,0 +1,6 @@
+AppServiceConsoleLogs
+| extend payload = parse_json(ResultDescription)
+| where tostring(payload.service) == "bodhi_api"
+| where tostring(payload.status) == "failed"
+| project TimeGenerated, event=tostring(payload.event), region=tostring(payload.region), error_type=tostring(payload.error_type), error_message=tostring(payload.error_message)
+| order by TimeGenerated desc
