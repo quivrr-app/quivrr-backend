@@ -1,0 +1,20 @@
+ContainerAppConsoleLogs_CL
+| extend payload = parse_json(Log_s)
+| where tostring(payload.service) == "inventory_link_health"
+| where tostring(payload.event) in ("inventory_link_health_snapshot", "inventory_link_health_retailer")
+| project
+    TimeGenerated,
+    event=tostring(payload.event),
+    region=tostring(payload.region),
+    retailer_name=tostring(payload.retailer_name),
+    total_rows=tolong(payload.total_rows),
+    linked_model_rows=tolong(payload.linked_model_rows),
+    linked_size_rows=tolong(payload.linked_size_rows),
+    linked_model_pct=todouble(payload.linked_model_pct),
+    linked_size_pct=todouble(payload.linked_size_pct),
+    canonical_size_linked_rows=tolong(payload.canonical_size_linked_rows),
+    canonical_size_linked_pct=todouble(payload.canonical_size_linked_pct),
+    searchable_rows=tolong(payload.searchable_rows),
+    searchable_pct=todouble(payload.searchable_pct),
+    retailer_count=tolong(payload.retailer_count)
+| order by TimeGenerated desc
