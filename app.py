@@ -687,6 +687,26 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             mi.RegionCode,
 
             CASE
+                WHEN mi.BoardSizeId = :board_size_id
+                    THEN 0
+
+                WHEN mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND (
+                        (
+                            mi.VolumeLitres IS NOT NULL
+                            AND :volume IS NOT NULL
+                            AND ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                        )
+                        OR (
+                            REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                            AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                        )
+                    )
+                    THEN 1
+
                 WHEN mi.BrandName = 'JS Industries'
                     AND mi.BoardModelId = :board_model_id
                     AND mi.LengthFeetInches = :length
@@ -952,6 +972,28 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             AND mi.AvailabilitySource = 'manufacturer_direct'
             AND mi.BrandId = :brand_id
             AND (
+                (
+                    mi.BoardSizeId = :board_size_id
+                )
+                OR
+                (
+                    mi.BoardModelId = :board_model_id
+                    AND mi.LengthFeetInches = :length
+                    AND (
+                        (
+                            mi.VolumeLitres IS NOT NULL
+                            AND :volume IS NOT NULL
+                            AND ABS(CAST(mi.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                        )
+                        OR (
+                            REPLACE(REPLACE(mi.Width, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:width, '"', ''), ' ', '')
+                            AND REPLACE(REPLACE(mi.Thickness, '"', ''), ' ', '') =
+                                REPLACE(REPLACE(:thickness, '"', ''), ' ', '')
+                        )
+                    )
+                )
+                OR
                 (
                     mi.BrandName = 'JS Industries'
                     AND mi.BoardModelId = :board_model_id
