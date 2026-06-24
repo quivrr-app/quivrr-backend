@@ -116,6 +116,16 @@ def run_scrapers():
         subprocess.run([sys.executable, str(script)], check=True)
 
 
+
+def run_linker():
+    linker = PROJECT_ROOT / "scripts" / "retailer_inventory" / "link_id_retailer_inventory.py"
+    if not linker.exists():
+        raise FileNotFoundError(f"Missing Indonesia retailer linker: {linker}")
+
+    print("Linking Indonesia retailer inventory...")
+    subprocess.run([sys.executable, str(linker), "--apply"], check=True)
+
+
 def load_rows():
     rows = []
 
