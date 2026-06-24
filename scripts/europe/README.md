@@ -11,7 +11,7 @@ This folder contains the active EU retailer inventory importer, audit tools, lin
 - AU and ID counts are protected before and after EU transactions
 - No delete or truncate may affect another region
 
-Active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver. Discovery and normalization remain under `scrapers/retailers/europe/`; generated outputs are not source files and should not be committed casually.
+Active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, and Tablas Surf Shop. Discovery and normalization remain under `scrapers/retailers/europe/`; generated outputs are not source files and should not be committed casually.
 
 ## Import And Scheduled Runner
 

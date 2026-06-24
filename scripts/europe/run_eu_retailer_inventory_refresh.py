@@ -34,8 +34,13 @@ MINIMUM_ROWS = {
     "58_surf": 1200,
     "pukas_surf_shop": 1800,
     "bell_surf": 350,
+    "board_exchange": 100,
+    "pop_up_surf_shop": 70,
+    "noordzee_boardstore": 100,
+    "gsi_europe": 10,
     "surf_boss": 300,
     "surf_corner": 100,
+    "tablas_surf_shop": 80,
     "mundo_surf": 3800,
     "single_quiver": 300,
 }

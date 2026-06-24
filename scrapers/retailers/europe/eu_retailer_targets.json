@@ -77,11 +77,11 @@
     "regionCode": "EU",
     "country": "Spain",
     "website": "https://www.tablassurfshop.com",
-    "surfboardCategoryUrl": "https://www.tablassurfshop.com/",
+    "surfboardCategoryUrl": "https://www.tablassurfshop.com/surf/tablas-surf/shortboard.html",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "custom_magento_cards",
+    "notes": "Priority EU custom Magento category-card target. Region-scoped discovery and import only."
   },
   {
     "retailerSlug": "58_surf",
@@ -115,9 +115,45 @@
     "website": "https://boardexchange.pt",
     "surfboardCategoryUrl": "https://boardexchange.pt/collections/surfboards",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Priority EU Shopify target. Region-scoped discovery and import only."
+  },
+  {
+    "retailerSlug": "pop_up_surf_shop",
+    "retailerName": "Pop Up Surf Shop",
+    "regionCode": "EU",
+    "country": "Netherlands",
+    "website": "https://popupsurfshop.eu",
+    "surfboardCategoryUrl": "https://popupsurfshop.eu/collections/surfboards",
+    "priority": "Wave 1",
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Priority EU Shopify target. Region-scoped discovery and import only."
+  },
+  {
+    "retailerSlug": "noordzee_boardstore",
+    "retailerName": "Noordzee Boardstore",
+    "regionCode": "EU",
+    "country": "Netherlands",
+    "website": "https://noordzeeboardstore.nl",
+    "surfboardCategoryUrl": "https://noordzeeboardstore.nl/collections/all-surfboards",
+    "priority": "Wave 1",
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Priority EU Shopify target. Region-scoped discovery and import only."
+  },
+  {
+    "retailerSlug": "gsi_europe",
+    "retailerName": "GSI Europe",
+    "regionCode": "EU",
+    "country": "Europe / EU",
+    "website": "https://eu.surfindustries.com",
+    "surfboardCategoryUrl": "https://eu.surfindustries.com/collections/surfboards",
+    "priority": "Wave 2",
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Secondary EU Shopify target. Region-scoped discovery and import only."
   },
   {
     "retailerSlug": "guincho_wind_factory",

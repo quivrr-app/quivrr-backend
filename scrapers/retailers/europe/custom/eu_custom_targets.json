@@ -18,6 +18,26 @@
     "notes": "Surf Corner Store uses the Daisuke ecommerce platform. Crawl ?pag=N until the listing is exhausted."
   },
   {
+    "retailerSlug": "tablas_surf_shop",
+    "retailerName": "Tablas Surf Shop",
+    "regionCode": "EU",
+    "country": "Spain",
+    "website": "https://www.tablassurfshop.com",
+    "categoryUrls": [
+      "https://www.tablassurfshop.com/surf/tablas-surf/shortboard.html",
+      "https://www.tablassurfshop.com/surf/tablas-surf/funboard.html",
+      "https://www.tablassurfshop.com/surf/tablas-surf/retro-surfboards.html",
+      "https://www.tablassurfshop.com/surf/tablas-surf/iniciacion.html",
+      "https://www.tablassurfshop.com/surf/tablas-surf/blandas.html",
+      "https://www.tablassurfshop.com/longboard/longboard-surf.html"
+    ],
+    "platform": "custom_magento_cards",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "paginationParam": "p",
+    "notes": "EU-only lightweight Magento category-card target. Public category page 1 is readable with browser-style headers; deeper pagination may be challenged and discovery stops immediately on block."
+  },
+  {
     "retailerSlug": "surf_pirates",
     "retailerName": "Surf Pirates",
     "regionCode": "EU",

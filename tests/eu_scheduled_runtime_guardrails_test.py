@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+import importlib
 
 from scripts.europe import run_eu_retailer_inventory_refresh as retailer_runner
 from scripts.manufacturer_availability import (
@@ -29,6 +30,46 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(RuntimeError, "mundo_surf"):
                 retailer_runner.assert_detail_fetch_health(path)
+
+    def test_shopify_rollout_targets_remain_eu_scoped(self):
+        module = importlib.import_module("scrapers.retailers.europe.run_eu_retailer_discovery")
+        self.assertTrue(
+            {
+                "board_exchange",
+                "pop_up_surf_shop",
+                "noordzee_boardstore",
+                "gsi_europe",
+            }.issubset(module.SHOPIFY_TARGETS)
+        )
+
+        targets = json.loads(
+            (ROOT / "scrapers/retailers/europe/shopify/eu_shopify_targets.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        by_slug = {target["retailerSlug"]: target for target in targets}
+        for slug in [
+            "board_exchange",
+            "pop_up_surf_shop",
+            "noordzee_boardstore",
+            "gsi_europe",
+        ]:
+            with self.subTest(slug=slug):
+                self.assertEqual(by_slug[slug]["regionCode"], "EU")
+                self.assertTrue(by_slug[slug]["enabled"])
+
+    def test_custom_rollout_targets_remain_eu_scoped(self):
+        module = importlib.import_module("scrapers.retailers.europe.run_eu_retailer_discovery")
+        self.assertIn("tablas_surf_shop", module.CUSTOM_TARGETS)
+
+        targets = json.loads(
+            (ROOT / "scrapers/retailers/europe/custom/eu_custom_targets.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        by_slug = {target["retailerSlug"]: target for target in targets}
+        self.assertEqual(by_slug["tablas_surf_shop"]["regionCode"], "EU")
+        self.assertTrue(by_slug["tablas_surf_shop"]["enabled"])
 
     def test_mfa_runner_rejects_non_eu_region(self):
         with patch.dict(os.environ, {"QUIVRR_REGION_CODE": "ID"}):

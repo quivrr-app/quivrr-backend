@@ -46,13 +46,28 @@ OUTPUT_FILE = Path("scrapers/retailers/europe/output/eu_discovery_orchestration_
 SHOPIFY_TARGETS = {
     "pukas_surf_shop",
     "bell_surf",
+    "board_exchange",
+    "pop_up_surf_shop",
+    "noordzee_boardstore",
+    "gsi_europe",
 }
 PRESTASHOP_TARGETS = {"mundo_surf", "single_quiver"}
-CUSTOM_TARGETS = {"surf_corner"}
+CUSTOM_TARGETS = {"surf_corner", "tablas_surf_shop"}
 WOOCOMMERCE_TARGETS = {"surf_boss"}
 
 REGION_CODE = "EU"
-ROLLOUT_TARGETS = {"bell_surf", "surf_boss", "surf_corner", "mundo_surf", "single_quiver"}
+ROLLOUT_TARGETS = {
+    "bell_surf",
+    "board_exchange",
+    "gsi_europe",
+    "mundo_surf",
+    "noordzee_boardstore",
+    "pop_up_surf_shop",
+    "single_quiver",
+    "surf_boss",
+    "surf_corner",
+    "tablas_surf_shop",
+}
 PRIORITY_TARGETS = {"58_surf", "pukas_surf_shop", *ROLLOUT_TARGETS}
 
 

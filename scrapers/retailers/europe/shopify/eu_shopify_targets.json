@@ -33,9 +33,45 @@
     "website": "https://boardexchange.pt",
     "collectionUrl": "https://boardexchange.pt/collections/surfboards",
     "platform": "shopify",
-    "enabled": false,
+    "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Discovery detected Shopify markers. Keep disabled until EU output fields and currency are reviewed."
+    "notes": "Priority EU Shopify target. Collection products.json feed exposes importable surfboard inventory."
+  },
+  {
+    "retailerSlug": "pop_up_surf_shop",
+    "retailerName": "Pop Up Surf Shop",
+    "regionCode": "EU",
+    "country": "Netherlands",
+    "website": "https://popupsurfshop.eu",
+    "collectionUrl": "https://popupsurfshop.eu/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Priority EU Shopify target. Collection products.json feed exposes importable surfboard inventory."
+  },
+  {
+    "retailerSlug": "noordzee_boardstore",
+    "retailerName": "Noordzee Boardstore",
+    "regionCode": "EU",
+    "country": "Netherlands",
+    "website": "https://noordzeeboardstore.nl",
+    "collectionUrl": "https://noordzeeboardstore.nl/collections/all-surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Priority EU Shopify target. Collection products.json feed exposes importable surfboard inventory."
+  },
+  {
+    "retailerSlug": "gsi_europe",
+    "retailerName": "GSI Europe",
+    "regionCode": "EU",
+    "country": "Europe / EU",
+    "website": "https://eu.surfindustries.com",
+    "collectionUrl": "https://eu.surfindustries.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "EUR",
+    "notes": "Secondary EU Shopify target. Collection products.json feed exposes importable surfboard inventory."
   },
   {
     "retailerSlug": "guincho_wind_factory",
