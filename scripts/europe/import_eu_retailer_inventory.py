@@ -101,11 +101,19 @@ GENERIC_MODEL_NAMES = {
 }
 
 DETERMINISTIC_MODEL_ALIASES = {
+    "421": "421 fish",
     "fishbeard": "fish beard",
     "high line": "highline",
     "hk twin": "hk twin pin",
     "mav s gun": "mavs gun",
     "mikey s shorty": "mikey february shorty",
+    "mickstape sym": "micks tape sym",
+    "neck beard 2": "neckbeard 2",
+    "sabo taj": "sabotaj",
+    "spud nick": "spudnick",
+    "sword fish": "swordfish",
+    "water hog": "waterhog",
+    "whitetiger": "white tiger",
 }
 
 
@@ -1023,6 +1031,7 @@ def load_eu_inventory_rows(conn) -> list[dict]:
 
 def score_model_candidate(row: dict, model: dict) -> int | None:
     candidate_key = model["modelKey"]
+    candidate_tolerant_key = tolerant_model_key(model["modelName"])
     raw_key = model_key(row.get("rawProductTitle"))
     normalised_key = model_key(row.get("normalisedProductTitle"))
     hint_key = tolerant_model_key(
@@ -1033,6 +1042,8 @@ def score_model_candidate(row: dict, model: dict) -> int | None:
 
     if hint_key and hint_key == candidate_key:
         score = 14000
+    elif hint_key and hint_key == candidate_tolerant_key:
+        score = 13500
     elif hint_key and hint_key.startswith(f"{candidate_key} "):
         score = 11000
     elif normalised_key and normalised_key == candidate_key:
