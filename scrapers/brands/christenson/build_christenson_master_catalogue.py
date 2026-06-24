@@ -73,6 +73,88 @@ def strip_html(value):
     return clean(unescape(soup.get_text(" ", strip=True))) or None
 
 
+def extract_model_type(product):
+    body = product.get("body_html") or ""
+    soup = BeautifulSoup(body, "html.parser")
+    text = clean(unescape(soup.get_text(" ", strip=True)))
+
+    match = re.search(r"Surfboard Model Type:\s*([^\n\r]+?)(?:\s{2,}|Fins:|$)", text, re.I)
+
+    if not match:
+        return None
+
+    value = clean(match.group(1))
+
+    if not value:
+        return None
+
+    lowered = value.lower()
+
+    if "fish" in lowered:
+        return "Fish"
+
+    if "hybrid" in lowered:
+        return "Hybrid"
+
+    if "long" in lowered:
+        return "Longboard"
+
+    if "mid" in lowered:
+        return "Mid Length"
+
+    if "gun" in lowered or "step" in lowered:
+        return "Step Up"
+
+    return value
+
+
+def extract_description(product):
+    body = product.get("body_html")
+
+    if not body:
+        return None
+
+    soup = BeautifulSoup(body, "html.parser")
+
+    for br in soup.find_all("br"):
+        br.replace_with("\n")
+
+    text = unescape(soup.get_text("\n", strip=True))
+
+    lines = []
+
+    skip_prefixes = (
+        "surfboard model:",
+        "surfboard id:",
+        "surfboard model type:",
+        "fins:",
+    )
+
+    skip_next = False
+
+    for line in text.splitlines():
+        line = clean(line)
+
+        if not line:
+            continue
+
+        if skip_next:
+            skip_next = False
+            continue
+
+        lowered = line.lower()
+
+        if any(lowered.startswith(prefix) for prefix in skip_prefixes):
+            skip_next = True
+            continue
+
+        lines.append(line)
+
+    description = clean(" ".join(lines))
+
+    return description or None
+
+
 def fetch_products():
     response = requests.get(
         SOURCE_URL,
@@ -80,7 +162,15 @@ def fetch_products():
         timeout=(10, 60),
     )
     response.raise_for_status()
-    return response.json().get("products", [])
+
+    products = response.json().get("products", [])
+
+    RAW_PRODUCTS_FILE.write_text(
+        json.dumps(products, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    return products
 
 
 def normalise_model(value):
@@ -213,6 +303,8 @@ def build_catalogue():
             continue
 
         volume = float(volume_raw)
+        description = extract_description(product)
+        model_type = extract_model_type(product)
 
         if volume <= 0:
             failures.append({
@@ -231,8 +323,8 @@ def build_catalogue():
             "brand": BRAND_NAME,
             "model_name": model,
             "model_family": model,
-            "board_category": clean(product.get("product_type")) or "Surfboard",
-            "description": strip_html(product.get("body_html")),
+            "board_category": christenson_category_from_type(model_type),
+            "description": description,
             "official_product_url": product_url,
             "official_image_url": get_image(product),
             "recommended_wave_range": None,
