@@ -1,0 +1,97 @@
+[
+  {
+    "retailerSlug": "surf_station",
+    "retailerName": "Surf Station",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.surfstationstore.com",
+    "collectionUrl": "https://www.surfstationstore.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+  },
+  {
+    "retailerSlug": "jacks_surfboards",
+    "retailerName": "Jack's Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://jackssurfboards.com",
+    "collectionUrl": "https://jackssurfboards.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+  },
+  {
+    "retailerSlug": "real_watersports",
+    "retailerName": "Real Watersports",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.realwatersports.com",
+    "collectionUrl": "https://www.realwatersports.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+  },
+  {
+    "retailerSlug": "cleanline_surf",
+    "retailerName": "Cleanline Surf",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.cleanlinesurf.com",
+    "collectionUrl": "https://www.cleanlinesurf.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+  },
+  {
+    "retailerSlug": "hansen_surfboards",
+    "retailerName": "Hansen Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.hansensurf.com",
+    "collectionUrl": "https://www.hansensurf.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+  },
+  {
+    "retailerSlug": "hawaiian_south_shore",
+    "retailerName": "Hawaiian South Shore",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.hawaiiansouthshore.com",
+    "collectionUrl": "https://www.hawaiiansouthshore.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+  },
+  {
+    "retailerSlug": "encinitas_surfboards",
+    "retailerName": "Encinitas Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://encinitassurfboards.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Uses the store-wide products.json feed because the public board room is content-led and does not expose a single stable collection handle."
+  },
+  {
+    "retailerSlug": "birds_surf_shed",
+    "retailerName": "Bird's Surf Shed",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://birdssurfshed.com",
+    "collectionUrl": "https://www.birdssurfshed.com/collections/birds-shed-online-surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US Phase 1 Shopify target. Verified products.json support and visible surfboard collections."
+  }
+]

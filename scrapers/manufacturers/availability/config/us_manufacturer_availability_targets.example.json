@@ -1,0 +1,30 @@
+{
+  "example": true,
+  "enabled": false,
+  "regionCode": "US",
+  "description": "Non-live example scaffold for United States manufacturer direct availability targets. These targets are planning placeholders only and are not validated for SQL import.",
+  "notes": [
+    "US means United States fulfilment.",
+    "Use RegionCode US for all future USA manufacturer-direct rows.",
+    "Do not run this file as production configuration in Phase 1.",
+    "This scaffold documents source mapping and rollout sequencing only."
+  ],
+  "targets": [
+    { "brandName": "Channel Islands", "enabled": false, "validated": false, "sourceUrl": "https://cisurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary CI source when reviewed." },
+    { "brandName": "Lost", "enabled": false, "validated": false, "sourceUrl": "https://lostsurfboards.net", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary Lost source when reviewed." },
+    { "brandName": "Pyzel", "enabled": false, "validated": false, "sourceUrl": "https://pyzelsurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Source differs from the current EU path and needs separate validation." },
+    { "brandName": "JS Industries", "enabled": false, "validated": false, "sourceUrl": "https://us.jsindustries.com", "builderStrategy": "shopify_candidate", "marketNotes": "Strong candidate for the shared Shopify-style manufacturer path after US validation." },
+    { "brandName": "Firewire", "enabled": false, "validated": false, "sourceUrl": "https://firewiresurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan a US-specific builder from the primary US source." },
+    { "brandName": "Album", "enabled": false, "validated": false, "sourceUrl": "https://albumsurf.com", "builderStrategy": "existing_us_builder_present", "marketNotes": "A partial US builder exists in-repo and needs formal review before activation." },
+    { "brandName": "SharpEye", "enabled": false, "validated": false, "sourceUrl": "https://sharpeyesurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary US source." },
+    { "brandName": "DHD", "enabled": false, "validated": false, "sourceUrl": "https://dhdsurf.com", "builderStrategy": "new_or_adapted", "marketNotes": "Primary site differs from the current EU specialized DHD path." },
+    { "brandName": "Christenson", "enabled": false, "validated": false, "sourceUrl": "https://christensonsurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary Christenson source." },
+    { "brandName": "Chemistry", "enabled": false, "validated": false, "sourceUrl": "https://chemistrysurfboards.com", "builderStrategy": "existing_au_builder_present", "marketNotes": "An AU builder exists and may inform a later US rollout after source review." },
+    { "brandName": "Rusty", "enabled": false, "validated": false, "sourceUrl": "https://rustysurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary Rusty source." },
+    { "brandName": "Haydenshapes", "enabled": false, "validated": false, "sourceUrl": "https://haydenshapes.com", "builderStrategy": "new_or_adapted", "marketNotes": "Primary source differs from existing AU/EU assumptions and needs review." },
+    { "brandName": "Misfit", "enabled": false, "validated": false, "sourceUrl": "https://misfitshapes.com", "builderStrategy": "existing_au_builder_present", "marketNotes": "An AU builder exists and may inform a later US rollout after source review." },
+    { "brandName": "Chilli", "enabled": false, "validated": false, "sourceUrl": "https://chillisurfboards.com", "builderStrategy": "existing_au_builder_present", "marketNotes": "An AU builder exists and may inform a later US rollout after source review." },
+    { "brandName": "Pukas", "enabled": false, "validated": false, "sourceUrl": "https://pukasurf.com", "builderStrategy": "new_or_adapted", "marketNotes": "Needs US fulfilment relevance review before builder work." },
+    { "brandName": "Simon Anderson", "enabled": false, "validated": false, "sourceUrl": "https://simonandersonsurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Needs US fulfilment relevance review before builder work." }
+  ]
+}

@@ -638,7 +638,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
 
     region_code = (region or regionCode or "AU").strip().upper()
 
-    if region_code not in {"AU", "ID", "EU"}:
+    if region_code not in {"AU", "ID", "EU", "US"}:
         region_code = "AU"
 
     official_query = text("""

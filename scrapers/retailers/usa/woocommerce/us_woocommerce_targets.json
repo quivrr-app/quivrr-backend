@@ -1,0 +1,16 @@
+[
+  {
+    "retailerSlug": "et_surf",
+    "retailerName": "ET Surf",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://etsurf.com",
+    "categoryUrls": [
+      "https://www.etsurf.com/"
+    ],
+    "platform": "woocommerce",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "WooCommerce markers were detected, but the store API route is unavailable and lightweight inspection did not surface a safe paginated surfboard category path for the current regional adapter."
+  }
+]
