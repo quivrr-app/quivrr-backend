@@ -76,6 +76,8 @@ SUPPORTED_CATALOGUE_BRANDS = {
     "Simon Anderson",
 }
 
+SEARCH_VERSION = "search_timeout_fix_v2"
+OTHER_MODEL_MATCHES_ENABLED = False
 OTHER_MODEL_MATCHES_LIMIT = 8
 OTHER_MODEL_MATCHES_TIMEOUT_SECONDS = 2
 OTHER_MODEL_MATCHES_BUDGET_MS = 1500
@@ -430,7 +432,12 @@ def should_include_other_model_matches(official_brand_name, direct_matches, exac
 
 def should_run_other_model_matches(direct_matches, exact_matches, close_matches):
 
-    return not direct_matches and not exact_matches and not close_matches
+    return (
+        OTHER_MODEL_MATCHES_ENABLED
+        and not direct_matches
+        and not exact_matches
+        and not close_matches
+    )
 
 
 def should_skip_other_model_matches_for_budget(elapsed_ms):
@@ -443,6 +450,7 @@ def search_log(event, **fields):
     payload = {
         "event": event,
         "service": "quivrr-api",
+        "searchVersion": SEARCH_VERSION,
         "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     payload.update(fields)
@@ -2455,6 +2463,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
 
     response = {
         "apiBuild": "manufacturer-policy-v1",
+        "searchVersion": SEARCH_VERSION,
         "regionCode": region_code,
         "manufacturerSearchPolicy": {
             "brandName": official.BrandName,

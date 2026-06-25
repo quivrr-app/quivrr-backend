@@ -213,12 +213,14 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertIn("ri.InventoryId NOT IN :exact_inventory_ids", source)
         self.assertIn("ri.BoardSizeId <> :board_size_id", source)
         self.assertIn('"otherModelMatches": other_model_matches', source)
+        self.assertIn('"searchVersion": SEARCH_VERSION', source)
         self.assertIn("TOP 8", source)
         self.assertIn("ri.BoardModelId <> :board_model_id", source)
         self.assertIn("timeout_seconds=OTHER_MODEL_MATCHES_TIMEOUT_SECONDS", source)
         self.assertIn("other_model_matches_timeout", source)
 
     def test_other_model_matches_only_show_when_primary_sections_are_empty(self):
+        self.assertFalse(app.OTHER_MODEL_MATCHES_ENABLED)
         self.assertTrue(
             app.should_include_other_model_matches(
                 "JS Industries",
@@ -248,13 +250,7 @@ class DimensionMatchingTests(unittest.TestCase):
                 [{"inventoryId": 1}],
             )
         )
-        self.assertTrue(
-            app.should_run_other_model_matches(
-                [],
-                [],
-                [],
-            )
-        )
+        self.assertFalse(app.should_run_other_model_matches([], [], []))
 
     def test_other_model_matches_budget_guard(self):
         self.assertFalse(app.should_skip_other_model_matches_for_budget(1499))
@@ -263,6 +259,7 @@ class DimensionMatchingTests(unittest.TestCase):
     def test_timeout_classifier_handles_timeout_text(self):
         self.assertTrue(app.is_timeout_error(RuntimeError("query timeout expired")))
         self.assertFalse(app.is_timeout_error(RuntimeError("other failure")))
+        self.assertEqual(app.SEARCH_VERSION, "search_timeout_fix_v2")
         self.assertFalse(
             app.should_include_other_model_matches(
                 "JS Industries",
