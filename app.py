@@ -6,9 +6,10 @@ from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, text
+from sqlalchemy import bindparam, create_engine, text
 from sqlalchemy.exc import OperationalError
 
+from utils.dimensions import dimensions_from_title
 from utils.retailer_matching import classify_retailer_exact
 from utils.manufacturer_shipping import shipping_metadata_for_brand
 
@@ -327,6 +328,59 @@ def retailer_result(row, result_type):
         )
 
     return result
+
+
+def retailer_row_matches_selected_exactly(row, official):
+
+    if getattr(row, "BoardSizeId", None) is not None and row.BoardSizeId == official.BoardSizeId:
+        return True
+
+    title = (
+        f"{getattr(row, 'RawProductTitle', '') or ''} "
+        f"{getattr(row, 'NormalisedProductTitle', '') or ''}"
+    )
+    parsed_title_dimensions = dimensions_from_title(title)
+    strong_model_title = text_contains_phrase(
+        getattr(row, "RawProductTitle", None),
+        getattr(row, "NormalisedProductTitle", None),
+        official.ModelName,
+    )
+
+    exact, _reason = classify_retailer_exact(
+        {
+            "boardSizeId": getattr(row, "BoardSizeId", None),
+            "title": title,
+            "length": parsed_title_dimensions.get("length") or getattr(row, "LengthFeetInches", None),
+            "width": parsed_title_dimensions.get("width") or getattr(row, "Width", None),
+            "thickness": parsed_title_dimensions.get("thickness") or getattr(row, "Thickness", None),
+            "volume": parsed_title_dimensions.get("volume") or getattr(row, "VolumeLitres", None),
+            "construction": getattr(row, "Construction", None),
+        },
+        {
+            "boardSizeId": official.BoardSizeId,
+            "length": official.LengthFeetInches,
+            "width": official.Width,
+            "thickness": official.Thickness,
+            "volume": official.VolumeLitres,
+            "construction": official.Construction,
+        },
+        brand_matches=(getattr(row, "BrandId", None) == official.BrandId),
+        model_matches=(
+            getattr(row, "BoardModelId", None) == official.BoardModelId
+            or strong_model_title
+        ),
+        strong_model_title=strong_model_title,
+    )
+
+    return exact
+
+
+def should_exclude_close_retailer_row(row, official, exact_inventory_ids):
+
+    if getattr(row, "InventoryId", None) in exact_inventory_ids:
+        return True
+
+    return retailer_row_matches_selected_exactly(row, official)
 
 
 @app.get("/")
@@ -1442,6 +1496,9 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     close_query = text("""
         SELECT TOP 300
             ri.InventoryId,
+            ri.BrandId,
+            ri.BoardModelId,
+            ri.BoardSizeId,
             ri.RawProductTitle,
             ri.NormalisedProductTitle,
             ri.ProductUrl,
@@ -1537,6 +1594,15 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         AND ri.RegionCode = :region_code
         AND ri.BrandId = :brand_id
         AND (
+            :exact_inventory_ids_empty = 1
+            OR ri.InventoryId NOT IN :exact_inventory_ids
+        )
+        AND (
+            :board_size_id IS NULL
+            OR ri.BoardSizeId IS NULL
+            OR ri.BoardSizeId <> :board_size_id
+        )
+        AND (
             ri.StockStatus IS NULL
             OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
                 'in stock',
@@ -1587,7 +1653,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             VolumeDelta ASC,
             ri.PriceAud ASC,
             r.RetailerName ASC
-    """)
+    """).bindparams(bindparam("exact_inventory_ids", expanding=True))
 
     official = fetch_one_with_retry(
         official_query,
@@ -1896,9 +1962,13 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     close_rows = execute_with_retry(
         close_query,
         {
+            "exact_inventory_ids": sorted(exact_ids) or [-1],
+            "exact_inventory_ids_empty": 1 if not exact_ids else 0,
+            "board_size_id": official.BoardSizeId,
             "model_match": model_match,
             "model_family_match": model_family_match,
             "brand_id": official.BrandId,
+            "board_model_id": official.BoardModelId,
             "length": official.LengthFeetInches,
             "one_down_length": one_down_length,
             "one_up_length": one_up_length,
@@ -1913,7 +1983,11 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     close_matches = []
 
     for row in close_rows:
-        if row.InventoryId in exact_ids:
+        if should_exclude_close_retailer_row(
+            row,
+            official,
+            exact_ids,
+        ):
             continue
 
         if not model_family_matches(

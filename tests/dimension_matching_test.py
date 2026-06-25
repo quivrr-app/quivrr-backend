@@ -1,5 +1,6 @@
 import unittest
 import inspect
+from types import SimpleNamespace
 
 import app
 
@@ -156,6 +157,132 @@ class DimensionMatchingTests(unittest.TestCase):
         source = inspect.getsource(app.search_inventory)
         self.assertGreaterEqual(source.count("ri.RegionCode = :region_code"), 2)
         self.assertGreaterEqual(source.count("ri.BrandId = :brand_id"), 2)
+        self.assertIn("ri.InventoryId NOT IN :exact_inventory_ids", source)
+        self.assertIn("ri.BoardSizeId <> :board_size_id", source)
+
+    def test_close_match_excludes_au_exact_same_board_size(self):
+        official = SimpleNamespace(
+            BoardSizeId=1001,
+            BoardModelId=2001,
+            BrandId=3001,
+            BrandName="Channel Islands",
+            ModelName="Dumpster Diver 2",
+            LengthFeetInches="5'8",
+            Width="19 1/2",
+            Thickness="2 7/16",
+            VolumeLitres=29.3,
+            Construction="PU",
+        )
+        exact_row = SimpleNamespace(
+            InventoryId=5001,
+            BoardSizeId=1001,
+            BoardModelId=2001,
+            BrandId=3001,
+            RawProductTitle="Channel Islands Dumpster Diver 2 PU 5'8 x 19 1/2 x 2 7/16 29.3L",
+            NormalisedProductTitle="channel islands dumpster diver 2 pu 5 8 29 3l",
+            LengthFeetInches="5'8",
+            Width="19 1/2",
+            Thickness="2 7/16",
+            VolumeLitres=29.3,
+            Construction="PU",
+        )
+        self.assertTrue(
+            app.should_exclude_close_retailer_row(exact_row, official, {5001})
+        )
+
+    def test_close_match_excludes_us_exact_same_model_size_construction(self):
+        official = SimpleNamespace(
+            BoardSizeId=1002,
+            BoardModelId=2002,
+            BrandId=3001,
+            BrandName="Channel Islands",
+            ModelName="Dumpster Diver 2",
+            LengthFeetInches="5'8",
+            Width="19 1/2",
+            Thickness="2 7/16",
+            VolumeLitres=29.3,
+            Construction="Spine-Tek",
+        )
+        exact_equivalent_row = SimpleNamespace(
+            InventoryId=5002,
+            BoardSizeId=None,
+            BoardModelId=2002,
+            BrandId=3001,
+            RawProductTitle="Channel Islands Dumpster Diver 2 Spine-Tek 5'8 x 19 1/2 x 2 7/16 29.3L",
+            NormalisedProductTitle="channel islands dumpster diver 2 spine tek 5 8 29 3l",
+            LengthFeetInches="5'8",
+            Width="19.5",
+            Thickness="2.44",
+            VolumeLitres=29.3,
+            Construction="Spine-Tek",
+        )
+        self.assertTrue(
+            app.should_exclude_close_retailer_row(exact_equivalent_row, official, set())
+        )
+
+    def test_close_match_excludes_title_identified_exact_when_canonical_ids_missing(self):
+        official = SimpleNamespace(
+            BoardSizeId=1005,
+            BoardModelId=2005,
+            BrandId=3001,
+            BrandName="Channel Islands",
+            ModelName="Dumpster Diver 2",
+            LengthFeetInches="5'8",
+            Width="19 1/2",
+            Thickness="2 7/16",
+            VolumeLitres=29.3,
+            Construction="PU",
+        )
+        title_identified_exact_row = SimpleNamespace(
+            InventoryId=5005,
+            BoardSizeId=None,
+            BoardModelId=None,
+            BrandId=3001,
+            RawProductTitle="Dumpster Diver 2 5'8 x 19 1/2 x 2 7/16 - 29.30L PU",
+            NormalisedProductTitle="dumpster diver 2 5 8 19 1 2 2 7 16 29 30l pu",
+            LengthFeetInches="5'8",
+            Width=None,
+            Thickness=None,
+            VolumeLitres=29.3,
+            Construction="PU",
+        )
+        self.assertTrue(
+            app.should_exclude_close_retailer_row(
+                title_identified_exact_row,
+                official,
+                set(),
+            )
+        )
+
+    def test_close_match_keeps_legitimate_nearby_alternative(self):
+        official = SimpleNamespace(
+            BoardSizeId=1003,
+            BoardModelId=2003,
+            BrandId=3001,
+            BrandName="Channel Islands",
+            ModelName="Dumpster Diver 2",
+            LengthFeetInches="5'8",
+            Width="19 1/2",
+            Thickness="2 7/16",
+            VolumeLitres=29.3,
+            Construction="PU",
+        )
+        nearby_row = SimpleNamespace(
+            InventoryId=5003,
+            BoardSizeId=1004,
+            BoardModelId=2003,
+            BrandId=3001,
+            RawProductTitle="Channel Islands Dumpster Diver 2 PU 5'9 x 19 3/4 x 2 1/2 30.7L",
+            NormalisedProductTitle="channel islands dumpster diver 2 pu 5 9 30 7l",
+            LengthFeetInches="5'9",
+            Width="19 3/4",
+            Thickness="2 1/2",
+            VolumeLitres=30.7,
+            Construction="PU",
+        )
+        self.assertFalse(
+            app.should_exclude_close_retailer_row(nearby_row, official, set())
+        )
 
     def test_eu_linker_uses_title_decimals_but_rejects_ambiguity(self):
         row = {
