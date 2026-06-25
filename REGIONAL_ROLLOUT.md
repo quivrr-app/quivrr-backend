@@ -89,6 +89,36 @@ Validated June 2026 counts:
 | `RetailerInventory` | 11,746 | 9,105 | 1,998 | 0 |
 | `ManufacturerInventory` | 6,498 | 2,736 | 185 | 0 |
 
+## Global Linkage Framework
+
+Sprint 5 is complete and Sprint 6 linkage uplift is active through one shared supported-catalogue linker:
+
+- `python scripts/run_supported_inventory_linkage_backfill.py dry-run`
+- `python scripts/run_supported_inventory_linkage_backfill.py apply --confirm-apply APPLY_SUPPORTED_LINKS`
+
+The shared linker applies across `AU`, `EU`, `ID`, and `US` and scopes quality reporting to supported Quivrr manufacturers only. Unsupported brands, retailer house brands, and unsupported longboard catalogues are excluded from platform linkage quality metrics.
+
+Current supported-manufacturer linkage baseline after the latest shared apply:
+
+- Global model linkage: `81.47%`
+- Global size linkage: `33.72%`
+
+Per-region supported linkage:
+
+- `AU`: model `88.76%`, size `26.80%`
+- `EU`: model `75.92%`, size `31.98%`
+- `ID`: model `85.21%`, size `62.69%`
+- `US`: model `78.19%`, size `36.11%`
+
+Shared search experience is now:
+
+- Manufacturer Direct
+- Exact Retailer Matches
+- Close Matches
+- Other Models Available
+
+`Other Models Available` is deterministic, remains inside the same supported manufacturer, and only appears when direct, exact, and close matches are all empty.
+
 ## UK Planned State
 
 UK is planned as the United Kingdom fulfilment market.

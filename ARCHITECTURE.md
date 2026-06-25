@@ -80,7 +80,7 @@ Primary endpoints:
 
 The API should not run scrapers, catalogue imports, or database mutation jobs. Those workloads belong in scripts and scheduled jobs.
 
-`region` or `regionCode` is required for regional inventory behavior and must resolve to an active runtime region: `AU`, `EU`, or `ID`. Invalid values must be rejected or fail closed; they must not silently fall back to AU.
+`region` or `regionCode` is required for regional inventory behavior and must resolve to an active runtime region: `AU`, `EU`, `ID`, or `US`. Invalid values must be rejected or fail closed; they must not silently fall back to AU.
 
 ## Azure SQL Dependency
 
@@ -154,9 +154,20 @@ The active EU retailer set is 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, 
 
 Exact retailer matching accepts equivalent dimensions, including fractional and decimal inch representations, decimal-comma or decimal-point litres, and bounded width, thickness, and volume comparisons. For 58 Surf, discovery fetches product-detail attributes and retains width, thickness, volume, construction, and fin information through normalization and import. An exact result can therefore pass through equivalent dimensions even when `BoardSizeId` remains `NULL` because duplicate equivalent canonical sizes make deterministic size linking ambiguous.
 
+Supported-manufacturer linkage quality is now improved through a shared deterministic backfill path:
+
+```powershell
+python scripts/run_supported_inventory_linkage_backfill.py dry-run
+python scripts/run_supported_inventory_linkage_backfill.py apply --confirm-apply APPLY_SUPPORTED_LINKS
+```
+
+This path scopes metrics to supported Quivrr manufacturers only, includes used boards when they link to existing canonical models and sizes, and produces global, regional, retailer, and manufacturer linkage reporting without changing SQL schema or retailer source behavior.
+
+The search API now also exposes `otherModelMatches` as a deterministic final fallback section. It is only populated when manufacturer direct, exact retailer, and close retailer sections are all empty, and it remains inside the same supported manufacturer.
+
 ## Regional Rollout
 
-`RegionCode` is mandatory for regional inventory and availability. AU, EU, and ID are active runtime regions. Search and imports must never coerce an invalid, missing, or unsupported region to AU.
+`RegionCode` is mandatory for regional inventory and availability. AU, EU, ID, and US are active runtime regions. Search and imports must never coerce an invalid, missing, or unsupported region to AU.
 
 AU is the mature production region. Existing retailer master data, active scrape targets, and nightly inventory jobs are AU-oriented unless a file explicitly says otherwise.
 
