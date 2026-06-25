@@ -54,6 +54,27 @@ engine = create_engine(
 )
 
 
+SUPPORTED_CATALOGUE_BRANDS = {
+    "Album",
+    "Channel Islands",
+    "Chemistry Surfboards",
+    "Chilli",
+    "Christenson",
+    "DHD",
+    "DMS",
+    "Firewire",
+    "Haydenshapes",
+    "JS Industries",
+    "Lost",
+    "Misfit",
+    "Pukas",
+    "Pyzel",
+    "Rusty",
+    "Sharp Eye",
+    "Simon Anderson",
+}
+
+
 app = FastAPI(
     title="Quivrr API",
     version="1.1.0"
@@ -381,6 +402,16 @@ def should_exclude_close_retailer_row(row, official, exact_inventory_ids):
         return True
 
     return retailer_row_matches_selected_exactly(row, official)
+
+
+def should_include_other_model_matches(official_brand_name, direct_matches, exact_matches, close_matches):
+
+    return (
+        official_brand_name in SUPPORTED_CATALOGUE_BRANDS
+        and not direct_matches
+        and not exact_matches
+        and not close_matches
+    )
 
 
 @app.get("/")
@@ -1655,6 +1686,98 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             r.RetailerName ASC
     """).bindparams(bindparam("exact_inventory_ids", expanding=True))
 
+    other_models_query = text("""
+        SELECT TOP 300
+            ri.InventoryId,
+            ri.BrandId,
+            ri.BoardModelId,
+            ri.BoardSizeId,
+            ri.RawProductTitle,
+            ri.NormalisedProductTitle,
+            ri.ProductUrl,
+            ri.ProductImageUrl,
+            ri.PriceAud,
+            ri.PriceAmount,
+            ri.PriceCurrency,
+            ri.StockStatus,
+            ri.Construction,
+            ri.FinSetup,
+            ri.LengthFeetInches,
+            ri.Width,
+            ri.Thickness,
+            ri.VolumeLitres,
+            r.RetailerName,
+            r.WebsiteUrl,
+            r.LogoUrl,
+            bm.ModelName AS CanonicalModelName,
+            CASE
+                WHEN ri.BoardModelId = :board_model_id
+                     AND (
+                        ri.Construction IS NULL
+                        OR :construction IS NULL
+                        OR LOWER(LTRIM(RTRIM(ri.Construction))) <>
+                           LOWER(LTRIM(RTRIM(:construction)))
+                     )
+                    THEN 400
+                WHEN ri.BoardModelId = :board_model_id
+                     AND ri.LengthFeetInches IN (:one_down_length, :one_up_length)
+                    THEN 350
+                WHEN ri.BoardModelId = :board_model_id
+                    THEN 300
+                ELSE 200
+            END
+            +
+            CASE
+                WHEN ri.LengthFeetInches = :length THEN 30
+                WHEN ri.LengthFeetInches IN (:one_down_length, :one_up_length) THEN 20
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.VolumeLitres IS NOT NULL
+                     AND :volume IS NOT NULL
+                     AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    THEN 25
+                WHEN ri.VolumeLitres IS NOT NULL
+                     AND :volume IS NOT NULL
+                     AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 2.0
+                    THEN 10
+                ELSE 0
+            END AS MatchScore
+        FROM dbo.RetailerInventory ri
+        INNER JOIN dbo.Retailers r
+            ON ri.RetailerId = r.RetailerId
+        INNER JOIN dbo.BoardModels bm
+            ON bm.BoardModelId = ri.BoardModelId
+        WHERE ri.IsActive = 1
+          AND ri.RegionCode = :region_code
+          AND ri.BrandId = :brand_id
+          AND ri.BoardModelId IS NOT NULL
+          AND (
+                :excluded_inventory_ids_empty = 1
+                OR ri.InventoryId NOT IN :excluded_inventory_ids
+          )
+          AND (
+                :board_size_id IS NULL
+                OR ri.BoardSizeId IS NULL
+                OR ri.BoardSizeId <> :board_size_id
+          )
+          AND (
+                ri.StockStatus IS NULL
+                OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
+                    'in stock',
+                    'instock',
+                    'in_stock',
+                    'available',
+                    'true'
+                )
+          )
+        ORDER BY
+            MatchScore DESC,
+            ri.PriceAud ASC,
+            r.RetailerName ASC
+    """).bindparams(bindparam("excluded_inventory_ids", expanding=True))
+
     official = fetch_one_with_retry(
         official_query,
         {
@@ -2007,6 +2130,51 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         if len(close_matches) >= 50:
             break
 
+    other_model_matches = []
+    close_ids = {
+        row["inventoryId"]
+        for row in close_matches
+    }
+
+    if should_include_other_model_matches(
+        official.BrandName,
+        direct_matches,
+        exact_matches,
+        close_matches,
+    ):
+        excluded_inventory_ids = sorted(exact_ids | close_ids) or [-1]
+        other_model_rows = execute_with_retry(
+            other_models_query,
+            {
+                "excluded_inventory_ids": excluded_inventory_ids,
+                "excluded_inventory_ids_empty": 1 if not (exact_ids or close_ids) else 0,
+                "board_size_id": official.BoardSizeId,
+                "board_model_id": official.BoardModelId,
+                "brand_id": official.BrandId,
+                "length": official.LengthFeetInches,
+                "one_down_length": one_down_length,
+                "one_up_length": one_up_length,
+                "volume": official.VolumeLitres,
+                "construction": official.Construction,
+                "region_code": region_code,
+            }
+        )
+
+        for row in other_model_rows:
+            if should_exclude_close_retailer_row(
+                row,
+                official,
+                exact_ids | close_ids,
+            ):
+                continue
+
+            result = retailer_result(row, "retailerOtherModel")
+            result["canonicalModelName"] = getattr(row, "CanonicalModelName", None)
+            other_model_matches.append(result)
+
+            if len(other_model_matches) >= 50:
+                break
+
     if official_result.get("directManufacturerMatches"):
         available_direct_matches = [
             match for match in official_result.get("directManufacturerMatches", [])
@@ -2066,7 +2234,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         "directManufacturerMatches": official_result.get("directManufacturerMatches", []),
         "alternateManufacturerMatches": official_result.get("alternateManufacturerMatches", []),
         "exactRetailerMatches": exact_matches,
-        "closeRetailerMatches": close_matches
+        "closeRetailerMatches": close_matches,
+        "otherModelMatches": other_model_matches,
     }
 
 

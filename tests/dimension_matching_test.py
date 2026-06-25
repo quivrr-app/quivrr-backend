@@ -159,6 +159,33 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertGreaterEqual(source.count("ri.BrandId = :brand_id"), 2)
         self.assertIn("ri.InventoryId NOT IN :exact_inventory_ids", source)
         self.assertIn("ri.BoardSizeId <> :board_size_id", source)
+        self.assertIn('"otherModelMatches": other_model_matches', source)
+
+    def test_other_model_matches_only_show_when_primary_sections_are_empty(self):
+        self.assertTrue(
+            app.should_include_other_model_matches(
+                "JS Industries",
+                [],
+                [],
+                [],
+            )
+        )
+        self.assertFalse(
+            app.should_include_other_model_matches(
+                "JS Industries",
+                [{"inventoryId": 1}],
+                [],
+                [],
+            )
+        )
+        self.assertFalse(
+            app.should_include_other_model_matches(
+                "Unsupported",
+                [],
+                [],
+                [],
+            )
+        )
 
     def test_close_match_excludes_au_exact_same_board_size(self):
         official = SimpleNamespace(

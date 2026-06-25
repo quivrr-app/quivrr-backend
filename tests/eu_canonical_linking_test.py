@@ -1,6 +1,8 @@
 import unittest
 
 from scripts.europe.import_eu_retailer_inventory import (
+    extract_canonical_brand_name,
+    extract_model_hint,
     select_model_candidate,
     tolerant_model_key,
 )
@@ -49,6 +51,38 @@ class EuCanonicalLinkingTests(unittest.TestCase):
                 )
                 self.assertIsNotNone(selected)
                 self.assertEqual(selected["modelName"], expected)
+
+    def test_extract_model_hint_strips_used_prefix_length_and_stock_codes(self):
+        self.assertEqual(
+            extract_model_hint(
+                "5'11 JS Xero Gravity Carbotune #8057 - Used Surfboard",
+                "JS Industries",
+            ),
+            "Xero Gravity",
+        )
+        self.assertEqual(
+            extract_model_hint(
+                "USED Lost Driver 3.0 Grom PU/Poly 5'9\"",
+                "Lost",
+            ),
+            "Driver 3.0 Grom",
+        )
+
+    def test_extract_canonical_brand_name_supports_supported_brand_aliases_after_prefix_cleanup(self):
+        self.assertEqual(
+            extract_canonical_brand_name(
+                "USED SimonAnderson Holy Grail 6'1",
+                "",
+            ),
+            "Simon Anderson",
+        )
+        self.assertEqual(
+            extract_canonical_brand_name(
+                "5'8 Chemistry Surfboards Zen 3",
+                "",
+            ),
+            "Chemistry Surfboards",
+        )
 
 
 if __name__ == "__main__":

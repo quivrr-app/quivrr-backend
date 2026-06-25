@@ -60,6 +60,15 @@ Inventory link health report:
 - The inventory link health report now sorts `EU`, `AU`, `ID`, and `US` as explicit regional snapshots when those active rows exist.
 - Before SQL activation from a blocked local environment, the operational readiness signals are the US dry-run normalised row count, importable row count, retailer count, and per-retailer coverage from `scripts/usa/run_us_retailer_inventory_refresh.py`.
 
+Supported catalogue linkage backfill:
+
+- Command: `python scripts/run_supported_inventory_linkage_backfill.py dry-run`
+- Apply: `python scripts/run_supported_inventory_linkage_backfill.py apply --confirm-apply APPLY_SUPPORTED_LINKS`
+- The report scopes metrics to supported Quivrr manufacturers only and ignores unsupported or house-brand inventory when measuring platform linkage quality.
+- The backfill uses one shared parser and canonical matcher across `AU`, `EU`, `ID`, and `US`.
+- Used inventory is eligible when it belongs to a supported manufacturer and links to an existing canonical model or size.
+- The report emits before/after supported-row linkage coverage globally and per region, retailer, and manufacturer, plus top remaining unmatched models and alias opportunities.
+
 ## Health Model
 
 The observability health module calculates:

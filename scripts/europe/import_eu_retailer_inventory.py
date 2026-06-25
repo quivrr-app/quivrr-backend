@@ -45,6 +45,8 @@ REGION_CODE = "EU"
 PRICE_CURRENCY = "EUR"
 
 BRAND_ALIASES = {
+    "album": "Album",
+    "album surfboards": "Album",
     "aloha": "Aloha",
     "al merrick": "Channel Islands",
     "channel islands": "Channel Islands",
@@ -73,8 +75,16 @@ BRAND_ALIASES = {
     "christenson surfboards": "Christenson",
     "chilli": "Chilli",
     "chilli surfboards": "Chilli",
+    "chemistry": "Chemistry Surfboards",
+    "chemistry surfboards": "Chemistry Surfboards",
+    "d m s": "DMS",
+    "dms": "DMS",
+    "dms surfboards": "DMS",
     "haydenshapes": "Haydenshapes",
     "haydenshapes surfboards": "Haydenshapes",
+    "misfit": "Misfit",
+    "misfit shapes": "Misfit",
+    "misfit surfboards": "Misfit",
     "nsp": "NSP",
     "nsp surfboards": "NSP",
     "rusty": "Rusty",
@@ -84,8 +94,12 @@ BRAND_ALIASES = {
     "torq": "Torq",
     "torq surfboards": "Torq",
     "sharp eye": "Sharp Eye",
+    "sharp eye surfboards": "Sharp Eye",
     "sharpeye": "Sharp Eye",
     "sharpeye surfboards": "Sharp Eye",
+    "simon anderson": "Simon Anderson",
+    "simon anderson surfboards": "Simon Anderson",
+    "simonanderson": "Simon Anderson",
 }
 
 GENERIC_MODEL_NAMES = {
@@ -102,6 +116,12 @@ GENERIC_MODEL_NAMES = {
 
 DETERMINISTIC_MODEL_ALIASES = {
     "421": "421 fish",
+    "f 1": "f1",
+    "f 1 round": "f1 round",
+    "f 1 squash": "f1 squash",
+    "f 1 swallow": "f1 swallow",
+    "f1 squash": "f1",
+    "f1 round": "f1",
     "fishbeard": "fish beard",
     "high line": "highline",
     "hk twin": "hk twin pin",
@@ -112,6 +132,7 @@ DETERMINISTIC_MODEL_ALIASES = {
     "sabo taj": "sabotaj",
     "spud nick": "spudnick",
     "sword fish": "swordfish",
+    "the ripper": "ripper",
     "water hog": "waterhog",
     "whitetiger": "white tiger",
 }
@@ -136,6 +157,37 @@ def contains_phrase(text_value: object, phrase_value: object) -> bool:
     if not text_key or not phrase_key:
         return False
     return f" {phrase_key} " in f" {text_key} "
+
+
+def strip_condition_prefixes(value: object) -> str:
+    text = clean(value)
+    if not text:
+        return ""
+
+    patterns = [
+        r"^\s*(?:used|new|ex demo|ex-demo|demo|factory blemish|2nd hand|second hand|pre owned|pre-owned)\s*\|\s*",
+        r"^\s*(?:used|new|ex demo|ex-demo|demo|factory blemish|2nd hand|second hand|pre owned|pre-owned)\s+",
+        r"^\s*used\s+board\s*\(?",
+    ]
+    for pattern in patterns:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+
+    return clean(text)
+
+
+def strip_leading_length(value: object) -> str:
+    text = clean(value)
+    if not text:
+        return ""
+
+    return clean(
+        re.sub(
+            r"^\s*(?:[4-9]|1[0-2])\s*(?:ft)?\s*['’\"]?\s*\d{1,2}\s*(?:[\"”]|in)?\s*",
+            "",
+            text,
+            flags=re.IGNORECASE,
+        )
+    )
 
 
 def model_key(value: object) -> str:
@@ -195,12 +247,13 @@ def catalogue_model_key(model_name: object, brand_name: object) -> str:
 
 
 def extract_canonical_brand_name(title: object, existing_brand: object = "") -> str:
+    title = strip_condition_prefixes(title)
     existing_key = clean_key(existing_brand)
     for alias, canonical in BRAND_ALIASES.items():
         if existing_key == clean_key(alias) or existing_key == clean_key(canonical):
             return canonical
 
-    title_key = re.sub(r"^surfboards?\s+", "", clean_key(title))
+    title_key = re.sub(r"^surfboards?\s+", "", clean_key(strip_leading_length(title)))
     for alias, canonical in sorted(
         BRAND_ALIASES.items(), key=lambda item: len(clean_key(item[0])), reverse=True
     ):
@@ -211,9 +264,11 @@ def extract_canonical_brand_name(title: object, existing_brand: object = "") -> 
 
 
 def extract_model_hint(title: object, brand_name: object = "") -> str:
-    value = clean(title)
+    value = strip_condition_prefixes(title)
     if not value:
         return ""
+
+    value = strip_leading_length(value)
 
     parts = [clean(part) for part in re.split(r"\s+-\s+", value) if clean(part)]
     if (
@@ -256,9 +311,16 @@ def extract_model_hint(title: object, brand_name: object = "") -> str:
         value,
         flags=re.IGNORECASE,
     )
+    value = re.sub(r"\s+#\d+\b", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+\(?\d{5,}\)?\s*$", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s*-\s*used\s+surfboard\b", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+used\s+surfboard\b", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+used\b", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+surfboard\b", "", value, flags=re.IGNORECASE)
     value = re.split(
-        r"\b(?:PU|EPS|SPINE\s*-?\s*TEK|LIGHT\s*SPEED|LIGHTSPEED|"
-        r"HELIUM|IBOLIC|VOLCANIC|LFT|FST|PE|TIMBERTEK|THUNDERBOLT)\b",
+        r"\b(?:PU(?:/POLY)?|POLY(?:ESTER)?|EPS|SPINE\s*-?\s*TEK|LIGHT\s*SPEED(?:\s*II)?|"
+        r"LIGHTSPEED(?:\s*II)?|STEALTH\s+CARBON\s+WRAP|CARBON\s+WRAP|CARBOTUNE|HYFI(?:\s*3(?:\.0)?)?|"
+        r"C1\s*CARBON|HELIUM|IBOLIC|VOLCANIC|LFT|FST|PE|TIMBERTEK|THUNDERBOLT)\b",
         value,
         maxsplit=1,
         flags=re.IGNORECASE,
