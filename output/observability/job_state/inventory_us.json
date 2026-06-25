@@ -1,0 +1,13 @@
+{
+  "event": "inventory_job_state_updated",
+  "service": "retailer_inventory",
+  "timestamp_utc": "2026-06-25T00:43:45Z",
+  "region": "US",
+  "status": "success",
+  "rows_loaded": 7812,
+  "job_name": "inventory_us",
+  "job_type": "inventory",
+  "consecutive_failures": 0,
+  "latest_success_timestamp_utc": "2026-06-25T00:43:45Z",
+  "latest_status_timestamp_utc": "2026-06-25T00:43:45Z"
+}

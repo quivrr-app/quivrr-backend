@@ -31,9 +31,9 @@
     "website": "https://catalystshop.com",
     "surfboardCategoryUrl": "https://catalystshop.com/webstore/surfboards/",
     "priority": 3,
-    "enabled": false,
+    "enabled": true,
     "platform": "bigcommerce",
-    "notes": "Detected BigCommerce with a visible surfboards category. Deferred in Phase 1 because the current Gen 3 regional discovery stack does not yet have a lightweight BigCommerce adapter that is safe to wire into the US regional path."
+    "notes": "Promoted after validating the surfboards category through a dedicated US-safe BigCommerce adapter."
   },
   {
     "retailerSlug": "ron_jon_surf_shop",
@@ -79,9 +79,9 @@
     "website": "https://www.hansensurf.com",
     "surfboardCategoryUrl": "https://www.hansensurf.com/collections/surfboards",
     "priority": 7,
-    "enabled": true,
+    "enabled": false,
     "platform": "shopify",
-    "notes": "Phase 1 implemented through the existing Shopify discovery path. Verified products.json support and visible surfboard collection links."
+    "notes": "Follow-up target. Lightweight validation confirms the Shopify storefront is reachable, but the current collection handle and store-wide feed do not expose recoverable surfboard inventory through the existing Gen 3 adapter. Kept disabled until a small, US-only collection recovery path is reviewed."
   },
   {
     "retailerSlug": "hawaiian_south_shore",
@@ -115,9 +115,9 @@
     "website": "https://encinitassurfboards.com",
     "surfboardCategoryUrl": "https://encinitassurfboards.com/pages/board-room",
     "priority": 10,
-    "enabled": true,
+    "enabled": false,
     "platform": "shopify",
-    "notes": "Phase 1 implemented through the existing Shopify discovery path using the store products.json feed because the board room is content-led rather than a single public collection."
+    "notes": "Follow-up target. The board room is reachable, but the current Shopify paths surface broad non-board merchandise and did not produce safe accepted surfboard rows through the existing Gen 3 adapter. Kept disabled until a reviewed board-room extraction path exists."
   },
   {
     "retailerSlug": "birds_surf_shed",
@@ -142,5 +142,161 @@
     "enabled": false,
     "platform": "unknown",
     "notes": "Deferred in Phase 1. Lightweight inspection returned lander redirects rather than stable commerce endpoints for homepage, Shopify, or WooCommerce probes."
+  },
+  {
+    "retailerSlug": "island_water_sports",
+    "retailerName": "Island Water Sports",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.islandwatersports.com",
+    "surfboardCategoryUrl": "https://www.islandwatersports.com",
+    "priority": 13,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the existing US Shopify path against the store-wide products feed. The feed produced clean surfboard rows with dimensions and low noise."
+  },
+  {
+    "retailerSlug": "surf_n_sea",
+    "retailerName": "Surf N Sea",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://surfnsea.com",
+    "surfboardCategoryUrl": "https://surfnsea.com",
+    "priority": 14,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the existing US Shopify path against the store-wide products feed. The feed produced clean surfboard inventory with dimensions."
+  },
+  {
+    "retailerSlug": "kimos_surf_hut",
+    "retailerName": "Kimo's Surf Hut",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.kimossurfhut.com",
+    "surfboardCategoryUrl": "https://www.kimossurfhut.com/collections/kimos-surf-hut-surfboards",
+    "priority": 15,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the explicit surfboards collection through the US Shopify normaliser. The collection yielded surfboard rows with recoverable identifiers and acceptable noise."
+  },
+  {
+    "retailerSlug": "moment_surf_co",
+    "retailerName": "Moment Surf Co",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://momentsurfco.com",
+    "surfboardCategoryUrl": "https://momentsurfco.com/collections/new-surfboards",
+    "priority": 16,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the new-surfboards Shopify collection. The collection produced clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "degree_33_surfboards",
+    "retailerName": "Degree 33 Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://degree33surfboards.com",
+    "surfboardCategoryUrl": "https://degree33surfboards.com",
+    "priority": 17,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the store-wide Shopify feed. The catalogue is surfboard-heavy and produced substantial US surfboard inventory with recoverable dimensions."
+  },
+  {
+    "retailerSlug": "surfboard_broker",
+    "retailerName": "Surfboard Broker",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://surfboardbroker.com",
+    "surfboardCategoryUrl": "https://surfboardbroker.com",
+    "priority": 18,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the store-wide Shopify feed. The feed is surfboard-dominant and yielded clean importable board rows."
+  },
+  {
+    "retailerSlug": "infinity_surfboards",
+    "retailerName": "Infinity Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://infinitysurf.com",
+    "surfboardCategoryUrl": "https://infinitysurf.com",
+    "priority": 19,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the store-wide Shopify feed. The feed produced clean surfboard rows with dimensions and low noise."
+  },
+  {
+    "retailerSlug": "walden_surfboards",
+    "retailerName": "Walden Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://waldensurfboards.com",
+    "surfboardCategoryUrl": "https://waldensurfboards.com",
+    "priority": 20,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the store-wide Shopify feed. The storefront yielded enough clean surfboard rows with dimensions to support the US runner safely."
+  },
+  {
+    "retailerSlug": "stewart_surfboards",
+    "retailerName": "Stewart Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://stewartsurfboards.com",
+    "surfboardCategoryUrl": "https://stewartsurfboards.com",
+    "priority": 21,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the store-wide Shopify feed. The feed produced a strong volume of clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "bing_surfboards",
+    "retailerName": "Bing Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://bingsurf.com",
+    "surfboardCategoryUrl": "https://bingsurf.com",
+    "priority": 22,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the store-wide Shopify feed. The feed produced clean surfboard inventory with recoverable dimensions."
+  },
+  {
+    "retailerSlug": "robert_august_surf_company",
+    "retailerName": "Robert August Surf Company",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://robertaugust.com",
+    "surfboardCategoryUrl": "https://robertaugust.com/collections/boards-in-inventory",
+    "priority": 23,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the boards-in-inventory Shopify collection. The collection produced clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "dark_arts_surf",
+    "retailerName": "Dark Arts Surf",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://darkartssurf.com",
+    "surfboardCategoryUrl": "https://darkartssurf.com/collections/surfboards",
+    "priority": 24,
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the surfboards Shopify collection. The collection produced clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "warm_winds",
+    "retailerName": "Warm Winds",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://warmwinds.com",
+    "surfboardCategoryUrl": "https://www.warmwinds.com/shop/category/surfboards-13",
+    "priority": 25,
+    "enabled": true,
+    "platform": "magento",
+    "notes": "Promoted after validating the surfboards category through a dedicated US Magento/html adapter."
   }
 ]

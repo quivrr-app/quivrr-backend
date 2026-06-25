@@ -1,0 +1,10 @@
+{
+  "brand": "Degree 33",
+  "base_url": "https://degree33surfboards.com",
+  "source_url": "https://degree33surfboards.com/collections/surfboards/products.json",
+  "products_seen": 233,
+  "filtered_products": 233,
+  "catalogue_rows": 233,
+  "created_at_utc": "2026-06-25T00:42:36Z",
+  "output_file": "scrapers\\brands\\degree_33\\output\\degree_33_master_catalogue_clean.json"
+}

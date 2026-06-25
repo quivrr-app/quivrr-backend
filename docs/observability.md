@@ -56,6 +56,9 @@ Inventory link health report:
 - The script queries `dbo.RetailerInventory` and `dbo.Retailers` directly and includes every active `RegionCode` present in live retailer inventory.
 - AU legacy retailer search can still return valid results even when `RetailerInventory.BoardModelId` and `RetailerInventory.BoardSizeId` are not populated.
 - EU and ID link quality should be tracked primarily through `BoardModelId` and `BoardSizeId` coverage on active rows.
+- USA uses the same canonical link health model as EU and ID once `RegionCode = 'US'` rows are present in `RetailerInventory`.
+- The inventory link health report now sorts `EU`, `AU`, `ID`, and `US` as explicit regional snapshots when those active rows exist.
+- Before SQL activation from a blocked local environment, the operational readiness signals are the US dry-run normalised row count, importable row count, retailer count, and per-retailer coverage from `scripts/usa/run_us_retailer_inventory_refresh.py`.
 
 ## Health Model
 

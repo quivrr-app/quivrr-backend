@@ -1,0 +1,10 @@
+{
+  "brand": "Walden",
+  "base_url": "https://waldensurfboards.com",
+  "source_url": "https://waldensurfboards.com/products.json",
+  "products_seen": 479,
+  "filtered_products": 71,
+  "catalogue_rows": 71,
+  "created_at_utc": "2026-06-25T00:37:59Z",
+  "output_file": "scrapers\\brands\\walden\\output\\walden_master_catalogue_clean.json"
+}

@@ -55,9 +55,9 @@
     "website": "https://www.hansensurf.com",
     "collectionUrl": "https://www.hansensurf.com/collections/surfboards",
     "platform": "shopify",
-    "enabled": true,
+    "enabled": false,
     "priceCurrency": "USD",
-    "notes": "US Phase 1 Shopify target. Verified products.json support and a visible surfboards collection."
+    "notes": "US follow-up Shopify target. The storefront is reachable, but the current collection JSON and store-wide feed do not expose recoverable surfboard rows through the existing regional adapter."
   },
   {
     "retailerSlug": "hawaiian_south_shore",
@@ -77,10 +77,11 @@
     "regionCode": "US",
     "country": "United States",
     "website": "https://encinitassurfboards.com",
+    "collectionUrl": "",
     "platform": "shopify",
-    "enabled": true,
+    "enabled": false,
     "priceCurrency": "USD",
-    "notes": "US Phase 1 Shopify target. Uses the store-wide products.json feed because the public board room is content-led and does not expose a single stable collection handle."
+    "notes": "US follow-up Shopify target. The public board room is reachable, but the current Shopify feeds surface broad non-board merchandise and do not yet yield safe accepted surfboard rows through the existing adapter."
   },
   {
     "retailerSlug": "birds_surf_shed",
@@ -93,5 +94,149 @@
     "enabled": true,
     "priceCurrency": "USD",
     "notes": "US Phase 1 Shopify target. Verified products.json support and visible surfboard collections."
+  },
+  {
+    "retailerSlug": "island_water_sports",
+    "retailerName": "Island Water Sports",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.islandwatersports.com",
+    "collectionUrl": "https://www.islandwatersports.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed through the US normaliser. The feed produced clean surfboard rows with dimensions and low noise."
+  },
+  {
+    "retailerSlug": "surf_n_sea",
+    "retailerName": "Surf N Sea",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://surfnsea.com",
+    "collectionUrl": "https://surfnsea.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed through the US normaliser. The feed produced clean surfboard inventory with dimensions."
+  },
+  {
+    "retailerSlug": "kimos_surf_hut",
+    "retailerName": "Kimo's Surf Hut",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.kimossurfhut.com",
+    "collectionUrl": "https://www.kimossurfhut.com/collections/kimos-surf-hut-surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the explicit surfboards collection through the US Shopify normaliser."
+  },
+  {
+    "retailerSlug": "moment_surf_co",
+    "retailerName": "Moment Surf Co",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://momentsurfco.com",
+    "collectionUrl": "https://momentsurfco.com/collections/new-surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the new-surfboards Shopify collection. The collection produced clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "degree_33_surfboards",
+    "retailerName": "Degree 33 Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://degree33surfboards.com",
+    "collectionUrl": "https://degree33surfboards.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed. The catalogue is surfboard-heavy and produced substantial US surfboard inventory with recoverable dimensions."
+  },
+  {
+    "retailerSlug": "surfboard_broker",
+    "retailerName": "Surfboard Broker",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://surfboardbroker.com",
+    "collectionUrl": "https://surfboardbroker.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed. The feed is surfboard-dominant and yielded clean importable board rows."
+  },
+  {
+    "retailerSlug": "infinity_surfboards",
+    "retailerName": "Infinity Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://infinitysurf.com",
+    "collectionUrl": "https://infinitysurf.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed. The feed produced clean surfboard rows with dimensions and low noise."
+  },
+  {
+    "retailerSlug": "walden_surfboards",
+    "retailerName": "Walden Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://waldensurfboards.com",
+    "collectionUrl": "https://waldensurfboards.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed. The storefront yielded enough clean surfboard rows with dimensions to support the US runner safely."
+  },
+  {
+    "retailerSlug": "stewart_surfboards",
+    "retailerName": "Stewart Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://stewartsurfboards.com",
+    "collectionUrl": "https://stewartsurfboards.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed. The feed produced a strong volume of clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "bing_surfboards",
+    "retailerName": "Bing Surfboards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://bingsurf.com",
+    "collectionUrl": "https://bingsurf.com",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the store-wide Shopify products feed. The feed produced clean surfboard inventory with recoverable dimensions."
+  },
+  {
+    "retailerSlug": "robert_august_surf_company",
+    "retailerName": "Robert August Surf Company",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://robertaugust.com",
+    "collectionUrl": "https://robertaugust.com/collections/boards-in-inventory",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the boards-in-inventory Shopify collection. The collection produced clean surfboard rows with dimensions."
+  },
+  {
+    "retailerSlug": "dark_arts_surf",
+    "retailerName": "Dark Arts Surf",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://darkartssurf.com",
+    "collectionUrl": "https://darkartssurf.com/collections/surfboards",
+    "platform": "shopify",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the surfboards Shopify collection. The collection produced clean surfboard rows with dimensions."
   }
 ]

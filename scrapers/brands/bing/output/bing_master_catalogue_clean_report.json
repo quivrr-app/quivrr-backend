@@ -1,0 +1,10 @@
+{
+  "brand": "Bing",
+  "base_url": "https://bingsurf.com",
+  "source_url": "https://bingsurf.com/products.json",
+  "products_seen": 2285,
+  "filtered_products": 921,
+  "catalogue_rows": 921,
+  "created_at_utc": "2026-06-25T00:47:15Z",
+  "output_file": "scrapers\\brands\\bing\\output\\bing_master_catalogue_clean.json"
+}

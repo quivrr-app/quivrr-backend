@@ -9,12 +9,16 @@ from datetime import datetime, timezone
 from html import unescape
 from pathlib import Path
 
+import requests
+
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scrapers.retailers.europe.common.discovery_utils import (  # noqa: E402
+    classify_product,
+    clean,
     dedupe_rows,
     decorate_rows,
     product_rows_from_json_ld,
@@ -27,6 +31,11 @@ from scrapers.retailers.europe.common.fetch_utils import fetch_text  # noqa: E40
 
 INPUT_FILE = Path("scrapers/retailers/usa/woocommerce/us_woocommerce_targets.json")
 OUTPUT_FILE = Path("scrapers/retailers/usa/woocommerce/output/us_woocommerce_product_discovery.json")
+STORE_API_PAGE_SIZE = 100
+STORE_API_HEADERS = {
+    "User-Agent": "Mozilla/5.0 QuivrrProbe/1.0",
+    "Accept": "application/json,text/plain,*/*",
+}
 
 
 def page_url(url: str, page: int) -> str:
@@ -85,10 +94,116 @@ def enrich_product_variants(row: dict) -> list[dict]:
     return expanded or [{**row, "sourceSnippet": f"{row.get('sourceSnippet', '')} {page_text}"}]
 
 
+def store_api_page_url(url: str, page: int) -> str:
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}per_page={STORE_API_PAGE_SIZE}&page={page}"
+
+
+def product_rows_from_store_api(items: list[dict], target: dict, source_url: str) -> tuple[list[dict], int]:
+    rows = []
+    rejected = 0
+
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        name = clean(item.get("name"))
+        permalink = clean(item.get("permalink"))
+        extra_text = " ".join(
+            [
+                name,
+                strip_tags(unescape(str(item.get("short_description") or ""))),
+                strip_tags(unescape(str(item.get("description") or ""))),
+            ]
+        )
+        score = classify_product(name, permalink, extra_text)
+        if not score["accepted"]:
+            rejected += 1
+            continue
+
+        images = item.get("images") if isinstance(item.get("images"), list) else []
+        image_url = ""
+        if images and isinstance(images[0], dict):
+            image_url = clean(images[0].get("src"))
+
+        prices = item.get("prices") if isinstance(item.get("prices"), dict) else {}
+        raw_price = prices.get("price")
+        if isinstance(raw_price, str) and raw_price.isdigit():
+            price_amount = f"{int(raw_price) / 100:.2f}"
+        else:
+            price_amount = clean(raw_price)
+
+        rows.append(
+            {
+                "retailerSlug": target["retailerSlug"],
+                "retailerName": target["retailerName"],
+                "regionCode": target["regionCode"],
+                "country": target["country"],
+                "platform": target["platform"],
+                "sourceUrl": source_url,
+                "productTitle": name,
+                "productUrl": permalink,
+                "productImageUrl": image_url,
+                "brand": "",
+                "vendor": "",
+                "priceAmount": price_amount,
+                "priceCurrency": clean(prices.get("currency_code")) or target.get("priceCurrency", "USD"),
+                "isAvailable": item.get("is_in_stock") if isinstance(item.get("is_in_stock"), bool) else None,
+                "stockStatus": "in_stock" if item.get("is_in_stock") is True else "out_of_stock" if item.get("is_in_stock") is False else "",
+                "sku": clean(item.get("sku")),
+                "sourceSnippet": extra_text[:1000],
+                "parseConfidence": score["parseConfidence"],
+                "discoveryStatus": "accepted",
+                "filterReasons": score["filterReasons"],
+            }
+        )
+
+    return rows, rejected
+
+
 def discover_target(target: dict, max_pages: int) -> dict:
     products = []
     rejected = 0
     fetches = []
+
+    store_api_url = clean(target.get("storeApiUrl"))
+    if store_api_url:
+        page = 1
+        while max_pages <= 0 or page <= max_pages:
+            source_url = store_api_page_url(store_api_url, page)
+            try:
+                response = requests.get(source_url, headers=STORE_API_HEADERS, timeout=25)
+                status = "ok" if response.status_code == 200 else "http_error"
+                fetches.append({
+                    "url": source_url,
+                    "status": status,
+                    "httpStatus": response.status_code,
+                    "finalUrl": response.url,
+                    "reason": "" if response.status_code == 200 else f"HTTP {response.status_code}",
+                })
+                if response.status_code != 200:
+                    break
+                items = response.json()
+                if not isinstance(items, list) or not items:
+                    break
+                rows, rejected_count = product_rows_from_store_api(items, target, source_url)
+                if not rows:
+                    rejected += rejected_count
+                    page += 1
+                    continue
+                products.extend(rows)
+                rejected += rejected_count
+                if len(items) < STORE_API_PAGE_SIZE:
+                    break
+                page += 1
+            except Exception as error:
+                fetches.append({
+                    "url": source_url,
+                    "status": "network_error",
+                    "httpStatus": None,
+                    "finalUrl": source_url,
+                    "reason": f"{type(error).__name__}: {error}",
+                })
+                break
 
     for category_url in target.get("categoryUrls", []):
         page = 1

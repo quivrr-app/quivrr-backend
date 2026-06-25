@@ -1,0 +1,16 @@
+[
+  {
+    "retailerSlug": "catalyst_surf_shop",
+    "retailerName": "Catalyst Surf Shop",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://catalystshop.com",
+    "categoryUrls": [
+      "https://catalystshop.com/webstore/surfboards/"
+    ],
+    "platform": "bigcommerce",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "US BigCommerce target promoted after validating the surfboards category path through a dedicated US-safe BigCommerce adapter."
+  }
+]

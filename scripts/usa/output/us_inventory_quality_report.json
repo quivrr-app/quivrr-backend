@@ -1,0 +1,1264 @@
+{
+  "event": "us_inventory_quality_report",
+  "regionCode": "US",
+  "priceCurrency": "USD",
+  "inputFile": "scrapers\\retailers\\usa\\output\\us_normalised_inventory.json",
+  "sourceRows": 7923,
+  "totalRows": 7923,
+  "duplicateRows": 0,
+  "duplicateRatePct": 0.0,
+  "importableRows": 7812,
+  "rejectedRows": 111,
+  "rejectedRatePct": 1.4,
+  "productsWithoutDimensions": 111,
+  "productsWithoutDimensionsPct": 1.4,
+  "productsWithoutPrices": 0,
+  "productsWithoutPricesPct": 0.0,
+  "productsWithoutImages": 57,
+  "productsWithoutImagesPct": 0.72,
+  "projectedLinkMetricsBefore": {
+    "denominator": "all_importable_rows",
+    "importableRows": 7812,
+    "projectedModelLinkedRows": 3753,
+    "projectedModelLinkedPct": 48.04,
+    "projectedSizeLinkedRows": 2244,
+    "projectedSizeLinkedPct": 28.73
+  },
+  "projectedLinkMetricsAfter": {
+    "denominator": "catalogue_covered_eligible_rows_after_safe_us_normalisation_and_exclusions",
+    "postExclusionRows": 7245,
+    "eligibleRows": 5022,
+    "projectedModelLinkedRows": 3753,
+    "projectedModelLinkedPct": 74.73,
+    "projectedSizeLinkedRows": 2244,
+    "projectedSizeLinkedPct": 44.68
+  },
+  "expectedCanonicalModelLinkedRows": 3753,
+  "expectedCanonicalModelLinkedPct": 48.04,
+  "expectedBoardSizeLinkedRows": 2244,
+  "expectedBoardSizeLinkedPct": 28.73,
+  "brandDistribution": [
+    {
+      "brandName": "Lost",
+      "rows": 1843
+    },
+    {
+      "brandName": "Bing",
+      "rows": 1023
+    },
+    {
+      "brandName": "Firewire",
+      "rows": 635
+    },
+    {
+      "brandName": "Unknown",
+      "rows": 456
+    },
+    {
+      "brandName": "Channel Islands",
+      "rows": 439
+    },
+    {
+      "brandName": "JS Industries",
+      "rows": 361
+    },
+    {
+      "brandName": "Christenson",
+      "rows": 336
+    },
+    {
+      "brandName": "Pyzel",
+      "rows": 325
+    },
+    {
+      "brandName": "Stewart",
+      "rows": 301
+    },
+    {
+      "brandName": "Domestic",
+      "rows": 173
+    },
+    {
+      "brandName": "Torq",
+      "rows": 116
+    },
+    {
+      "brandName": "Slater Designs",
+      "rows": 114
+    },
+    {
+      "brandName": "Walk in customer",
+      "rows": 98
+    },
+    {
+      "brandName": "SHRED & SPEED",
+      "rows": 92
+    },
+    {
+      "brandName": "Harley Ingleby",
+      "rows": 82
+    },
+    {
+      "brandName": "COMBO BOARD VENDOR",
+      "rows": 81
+    },
+    {
+      "brandName": "NSP",
+      "rows": 67
+    },
+    {
+      "brandName": "CJ Nelson",
+      "rows": 67
+    },
+    {
+      "brandName": "Consignment",
+      "rows": 51
+    },
+    {
+      "brandName": "Imported",
+      "rows": 51
+    },
+    {
+      "brandName": "Catch Surf",
+      "rows": 43
+    },
+    {
+      "brandName": "Walden",
+      "rows": 43
+    },
+    {
+      "brandName": "SMTH Shapes",
+      "rows": 40
+    },
+    {
+      "brandName": "Gerry Lopez",
+      "rows": 39
+    },
+    {
+      "brandName": "Robert August Surf Company",
+      "rows": 39
+    },
+    {
+      "brandName": "Maurice Cole",
+      "rows": 38
+    },
+    {
+      "brandName": "Vernor",
+      "rows": 37
+    },
+    {
+      "brandName": "Machado",
+      "rows": 37
+    },
+    {
+      "brandName": "Dan Mann",
+      "rows": 35
+    },
+    {
+      "brandName": "ST",
+      "rows": 33
+    },
+    {
+      "brandName": "Alton",
+      "rows": 30
+    },
+    {
+      "brandName": "Skindog",
+      "rows": 26
+    },
+    {
+      "brandName": "Lib Tech",
+      "rows": 25
+    },
+    {
+      "brandName": "Sale",
+      "rows": 25
+    },
+    {
+      "brandName": "Haydenshapes",
+      "rows": 24
+    },
+    {
+      "brandName": "Takayama",
+      "rows": 23
+    },
+    {
+      "brandName": "Donald Takayama",
+      "rows": 22
+    },
+    {
+      "brandName": "Rawson",
+      "rows": 22
+    },
+    {
+      "brandName": "Kai Sallas",
+      "rows": 20
+    },
+    {
+      "brandName": "AIPA",
+      "rows": 20
+    },
+    {
+      "brandName": "Thunderbolt",
+      "rows": 19
+    },
+    {
+      "brandName": "Surfboardbroker",
+      "rows": 19
+    },
+    {
+      "brandName": "Roger Hinds",
+      "rows": 18
+    },
+    {
+      "brandName": "Mark Richards",
+      "rows": 17
+    },
+    {
+      "brandName": "Ryan Sakal",
+      "rows": 17
+    },
+    {
+      "brandName": "CJ NELSON DESIGNS",
+      "rows": 15
+    },
+    {
+      "brandName": "Wayne Rich",
+      "rows": 14
+    },
+    {
+      "brandName": "Taylor Jensen",
+      "rows": 14
+    },
+    {
+      "brandName": "Surf N Sea",
+      "rows": 14
+    },
+    {
+      "brandName": "Shred & Speed",
+      "rows": 14
+    },
+    {
+      "brandName": "Timmy Patterson",
+      "rows": 13
+    },
+    {
+      "brandName": "Rusty",
+      "rows": 13
+    },
+    {
+      "brandName": "Kimo's Surf Hut",
+      "rows": 13
+    },
+    {
+      "brandName": "Valaric",
+      "rows": 12
+    },
+    {
+      "brandName": "Flowt",
+      "rows": 12
+    },
+    {
+      "brandName": "AJW",
+      "rows": 11
+    },
+    {
+      "brandName": "Sharp Eye",
+      "rows": 10
+    },
+    {
+      "brandName": "Ricky Carroll",
+      "rows": 10
+    },
+    {
+      "brandName": "Album Surf",
+      "rows": 10
+    },
+    {
+      "brandName": "Stamps",
+      "rows": 10
+    },
+    {
+      "brandName": "MAST",
+      "rows": 10
+    },
+    {
+      "brandName": "Roland",
+      "rows": 10
+    },
+    {
+      "brandName": "Surf Prescriptions",
+      "rows": 9
+    },
+    {
+      "brandName": "Aipa",
+      "rows": 8
+    },
+    {
+      "brandName": "Softech",
+      "rows": 8
+    },
+    {
+      "brandName": "Murdey",
+      "rows": 8
+    },
+    {
+      "brandName": "Used",
+      "rows": 8
+    },
+    {
+      "brandName": "HARLEY INGLEBY SERIES",
+      "rows": 7
+    },
+    {
+      "brandName": "Chemistry",
+      "rows": 7
+    },
+    {
+      "brandName": "Forty Seven",
+      "rows": 6
+    },
+    {
+      "brandName": "Hayden",
+      "rows": 6
+    },
+    {
+      "brandName": "Rockit Surf",
+      "rows": 5
+    },
+    {
+      "brandName": "Arakawa",
+      "rows": 5
+    },
+    {
+      "brandName": "Orion",
+      "rows": 5
+    },
+    {
+      "brandName": "Bailey",
+      "rows": 5
+    },
+    {
+      "brandName": "Panda",
+      "rows": 5
+    },
+    {
+      "brandName": "SW",
+      "rows": 5
+    },
+    {
+      "brandName": "Wave Bandit",
+      "rows": 4
+    },
+    {
+      "brandName": "Stu Kenson",
+      "rows": 4
+    },
+    {
+      "brandName": "CJ Nelson Designs",
+      "rows": 4
+    },
+    {
+      "brandName": "Pace",
+      "rows": 4
+    },
+    {
+      "brandName": "Bauer",
+      "rows": 4
+    },
+    {
+      "brandName": "Surf Technicians",
+      "rows": 4
+    },
+    {
+      "brandName": "G&S Inc",
+      "rows": 4
+    },
+    {
+      "brandName": "SMTH",
+      "rows": 4
+    },
+    {
+      "brandName": "Album",
+      "rows": 4
+    },
+    {
+      "brandName": "Chilli",
+      "rows": 3
+    },
+    {
+      "brandName": "Surftech",
+      "rows": 3
+    },
+    {
+      "brandName": "Mandala",
+      "rows": 3
+    },
+    {
+      "brandName": "Linden",
+      "rows": 3
+    },
+    {
+      "brandName": "Roberts",
+      "rows": 3
+    },
+    {
+      "brandName": "Proctor",
+      "rows": 3
+    },
+    {
+      "brandName": "Tyler Warren Shapes",
+      "rows": 3
+    },
+    {
+      "brandName": "Rip Curl",
+      "rows": 3
+    },
+    {
+      "brandName": "THUNDERBOLT",
+      "rows": 3
+    },
+    {
+      "brandName": "Mitsven",
+      "rows": 3
+    },
+    {
+      "brandName": "Island Water Sports",
+      "rows": 3
+    },
+    {
+      "brandName": "Wave Riding Vehicles",
+      "rows": 3
+    },
+    {
+      "brandName": "Jimmy Romo",
+      "rows": 3
+    },
+    {
+      "brandName": "Discontinued",
+      "rows": 3
+    },
+    {
+      "brandName": "Eye Symmetry",
+      "rows": 3
+    },
+    {
+      "brandName": "Tokoro",
+      "rows": 3
+    },
+    {
+      "brandName": "Bret",
+      "rows": 3
+    },
+    {
+      "brandName": "Trade-In",
+      "rows": 3
+    },
+    {
+      "brandName": "JT",
+      "rows": 3
+    },
+    {
+      "brandName": "Justin Melton",
+      "rows": 2
+    },
+    {
+      "brandName": "T. Patterson",
+      "rows": 2
+    },
+    {
+      "brandName": "Munoz",
+      "rows": 2
+    },
+    {
+      "brandName": "Crime",
+      "rows": 2
+    },
+    {
+      "brandName": "Cleanline",
+      "rows": 2
+    },
+    {
+      "brandName": "Mickey Muñoz",
+      "rows": 2
+    },
+    {
+      "brandName": "Solid",
+      "rows": 2
+    },
+    {
+      "brandName": "TVS",
+      "rows": 2
+    },
+    {
+      "brandName": "Three Palms Board Co.",
+      "rows": 2
+    },
+    {
+      "brandName": "FCS",
+      "rows": 2
+    },
+    {
+      "brandName": "Trading Co",
+      "rows": 2
+    },
+    {
+      "brandName": "7S",
+      "rows": 2
+    },
+    {
+      "brandName": "Almond",
+      "rows": 2
+    },
+    {
+      "brandName": "Critters Toy Co.",
+      "rows": 2
+    },
+    {
+      "brandName": "tomo",
+      "rows": 2
+    },
+    {
+      "brandName": "misfit",
+      "rows": 2
+    },
+    {
+      "brandName": "Borst",
+      "rows": 2
+    },
+    {
+      "brandName": "Magic Carpet",
+      "rows": 2
+    },
+    {
+      "brandName": "ISLAND DAZE",
+      "rows": 2
+    },
+    {
+      "brandName": "11th Street",
+      "rows": 1
+    },
+    {
+      "brandName": "Mick Fanning",
+      "rows": 1
+    },
+    {
+      "brandName": "Neilson",
+      "rows": 1
+    },
+    {
+      "brandName": "Stewart Maxcy",
+      "rows": 1
+    },
+    {
+      "brandName": "Surf Station",
+      "rows": 1
+    },
+    {
+      "brandName": "DMS",
+      "rows": 1
+    },
+    {
+      "brandName": "Bark",
+      "rows": 1
+    },
+    {
+      "brandName": "Tomo",
+      "rows": 1
+    },
+    {
+      "brandName": "Alex Lopez",
+      "rows": 1
+    },
+    {
+      "brandName": "Black Rose",
+      "rows": 1
+    },
+    {
+      "brandName": "NME",
+      "rows": 1
+    },
+    {
+      "brandName": "Trimcraft",
+      "rows": 1
+    },
+    {
+      "brandName": "Sparrow",
+      "rows": 1
+    },
+    {
+      "brandName": "Kies",
+      "rows": 1
+    },
+    {
+      "brandName": "Degree 33",
+      "rows": 1
+    },
+    {
+      "brandName": "First Break Surf Shop",
+      "rows": 1
+    },
+    {
+      "brandName": "BST Surf Stix",
+      "rows": 1
+    },
+    {
+      "brandName": "Northwest Surf Design",
+      "rows": 1
+    },
+    {
+      "brandName": "Pete Cochran",
+      "rows": 1
+    },
+    {
+      "brandName": "Jimmy Lewis",
+      "rows": 1
+    },
+    {
+      "brandName": "Infinity",
+      "rows": 1
+    },
+    {
+      "brandName": "Matt Kechele",
+      "rows": 1
+    },
+    {
+      "brandName": "Shuler",
+      "rows": 1
+    },
+    {
+      "brandName": "Duke Kahanamoku",
+      "rows": 1
+    },
+    {
+      "brandName": "BIC",
+      "rows": 1
+    },
+    {
+      "brandName": "SMITH",
+      "rows": 1
+    },
+    {
+      "brandName": "Aftanas",
+      "rows": 1
+    },
+    {
+      "brandName": "Stretch",
+      "rows": 1
+    },
+    {
+      "brandName": "Vulcan",
+      "rows": 1
+    },
+    {
+      "brandName": "Nomad",
+      "rows": 1
+    },
+    {
+      "brandName": "Aloha",
+      "rows": 1
+    },
+    {
+      "brandName": "Blackfern",
+      "rows": 1
+    },
+    {
+      "brandName": "Critical Slide",
+      "rows": 1
+    },
+    {
+      "brandName": "Naish",
+      "rows": 1
+    },
+    {
+      "brandName": "TYLER WARREN",
+      "rows": 1
+    },
+    {
+      "brandName": "HANK WARNER",
+      "rows": 1
+    },
+    {
+      "brandName": "Rusty , Inc.",
+      "rows": 1
+    },
+    {
+      "brandName": "Con",
+      "rows": 1
+    },
+    {
+      "brandName": "Clyde Beatty Jr",
+      "rows": 1
+    },
+    {
+      "brandName": "Michael Dolsey Designs",
+      "rows": 1
+    },
+    {
+      "brandName": "MakaSurf",
+      "rows": 1
+    },
+    {
+      "brandName": "Modern",
+      "rows": 1
+    },
+    {
+      "brandName": "Love Machine",
+      "rows": 1
+    },
+    {
+      "brandName": "Rob Machado",
+      "rows": 1
+    },
+    {
+      "brandName": "Demo",
+      "rows": 1
+    },
+    {
+      "brandName": "KJA",
+      "rows": 1
+    },
+    {
+      "brandName": "Ghost Shapes",
+      "rows": 1
+    },
+    {
+      "brandName": "Wally Puha",
+      "rows": 1
+    },
+    {
+      "brandName": "Thrash Craft",
+      "rows": 1
+    },
+    {
+      "brandName": "von sol",
+      "rows": 1
+    },
+    {
+      "brandName": "Bushman",
+      "rows": 1
+    },
+    {
+      "brandName": "G Force",
+      "rows": 1
+    },
+    {
+      "brandName": "Cordell",
+      "rows": 1
+    },
+    {
+      "brandName": "seven",
+      "rows": 1
+    },
+    {
+      "brandName": "Wayne rich",
+      "rows": 1
+    },
+    {
+      "brandName": "Lance Ebert",
+      "rows": 1
+    },
+    {
+      "brandName": "G Style",
+      "rows": 1
+    },
+    {
+      "brandName": "album",
+      "rows": 1
+    },
+    {
+      "brandName": "MANN",
+      "rows": 1
+    },
+    {
+      "brandName": "SUPER",
+      "rows": 1
+    },
+    {
+      "brandName": "The Guild",
+      "rows": 1
+    },
+    {
+      "brandName": "Meeks",
+      "rows": 1
+    },
+    {
+      "brandName": "Bionic",
+      "rows": 1
+    },
+    {
+      "brandName": "Thread",
+      "rows": 1
+    },
+    {
+      "brandName": "Slater Design",
+      "rows": 1
+    },
+    {
+      "brandName": "Chris Gallagher Designs",
+      "rows": 1
+    },
+    {
+      "brandName": "Sticker Junkie",
+      "rows": 1
+    },
+    {
+      "brandName": "Amos",
+      "rows": 1
+    }
+  ],
+  "retailerDistribution": [
+    {
+      "retailerName": "Catalyst Surf Shop",
+      "rows": 2420
+    },
+    {
+      "retailerName": "Real Watersports",
+      "rows": 2057
+    },
+    {
+      "retailerName": "Bing Surfboards",
+      "rows": 961
+    },
+    {
+      "retailerName": "Cleanline Surf",
+      "rows": 429
+    },
+    {
+      "retailerName": "Stewart Surfboards",
+      "rows": 319
+    },
+    {
+      "retailerName": "Degree 33 Surfboards",
+      "rows": 266
+    },
+    {
+      "retailerName": "Surf Station",
+      "rows": 225
+    },
+    {
+      "retailerName": "Bird's Surf Shed",
+      "rows": 210
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rows": 200
+    },
+    {
+      "retailerName": "Surfboard Broker",
+      "rows": 182
+    },
+    {
+      "retailerName": "Warm Winds",
+      "rows": 172
+    },
+    {
+      "retailerName": "Island Water Sports",
+      "rows": 111
+    },
+    {
+      "retailerName": "Infinity Surfboards",
+      "rows": 108
+    },
+    {
+      "retailerName": "Hawaiian South Shore",
+      "rows": 94
+    },
+    {
+      "retailerName": "Walden Surfboards",
+      "rows": 64
+    },
+    {
+      "retailerName": "Robert August Surf Company",
+      "rows": 39
+    },
+    {
+      "retailerName": "Moment Surf Co",
+      "rows": 21
+    },
+    {
+      "retailerName": "Surf N Sea",
+      "rows": 20
+    },
+    {
+      "retailerName": "Kimo's Surf Hut",
+      "rows": 13
+    },
+    {
+      "retailerName": "Dark Arts Surf",
+      "rows": 12
+    }
+  ],
+  "rejectReasonCounts": {
+    "missing_all_dimensions": 111
+  },
+  "parsingFixCounts": {
+    "brand_parsing_issue": 331,
+    "model_parsing_issue": 1578
+  },
+  "expectedLinkByRetailer": [
+    {
+      "retailerName": "Bing Surfboards",
+      "importableRows": 960,
+      "postExclusionRows": 951,
+      "eligibleRows": 951,
+      "excludedRows": 9,
+      "expectedCanonicalModelLinkedRows": 637,
+      "expectedCanonicalModelLinkedPct": 66.35,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 66.98,
+      "expectedBoardSizeLinkedRows": 565,
+      "expectedBoardSizeLinkedPct": 58.85,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 59.41,
+      "zeroLinkReasons": {
+        "missing_canonical_model": 314,
+        "missing_canonical_sizes": 72,
+        "used_board": 9
+      }
+    },
+    {
+      "retailerName": "Bird's Surf Shed",
+      "importableRows": 210,
+      "postExclusionRows": 177,
+      "eligibleRows": 0,
+      "excludedRows": 33,
+      "expectedCanonicalModelLinkedRows": 0,
+      "expectedCanonicalModelLinkedPct": 0.0,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 0.0,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 177,
+        "used_board": 33
+      }
+    },
+    {
+      "retailerName": "Catalyst Surf Shop",
+      "importableRows": 2414,
+      "postExclusionRows": 2187,
+      "eligibleRows": 1740,
+      "excludedRows": 227,
+      "expectedCanonicalModelLinkedRows": 1295,
+      "expectedCanonicalModelLinkedPct": 53.65,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 74.43,
+      "expectedBoardSizeLinkedRows": 728,
+      "expectedBoardSizeLinkedPct": 30.16,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 41.84,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 447,
+        "missing_canonical_sizes": 567,
+        "missing_canonical_model": 445,
+        "used_board": 227
+      }
+    },
+    {
+      "retailerName": "Cleanline Surf",
+      "importableRows": 429,
+      "postExclusionRows": 378,
+      "eligibleRows": 123,
+      "excludedRows": 51,
+      "expectedCanonicalModelLinkedRows": 96,
+      "expectedCanonicalModelLinkedPct": 22.38,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 78.05,
+      "expectedBoardSizeLinkedRows": 63,
+      "expectedBoardSizeLinkedPct": 14.69,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 51.22,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 255,
+        "missing_canonical_sizes": 33,
+        "missing_canonical_model": 27,
+        "used_board": 51
+      }
+    },
+    {
+      "retailerName": "Dark Arts Surf",
+      "importableRows": 12,
+      "postExclusionRows": 12,
+      "eligibleRows": 7,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 5,
+      "expectedCanonicalModelLinkedPct": 41.67,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 71.43,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 5,
+        "missing_canonical_brand": 5,
+        "missing_canonical_model": 2
+      }
+    },
+    {
+      "retailerName": "Degree 33 Surfboards",
+      "importableRows": 196,
+      "postExclusionRows": 194,
+      "eligibleRows": 194,
+      "excludedRows": 2,
+      "expectedCanonicalModelLinkedRows": 120,
+      "expectedCanonicalModelLinkedPct": 61.22,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 61.86,
+      "expectedBoardSizeLinkedRows": 52,
+      "expectedBoardSizeLinkedPct": 26.53,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 26.8,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 68,
+        "missing_canonical_model": 74,
+        "wall_art": 1,
+        "used_board": 1
+      }
+    },
+    {
+      "retailerName": "Hawaiian South Shore",
+      "importableRows": 94,
+      "postExclusionRows": 80,
+      "eligibleRows": 60,
+      "excludedRows": 14,
+      "expectedCanonicalModelLinkedRows": 44,
+      "expectedCanonicalModelLinkedPct": 46.81,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 73.33,
+      "expectedBoardSizeLinkedRows": 25,
+      "expectedBoardSizeLinkedPct": 26.6,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 41.67,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 20,
+        "missing_canonical_sizes": 19,
+        "missing_canonical_model": 16,
+        "used_board": 14
+      }
+    },
+    {
+      "retailerName": "Infinity Surfboards",
+      "importableRows": 97,
+      "postExclusionRows": 97,
+      "eligibleRows": 97,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 56,
+      "expectedCanonicalModelLinkedPct": 57.73,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 57.73,
+      "expectedBoardSizeLinkedRows": 25,
+      "expectedBoardSizeLinkedPct": 25.77,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 25.77,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 31,
+        "missing_canonical_model": 41
+      }
+    },
+    {
+      "retailerName": "Island Water Sports",
+      "importableRows": 108,
+      "postExclusionRows": 84,
+      "eligibleRows": 48,
+      "excludedRows": 24,
+      "expectedCanonicalModelLinkedRows": 32,
+      "expectedCanonicalModelLinkedPct": 29.63,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 66.67,
+      "expectedBoardSizeLinkedRows": 24,
+      "expectedBoardSizeLinkedPct": 22.22,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 50.0,
+      "zeroLinkReasons": {
+        "missing_canonical_model": 16,
+        "missing_canonical_brand": 36,
+        "consignment_board": 16,
+        "used_board": 8,
+        "missing_canonical_sizes": 8
+      }
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "importableRows": 195,
+      "postExclusionRows": 195,
+      "eligibleRows": 64,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 52,
+      "expectedCanonicalModelLinkedPct": 26.67,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 81.25,
+      "expectedBoardSizeLinkedRows": 22,
+      "expectedBoardSizeLinkedPct": 11.28,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 34.38,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 131,
+        "missing_canonical_model": 12,
+        "missing_canonical_sizes": 30
+      }
+    },
+    {
+      "retailerName": "Kimo's Surf Hut",
+      "importableRows": 10,
+      "postExclusionRows": 6,
+      "eligibleRows": 0,
+      "excludedRows": 4,
+      "expectedCanonicalModelLinkedRows": 0,
+      "expectedCanonicalModelLinkedPct": 0.0,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 0.0,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 6,
+        "used_board": 4
+      }
+    },
+    {
+      "retailerName": "Moment Surf Co",
+      "importableRows": 21,
+      "postExclusionRows": 21,
+      "eligibleRows": 3,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 2,
+      "expectedCanonicalModelLinkedPct": 9.52,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 66.67,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 18,
+        "missing_canonical_model": 1,
+        "missing_canonical_sizes": 2
+      }
+    },
+    {
+      "retailerName": "Real Watersports",
+      "importableRows": 2057,
+      "postExclusionRows": 2036,
+      "eligibleRows": 1149,
+      "excludedRows": 21,
+      "expectedCanonicalModelLinkedRows": 890,
+      "expectedCanonicalModelLinkedPct": 43.27,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 77.46,
+      "expectedBoardSizeLinkedRows": 460,
+      "expectedBoardSizeLinkedPct": 22.36,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 40.03,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 430,
+        "used_board": 21,
+        "missing_canonical_brand": 887,
+        "missing_canonical_model": 259
+      }
+    },
+    {
+      "retailerName": "Robert August Surf Company",
+      "importableRows": 39,
+      "postExclusionRows": 39,
+      "eligibleRows": 0,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 0,
+      "expectedCanonicalModelLinkedPct": 0.0,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 0.0,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 39
+      }
+    },
+    {
+      "retailerName": "Stewart Surfboards",
+      "importableRows": 319,
+      "postExclusionRows": 279,
+      "eligibleRows": 279,
+      "excludedRows": 40,
+      "expectedCanonicalModelLinkedRows": 269,
+      "expectedCanonicalModelLinkedPct": 84.33,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 96.42,
+      "expectedBoardSizeLinkedRows": 148,
+      "expectedBoardSizeLinkedPct": 46.39,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 53.05,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 121,
+        "used_board": 40,
+        "missing_canonical_model": 10
+      }
+    },
+    {
+      "retailerName": "Surf N Sea",
+      "importableRows": 20,
+      "postExclusionRows": 20,
+      "eligibleRows": 0,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 0,
+      "expectedCanonicalModelLinkedPct": 0.0,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 0.0,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 20
+      }
+    },
+    {
+      "retailerName": "Surf Station",
+      "importableRows": 222,
+      "postExclusionRows": 217,
+      "eligibleRows": 153,
+      "excludedRows": 5,
+      "expectedCanonicalModelLinkedRows": 128,
+      "expectedCanonicalModelLinkedPct": 57.66,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 83.66,
+      "expectedBoardSizeLinkedRows": 51,
+      "expectedBoardSizeLinkedPct": 22.97,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 33.33,
+      "zeroLinkReasons": {
+        "missing_canonical_brand": 64,
+        "missing_canonical_sizes": 77,
+        "missing_canonical_model": 25,
+        "used_board": 3,
+        "consignment_board": 2
+      }
+    },
+    {
+      "retailerName": "Surfboard Broker",
+      "importableRows": 182,
+      "postExclusionRows": 50,
+      "eligibleRows": 3,
+      "excludedRows": 132,
+      "expectedCanonicalModelLinkedRows": 0,
+      "expectedCanonicalModelLinkedPct": 0.0,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 0.0,
+      "expectedBoardSizeLinkedRows": 0,
+      "expectedBoardSizeLinkedPct": 0.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 0.0,
+      "zeroLinkReasons": {
+        "used_board": 132,
+        "missing_canonical_brand": 47,
+        "missing_canonical_model": 3
+      }
+    },
+    {
+      "retailerName": "Walden Surfboards",
+      "importableRows": 55,
+      "postExclusionRows": 50,
+      "eligibleRows": 50,
+      "excludedRows": 5,
+      "expectedCanonicalModelLinkedRows": 49,
+      "expectedCanonicalModelLinkedPct": 89.09,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 98.0,
+      "expectedBoardSizeLinkedRows": 44,
+      "expectedBoardSizeLinkedPct": 80.0,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 88.0,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 5,
+        "kneeboard": 5,
+        "missing_canonical_model": 1
+      }
+    },
+    {
+      "retailerName": "Warm Winds",
+      "importableRows": 172,
+      "postExclusionRows": 172,
+      "eligibleRows": 101,
+      "excludedRows": 0,
+      "expectedCanonicalModelLinkedRows": 78,
+      "expectedCanonicalModelLinkedPct": 45.35,
+      "expectedCanonicalModelLinkedPctOnEligibleRows": 77.23,
+      "expectedBoardSizeLinkedRows": 37,
+      "expectedBoardSizeLinkedPct": 21.51,
+      "expectedBoardSizeLinkedPctOnEligibleRows": 36.63,
+      "zeroLinkReasons": {
+        "missing_canonical_sizes": 41,
+        "missing_canonical_brand": 71,
+        "missing_canonical_model": 23
+      }
+    }
+  ],
+  "recommendation": "Ready for guarded SQL apply review"
+}

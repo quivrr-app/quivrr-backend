@@ -1,0 +1,8 @@
+{
+  "generatedAtUtc": "2026-06-24T22:50:29.376115+00:00",
+  "mode": "orchestrated_run",
+  "purpose": "US WooCommerce product discovery only. No SQL import or production table writes.",
+  "targetsSelected": 0,
+  "results": [],
+  "products": []
+}

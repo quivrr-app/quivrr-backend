@@ -12,6 +12,16 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scrapers.retailers.usa.normalise_us_retailer_inventory import main as normalise_main  # noqa: E402
+from scrapers.retailers.usa.bigcommerce.discover_us_bigcommerce_products import (  # noqa: E402
+    INPUT_FILE as BIGCOMMERCE_INPUT,
+    OUTPUT_FILE as BIGCOMMERCE_OUTPUT,
+    discover_target as discover_bigcommerce_target,
+)
+from scrapers.retailers.usa.magento.discover_us_magento_products import (  # noqa: E402
+    INPUT_FILE as MAGENTO_INPUT,
+    OUTPUT_FILE as MAGENTO_OUTPUT,
+    discover_target as discover_magento_target,
+)
 from scrapers.retailers.usa.shopify.discover_us_shopify_products import (  # noqa: E402
     INPUT_FILE as SHOPIFY_INPUT,
     OUTPUT_FILE as SHOPIFY_OUTPUT,
@@ -25,16 +35,6 @@ from scrapers.retailers.usa.woocommerce.discover_us_woocommerce_products import 
 
 
 OUTPUT_FILE = Path("scrapers/retailers/usa/output/us_discovery_orchestration_report.json")
-SHOPIFY_TARGETS = {
-    "surf_station",
-    "jacks_surfboards",
-    "real_watersports",
-    "cleanline_surf",
-    "hansen_surfboards",
-    "hawaiian_south_shore",
-    "encinitas_surfboards",
-    "birds_surf_shed",
-}
 WOOCOMMERCE_TARGETS = set()
 
 REGION_CODE = "US"
@@ -122,7 +122,7 @@ def main() -> None:
 
     if args.dry_run:
         configured = []
-        for input_file in [SHOPIFY_INPUT, WOOCOMMERCE_INPUT]:
+        for input_file in [SHOPIFY_INPUT, BIGCOMMERCE_INPUT, MAGENTO_INPUT, WOOCOMMERCE_INPUT]:
             for target in load_targets(input_file):
                 assert_us_target(target, input_file)
                 configured.append(target.get("retailerSlug"))
@@ -144,8 +144,26 @@ def main() -> None:
             input_file=SHOPIFY_INPUT,
             output_file=SHOPIFY_OUTPUT,
             discover=discover_shopify_target,
-            target_slugs=SHOPIFY_TARGETS,
+            target_slugs=None,
             max_pages=max(0, args.shopify_pages),
+            require_enabled=True,
+        ),
+        run_platform(
+            name="BigCommerce",
+            input_file=BIGCOMMERCE_INPUT,
+            output_file=BIGCOMMERCE_OUTPUT,
+            discover=discover_bigcommerce_target,
+            target_slugs=None,
+            max_pages=0,
+            require_enabled=True,
+        ),
+        run_platform(
+            name="Magento",
+            input_file=MAGENTO_INPUT,
+            output_file=MAGENTO_OUTPUT,
+            discover=discover_magento_target,
+            target_slugs=None,
+            max_pages=0,
             require_enabled=True,
         ),
         run_platform(

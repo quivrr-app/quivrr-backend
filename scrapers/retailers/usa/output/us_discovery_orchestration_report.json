@@ -1,0 +1,58 @@
+{
+  "generatedAtUtc": "2026-06-24T22:50:31.390273+00:00",
+  "purpose": "US retailer discovery orchestration only. No SQL writes.",
+  "normalisedOutputFile": "scrapers/retailers/usa/output/us_normalised_inventory.json",
+  "platforms": [
+    {
+      "platform": "Shopify",
+      "outputFile": "scrapers\\retailers\\usa\\shopify\\output\\us_shopify_product_discovery.json",
+      "targets": [
+        "surf_station",
+        "jacks_surfboards",
+        "real_watersports",
+        "cleanline_surf",
+        "hawaiian_south_shore",
+        "birds_surf_shed",
+        "island_water_sports",
+        "surf_n_sea",
+        "kimos_surf_hut",
+        "moment_surf_co",
+        "degree_33_surfboards",
+        "surfboard_broker",
+        "infinity_surfboards",
+        "walden_surfboards",
+        "stewart_surfboards",
+        "bing_surfboards",
+        "robert_august_surf_company",
+        "dark_arts_surf"
+      ],
+      "productsAccepted": 5331,
+      "productsRejected": 9137
+    },
+    {
+      "platform": "BigCommerce",
+      "outputFile": "scrapers\\retailers\\usa\\bigcommerce\\output\\us_bigcommerce_product_discovery.json",
+      "targets": [
+        "catalyst_surf_shop"
+      ],
+      "productsAccepted": 2420,
+      "productsRejected": 59
+    },
+    {
+      "platform": "Magento",
+      "outputFile": "scrapers\\retailers\\usa\\magento\\output\\us_magento_product_discovery.json",
+      "targets": [
+        "warm_winds"
+      ],
+      "productsAccepted": 172,
+      "productsRejected": 183
+    },
+    {
+      "platform": "WooCommerce",
+      "outputFile": "scrapers\\retailers\\usa\\woocommerce\\output\\us_woocommerce_product_discovery.json",
+      "targets": [],
+      "productsAccepted": 0,
+      "productsRejected": 0
+    }
+  ]
+}

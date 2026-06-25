@@ -1,0 +1,13 @@
+{
+  "event": "mfa_job_state_updated",
+  "service": "manufacturer_availability",
+  "timestamp_utc": "2026-06-24T21:16:56Z",
+  "region": "US",
+  "status": "success",
+  "rows": 0,
+  "job_name": "mfa_us",
+  "job_type": "mfa",
+  "consecutive_failures": 0,
+  "latest_success_timestamp_utc": "2026-06-24T21:16:56Z",
+  "latest_status_timestamp_utc": "2026-06-24T21:16:56Z"
+}

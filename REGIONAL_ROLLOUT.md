@@ -15,9 +15,10 @@ Active and planned primary `RegionCode` values:
 - `AU` = Australia.
 - `ID` = Indonesia.
 - `EU` = mainland European Union fulfilment market.
+- `US` = United States fulfilment market.
 - `UK` = United Kingdom fulfilment market.
 
-AU, EU, and ID are active runtime values. UK remains planned. `RegionCode` is mandatory for regional retailer and manufacturer availability rows; `NULL`, missing, and unsupported values must fail closed and must never be silently converted to AU.
+AU, EU, ID, and US are valid runtime values in code. UK remains planned. `RegionCode` is mandatory for regional retailer and manufacturer availability rows; `NULL`, missing, and unsupported values must fail closed and must never be silently converted to AU.
 
 EU and UK must stay separate. EU covers mainland European Union fulfilment. UK must not be grouped into EU because tax, duty, fulfilment, currency, shipping rules, and retailer relevance differ.
 
@@ -100,6 +101,22 @@ UK is planned as the United Kingdom fulfilment market.
 
 No UK live scraper, importer, search behavior, or Azure production job is active from this scaffold alone.
 
+## US Current State
+
+US is now a guarded rollout region following the EU Gen 3 structure.
+
+- `RegionCode = US`.
+- Frontend regional route exists at `/united-states`.
+- Retailer discovery and normalisation live under `scrapers/retailers/usa/`.
+- US Shopify discovery is now config-driven from `scrapers/retailers/usa/shopify/us_shopify_targets.json` rather than a hardcoded allowlist in the runner.
+- US BigCommerce discovery is now wired through `scrapers/retailers/usa/bigcommerce/` and currently validates Catalyst Surf Shop safely.
+- US Magento or category-html discovery is now wired through `scrapers/retailers/usa/magento/` and currently validates Warm Winds safely.
+- US WooCommerce discovery now supports category and Store API paths, but no WooCommerce retailer has yet been promoted from backlog.
+- The current production-ready dry-run retailer set is Surf Station, Jack's Surfboards, Real Watersports, Cleanline Surf, Hawaiian South Shore, Bird's Surf Shed, Island Water Sports, Surf N Sea, Kimo's Surf Hut, Moment Surf Co, Degree 33 Surfboards, Surfboard Broker, Infinity Surfboards, Walden Surfboards, Stewart Surfboards, Bing Surfboards, Robert August Surf Company, Dark Arts Surf, Catalyst Surf Shop, and Warm Winds.
+- Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets because the existing Shopify path does not yet recover safe surfboard inventory from their exposed feeds.
+- US MFA remains planning-first. `scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py` validates the rollout plan and writes a non-live readiness report, but no US manufacturer SQL importer is active yet.
+- No USA Azure Container Apps Jobs exist yet. Job creation should remain manual and follow the reviewed command plan.
+
 ## Rollout Checklist
 
 Before activating a region:
@@ -154,6 +171,8 @@ Regional jobs follow the existing Container Apps Jobs pattern:
 
 Suggested future job categories beyond the active AU/EU jobs:
 
+- US manufacturer direct availability.
+- US retailer inventory.
 - UK manufacturer direct availability.
 - UK retailer inventory.
 - EU market intelligence.

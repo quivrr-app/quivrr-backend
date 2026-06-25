@@ -45,6 +45,7 @@ REGION_PRIORITY = {
     "EU": 0,
     "AU": 1,
     "ID": 2,
+    "US": 3,
 }
 
 

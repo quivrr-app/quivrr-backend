@@ -1,0 +1,10 @@
+{
+  "brand": "Stewart",
+  "base_url": "https://stewartsurfboards.com",
+  "source_url": "https://stewartsurfboards.com/products.json",
+  "products_seen": 1199,
+  "filtered_products": 238,
+  "catalogue_rows": 238,
+  "created_at_utc": "2026-06-25T00:41:05Z",
+  "output_file": "scrapers\\brands\\stewart\\output\\stewart_master_catalogue_clean.json"
+}

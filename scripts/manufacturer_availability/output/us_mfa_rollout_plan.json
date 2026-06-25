@@ -1,0 +1,169 @@
+{
+  "regionCode": "US",
+  "brandsPlanned": 16,
+  "brandsImplemented": 0,
+  "brandsBlocked": 1,
+  "brandsPlanningOnly": 15,
+  "brands": [
+    {
+      "brandName": "Channel Islands",
+      "sourceUrl": "https://cisurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Plan US builder from the primary CI source when reviewed."
+    },
+    {
+      "brandName": "Lost",
+      "sourceUrl": "https://lostsurfboards.net",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Plan US builder from the primary Lost source when reviewed."
+    },
+    {
+      "brandName": "Pyzel",
+      "sourceUrl": "https://pyzelsurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Source differs from the current EU path and needs separate validation."
+    },
+    {
+      "brandName": "JS Industries",
+      "sourceUrl": "https://us.jsindustries.com",
+      "builderStrategy": "shopify_candidate",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Strong candidate for the shared Shopify-style manufacturer path after US validation."
+    },
+    {
+      "brandName": "Firewire",
+      "sourceUrl": "https://firewiresurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Plan a US-specific builder from the primary US source."
+    },
+    {
+      "brandName": "Album",
+      "sourceUrl": "https://albumsurf.com",
+      "builderStrategy": "existing_us_builder_present",
+      "enabled": false,
+      "validated": false,
+      "status": "blocked",
+      "builder": "scrapers/manufacturers/availability/album/build_album_us_availability.py",
+      "reason": "Existing experiment still points at /en-au inventory and emits AUD pricing, so it is not safe to activate for RegionCode US."
+    },
+    {
+      "brandName": "SharpEye",
+      "sourceUrl": "https://sharpeyesurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Plan US builder from the primary US source."
+    },
+    {
+      "brandName": "DHD",
+      "sourceUrl": "https://dhdsurf.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Primary site differs from the current EU specialized DHD path."
+    },
+    {
+      "brandName": "Christenson",
+      "sourceUrl": "https://christensonsurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Plan US builder from the primary Christenson source."
+    },
+    {
+      "brandName": "Chemistry",
+      "sourceUrl": "https://chemistrysurfboards.com",
+      "builderStrategy": "existing_au_builder_present",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "An AU builder exists and may inform a later US rollout after source review."
+    },
+    {
+      "brandName": "Rusty",
+      "sourceUrl": "https://rustysurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Plan US builder from the primary Rusty source."
+    },
+    {
+      "brandName": "Haydenshapes",
+      "sourceUrl": "https://haydenshapes.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Primary source differs from existing AU/EU assumptions and needs review."
+    },
+    {
+      "brandName": "Misfit",
+      "sourceUrl": "https://misfitshapes.com",
+      "builderStrategy": "existing_au_builder_present",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "An AU builder exists and may inform a later US rollout after source review."
+    },
+    {
+      "brandName": "Chilli",
+      "sourceUrl": "https://chillisurfboards.com",
+      "builderStrategy": "existing_au_builder_present",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "An AU builder exists and may inform a later US rollout after source review."
+    },
+    {
+      "brandName": "Pukas",
+      "sourceUrl": "https://pukasurf.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Needs US fulfilment relevance review before builder work."
+    },
+    {
+      "brandName": "Simon Anderson",
+      "sourceUrl": "https://simonandersonsurfboards.com",
+      "builderStrategy": "new_or_adapted",
+      "enabled": false,
+      "validated": false,
+      "status": "planned",
+      "builder": null,
+      "reason": "Needs US fulfilment relevance review before builder work."
+    }
+  ]
+}

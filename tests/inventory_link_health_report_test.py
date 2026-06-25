@@ -102,11 +102,13 @@ class InventoryLinkHealthReportTests(unittest.TestCase):
             {"RegionCode": "ID", "TotalRows": 50, "LinkedModelRows": 20, "LinkedSizeRows": 10, "RetailerCount": 2},
             {"RegionCode": "AU", "TotalRows": 60, "LinkedModelRows": 30, "LinkedSizeRows": 18, "RetailerCount": 3},
             {"RegionCode": "EU", "TotalRows": 70, "LinkedModelRows": 40, "LinkedSizeRows": 21, "RetailerCount": 4},
+            {"RegionCode": "US", "TotalRows": 80, "LinkedModelRows": 50, "LinkedSizeRows": 25, "RetailerCount": 5},
         ]
         retailer_rows = [
             {"RegionCode": "AU", "RetailerName": "Zulu", "TotalRows": 10, "LinkedModelRows": 8, "LinkedSizeRows": 4},
             {"RegionCode": "EU", "RetailerName": "Alpha", "TotalRows": 20, "LinkedModelRows": 10, "LinkedSizeRows": 6},
             {"RegionCode": "ID", "RetailerName": "Beta", "TotalRows": 15, "LinkedModelRows": 7, "LinkedSizeRows": 5},
+            {"RegionCode": "US", "RetailerName": "Gamma", "TotalRows": 12, "LinkedModelRows": 9, "LinkedSizeRows": 5},
         ]
 
         from observability import inventory_link_health as report
@@ -124,8 +126,11 @@ class InventoryLinkHealthReportTests(unittest.TestCase):
         finally:
             report._rows = original_rows
 
-        self.assertEqual([item["region"] for item in snapshots], ["EU", "AU", "ID"])
-        self.assertEqual([(item["region"], item["retailer_name"]) for item in retailers], [("EU", "Alpha"), ("AU", "Zulu"), ("ID", "Beta")])
+        self.assertEqual([item["region"] for item in snapshots], ["EU", "AU", "ID", "US"])
+        self.assertEqual(
+            [(item["region"], item["retailer_name"]) for item in retailers],
+            [("EU", "Alpha"), ("AU", "Zulu"), ("ID", "Beta"), ("US", "Gamma")],
+        )
         self.assertTrue(any("dbo.RetailerInventory" in query for query in calls))
         self.assertTrue(any("dbo.Retailers" in query for query in calls))
 

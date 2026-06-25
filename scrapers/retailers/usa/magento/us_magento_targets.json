@@ -1,0 +1,127 @@
+[
+  {
+    "retailerSlug": "aqua_east_surf_shop",
+    "retailerName": "Aqua East Surf Shop",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.aquaeast.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "No safe surfboard category path was recovered during lightweight inspection."
+  },
+  {
+    "retailerSlug": "reddog_surf_shop",
+    "retailerName": "Reddog Surf Shop",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.reddogsurfshop.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "No safe surfboard category path was recovered during lightweight inspection."
+  },
+  {
+    "retailerSlug": "breakwater_surf_co",
+    "retailerName": "Breakwater Surf Co",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.breakwatersurf.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "Homepage probe does not expose a safe surfboard category path for the US Magento/html runner."
+  },
+  {
+    "retailerSlug": "lucky_dog_surf_co",
+    "retailerName": "Lucky Dog Surf Co",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.luckydogsurf.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "No safe surfboard category path was recovered during lightweight inspection."
+  },
+  {
+    "retailerSlug": "farias_surf_shop",
+    "retailerName": "Farias Surf Shop",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.fariassurf.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "No safe surfboard category path was recovered during lightweight inspection."
+  },
+  {
+    "retailerSlug": "bayfront_boards",
+    "retailerName": "Bayfront Boards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://bayfrontboards.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "No safe surfboard category path was recovered during lightweight inspection."
+  },
+  {
+    "retailerSlug": "surf_zone_puerto_rico",
+    "retailerName": "Surf Zone Puerto Rico",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.surfzonepr.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "No safe surfboard category path was recovered during lightweight inspection."
+  },
+  {
+    "retailerSlug": "surf_ride",
+    "retailerName": "Surf Ride",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.surfride.com",
+    "categoryUrls": [],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "Surfboard collection guesses returned 404 and no safe category path was confirmed."
+  },
+  {
+    "retailerSlug": "cinnamon_rainbows",
+    "retailerName": "Cinnamon Rainbows",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://cinnamonrainbows.com",
+    "categoryUrls": [
+      "https://www.cinnamonrainbows.com/gear/surfboards",
+      "https://www.cinnamonrainbows.com/used-surfboards"
+    ],
+    "platform": "magento",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "Surfboard routes were discovered, but lightweight validation did not recover usable surfboard product rows."
+  },
+  {
+    "retailerSlug": "warm_winds",
+    "retailerName": "Warm Winds",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://warmwinds.com",
+    "categoryUrls": [
+      "https://www.warmwinds.com/shop/category/surfboards-13"
+    ],
+    "platform": "magento",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "Promoted after validating the surfboards category through a dedicated US Magento/html adapter."
+  }
+]

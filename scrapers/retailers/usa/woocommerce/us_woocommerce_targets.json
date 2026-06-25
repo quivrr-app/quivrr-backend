@@ -5,12 +5,37 @@
     "regionCode": "US",
     "country": "United States",
     "website": "https://etsurf.com",
+    "categoryUrls": [],
+    "platform": "woocommerce",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "WooCommerce markers were detected, but lightweight validation only surfaced legacy content pages and no safe surfboard commerce path."
+  },
+  {
+    "retailerSlug": "heritage_surf_and_sport",
+    "retailerName": "Heritage Surf & Sport",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.heritagesurf.com",
+    "storeApiUrl": "https://www.heritagesurf.com/wp-json/wc/store/products",
     "categoryUrls": [
-      "https://www.etsurf.com/"
+      "https://www.heritagesurf.com/product-category/surfboards/"
     ],
     "platform": "woocommerce",
     "enabled": false,
     "priceCurrency": "USD",
-    "notes": "WooCommerce markers were detected, but the store API route is unavailable and lightweight inspection did not surface a safe paginated surfboard category path for the current regional adapter."
+    "notes": "Store API is reachable with a scoped user-agent, but validation did not recover surfboard rows from the exposed public endpoints."
+  },
+  {
+    "retailerSlug": "808_boards",
+    "retailerName": "808 Boards",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://808boards.com",
+    "categoryUrls": [],
+    "platform": "woocommerce",
+    "enabled": false,
+    "priceCurrency": "USD",
+    "notes": "WooCommerce markers were detected, but lightweight validation did not expose a safe surfboard commerce category or Store API path."
   }
 ]

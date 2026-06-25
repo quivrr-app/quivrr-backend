@@ -17,6 +17,7 @@ REGION_CODE = "US"
 CONFIG_PATH = Path(
     "scrapers/manufacturers/availability/config/us_manufacturer_availability_targets.example.json"
 )
+REPORT_OUTPUT = Path("scripts/manufacturer_availability/output/us_mfa_rollout_plan.json")
 APPROVED_BRANDS = {
     "Channel Islands": "https://cisurfboards.com",
     "Lost": "https://lostsurfboards.net",
@@ -34,6 +35,13 @@ APPROVED_BRANDS = {
     "Chilli": "https://chillisurfboards.com",
     "Pukas": "https://pukasurf.com",
     "Simon Anderson": "https://simonandersonsurfboards.com",
+}
+EXPERIMENTAL_BUILDERS = {
+    "Album": {
+        "builder": "scrapers/manufacturers/availability/album/build_album_us_availability.py",
+        "status": "blocked",
+        "reason": "Existing experiment still points at /en-au inventory and emits AUD pricing, so it is not safe to activate for RegionCode US.",
+    }
 }
 
 
@@ -55,6 +63,32 @@ def load_plan() -> dict:
     if missing:
         raise RuntimeError(f"US MFA plan is missing approved brands: {', '.join(missing)}")
     return payload
+
+
+def build_rollout_report(payload: dict) -> dict:
+    targets = payload.get("targets", [])
+    brand_reports = []
+    for target in targets:
+        brand_name = target.get("brandName")
+        experiment = EXPERIMENTAL_BUILDERS.get(brand_name)
+        brand_reports.append({
+            "brandName": brand_name,
+            "sourceUrl": target.get("sourceUrl"),
+            "builderStrategy": target.get("builderStrategy"),
+            "enabled": bool(target.get("enabled")),
+            "validated": bool(target.get("validated")),
+            "status": experiment["status"] if experiment else "planned",
+            "builder": experiment["builder"] if experiment else None,
+            "reason": experiment["reason"] if experiment else target.get("marketNotes"),
+        })
+    return {
+        "regionCode": REGION_CODE,
+        "brandsPlanned": len(brand_reports),
+        "brandsImplemented": sum(1 for brand in brand_reports if brand["status"] == "implemented"),
+        "brandsBlocked": sum(1 for brand in brand_reports if brand["status"] == "blocked"),
+        "brandsPlanningOnly": sum(1 for brand in brand_reports if brand["status"] == "planned"),
+        "brands": brand_reports,
+    }
 
 
 def main() -> None:
@@ -79,8 +113,14 @@ def main() -> None:
             "This scaffold validates planning only and must not write SQL yet."
         )
     payload = load_plan()
+    report = build_rollout_report(payload)
+    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    REPORT_OUTPUT.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print("US manufacturer availability planning dry-run complete")
     print(f"Brands planned: {len(payload.get('targets', []))}")
+    print(f"Brands blocked pending source-safe builders: {report['brandsBlocked']}")
+    print(f"Brands planning only: {report['brandsPlanningOnly']}")
+    print(f"Report: {REPORT_OUTPUT}")
     update_job_state("mfa_us", "mfa", "manufacturer_availability", "success", region=REGION_CODE, rows=0)
     emit_event("mfa_refresh_completed", "manufacturer_availability", region=REGION_CODE, status="success", rows=0)
 

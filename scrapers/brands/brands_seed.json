@@ -123,6 +123,30 @@
     "brand_name": "Chemistry Surfboards",
     "website": "https://chemistrysurfboards.com",
     "country": "USA"
+  },
+  {
+    "brand_name": "Bing",
+    "website": "https://bingsurf.com",
+    "country": "USA"
+  },
+  {
+    "brand_name": "Stewart",
+    "website": "https://stewartsurfboards.com",
+    "country": "USA"
+  },
+  {
+    "brand_name": "Degree 33",
+    "website": "https://degree33surfboards.com",
+    "country": "USA"
+  },
+  {
+    "brand_name": "Infinity",
+    "website": "https://infinitysurf.com",
+    "country": "USA"
+  },
+  {
+    "brand_name": "Walden",
+    "website": "https://waldensurfboards.com",
+    "country": "USA"
   }
-  
 ]
