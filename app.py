@@ -1,16 +1,18 @@
+import json
 import os
 import re
 import time
 from urllib.parse import quote_plus
+from uuid import uuid4
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import bindparam, create_engine, text
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import DBAPIError, OperationalError
 
 from utils.dimensions import dimensions_from_title
-from utils.retailer_matching import classify_retailer_exact
+from utils.retailer_matching import classify_retailer_close, classify_retailer_exact
 from utils.manufacturer_shipping import shipping_metadata_for_brand
 
 
@@ -74,6 +76,10 @@ SUPPORTED_CATALOGUE_BRANDS = {
     "Simon Anderson",
 }
 
+OTHER_MODEL_MATCHES_LIMIT = 8
+OTHER_MODEL_MATCHES_TIMEOUT_SECONDS = 2
+OTHER_MODEL_MATCHES_BUDGET_MS = 1500
+
 
 app = FastAPI(
     title="Quivrr API",
@@ -90,12 +96,16 @@ app.add_middleware(
 )
 
 
-def execute_with_retry(query, params=None, attempts=3):
+def execute_with_retry(query, params=None, attempts=3, timeout_seconds=None):
     last_error = None
 
     for attempt in range(1, attempts + 1):
         try:
             with engine.connect() as connection:
+                if timeout_seconds is not None:
+                    connection = connection.execution_options(
+                        timeout=timeout_seconds
+                    )
                 return list(
                     connection.execute(
                         query,
@@ -103,7 +113,7 @@ def execute_with_retry(query, params=None, attempts=3):
                     )
                 )
 
-        except OperationalError as exc:
+        except (OperationalError, DBAPIError) as exc:
             last_error = exc
 
             if attempt == attempts:
@@ -114,18 +124,22 @@ def execute_with_retry(query, params=None, attempts=3):
     raise last_error
 
 
-def fetch_one_with_retry(query, params=None, attempts=3):
+def fetch_one_with_retry(query, params=None, attempts=3, timeout_seconds=None):
     last_error = None
 
     for attempt in range(1, attempts + 1):
         try:
             with engine.connect() as connection:
+                if timeout_seconds is not None:
+                    connection = connection.execution_options(
+                        timeout=timeout_seconds
+                    )
                 return connection.execute(
                     query,
                     params or {}
                 ).fetchone()
 
-        except OperationalError as exc:
+        except (OperationalError, DBAPIError) as exc:
             last_error = exc
 
             if attempt == attempts:
@@ -412,6 +426,33 @@ def should_include_other_model_matches(official_brand_name, direct_matches, exac
         and not exact_matches
         and not close_matches
     )
+
+
+def should_run_other_model_matches(direct_matches, exact_matches, close_matches):
+
+    return not direct_matches and not exact_matches and not close_matches
+
+
+def should_skip_other_model_matches_for_budget(elapsed_ms):
+
+    return elapsed_ms >= OTHER_MODEL_MATCHES_BUDGET_MS
+
+
+def search_log(event, **fields):
+
+    payload = {
+        "event": event,
+        "service": "quivrr-api",
+        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    payload.update(fields)
+    print(json.dumps(payload, default=str), flush=True)
+
+
+def is_timeout_error(exc):
+
+    message = str(exc).lower()
+    return "timeout" in message or "timed out" in message
 
 
 @app.get("/")
@@ -737,9 +778,56 @@ def constructions_match(left, right):
 def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | None = None):
 
     region_code = (region or regionCode or "AU").strip().upper()
+    request_id = str(uuid4())
+    request_started = time.perf_counter()
 
     if region_code not in {"AU", "ID", "EU", "US"}:
         region_code = "AU"
+
+    def elapsed_ms():
+        return round((time.perf_counter() - request_started) * 1000, 1)
+
+    def log_stage(event, stage, **fields):
+        search_log(
+            event,
+            requestId=request_id,
+            stage=stage,
+            boardSizeId=boardSizeId,
+            region=region_code,
+            elapsedMs=elapsed_ms(),
+            **fields,
+        )
+
+    def run_stage(stage, fn, **context):
+        stage_started = time.perf_counter()
+        log_stage("search_stage_start", stage, **context)
+        result = fn()
+        duration_ms = round((time.perf_counter() - stage_started) * 1000, 1)
+        extra = dict(context)
+        if isinstance(result, list):
+            extra["rowCount"] = len(result)
+        log_stage("search_stage_complete", stage, durationMs=duration_ms, **extra)
+        return result
+
+    search_log(
+        "search_request_start",
+        requestId=request_id,
+        boardSizeId=boardSizeId,
+        region=region_code,
+    )
+
+    search_connection = engine.connect()
+
+    def execute_search(query, params=None, *, one=False, timeout_seconds=None):
+        connection = (
+            search_connection.execution_options(timeout=timeout_seconds)
+            if timeout_seconds is not None
+            else search_connection
+        )
+        result = connection.execute(query, params or {})
+        if one:
+            return result.fetchone()
+        return list(result)
 
     official_query = text("""
         SELECT
@@ -1687,7 +1775,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     """).bindparams(bindparam("exact_inventory_ids", expanding=True))
 
     other_models_query = text("""
-        SELECT TOP 300
+        SELECT TOP 8
             ri.InventoryId,
             ri.BrandId,
             ri.BoardModelId,
@@ -1711,20 +1799,12 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             r.LogoUrl,
             bm.ModelName AS CanonicalModelName,
             CASE
-                WHEN ri.BoardModelId = :board_model_id
-                     AND (
-                        ri.Construction IS NULL
-                        OR :construction IS NULL
-                        OR LOWER(LTRIM(RTRIM(ri.Construction))) <>
-                           LOWER(LTRIM(RTRIM(:construction)))
-                     )
-                    THEN 400
-                WHEN ri.BoardModelId = :board_model_id
-                     AND ri.LengthFeetInches IN (:one_down_length, :one_up_length)
-                    THEN 350
-                WHEN ri.BoardModelId = :board_model_id
-                    THEN 300
-                ELSE 200
+                WHEN ri.Construction IS NOT NULL
+                     AND :construction IS NOT NULL
+                     AND LOWER(LTRIM(RTRIM(ri.Construction))) =
+                         LOWER(LTRIM(RTRIM(:construction)))
+                    THEN 120
+                ELSE 0
             END
             +
             CASE
@@ -1753,6 +1833,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
           AND ri.RegionCode = :region_code
           AND ri.BrandId = :brand_id
           AND ri.BoardModelId IS NOT NULL
+          AND ri.BoardModelId <> :board_model_id
+          AND ri.ProductUrl IS NOT NULL
           AND (
                 :excluded_inventory_ids_empty = 1
                 OR ri.InventoryId NOT IN :excluded_inventory_ids
@@ -1772,20 +1854,45 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                     'true'
                 )
           )
+          AND (
+                ri.LengthFeetInches = :length
+                OR ri.LengthFeetInches = :one_down_length
+                OR ri.LengthFeetInches = :one_up_length
+          )
         ORDER BY
             MatchScore DESC,
+            CASE
+                WHEN ri.VolumeLitres IS NULL THEN 1
+                ELSE 0
+            END,
             ri.PriceAud ASC,
             r.RetailerName ASC
     """).bindparams(bindparam("excluded_inventory_ids", expanding=True))
 
-    official = fetch_one_with_retry(
-        official_query,
-        {
-            "board_size_id": boardSizeId
-        }
+    official = run_stage(
+        "canonical_board_lookup",
+        lambda: execute_search(
+            official_query,
+            {
+                "board_size_id": boardSizeId
+            },
+            one=True,
+        ),
     )
 
     if not official:
+        search_connection.close()
+        search_log(
+            "search_request_complete",
+            requestId=request_id,
+            boardSizeId=boardSizeId,
+            region=region_code,
+            totalDurationMs=elapsed_ms(),
+            manufacturerDirectCount=0,
+            exactRetailerCount=0,
+            closeRetailerCount=0,
+            otherModelMatchesCount=0,
+        )
         return {
             "manufacturer": None,
             "exactRetailerMatches": [],
@@ -1859,41 +1966,56 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         "tailShape": official.TailShape
     }
 
-    manufacturer_direct_rows = execute_with_retry(
-        manufacturer_direct_query,
-        {
-            "board_size_id": official.BoardSizeId,
-            "board_model_id": official.BoardModelId,
-            "brand_id": official.BrandId,
-            "model_name": official.ModelName,
-            "model_match": model_match,
-            "length": official.LengthFeetInches,
-            "width": official.Width,
-            "thickness": official.Thickness,
-            "volume": official.VolumeLitres,
-            "construction": official.Construction,
-            "direct_enabled": direct_enabled,
-            "manufacturer_mode": manufacturer_mode,
-            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
-            "region_code": region_code
-        }
+    manufacturer_direct_params = {
+        "board_size_id": official.BoardSizeId,
+        "board_model_id": official.BoardModelId,
+        "brand_id": official.BrandId,
+        "model_name": official.ModelName,
+        "model_match": model_match,
+        "length": official.LengthFeetInches,
+        "width": official.Width,
+        "thickness": official.Thickness,
+        "volume": official.VolumeLitres,
+        "construction": official.Construction,
+        "direct_enabled": direct_enabled,
+        "manufacturer_mode": manufacturer_mode,
+        "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
+        "region_code": region_code
+    }
+    manufacturer_direct_rows = run_stage(
+        "manufacturer_direct_query",
+        lambda: execute_search(
+            manufacturer_direct_query,
+            manufacturer_direct_params,
+        ),
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
     )
 
-    alternate_manufacturer_direct_rows = execute_with_retry(
-        alternate_manufacturer_direct_query,
-        {
-            "board_size_id": official.BoardSizeId,
-            "board_model_id": official.BoardModelId,
-            "brand_id": official.BrandId,
-            "length": official.LengthFeetInches,
-            "width": official.Width,
-            "thickness": official.Thickness,
-            "construction": official.Construction,
-            "direct_enabled": direct_enabled,
-            "manufacturer_mode": manufacturer_mode,
-            "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
-            "region_code": region_code
-        }
+    alternate_manufacturer_direct_rows = run_stage(
+        "alternate_manufacturer_direct_query",
+        lambda: execute_search(
+            alternate_manufacturer_direct_query,
+            {
+                "board_size_id": official.BoardSizeId,
+                "board_model_id": official.BoardModelId,
+                "brand_id": official.BrandId,
+                "length": official.LengthFeetInches,
+                "width": official.Width,
+                "thickness": official.Thickness,
+                "construction": official.Construction,
+                "direct_enabled": direct_enabled,
+                "manufacturer_mode": manufacturer_mode,
+                "allow_alternate_manufacturer_construction": allow_alternate_manufacturer_construction,
+                "region_code": region_code
+            },
+        ),
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
     )
 
     direct_matches = []
@@ -1987,22 +2109,29 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             shipping_metadata_for_brand(first_direct.get("brandName"), first_direct.get("regionCode"))
         )
 
-    exact_rows = execute_with_retry(
-        exact_query,
-        {
-            "model_match": model_match,
-            "model_family_match": model_family_match,
-            "brand_id": official.BrandId,
-            "board_model_id": official.BoardModelId,
-            "length": official.LengthFeetInches,
-            "length_title_match": length_title_match,
-            "volume": official.VolumeLitres,
-            "construction": official.Construction,
-            "fin_setup": official.FinSetup,
-            "brand_name": official.BrandName,
-            "retailer_exact_construction_strict": retailer_exact_construction_strict,
-            "region_code": region_code
-        }
+    exact_rows = run_stage(
+        "exact_retailer_query",
+        lambda: execute_search(
+            exact_query,
+            {
+                "model_match": model_match,
+                "model_family_match": model_family_match,
+                "brand_id": official.BrandId,
+                "board_model_id": official.BoardModelId,
+                "length": official.LengthFeetInches,
+                "length_title_match": length_title_match,
+                "volume": official.VolumeLitres,
+                "construction": official.Construction,
+                "fin_setup": official.FinSetup,
+                "brand_name": official.BrandName,
+                "retailer_exact_construction_strict": retailer_exact_construction_strict,
+                "region_code": region_code
+            }
+        ),
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
     )
 
     exact_matches = []
@@ -2010,14 +2139,18 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
     if any(row.BoardModelId is None for row in exact_rows):
         brand_model_names = [
             row.ModelName
-            for row in execute_with_retry(
-                text("""
-                    SELECT ModelName
-                    FROM dbo.BoardModels
-                    WHERE BrandId = :brand_id
-                      AND IsActive = 1
-                """),
-                {"brand_id": official.BrandId},
+            for row in run_stage(
+                "exact_retailer_model_name_lookup",
+                lambda: execute_search(
+                    text("""
+                        SELECT ModelName
+                        FROM dbo.BoardModels
+                        WHERE BrandId = :brand_id
+                          AND IsActive = 1
+                    """),
+                    {"brand_id": official.BrandId},
+                ),
+                brandName=official.BrandName,
             )
         ]
 
@@ -2082,25 +2215,32 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         for row in exact_matches
     }
 
-    close_rows = execute_with_retry(
-        close_query,
-        {
-            "exact_inventory_ids": sorted(exact_ids) or [-1],
-            "exact_inventory_ids_empty": 1 if not exact_ids else 0,
-            "board_size_id": official.BoardSizeId,
-            "model_match": model_match,
-            "model_family_match": model_family_match,
-            "brand_id": official.BrandId,
-            "board_model_id": official.BoardModelId,
-            "length": official.LengthFeetInches,
-            "one_down_length": one_down_length,
-            "one_up_length": one_up_length,
-            "length_title_match": length_title_match,
-            "volume": official.VolumeLitres,
-            "construction": official.Construction,
-            "target_length_inches": target_length_inches or 0,
-            "region_code": region_code
-        }
+    close_rows = run_stage(
+        "close_retailer_query",
+        lambda: execute_search(
+            close_query,
+            {
+                "exact_inventory_ids": sorted(exact_ids) or [-1],
+                "exact_inventory_ids_empty": 1 if not exact_ids else 0,
+                "board_size_id": official.BoardSizeId,
+                "model_match": model_match,
+                "model_family_match": model_family_match,
+                "brand_id": official.BrandId,
+                "board_model_id": official.BoardModelId,
+                "length": official.LengthFeetInches,
+                "one_down_length": one_down_length,
+                "one_up_length": one_up_length,
+                "length_title_match": length_title_match,
+                "volume": official.VolumeLitres,
+                "construction": official.Construction,
+                "target_length_inches": target_length_inches or 0,
+                "region_code": region_code
+            }
+        ),
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
     )
 
     close_matches = []
@@ -2113,19 +2253,51 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         ):
             continue
 
-        if not model_family_matches(
+        strong_model_title = text_contains_phrase(
             row.RawProductTitle,
             row.NormalisedProductTitle,
-            official.ModelName
-        ):
+            official.ModelName,
+        )
+        title_family_match = model_family_matches(
+            row.RawProductTitle,
+            row.NormalisedProductTitle,
+            official.ModelName,
+        )
+        close_ok, close_reason = classify_retailer_close(
+            {
+                "boardSizeId": row.BoardSizeId,
+                "title": f"{row.RawProductTitle or ''} {row.NormalisedProductTitle or ''}",
+                "length": row.LengthFeetInches,
+                "width": row.Width,
+                "thickness": row.Thickness,
+                "volume": row.VolumeLitres,
+                "construction": row.Construction,
+            },
+            {
+                "boardSizeId": official.BoardSizeId,
+                "length": official.LengthFeetInches,
+                "width": official.Width,
+                "thickness": official.Thickness,
+                "volume": official.VolumeLitres,
+                "construction": official.Construction,
+            },
+            brand_matches=row.BrandId == official.BrandId,
+            model_matches=(
+                row.BoardModelId == official.BoardModelId
+                or strong_model_title
+                or title_family_match
+            ),
+            strong_model_title=(strong_model_title or title_family_match),
+        )
+        if not close_ok:
             continue
 
-        close_matches.append(
-            retailer_result(
-                row,
-                "retailerClose"
-            )
+        result = retailer_result(
+            row,
+            "retailerClose"
         )
+        result["closeMatchReason"] = close_reason
+        close_matches.append(result)
 
         if len(close_matches) >= 50:
             break
@@ -2142,38 +2314,87 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         exact_matches,
         close_matches,
     ):
-        excluded_inventory_ids = sorted(exact_ids | close_ids) or [-1]
-        other_model_rows = execute_with_retry(
-            other_models_query,
-            {
-                "excluded_inventory_ids": excluded_inventory_ids,
-                "excluded_inventory_ids_empty": 1 if not (exact_ids or close_ids) else 0,
-                "board_size_id": official.BoardSizeId,
-                "board_model_id": official.BoardModelId,
-                "brand_id": official.BrandId,
-                "length": official.LengthFeetInches,
-                "one_down_length": one_down_length,
-                "one_up_length": one_up_length,
-                "volume": official.VolumeLitres,
-                "construction": official.Construction,
-                "region_code": region_code,
-            }
-        )
+        if should_run_other_model_matches(
+            direct_matches,
+            exact_matches,
+            close_matches,
+        ) and not should_skip_other_model_matches_for_budget(elapsed_ms()):
+            excluded_inventory_ids = sorted(exact_ids | close_ids) or [-1]
+            try:
+                other_model_rows = run_stage(
+                    "other_model_matches_query",
+                    lambda: execute_search(
+                        other_models_query,
+                        {
+                            "excluded_inventory_ids": excluded_inventory_ids,
+                            "excluded_inventory_ids_empty": 1 if not (exact_ids or close_ids) else 0,
+                            "board_size_id": official.BoardSizeId,
+                            "board_model_id": official.BoardModelId,
+                            "brand_id": official.BrandId,
+                            "length": official.LengthFeetInches,
+                            "one_down_length": one_down_length,
+                            "one_up_length": one_up_length,
+                            "volume": official.VolumeLitres,
+                            "construction": official.Construction,
+                            "region_code": region_code,
+                        },
+                        timeout_seconds=OTHER_MODEL_MATCHES_TIMEOUT_SECONDS,
+                    ),
+                    brandName=official.BrandName,
+                    modelName=official.ModelName,
+                    construction=official.Construction,
+                    length=official.LengthFeetInches,
+                    resultLimit=OTHER_MODEL_MATCHES_LIMIT,
+                )
 
-        for row in other_model_rows:
-            if should_exclude_close_retailer_row(
-                row,
-                official,
-                exact_ids | close_ids,
-            ):
-                continue
+                for row in other_model_rows:
+                    if should_exclude_close_retailer_row(
+                        row,
+                        official,
+                        exact_ids | close_ids,
+                    ):
+                        continue
 
-            result = retailer_result(row, "retailerOtherModel")
-            result["canonicalModelName"] = getattr(row, "CanonicalModelName", None)
-            other_model_matches.append(result)
+                    result = retailer_result(row, "retailerOtherModel")
+                    result["canonicalModelName"] = getattr(row, "CanonicalModelName", None)
+                    other_model_matches.append(result)
 
-            if len(other_model_matches) >= 50:
-                break
+                    if len(other_model_matches) >= OTHER_MODEL_MATCHES_LIMIT:
+                        break
+            except Exception as exc:
+                timeout_like = is_timeout_error(exc)
+                search_log(
+                    "other_model_matches_timeout" if timeout_like else "other_model_matches_skipped",
+                    requestId=request_id,
+                    boardSizeId=boardSizeId,
+                    region=region_code,
+                    brandName=official.BrandName,
+                    modelName=official.ModelName,
+                    construction=official.Construction,
+                    length=official.LengthFeetInches,
+                    elapsedMs=elapsed_ms(),
+                    errorType=type(exc).__name__,
+                    errorMessage=str(exc),
+                )
+                other_model_matches = []
+        else:
+            log_stage(
+                "search_stage_skipped",
+                "other_model_matches_query",
+                reason=(
+                    "normal_results_exist"
+                    if should_run_other_model_matches(
+                        direct_matches,
+                        exact_matches,
+                        close_matches,
+                    ) is False
+                    else "budget_exceeded"
+                ),
+                brandName=official.BrandName,
+                modelName=official.ModelName,
+                construction=official.Construction,
+                length=official.LengthFeetInches,
+            )
 
     if official_result.get("directManufacturerMatches"):
         available_direct_matches = [
@@ -2219,7 +2440,20 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         official_result["stockStatus"] = "unavailable"
         official_result["isAvailable"] = False
 
-    return {
+    log_stage(
+        "search_stage_complete",
+        "response_shaping",
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
+        directCount=len(official_result.get("directManufacturerMatches", [])),
+        exactCount=len(exact_matches),
+        closeCount=len(close_matches),
+        otherCount=len(other_model_matches),
+    )
+
+    response = {
         "apiBuild": "manufacturer-policy-v1",
         "regionCode": region_code,
         "manufacturerSearchPolicy": {
@@ -2237,6 +2471,25 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         "closeRetailerMatches": close_matches,
         "otherModelMatches": other_model_matches,
     }
+
+    search_log(
+        "search_request_complete",
+        requestId=request_id,
+        boardSizeId=boardSizeId,
+        region=region_code,
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
+        totalDurationMs=elapsed_ms(),
+        manufacturerDirectCount=len(response.get("directManufacturerMatches", [])),
+        exactRetailerCount=len(response.get("exactRetailerMatches", [])),
+        closeRetailerCount=len(response.get("closeRetailerMatches", [])),
+        otherModelMatchesCount=len(response.get("otherModelMatches", [])),
+    )
+
+    search_connection.close()
+    return response
 
 
 @app.get("/api/test-db")
