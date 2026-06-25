@@ -117,7 +117,7 @@ SUPPORTED_CATALOGUE_BRANDS = {
     "Simon Anderson",
 }
 
-SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback"
+SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate"
 # Keep the fallback disabled by default until it is explicitly revalidated.
 OTHER_MODEL_MATCHES_ENABLED = env_flag("OTHER_MODEL_MATCHES_ENABLED", False)
 OTHER_MODEL_MATCHES_LIMIT = env_int("OTHER_MODEL_MATCHES_LIMIT", 8)
@@ -476,7 +476,8 @@ def should_include_other_model_matches(official_brand_name, direct_matches, exac
     return (
         official_brand_name in SUPPORTED_CATALOGUE_BRANDS
         and not direct_matches
-        and thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX
+        and exact_match_count(exact_matches) == 0
+        and close_match_count(close_matches) < 3
     )
 
 
@@ -485,12 +486,23 @@ def thin_result_match_count(exact_matches, close_matches):
     return len(exact_matches) + len(close_matches)
 
 
+def exact_match_count(exact_matches):
+
+    return len(exact_matches)
+
+
+def close_match_count(close_matches):
+
+    return len(close_matches)
+
+
 def should_run_other_model_matches(direct_matches, exact_matches, close_matches):
 
     return (
         OTHER_MODEL_MATCHES_ENABLED
         and not direct_matches
-        and thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX
+        and exact_match_count(exact_matches) == 0
+        and close_match_count(close_matches) < 3
         and OTHER_MODEL_MATCHES_LIMIT > 0
     )
 
@@ -2489,7 +2501,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             log_stage(
                 "search_stage_skipped",
                 "other_model_matches_query",
-                reason="thin_result_threshold_met_or_direct_exists",
+                reason="exact_present_close_threshold_or_direct_exists",
                 brandName=official.BrandName,
                 modelName=official.ModelName,
                 construction=official.Construction,

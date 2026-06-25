@@ -228,7 +228,8 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertNotIn("AND (\n                ri.LengthFeetInches = :length", source)
         self.assertIn("timeout_seconds=OTHER_MODEL_MATCHES_TIMEOUT_SECONDS", source)
         self.assertIn("other_model_matches_timeout", source)
-        self.assertIn("thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX", helper_source)
+        self.assertIn("exact_match_count(exact_matches) == 0", helper_source)
+        self.assertIn("close_match_count(close_matches) < 3", helper_source)
 
     def test_other_model_matches_only_show_for_supported_thin_results(self):
         self.assertFalse(app.OTHER_MODEL_MATCHES_ENABLED)
@@ -238,14 +239,6 @@ class DimensionMatchingTests(unittest.TestCase):
                 [],
                 [],
                 [],
-            )
-        )
-        self.assertTrue(
-            app.should_include_other_model_matches(
-                "Rusty",
-                [],
-                [{"inventoryId": 1}],
-                [{"inventoryId": 2}],
             )
         )
         self.assertFalse(
@@ -258,10 +251,26 @@ class DimensionMatchingTests(unittest.TestCase):
         )
         self.assertFalse(
             app.should_include_other_model_matches(
+                "Rusty",
+                [],
+                [{"inventoryId": 1}],
+                [{"inventoryId": 2}],
+            )
+        )
+        self.assertTrue(
+            app.should_include_other_model_matches(
+                "Rusty",
+                [],
+                [],
+                [{"inventoryId": 2}, {"inventoryId": 3}],
+            )
+        )
+        self.assertFalse(
+            app.should_include_other_model_matches(
                 "JS Industries",
                 [],
-                [{"inventoryId": 1}, {"inventoryId": 2}],
-                [{"inventoryId": 3}],
+                [],
+                [{"inventoryId": 1}, {"inventoryId": 2}, {"inventoryId": 3}],
             )
         )
         self.assertFalse(
@@ -285,8 +294,8 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertFalse(
             app.should_run_other_model_matches(
                 [],
-                [{"inventoryId": 1}, {"inventoryId": 2}],
-                [{"inventoryId": 3}],
+                [],
+                [{"inventoryId": 1}, {"inventoryId": 2}, {"inventoryId": 3}],
             )
         )
 
@@ -300,7 +309,7 @@ class DimensionMatchingTests(unittest.TestCase):
             self.assertTrue(
                 app.should_run_other_model_matches(
                     [],
-                    [{"inventoryId": 1}],
+                    [],
                     [{"inventoryId": 2}],
                 )
             )
@@ -314,8 +323,15 @@ class DimensionMatchingTests(unittest.TestCase):
             self.assertFalse(
                 app.should_run_other_model_matches(
                     [],
-                    [{"inventoryId": 1}, {"inventoryId": 2}],
-                    [{"inventoryId": 3}],
+                    [{"inventoryId": 1}],
+                    [],
+                )
+            )
+            self.assertFalse(
+                app.should_run_other_model_matches(
+                    [],
+                    [],
+                    [{"inventoryId": 1}, {"inventoryId": 2}, {"inventoryId": 3}],
                 )
             )
 
