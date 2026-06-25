@@ -115,9 +115,10 @@ US is now a Production Beta region following the EU Gen 3 structure.
 - The current production-ready dry-run retailer set is Surf Station, Jack's Surfboards, Real Watersports, Cleanline Surf, Hawaiian South Shore, Bird's Surf Shed, Island Water Sports, Surf N Sea, Kimo's Surf Hut, Moment Surf Co, Degree 33 Surfboards, Surfboard Broker, Infinity Surfboards, Walden Surfboards, Stewart Surfboards, Bing Surfboards, Robert August Surf Company, Dark Arts Surf, Catalyst Surf Shop, and Warm Winds.
 - Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets because the existing Shopify path does not yet recover safe surfboard inventory from their exposed feeds.
 - US MFA now has a guarded regional pipeline through `scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py`.
-- The currently validated US MFA brand set is JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, and Sharp Eye.
-- The shared US MFA builder is Shopify-oriented and currently reuses one regional code path for JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, and Sharp Eye while preserving `RegionCode = US`.
-- Lost, Chemistry, Christenson, Misfit, Chilli, Pukas, and Simon Anderson remain documented follow-up manufacturers because their US or global source paths were either blocked, not yet fulfilment-safe, or not yet validated in this pass.
+- The currently validated US MFA brand set is JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, Sharp Eye, Christenson, Misfit Shapes, Chilli, and Pukas.
+- The US MFA builder started as a Shopify-oriented shared path, but now also includes a safe US HTML stock parser for Christenson, an adapted Shopify-plus-canonical-size path for Misfit Shapes, an adapted ShaperBuddy-plus-US-storefront path for Chilli, and an adapted Shopify title parser for Pukas while preserving `RegionCode = US`.
+- Lost is intentionally excluded from US MFA after architectural review. The public US site currently behaves as a catalogue plus dealer-routing surface, not a manufacturer-direct purchasable inventory feed. Chemistry remains degraded and Simon Anderson remains explicitly AU-only.
+- Worldwide US MFA sources now preserve native source currency where that is the only trustworthy published price and expose shipping metadata so the frontend can warn when manufacturer-direct stock may ship from another region.
 - `scripts/manufacturer_availability/import_us_manufacturer_availability.py` is US-only, requires explicit confirmation for apply mode, and protects AU, EU, ID, and `NULL` region counts.
 - USA Azure Container Apps Jobs are now live:
   - `quivrr-us-mfr-availability` at `0 21 * * *`

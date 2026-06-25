@@ -10,6 +10,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 
 from utils.retailer_matching import classify_retailer_exact
+from utils.manufacturer_shipping import shipping_metadata_for_brand
 
 
 load_dotenv()
@@ -496,6 +497,8 @@ SUPPORTED_DIRECT_MANUFACTURER_BRANDS = {
     "Rusty",
     "Misfit Shapes",
     "Chilli",
+    "Christenson",
+    "Pukas",
 }
 
 
@@ -580,6 +583,18 @@ def manufacturer_search_policy(brand_name):
             "manufacturer_mode": "strict",
             "retailer_exact_construction_mode": "strict",
             "allow_alternate_manufacturer_construction": True,
+        },
+        "Christenson": {
+            "direct_enabled": True,
+            "manufacturer_mode": "generic",
+            "retailer_exact_construction_mode": "strict",
+            "allow_alternate_manufacturer_construction": False,
+        },
+        "Pukas": {
+            "direct_enabled": True,
+            "manufacturer_mode": "generic",
+            "retailer_exact_construction_mode": "strict",
+            "allow_alternate_manufacturer_construction": False,
         },
     }
 
@@ -1718,6 +1733,9 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             "isAvailable": bool(row.IsAvailable),
             "regionCode": row.RegionCode
         })
+        direct_matches[-1].update(
+            shipping_metadata_for_brand(row.BrandName, row.RegionCode)
+        )
     alternate_direct_matches = []
 
     for row in alternate_manufacturer_direct_rows:
@@ -1741,6 +1759,9 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             "isAvailable": bool(row.IsAvailable),
             "regionCode": row.RegionCode
         })
+        alternate_direct_matches[-1].update(
+            shipping_metadata_for_brand(row.BrandName, row.RegionCode)
+        )
 
     if official.BrandName == "Chemistry Surfboards" and not direct_matches and alternate_direct_matches:
         promoted_matches = []
@@ -1773,6 +1794,9 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         official_result["manufacturerInventoryId"] = first_direct.get("manufacturerInventoryId")
         official_result["regionCode"] = first_direct.get("regionCode")
         official_result["finSetup"] = first_direct.get("finSetup") or official_result.get("finSetup")
+        official_result.update(
+            shipping_metadata_for_brand(first_direct.get("brandName"), first_direct.get("regionCode"))
+        )
 
     exact_rows = execute_with_retry(
         exact_query,
@@ -1938,6 +1962,12 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         official_result["stockStatus"] = selected_direct_match.get("stockStatus")
         official_result["isAvailable"] = selected_direct_match.get("isAvailable")
         official_result["manufacturerInventoryId"] = selected_direct_match.get("manufacturerInventoryId")
+        official_result.update(
+            shipping_metadata_for_brand(
+                selected_direct_match.get("brandName"),
+                selected_direct_match.get("regionCode"),
+            )
+        )
     else:
         official_result["manufacturerAvailability"] = {
             "isAvailable": False,

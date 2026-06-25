@@ -1,0 +1,4047 @@
+{
+  "regionCode": "US",
+  "totalEuRows": 7812,
+  "linkedModels": 3120,
+  "linkedSizes": 1432,
+  "retailerAudit": [
+    {
+      "retailerName": "Bing Surfboards",
+      "totalRows": 960,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 960,
+      "unlinkedSizeRows": 960
+    },
+    {
+      "retailerName": "Bird's Surf Shed",
+      "totalRows": 210,
+      "linkedBoardModelIdRows": 7,
+      "linkedBoardSizeIdRows": 3,
+      "unlinkedModelRows": 203,
+      "unlinkedSizeRows": 207
+    },
+    {
+      "retailerName": "Catalyst Surf Shop",
+      "totalRows": 2414,
+      "linkedBoardModelIdRows": 1429,
+      "linkedBoardSizeIdRows": 776,
+      "unlinkedModelRows": 985,
+      "unlinkedSizeRows": 1638
+    },
+    {
+      "retailerName": "Cleanline Surf",
+      "totalRows": 429,
+      "linkedBoardModelIdRows": 104,
+      "linkedBoardSizeIdRows": 46,
+      "unlinkedModelRows": 325,
+      "unlinkedSizeRows": 383
+    },
+    {
+      "retailerName": "Dark Arts Surf",
+      "totalRows": 12,
+      "linkedBoardModelIdRows": 5,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 7,
+      "unlinkedSizeRows": 12
+    },
+    {
+      "retailerName": "Degree 33 Surfboards",
+      "totalRows": 196,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 196,
+      "unlinkedSizeRows": 196
+    },
+    {
+      "retailerName": "Hawaiian South Shore",
+      "totalRows": 94,
+      "linkedBoardModelIdRows": 51,
+      "linkedBoardSizeIdRows": 30,
+      "unlinkedModelRows": 43,
+      "unlinkedSizeRows": 64
+    },
+    {
+      "retailerName": "Infinity Surfboards",
+      "totalRows": 97,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 97,
+      "unlinkedSizeRows": 97
+    },
+    {
+      "retailerName": "Island Water Sports",
+      "totalRows": 108,
+      "linkedBoardModelIdRows": 37,
+      "linkedBoardSizeIdRows": 20,
+      "unlinkedModelRows": 71,
+      "unlinkedSizeRows": 88
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "totalRows": 195,
+      "linkedBoardModelIdRows": 66,
+      "linkedBoardSizeIdRows": 8,
+      "unlinkedModelRows": 129,
+      "unlinkedSizeRows": 187
+    },
+    {
+      "retailerName": "Kimo's Surf Hut",
+      "totalRows": 10,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 10,
+      "unlinkedSizeRows": 10
+    },
+    {
+      "retailerName": "Moment Surf Co",
+      "totalRows": 21,
+      "linkedBoardModelIdRows": 3,
+      "linkedBoardSizeIdRows": 1,
+      "unlinkedModelRows": 18,
+      "unlinkedSizeRows": 20
+    },
+    {
+      "retailerName": "Real Watersports",
+      "totalRows": 2057,
+      "linkedBoardModelIdRows": 1158,
+      "linkedBoardSizeIdRows": 399,
+      "unlinkedModelRows": 899,
+      "unlinkedSizeRows": 1658
+    },
+    {
+      "retailerName": "Robert August Surf Company",
+      "totalRows": 39,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 39,
+      "unlinkedSizeRows": 39
+    },
+    {
+      "retailerName": "Stewart Surfboards",
+      "totalRows": 319,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 319,
+      "unlinkedSizeRows": 319
+    },
+    {
+      "retailerName": "Surf N Sea",
+      "totalRows": 20,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 20,
+      "unlinkedSizeRows": 20
+    },
+    {
+      "retailerName": "Surf Station",
+      "totalRows": 222,
+      "linkedBoardModelIdRows": 147,
+      "linkedBoardSizeIdRows": 99,
+      "unlinkedModelRows": 75,
+      "unlinkedSizeRows": 123
+    },
+    {
+      "retailerName": "Surfboard Broker",
+      "totalRows": 182,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 182,
+      "unlinkedSizeRows": 182
+    },
+    {
+      "retailerName": "Walden Surfboards",
+      "totalRows": 55,
+      "linkedBoardModelIdRows": 0,
+      "linkedBoardSizeIdRows": 0,
+      "unlinkedModelRows": 55,
+      "unlinkedSizeRows": 55
+    },
+    {
+      "retailerName": "Warm Winds",
+      "totalRows": 172,
+      "linkedBoardModelIdRows": 113,
+      "linkedBoardSizeIdRows": 50,
+      "unlinkedModelRows": 59,
+      "unlinkedSizeRows": 122
+    }
+  ],
+  "brandLinkCandidates": 0,
+  "modelLinkCandidates": 0,
+  "sizeLinkCandidates": 0,
+  "ambiguousModelMatches": 0,
+  "ambiguousModelMatchSample": [],
+  "unmatchedRowsByRetailer": [
+    {
+      "retailerName": "Catalyst Surf Shop",
+      "count": 985
+    },
+    {
+      "retailerName": "Bing Surfboards",
+      "count": 960
+    },
+    {
+      "retailerName": "Real Watersports",
+      "count": 899
+    },
+    {
+      "retailerName": "Cleanline Surf",
+      "count": 325
+    },
+    {
+      "retailerName": "Stewart Surfboards",
+      "count": 319
+    },
+    {
+      "retailerName": "Bird's Surf Shed",
+      "count": 203
+    },
+    {
+      "retailerName": "Degree 33 Surfboards",
+      "count": 196
+    },
+    {
+      "retailerName": "Surfboard Broker",
+      "count": 182
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "count": 129
+    },
+    {
+      "retailerName": "Infinity Surfboards",
+      "count": 97
+    },
+    {
+      "retailerName": "Surf Station",
+      "count": 75
+    },
+    {
+      "retailerName": "Island Water Sports",
+      "count": 71
+    },
+    {
+      "retailerName": "Warm Winds",
+      "count": 59
+    },
+    {
+      "retailerName": "Walden Surfboards",
+      "count": 55
+    },
+    {
+      "retailerName": "Hawaiian South Shore",
+      "count": 43
+    },
+    {
+      "retailerName": "Robert August Surf Company",
+      "count": 39
+    },
+    {
+      "retailerName": "Surf N Sea",
+      "count": 20
+    },
+    {
+      "retailerName": "Moment Surf Co",
+      "count": 18
+    },
+    {
+      "retailerName": "Kimo's Surf Hut",
+      "count": 10
+    },
+    {
+      "retailerName": "Dark Arts Surf",
+      "count": 7
+    }
+  ],
+  "unmatchedRowsByBrand": [
+    {
+      "brandName": "missing",
+      "count": 3521
+    },
+    {
+      "brandName": "Lost",
+      "count": 471
+    },
+    {
+      "brandName": "Christenson",
+      "count": 167
+    },
+    {
+      "brandName": "Firewire",
+      "count": 130
+    },
+    {
+      "brandName": "Torq",
+      "count": 116
+    },
+    {
+      "brandName": "Slater Designs",
+      "count": 113
+    },
+    {
+      "brandName": "NSP",
+      "count": 67
+    },
+    {
+      "brandName": "Channel Islands",
+      "count": 48
+    },
+    {
+      "brandName": "JS Industries",
+      "count": 34
+    },
+    {
+      "brandName": "Pyzel",
+      "count": 13
+    },
+    {
+      "brandName": "Sharp Eye",
+      "count": 4
+    },
+    {
+      "brandName": "Rusty",
+      "count": 4
+    },
+    {
+      "brandName": "Chilli",
+      "count": 1
+    },
+    {
+      "brandName": "Aloha",
+      "count": 1
+    },
+    {
+      "brandName": "Album",
+      "count": 1
+    },
+    {
+      "brandName": "Haydenshapes",
+      "count": 1
+    }
+  ],
+  "topUnlinkedModels": [
+    {
+      "parsedModel": "LOST",
+      "count": 58
+    },
+    {
+      "parsedModel": "Harley Ingleby HIBT",
+      "count": 21
+    },
+    {
+      "parsedModel": "Hole Shot",
+      "count": 19
+    },
+    {
+      "parsedModel": "SMTH Shapes Humanoid",
+      "count": 19
+    },
+    {
+      "parsedModel": "DRK Firewire",
+      "count": 17
+    },
+    {
+      "parsedModel": "Vernor The Drifter",
+      "count": 17
+    },
+    {
+      "parsedModel": "Steve Lis Designs Fish",
+      "count": 17
+    },
+    {
+      "parsedModel": "Long Phish",
+      "count": 16
+    },
+    {
+      "parsedModel": "The Ripper",
+      "count": 16
+    },
+    {
+      "parsedModel": "Rawson Sniper",
+      "count": 15
+    },
+    {
+      "parsedModel": "FIREWIRE TOO FISH",
+      "count": 15
+    },
+    {
+      "parsedModel": "FIREWIRE CYMATIC -",
+      "count": 14
+    },
+    {
+      "parsedModel": "FIREWIRE",
+      "count": 14
+    },
+    {
+      "parsedModel": "Wolverine",
+      "count": 13
+    },
+    {
+      "parsedModel": "CJ Nelson Outlier",
+      "count": 13
+    },
+    {
+      "parsedModel": "CJ Nelson Parallax Plus",
+      "count": 13
+    },
+    {
+      "parsedModel": "SMTH Shapes Hooligan",
+      "count": 13
+    },
+    {
+      "parsedModel": "Formula-1",
+      "count": 13
+    },
+    {
+      "parsedModel": "Ryan Sakal Sabre",
+      "count": 13
+    },
+    {
+      "parsedModel": "FIREWIRE GREAT WHITE TWIN",
+      "count": 13
+    },
+    {
+      "parsedModel": "Harley Ingleby Mid 6",
+      "count": 12
+    },
+    {
+      "parsedModel": "FRK Plus Firewire",
+      "count": 12
+    },
+    {
+      "parsedModel": "FIREWIRE MASH UP",
+      "count": 12
+    },
+    {
+      "parsedModel": "missing",
+      "count": 11
+    },
+    {
+      "parsedModel": "Bing Collector",
+      "count": 11
+    },
+    {
+      "parsedModel": "2.Pro",
+      "count": 11
+    },
+    {
+      "parsedModel": "Kai Sallas Tsunami",
+      "count": 11
+    },
+    {
+      "parsedModel": "Surfer Rosa 2.0",
+      "count": 11
+    },
+    {
+      "parsedModel": "Submariner",
+      "count": 11
+    },
+    {
+      "parsedModel": "FIREWIRE MACHADO CADO",
+      "count": 11
+    },
+    {
+      "parsedModel": "Nautilus",
+      "count": 10
+    },
+    {
+      "parsedModel": "Maurice Cole Reverse Vee Twin Pin",
+      "count": 10
+    },
+    {
+      "parsedModel": "Harley Ingleby Moe",
+      "count": 10
+    },
+    {
+      "parsedModel": "Harley Ingleby Mid 6 Mini",
+      "count": 10
+    },
+    {
+      "parsedModel": "CJ Nelson Paragon",
+      "count": 10
+    },
+    {
+      "parsedModel": "Huntsman",
+      "count": 9
+    },
+    {
+      "parsedModel": "FRK Swallow Firewire",
+      "count": 9
+    },
+    {
+      "parsedModel": "Boss Up Firewire",
+      "count": 9
+    },
+    {
+      "parsedModel": "\" RA 'What I Ride'",
+      "count": 9
+    },
+    {
+      "parsedModel": "Driver 3.0",
+      "count": 8
+    },
+    {
+      "parsedModel": "C-Bucket",
+      "count": 8
+    },
+    {
+      "parsedModel": "Skindog Cherry Picker 2.0",
+      "count": 8
+    },
+    {
+      "parsedModel": "Maurice Cole Reverse Vee Step-Up",
+      "count": 8
+    },
+    {
+      "parsedModel": "Speed Master",
+      "count": 8
+    },
+    {
+      "parsedModel": "Kai Sallas Lava Flow",
+      "count": 8
+    },
+    {
+      "parsedModel": "AJW OG Potato Launcher",
+      "count": 8
+    },
+    {
+      "parsedModel": "Vernor Mini Simmons",
+      "count": 8
+    },
+    {
+      "parsedModel": "3.0 Stub",
+      "count": 8
+    },
+    {
+      "parsedModel": "26L (USED)",
+      "count": 8
+    },
+    {
+      "parsedModel": "GERRY LOPEZ SQUIRTY // FUSION-HD SURFBOARD (FUT)",
+      "count": 8
+    }
+  ],
+  "commonFailedTitlePatterns": [
+    {
+      "pattern": "other_title_pattern",
+      "count": 6192
+    },
+    {
+      "pattern": "brand_surfboard_length_model",
+      "count": 172
+    },
+    {
+      "pattern": "structured_brand_model_dimensions",
+      "count": 16
+    }
+  ],
+  "unlinkedRowSample": [
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "11th Street Puffin EPS 5'10 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "11th Street Puffin",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Aipa Big Boy Sting Fusion HD EPS 6'0 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Aipa Big Boy Sting Fusion HD",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.2,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Aipa The Bishop Dual Core EPS 5'9 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Aipa The Bishop Dual Core",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 28.53,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Catch Surf Beater Original 54 Ozzy Wrong Finless Soft Surfboard - Military Green",
+      "parsedBrand": null,
+      "parsedModel": "Military",
+      "lengthFeetInches": "4'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 35.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Catch Surf Beater Original 54 Tetsunori Tawaraya Finless Soft Surfboard - Orange",
+      "parsedBrand": null,
+      "parsedModel": "Orange",
+      "lengthFeetInches": "4'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 35.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Better Everyday PU/Poly 5'2 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Better Everyday",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 21.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Better Everyday Grom Series PU/Poly 5'0 Surfboard - Futures",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Better Everyday Grom Series",
+      "lengthFeetInches": "5'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 20.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Biscuit 5'4 PU/Poly Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Biscuit 5'4",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.2,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Mid Twin PU/Poly 6'5 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Mid Twin",
+      "lengthFeetInches": "6'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.7,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Mid Twin PU/Poly 6'7 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Mid Twin",
+      "lengthFeetInches": "6'7",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.7,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Mid Twin PU/Poly 6'9 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Mid Twin",
+      "lengthFeetInches": "6'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Pro Grom Series PU/Poly 4'10 Surfboard - Futures",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Pro Grom Series",
+      "lengthFeetInches": "4'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 17.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Pro Grom Series PU/Poly 4'10 Surfboard - Futures",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Pro Grom Series",
+      "lengthFeetInches": "4'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 17.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Pro Grom Series PU/Poly 4'8 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Pro Grom Series",
+      "lengthFeetInches": "4'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 16.3,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Pro Grom Series PU/Poly 5'0 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Pro Grom Series",
+      "lengthFeetInches": "5'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 18.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Pro Grom Series PU/Poly 5'2 Surfboard - Futures",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Pro Grom Series",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 18.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands CI Pro Grom Series PU/Poly 5'6 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Pro Grom Series",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 21.3,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Dumpster Diver 2 PU/Poly 5'8 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Dumpster Diver 2",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 32.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Free Scrubber PU/Poly 6'2 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Free Scrubber",
+      "lengthFeetInches": "6'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 37.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Happy Everyday PU/Poly 5'8 Used Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Happy Everyday",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands M23 Mini-Gun 7'6 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "M23 Mini-Gun 7'6 Surfboard - FCS II",
+      "lengthFeetInches": "7'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 54.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Rocket Wide Spine-Tek 5'9 Used Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Rocket Wide",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Channel Islands Waterhog PU/Poly 7'4 Surfboard - FCS II",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Waterhog",
+      "lengthFeetInches": "7'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 49.8,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Chilli Hot Knife PU/Poly 5'6 Surfboard - Futures",
+      "parsedBrand": "Chilli",
+      "parsedModel": "Hot Knife",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.7,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Chilli Shortie PU/Poly 6'4 Surfboard - FCS II",
+      "parsedBrand": "Chilli",
+      "parsedModel": "Shortie",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "ambiguous_length_without_volume"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Christenson Easy Wind PU/Poly 5'10 Surfboard - FCS II",
+      "parsedBrand": "Christenson",
+      "parsedModel": "Easy Wind",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.01,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Christenson Hole Shot PU/Poly 5'10 Surfboard - FCS II",
+      "parsedBrand": "Christenson",
+      "parsedModel": "Hole Shot",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Christenson Hole Shot PU/Poly 5'9 Surfboard - FCS II",
+      "parsedBrand": "Christenson",
+      "parsedModel": "Hole Shot",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Christenson Ocean Pro 1 PU/Poly 5'8 Surfboard - FCS II",
+      "parsedBrand": "Christenson",
+      "parsedModel": "Ocean Pro 1",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.3,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Christenson Ocean Pro 3 PU/Poly 5'9 Surfboard - FCS II",
+      "parsedBrand": "Christenson",
+      "parsedModel": "Ocean Pro 3",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Christenson Ocean Pro 3 PU/Poly 6'0 Surfboard - FCS II",
+      "parsedBrand": "Christenson",
+      "parsedModel": "Ocean Pro 3",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 31.44,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire FRK IBolic Swallow 5'9 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "FRK",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire FRK IBolic Swallow 6'0 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "FRK",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Mashup Helium2.0 5'6 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Mashup Helium2.0 5'6 Surfboard - Futures",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Mashup Helium2.0 5'9 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Mashup Helium2.0 5'9 Surfboard - Futures",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.2,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Mashup Helium2.0 6'0 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Mashup Helium2.0 6'0 Surfboard - Futures",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 38.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Revo Max IBolic Volcanic 6'3 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Revo Max",
+      "lengthFeetInches": "6'3",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 35.2,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Revo Max IBolic Volcanic 6'9 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Revo Max",
+      "lengthFeetInches": "6'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 46.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Revo Max IBolic Volcanic 6'9 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Revo Max",
+      "lengthFeetInches": "6'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 46.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire Revo Max IBolic Volcanic 7'0 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Revo Max",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 53.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire S Boss Volcanic 5'5 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "S Boss",
+      "lengthFeetInches": "5'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 26.2,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire TJ Hull Rider Helium 9'6 Longboard Surfboard",
+      "parsedBrand": "Firewire",
+      "parsedModel": "TJ Hull Rider",
+      "lengthFeetInches": "9'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 80.6,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire TJ Pro Volcanic Ibolic 9'0 Longboard Surfboard",
+      "parsedBrand": "Firewire",
+      "parsedModel": "TJ Pro",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 61.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Firewire TJ Twinzer Helium 7'2 Surfboard - Futures",
+      "parsedBrand": "Firewire",
+      "parsedModel": "TJ Twinzer",
+      "lengthFeetInches": "7'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 51.3,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Glider 9'6 Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Glider 9'6 Surfboard",
+      "lengthFeetInches": "9'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 81.5,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Little Darlin Fusion HD EPS 6'10 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Little Darlin Fusion HD",
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.8,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Little Darlin Fusion HD EPS 6'6 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Little Darlin Fusion HD",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Little Darlin Fusion HD EPS 6'8 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Little Darlin Fusion HD",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 38.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Little Darlin Fusion HD EPS 7'0 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Little Darlin Fusion HD",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Little Darlin Fusion HD EPS 7'2 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Little Darlin Fusion HD",
+      "lengthFeetInches": "7'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 45.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Little Darlin Fusion HD EPS 7'6 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Little Darlin Fusion HD",
+      "lengthFeetInches": "7'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 49.5,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Long Haul TrueRide 9'0 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Long Haul TrueRide 9'0 Longboard Surfboard",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 75.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Long Haul TrueRide 9'4 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Long Haul TrueRide 9'4 Longboard Surfboard",
+      "lengthFeetInches": "9'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 82.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Something Fishy Fusion HD EPS 5'10 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Something Fishy Fusion HD",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 38.2,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Something Fishy Fusion HD EPS 5'6 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Something Fishy Fusion HD",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.8,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Something Fishy Fusion HD EPS 5'8 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Something Fishy Fusion HD",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Gerry Lopez Something Fishy Fusion HD EPS 6'0 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "Gerry Lopez Something Fishy Fusion HD",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.9,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Black Baron HYFI 2.0 EPS 5'11 Surfboard - FCS II",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Black Baron HYFI 2.0",
+      "lengthFeetInches": "5'11",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 37.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Bull Run HYFY 3.0 5'11 Surfboard - Futures",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Bull Run HYFY 3.0 5'11 Surfboard - Futures",
+      "lengthFeetInches": "5'11",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries El Baron HYFI 3.0 EPS 6'4 Surfboard - Futures",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "El Baron HYFI 3.0",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Golden Child PU/Poly 6'1 Surfboard - Futures",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Golden Child",
+      "lengthFeetInches": "6'1",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 28.8,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Schooner PU/Poly 5'11 Surfboard - FCS II",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Schooner",
+      "lengthFeetInches": "5'11",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 28.7,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Xero Fusion HYFI 3.0 EPS 5'10 Surfboard - Futures",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Fusion HYFI 3.0",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Xero Fusion HYFI 3.0 EPS 6'0 Surfboard - Futures",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Fusion HYFI 3.0",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.2,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Xero Gravity Easy Rider PU/Poly 5'8 Surfboard - Futures",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Gravity Easy Rider",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 28.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Xero Gravity HYFI 3.0 EPS 5'11 Surfboard - FCS II",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Gravity HYFI 3.0",
+      "lengthFeetInches": "5'11",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.2,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "JS Industries Xero Gravity HYFI 3.0 EPS 6'2 Surfboard - FCS II",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Gravity HYFI 3.0",
+      "lengthFeetInches": "6'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Driver 3.0 PU/Poly 5'10 Surfboard - FCS II",
+      "parsedBrand": "Lost",
+      "parsedModel": "Driver 3.0",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost MR California Twin Swallow PU/Poly 5'5 Surfboard - Futures",
+      "parsedBrand": "Lost",
+      "parsedModel": "MR California Twin Swallow",
+      "lengthFeetInches": "5'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost RNF '96 LightSpeed EPS 5'6 Surfboard - Futures",
+      "parsedBrand": "Lost",
+      "parsedModel": "RNF '96",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Step Driver PU/Poly 5'10 Surfboard - Futures",
+      "parsedBrand": "Lost",
+      "parsedModel": "Step Driver",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Step Driver PU/Poly 6'4 Surfboard - Futures",
+      "parsedBrand": "Lost",
+      "parsedModel": "Step Driver",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Sub Driver 2.0 Grom LightSpeed 4'8 Surfboard - FCS II",
+      "parsedBrand": "Lost",
+      "parsedModel": "Sub Driver 2.0 Grom",
+      "lengthFeetInches": "4'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 15.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Sub Driver Pro Swallow PU/Poly 6'0 Surfboard - FCS II",
+      "parsedBrand": "Lost",
+      "parsedModel": "Sub Driver Pro Swallow",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "ambiguous_length_without_volume"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Sub Driver Swallow Pro PU/Poly 5'7 Surfboard - Futures",
+      "parsedBrand": "Lost",
+      "parsedModel": "Sub Driver Swallow Pro",
+      "lengthFeetInches": "5'7",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Sub Driver Swallow Pro PU/Poly 5'8 Surfboard - FCS II",
+      "parsedBrand": "Lost",
+      "parsedModel": "Sub Driver Swallow Pro",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost The Ripper Round PU/Poly 5'10 Surfboard - Futures",
+      "parsedBrand": "Lost",
+      "parsedModel": "The Ripper Round",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.75,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Lost Uber XL PU/Poly 5'6 Used Surfboard - FCS II",
+      "parsedBrand": "Lost",
+      "parsedModel": "Uber XL",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Mick Fanning Soft Top 5'2 Consignment Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Mick Fanning Soft Top 5'2 Consignment Surfboard - FCS II",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Neilson Perch PU/Poly 10'0 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Neilson Perch",
+      "lengthFeetInches": "10'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Sharp Eye Inferno 72 PU/Poly 6'0 Surfboard - FCS II",
+      "parsedBrand": "Sharp Eye",
+      "parsedModel": "Inferno 72",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "ambiguous_length_without_volume"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Surf Station Super Wide EPS 9'4 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Surf Station Super Wide",
+      "lengthFeetInches": "9'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Surftech x BARK Commander Fusion V-Tech 12'0 Prone Board",
+      "parsedBrand": null,
+      "parsedModel": "Surftech x BARK Commander Fusion V-Tech 12'0 Prone Board",
+      "lengthFeetInches": "12'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "T. Patterson Blue Fin Fusion HD EPS 6'10 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "T. Patterson Blue Fin Fusion HD",
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 44.26,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "T. Patterson Devil Fish PU/Poly 6'4 Surfboard - Futures",
+      "parsedBrand": null,
+      "parsedModel": "T. Patterson Devil Fish",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 42.58,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama In The Pink Tuflite Pro EPS 8'0 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama In The Pink Tuflite Pro",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 61.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama In The Pink Tuflite Pro EPS 8'6 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama In The Pink Tuflite Pro",
+      "lengthFeetInches": "8'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 64.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama In The Pink Tuflite Pro EPS 9'0 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama In The Pink Tuflite Pro",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 70.16,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama In The Pink Tuflite Pro EPS 9'3 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama In The Pink Tuflite Pro",
+      "lengthFeetInches": "9'3",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 76.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama In The Pink Tuflite V-Tech EPS 9'6 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama In The Pink Tuflite V-Tech",
+      "lengthFeetInches": "9'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 76.8,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama Scorpion II TufLite Pro EPS 6'4 Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama Scorpion II TufLite Pro",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 42.9,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama Wayne Rich The Checkmate NFT Flax EPS 9'2 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama Wayne Rich The Checkmate NFT Flax",
+      "lengthFeetInches": "9'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 69.5,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama Wayne Rich The Checkmate NFT Flax EPS 9'6 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama Wayne Rich The Checkmate NFT Flax",
+      "lengthFeetInches": "9'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 69.5,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama Wayne Rich Wildcard 3 NFT Flax EPS 9'4 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama Wayne Rich Wildcard 3 NFT Flax",
+      "lengthFeetInches": "9'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 74.4,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Takayama Wayne Rich Wildcard 3 NFT Flax EPS 9'9 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Takayama Wayne Rich Wildcard 3 NFT Flax",
+      "lengthFeetInches": "9'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 81.7,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt HIBT 3+3 6'10 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 45.0,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt Mid 6 Mini Twin 6'10 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.0,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt Moe 8'0 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 61.2,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt OG Double Scoop 9'4 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "9'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 71.9,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt Outlier X 6'6 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 42.82,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt Outlier X 6'9 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "6'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 47.05,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Thunderbolt Slasher Low Pro 9'9 Longboard Surfboard",
+      "parsedBrand": null,
+      "parsedModel": null,
+      "lengthFeetInches": "9'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 78.41,
+      "reasons": [
+        "unknown_brand",
+        "model_parse_failed",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Bigboy 23 ACT 6'10 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Bigboy 23 ACT 6'10 Surfboard - Futures",
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 49.1,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Bigboy 23 TEC 6'10 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Bigboy 23 TEC 6'10 Surfboard - Futures",
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 49.1,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Bigboy 23 TEC 6'6 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Bigboy 23 TEC 6'6 Surfboard - Futures",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Comp TEC 6'0 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Comp TEC 6'0 Surfboard - Futures",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 28.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Delpero TEC Pro 9'1 Longboard Surfboard",
+      "parsedBrand": "Torq",
+      "parsedModel": "Delpero TEC Pro 9'1 Longboard Surfboard",
+      "lengthFeetInches": "9'1",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 63.8,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq M23 X-Lite 3.0 6'8 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "M23 X-Lite 3.0 6'8 Surfboard - Futures",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 41.8,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Mid-Length V+ ACT 7'4 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Mid-Length V+ ACT 7'4 Surfboard - Futures",
+      "lengthFeetInches": "7'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 55.9,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Mod Fish TET 6'6 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Mod Fish TET 6'6 Surfboard - Futures",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Mod Fun TET V+ 8'2 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Mod Fun TET V+ 8'2 Surfboard - Futures",
+      "lengthFeetInches": "8'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 70.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Mod Fun TET-CS 7'8 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Mod Fun TET-CS 7'8 Surfboard - Futures",
+      "lengthFeetInches": "7'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Pod Mod X-Lite 2.0 6'2 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Pod Mod X-Lite 2.0 6'2 Surfboard - Futures",
+      "lengthFeetInches": "6'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Pod Mod X-Lite 3.0 6'2 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Pod Mod X-Lite 3.0 6'2 Surfboard - Futures",
+      "lengthFeetInches": "6'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Twin Fish TEC 5'10 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Twin Fish TEC 5'10 Surfboard - Futures",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.8,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Torq Twin Fish TEC 6'2 Surfboard - Futures",
+      "parsedBrand": "Torq",
+      "parsedModel": "Twin Fish TEC 6'2 Surfboard - Futures",
+      "lengthFeetInches": "6'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.9,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Magic Model PU/Poly 9'0 Longboard Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Magic Model",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Magic Model PU/Poly 9'6 Longboard Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Magic Model",
+      "lengthFeetInches": "9'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 80.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Magic Model Tuflite EPS 8'6 Longboard Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Magic Model Tuflite",
+      "lengthFeetInches": "8'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 63.2,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Mega Magic Tuflite PC EPS 8'0 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Mega Magic Tuflite PC",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 82.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Mini Magic Dual-Core EPS 6'8 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Mini Magic Dual-Core",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 46.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Mini Mega Magic Tuflite EPS 6'10 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Mini Mega Magic Tuflite",
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 67.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Surf Station",
+      "rawProductTitle": "Walden Mini Mega Magic Tuflite EPS 7'6 Surfboard - FCS II",
+      "parsedBrand": null,
+      "parsedModel": "Walden Mini Mega Magic Tuflite",
+      "lengthFeetInches": "7'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 82.2,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET Longboard",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET Longboard",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 60.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Channel Islands x Torq M23",
+      "parsedBrand": "Torq",
+      "parsedModel": "x Torq M23",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 41.8,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Atelier Performance Cruiser Surfboard",
+      "parsedBrand": "Haydenshapes",
+      "parsedModel": "Atelier Performance Cruiser Surfboard",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Odysea Log 2025 - Blue/Stripes",
+      "parsedBrand": null,
+      "parsedModel": "Odysea Log 2025 - Blue/Stripes",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET Mod Fun",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET Mod Fun",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 41.8,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Channel Islands x Torq X-Lite Pod Mod",
+      "parsedBrand": "Torq",
+      "parsedModel": "x Torq X-Lite Pod Mod",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 31.3,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET V+",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET V+",
+      "lengthFeetInches": "7'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 56.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Longboard - Elements",
+      "parsedBrand": "NSP",
+      "parsedModel": "Longboard - Elements",
+      "lengthFeetInches": "8'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Atelier Cruiser Surfboard",
+      "parsedBrand": "Haydenshapes",
+      "parsedModel": "Atelier Cruiser Surfboard",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Quiver Killer '25",
+      "parsedBrand": "Lost",
+      "parsedModel": "Quiver Killer '25",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 23.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "White Tiger (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "White Tiger (Special Order)",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Original Puddle Jumper '25",
+      "parsedBrand": "Lost",
+      "parsedModel": "Original Puddle Jumper '25",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.75,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TEC V+",
+      "parsedBrand": "Torq",
+      "parsedModel": "TEC V+",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 49.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "ACT Big Boy",
+      "parsedBrand": "Torq",
+      "parsedModel": "ACT Big Boy",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Ghost (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Ghost (Special Order)",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.7,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scallywag Softboard 9'0",
+      "parsedBrand": null,
+      "parsedModel": "Scallywag Softboard 9'0",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 79.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Gremlin (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Gremlin (Special Order)",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.8,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Blue Fin",
+      "parsedBrand": null,
+      "parsedModel": "Blue Fin",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.11,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Slater Designs Boss Up I-Bolic",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Boss Up I-Bolic",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "ACT V+",
+      "parsedBrand": "Torq",
+      "parsedModel": "ACT V+",
+      "lengthFeetInches": "7'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 55.9,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Phantom (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Phantom (Special Order)",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Big Boy Sting",
+      "parsedBrand": null,
+      "parsedModel": "Big Boy Sting",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Machadocado By Rob Machado",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Machadocado",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scorpion 2 - Tuflite Pro",
+      "parsedBrand": null,
+      "parsedModel": "Scorpion 2 - Tuflite Pro",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 37.8,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Red Tiger (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Red Tiger (Special Order)",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 22.2,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Magic Model - Tuflite",
+      "parsedBrand": null,
+      "parsedModel": "Magic Model - Tuflite",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 61.7,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Better Everyday",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Better Everyday",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 22.3,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TEC Twin Fish",
+      "parsedBrand": "Torq",
+      "parsedModel": "TEC Twin Fish",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.4,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "RNF '96 Kingfish",
+      "parsedBrand": "Lost",
+      "parsedModel": "RNF '96 Kingfish",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sub Xero Hyfi 3.0 (Special Order)",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Sub Xero Hyfi 3.0 (Special Order)",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TEC PG-R",
+      "parsedBrand": "Torq",
+      "parsedModel": "TEC PG-R",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 32.2,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "ACT PG-R",
+      "parsedBrand": "Torq",
+      "parsedModel": "ACT PG-R",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.6,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Pyzalien 2 (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Pyzalien 2 (Special Order)",
+      "lengthFeetInches": "5'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 23.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET Mod Fun- Laguna",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET Mod Fun- Laguna",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 41.8,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Blank Series Funboard- Black",
+      "parsedBrand": null,
+      "parsedModel": "Blank Series Funboard-",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 7'6",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 7'6",
+      "lengthFeetInches": "7'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 59.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "In the Pink - Tuflite Pro",
+      "parsedBrand": null,
+      "parsedModel": "In the Pink - Tuflite Pro",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 61.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TEC Bigboy 23",
+      "parsedBrand": "Torq",
+      "parsedModel": "TEC Bigboy 23",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TEC Go-Kart",
+      "parsedBrand": "Torq",
+      "parsedModel": "TEC Go-Kart",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.3,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Blacktip Soft Surfboard",
+      "parsedBrand": null,
+      "parsedModel": "Blacktip Soft Surfboard",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 42.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Slater Designs Boss Up Volcanic",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Boss Up",
+      "lengthFeetInches": "6'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Groove By Rob Machado",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Groove",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.8,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Pisces Surfboard",
+      "parsedBrand": "Lost",
+      "parsedModel": "Pisces Surfboard",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.25,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Blank Series Funboard- Pink",
+      "parsedBrand": null,
+      "parsedModel": "Blank Series Funboard-",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 6'6",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 6'6",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 46.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scallywag Softboard 8'0",
+      "parsedBrand": null,
+      "parsedModel": "Scallywag Softboard 8'0",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 65.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Dominator Pro",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Dominator Pro",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Devil Fish",
+      "parsedBrand": null,
+      "parsedModel": "Devil Fish",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.92,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Little Darlin // Fusion-HD",
+      "parsedBrand": null,
+      "parsedModel": "Little Darlin // Fusion-HD",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET Longboard- Laguna",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET Longboard- Laguna",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 60.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Odysea Log 2026- Turquoise",
+      "parsedBrand": null,
+      "parsedModel": "Odysea Log 2026- Turquoise",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 7'0",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 7'0",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 52.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Something Fishy // Fusion-HD",
+      "parsedBrand": null,
+      "parsedModel": "Something Fishy // Fusion-HD",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.3,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "El Baron PE",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "El Baron",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Odysea Log 2026 - Miltary Green/Stripes",
+      "parsedBrand": null,
+      "parsedModel": "Odysea Log 2026 - Miltary Green/Stripes",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "M-23",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "M-23",
+      "lengthFeetInches": "6'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 43.4,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Formula 1 Round",
+      "parsedBrand": "Lost",
+      "parsedModel": "Formula 1 Round",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 22.25,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sprout Softboard 5'8",
+      "parsedBrand": null,
+      "parsedModel": "Sprout Softboard 5'8",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scallywag Softboard 8'6",
+      "parsedBrand": null,
+      "parsedModel": "Scallywag Softboard 8'6",
+      "lengthFeetInches": "8'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 72.4,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sleep Walker - HDT",
+      "parsedBrand": "NSP",
+      "parsedModel": "Sleep Walker - HDT",
+      "lengthFeetInches": "9'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 70.5,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Squirty // Fusion-HD",
+      "parsedBrand": null,
+      "parsedModel": "Squirty // Fusion-HD",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.7,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "CI 2.Pro (Special Order)",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "2.Pro (Special Order)",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.3,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Xero Gravity Hyfi 3.0",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Gravity Hyfi 3.0",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TEC Horseshoe",
+      "parsedBrand": "Torq",
+      "parsedModel": "TEC Horseshoe",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 71.4,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "ACT Don HP",
+      "parsedBrand": "Torq",
+      "parsedModel": "ACT Don HP",
+      "lengthFeetInches": "9'1",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 63.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Pyzel Shadow (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Shadow (Special Order)",
+      "lengthFeetInches": "5'7",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 23.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "The Solution",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "The Solution",
+      "lengthFeetInches": "5'7",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scallywag Softboard 9'0 - Blue/Gray",
+      "parsedBrand": null,
+      "parsedModel": "Scallywag Softboard 9'0 - Blue/Gray",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 79.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scorpion 2 - Xtrasoft",
+      "parsedBrand": null,
+      "parsedModel": "Scorpion 2 - Xtrasoft",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 37.8,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Hypto Krypto Softboard - Clay - Futures 3",
+      "parsedBrand": "Haydenshapes",
+      "parsedModel": "Hypto Krypto Softboard - Clay - Futures 3",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.58,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Squirty",
+      "parsedBrand": null,
+      "parsedModel": "Squirty",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 31.6,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Humu Fish",
+      "parsedBrand": null,
+      "parsedModel": "Humu Fish",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.3,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Bone Fish",
+      "parsedBrand": null,
+      "parsedModel": "Bone Fish",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 23.3,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Red Tiger XL (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Red Tiger XL (Special Order)",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 23.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Power Tiger XL (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Power Tiger XL (Special Order)",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.7,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "ACT Go-Kart",
+      "parsedBrand": "Torq",
+      "parsedModel": "ACT Go-Kart",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 31.9,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Mini Ghost Round Tail (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Mini Ghost",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 23.7,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Lighspeed II Orginal Puddle Jumper (Clear/White)",
+      "parsedBrand": "Lost",
+      "parsedModel": "Lighspeed II Orginal Puddle Jumper (Clear/White)",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.75,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Odysea Log 2026- Orange/Resin-Check",
+      "parsedBrand": null,
+      "parsedModel": "Odysea Log 2026- Orange/Resin-Check",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Odysea Log 2026- Blue/Gradient",
+      "parsedBrand": null,
+      "parsedModel": "Odysea Log 2026- Blue/Gradient",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sprout Softboard 6'0",
+      "parsedBrand": null,
+      "parsedModel": "Sprout Softboard 6'0",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 6'6 - Red/White",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 6'6 - Red/White",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 46.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Mid 6 Mini Thunderbolt Black Tech",
+      "parsedBrand": null,
+      "parsedModel": "Mid 6 Mini",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Lightspeed II Quiver Killer '25 (Grey Rails)",
+      "parsedBrand": "Lost",
+      "parsedModel": null,
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.75,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Mega Magic - Tuflite",
+      "parsedBrand": null,
+      "parsedModel": "Mega Magic - Tuflite",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 66.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Tiger Twin ( Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Tiger Twin ( Special Order)",
+      "lengthFeetInches": "5'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.3,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Synthetic 84'",
+      "parsedBrand": null,
+      "parsedModel": "Synthetic 84'",
+      "lengthFeetInches": "5'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.18,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Fun Board",
+      "parsedBrand": null,
+      "parsedModel": "Fun Board",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.9,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "El Baron Hyfi 3.0",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "El Baron Hyfi 3.0",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "ACT Don NR",
+      "parsedBrand": "Torq",
+      "parsedModel": "ACT Don NR",
+      "lengthFeetInches": "9'1",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 77.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Mini Ghost Squash Tail (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "Mini Ghost",
+      "lengthFeetInches": "5'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Speed Demon (Clear/White)",
+      "parsedBrand": "Lost",
+      "parsedModel": "Speed Demon (Clear/White)",
+      "lengthFeetInches": "5'10",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.85,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET Mod Fish-Laguna",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET Mod Fish-Laguna",
+      "lengthFeetInches": "5'11",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.2,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Gas Pedal",
+      "parsedBrand": null,
+      "parsedModel": "Gas Pedal",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 22.7,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Double Up Protech 2",
+      "parsedBrand": "NSP",
+      "parsedModel": "Double Up Protech 2",
+      "lengthFeetInches": "7'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 72.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "SASQUATCH 8'6 - Navy/White",
+      "parsedBrand": null,
+      "parsedModel": "SASQUATCH 8'6 - Navy/White",
+      "lengthFeetInches": "8'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Feb's Fish (Blue)",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Feb's Fish (Blue)",
+      "lengthFeetInches": "6'3",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 30.1,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Feb's Fish (Red)",
+      "parsedBrand": "Channel Islands",
+      "parsedModel": "Feb's Fish (Red)",
+      "lengthFeetInches": "6'3",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 33.4,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Scallywag Softboard 9'0 - Green/Teal Blue",
+      "parsedBrand": null,
+      "parsedModel": "Scallywag Softboard 9'0 - Green/Teal",
+      "lengthFeetInches": "9'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 79.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sprout Softboard 6'0 - White/Gray",
+      "parsedBrand": null,
+      "parsedModel": "Sprout Softboard 6'0",
+      "lengthFeetInches": "6'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sprout Softboard 5'8 - White/Green",
+      "parsedBrand": null,
+      "parsedModel": "Sprout Softboard 5'8",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sprout Softboard 5'8 - Turquoise Blue",
+      "parsedBrand": null,
+      "parsedModel": "Sprout Softboard 5'8 - Turquoise",
+      "lengthFeetInches": "5'8",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 34.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Magic Model - Softop",
+      "parsedBrand": null,
+      "parsedModel": "Magic Model - Softop",
+      "lengthFeetInches": "8'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 57.5,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Mid 6 Thunderbolt Red Tech",
+      "parsedBrand": null,
+      "parsedModel": "Mid 6",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.3,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Mid 6 Mini Thunderbolt Red Tech",
+      "parsedBrand": null,
+      "parsedModel": "Mid 6 Mini",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 36.0,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "The Bishop",
+      "parsedBrand": null,
+      "parsedModel": "The Bishop",
+      "lengthFeetInches": "5'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Dark Horse",
+      "parsedBrand": null,
+      "parsedModel": "Dark Horse",
+      "lengthFeetInches": "5'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.88,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Xero Fusion Hyfi 3.0 Squash (Special Order)",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Fusion Hyfi 3.0 Squash (Special Order)",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Xero Gravity PU (Special Order)",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Gravity",
+      "lengthFeetInches": "5'9",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "The Crisis Twin (Special Order)",
+      "parsedBrand": "Pyzel",
+      "parsedModel": "The Crisis Twin (Special Order)",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 27.6,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Seaside & Beyond Volcanic By Rob Machado",
+      "parsedBrand": "Firewire",
+      "parsedModel": "Seaside & Beyond",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 40.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Xero Fusion Hyfi 3.0 (Special Order)",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Xero Fusion Hyfi 3.0 (Special Order)",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 24.6,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Lightspeed II RNF 96",
+      "parsedBrand": "Lost",
+      "parsedModel": null,
+      "lengthFeetInches": "5'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 26.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Bull Run Hyfi 3.0",
+      "parsedBrand": "JS Industries",
+      "parsedModel": "Bull Run Hyfi 3.0",
+      "lengthFeetInches": "5'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 29.0,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Quiver Killer '25- Red/Orange Rails",
+      "parsedBrand": "Lost",
+      "parsedModel": "Quiver Killer '25- Red/Orange Rails",
+      "lengthFeetInches": "6'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 39.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Hypto Krypto FutureFlex",
+      "parsedBrand": "Haydenshapes",
+      "parsedModel": "Hypto Krypto FutureFlex",
+      "lengthFeetInches": "6'2",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.9,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "MOE Thunderbolt Red Tech",
+      "parsedBrand": null,
+      "parsedModel": "MOE",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 49.4,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Odysea Lost RNF 2026 - Midnight Blue",
+      "parsedBrand": null,
+      "parsedModel": "Odysea Lost RNF 2026 - Midnight",
+      "lengthFeetInches": "5'5",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "TET V+ Laguna",
+      "parsedBrand": "Torq",
+      "parsedModel": "TET V+ Laguna",
+      "lengthFeetInches": "7'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 56.0,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Super Nova",
+      "parsedBrand": null,
+      "parsedModel": "Super Nova",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 25.5,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Volume Midlength By Richie Lovett",
+      "parsedBrand": "NSP",
+      "parsedModel": "Volume Midlength",
+      "lengthFeetInches": "6'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 38.1,
+      "reasons": [
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "SASQUATCH 8'6 - Grey/Yellow",
+      "parsedBrand": null,
+      "parsedModel": "SASQUATCH 8'6 - Grey/Yellow",
+      "lengthFeetInches": "8'6",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": null,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Driver 3.0 Grom",
+      "parsedBrand": "Lost",
+      "parsedModel": "Driver 3.0 Grom",
+      "lengthFeetInches": "5'11",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 18.5,
+      "reasons": [
+        "no_size_within_volume_tolerance"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Sprout Softboard 5'4",
+      "parsedBrand": null,
+      "parsedModel": "Sprout Softboard 5'4",
+      "lengthFeetInches": "5'4",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 28.4,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 7'0 - Black/Red",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 7'0 - Black/Red",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 52.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 7'0 - Red/White",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 7'0 - Red/White",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 52.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    },
+    {
+      "retailerName": "Jack's Surfboards",
+      "rawProductTitle": "Skiff Softboard 7'0 - Green/Light Blue",
+      "parsedBrand": null,
+      "parsedModel": "Skiff Softboard 7'0 - Green/Light",
+      "lengthFeetInches": "7'0",
+      "width": null,
+      "thickness": null,
+      "volumeLitres": 52.1,
+      "reasons": [
+        "unknown_brand",
+        "model_not_in_catalogue",
+        "size_blocked_by_model"
+      ]
+    }
+  ]
+}

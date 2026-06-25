@@ -1,0 +1,163 @@
+{
+  "mode": "apply",
+  "before": {
+    "EU": 2726,
+    "AU": 6717,
+    "ID": 183,
+    "US": 4647
+  },
+  "brands": [
+    {
+      "brand": "Album",
+      "source_url": "https://albumsurf.com/products/510-twinzman-exo-flex?variant=45698868969532",
+      "discovered_products": 62,
+      "normalised_rows": 62,
+      "available_rows": 62,
+      "linked_model_rows": 34,
+      "linked_size_rows": 11
+    },
+    {
+      "brand": "Channel Islands",
+      "source_url": "https://cisurfboards.com/products/55-febs-fish?variant=46258824806567",
+      "discovered_products": 274,
+      "normalised_rows": 274,
+      "available_rows": 274,
+      "linked_model_rows": 189,
+      "linked_size_rows": 166
+    },
+    {
+      "brand": "DHD",
+      "source_url": "https://dhdsurf.com/products/mf-bolt?variant=41866432151607",
+      "discovered_products": 11,
+      "normalised_rows": 426,
+      "available_rows": 426,
+      "linked_model_rows": 384,
+      "linked_size_rows": 0
+    },
+    {
+      "brand": "Firewire",
+      "source_url": "https://firewiresurfboards.com/products/spun-honey?variant=53070873788732",
+      "discovered_products": 28,
+      "normalised_rows": 132,
+      "available_rows": 132,
+      "linked_model_rows": 125,
+      "linked_size_rows": 56
+    },
+    {
+      "brand": "Haydenshapes",
+      "source_url": "https://haydenshapes.com/products/hypto-krypto-futureflex?variant=44192326189165",
+      "discovered_products": 102,
+      "normalised_rows": 2387,
+      "available_rows": 2387,
+      "linked_model_rows": 1050,
+      "linked_size_rows": 960
+    },
+    {
+      "brand": "JS Industries",
+      "source_url": "https://us.jsindustries.com/products/sb1147054?variant=54081664090325",
+      "discovered_products": 378,
+      "normalised_rows": 378,
+      "available_rows": 378,
+      "linked_model_rows": 360,
+      "linked_size_rows": 0
+    },
+    {
+      "brand": "Pyzel",
+      "source_url": "https://pyzelsurfboards.com/products/sb1143434?variant=51853823344930",
+      "discovered_products": 334,
+      "normalised_rows": 334,
+      "available_rows": 334,
+      "linked_model_rows": 295,
+      "linked_size_rows": 0
+    },
+    {
+      "brand": "Rusty",
+      "source_url": "https://rustysurfboards.com/products/griffin-63-x-20-37-x-2-68-38-20l-round-2x-futures-fin-boxes-pu-id-1050284?variant=43967371837527",
+      "discovered_products": 23,
+      "normalised_rows": 23,
+      "available_rows": 23,
+      "linked_model_rows": 21,
+      "linked_size_rows": 0
+    },
+    {
+      "brand": "Sharp Eye",
+      "source_url": "https://sharpeyesurfboards.com/products/sb1138774?variant=48260545118361",
+      "discovered_products": 173,
+      "normalised_rows": 173,
+      "available_rows": 173,
+      "linked_model_rows": 67,
+      "linked_size_rows": 53
+    }
+  ],
+  "after": {
+    "EU": 2726,
+    "AU": 6717,
+    "ID": 183,
+    "US": 4647
+  },
+  "applyDiagnostics": [
+    {
+      "brand": "Album",
+      "rowsDeleted": 62,
+      "rowsInserted": 62,
+      "elapsedSeconds": 3.355,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "Channel Islands",
+      "rowsDeleted": 274,
+      "rowsInserted": 274,
+      "elapsedSeconds": 8.045,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "DHD",
+      "rowsDeleted": 426,
+      "rowsInserted": 426,
+      "elapsedSeconds": 12.54,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "Firewire",
+      "rowsDeleted": 132,
+      "rowsInserted": 132,
+      "elapsedSeconds": 3.358,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "Haydenshapes",
+      "rowsDeleted": 2387,
+      "rowsInserted": 2387,
+      "elapsedSeconds": 27.211,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "JS Industries",
+      "rowsDeleted": 378,
+      "rowsInserted": 378,
+      "elapsedSeconds": 3.989,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "Pyzel",
+      "rowsDeleted": 334,
+      "rowsInserted": 334,
+      "elapsedSeconds": 5.428,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "Rusty",
+      "rowsDeleted": 23,
+      "rowsInserted": 23,
+      "elapsedSeconds": 3.099,
+      "truncatedFields": {}
+    },
+    {
+      "brand": "Sharp Eye",
+      "rowsDeleted": 173,
+      "rowsInserted": 173,
+      "elapsedSeconds": 9.213,
+      "truncatedFields": {}
+    }
+  ]
+}

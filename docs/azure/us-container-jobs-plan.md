@@ -26,10 +26,11 @@ This document now captures the live USA Azure Container Apps Jobs and the comman
 - Logging: stdout must remain Log Analytics compatible structured output
 - Current sizing recommendation for ~7.9k normalised rows / ~7.8k importable retailer rows:
   `--cpu 2.0 --memory 4Gi`
-- Current sizing recommendation for ~4.1k validated US MFA rows across JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, and Sharp Eye:
+- Current sizing recommendation for the expanded US MFA rollout across JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, Sharp Eye, Christenson, Misfit Shapes, Chilli, and Pukas:
   `--cpu 2.0 --memory 4Gi`
 - US MFA fresh-build policy: a throttled or temporarily unavailable brand may degrade to a stale-output fallback, but only fresh brand outputs are applied back into SQL.
 - Degraded brands must emit structured warning events and must not have their existing US `ManufacturerInventory` rows deleted during that run.
+- Worldwide brands such as Misfit Shapes, Chilli, and Pukas may preserve native source currency and should expose shipping-note metadata to the frontend response rather than being forced into synthetic USD pricing.
 
 ## Nightly order
 
@@ -94,6 +95,7 @@ az containerapp job start `
 - Inventory job execution succeeded after importer rollback and apply-report serialization was made JSON-safe for `Decimal` and `datetime` values.
 - Structured stdout events were confirmed in Log Analytics for both jobs.
 - Region safety was confirmed from the inventory apply logs: AU, EU, and ID row counts were unchanged before and after the US inventory run.
+- Lost is intentionally excluded from US MFA. Architectural review found catalogue pages and dealer referrals, not genuine manufacturer-direct purchasable inventory.
 
 ## Guardrails
 

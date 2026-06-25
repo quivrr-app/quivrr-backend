@@ -2,29 +2,29 @@
   "example": true,
   "enabled": false,
   "regionCode": "US",
-  "description": "Non-live example scaffold for United States manufacturer direct availability targets. These targets are planning placeholders only and are not validated for SQL import.",
+  "description": "United States manufacturer direct availability target map for the current Production Beta rollout. This file documents source coverage, shipping scope and safe skips; it is not runtime configuration.",
   "notes": [
     "US means United States fulfilment.",
     "Use RegionCode US for all future USA manufacturer-direct rows.",
-    "Do not run this file as production configuration in Phase 1.",
-    "This scaffold documents source mapping and rollout sequencing only."
+    "Do not run this file directly as production configuration.",
+    "Worldwide brands may preserve source currency and require a shipping note in the frontend response."
   ],
   "targets": [
-    { "brandName": "Channel Islands", "enabled": false, "validated": false, "sourceUrl": "https://cisurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary CI source when reviewed." },
-    { "brandName": "Lost", "enabled": false, "validated": false, "sourceUrl": "https://lostsurfboards.net", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary Lost source when reviewed." },
-    { "brandName": "Pyzel", "enabled": false, "validated": false, "sourceUrl": "https://pyzelsurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Source differs from the current EU path and needs separate validation." },
-    { "brandName": "JS Industries", "enabled": false, "validated": false, "sourceUrl": "https://us.jsindustries.com", "builderStrategy": "shopify_candidate", "marketNotes": "Strong candidate for the shared Shopify-style manufacturer path after US validation." },
-    { "brandName": "Firewire", "enabled": false, "validated": false, "sourceUrl": "https://firewiresurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan a US-specific builder from the primary US source." },
-    { "brandName": "Album", "enabled": false, "validated": false, "sourceUrl": "https://albumsurf.com", "builderStrategy": "existing_us_builder_present", "marketNotes": "A partial US builder exists in-repo and needs formal review before activation." },
-    { "brandName": "SharpEye", "enabled": false, "validated": false, "sourceUrl": "https://sharpeyesurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary US source." },
-    { "brandName": "DHD", "enabled": false, "validated": false, "sourceUrl": "https://dhdsurf.com", "builderStrategy": "new_or_adapted", "marketNotes": "Primary site differs from the current EU specialized DHD path." },
-    { "brandName": "Christenson", "enabled": false, "validated": false, "sourceUrl": "https://christensonsurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary Christenson source." },
+    { "brandName": "Channel Islands", "enabled": true, "validated": true, "sourceUrl": "https://cisurfboards.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "Lost", "enabled": false, "validated": false, "sourceUrl": "https://lostsurfboards.net/surfboards/driver/", "builderStrategy": "not_mfa_eligible_catalogue_plus_dealer_referrals", "shippingScope": "dealer_network", "marketNotes": "Direct Manufacturer Stock Not Available. The USA site exposes model catalogue pages with dimensions plus Dealer Locator and Online Dealers links, but not purchasable manufacturer-direct inventory items. Use canonical catalogue and retailer inventory instead." },
+    { "brandName": "Pyzel", "enabled": true, "validated": true, "sourceUrl": "https://pyzelsurfboards.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "JS Industries", "enabled": true, "validated": true, "sourceUrl": "https://us.jsindustries.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path, but the storefront can throttle aggressively during repeated validation." },
+    { "brandName": "Firewire", "enabled": true, "validated": true, "sourceUrl": "https://firewiresurfboards.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "Album", "enabled": true, "validated": true, "sourceUrl": "https://albumsurf.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path with bounded product-page enrichment for dimensions." },
+    { "brandName": "Sharp Eye", "enabled": true, "validated": true, "sourceUrl": "https://sharpeyesurfboards.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "DHD", "enabled": true, "validated": true, "sourceUrl": "https://dhdsurf.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "Christenson", "enabled": true, "validated": true, "sourceUrl": "https://christensonsurfboards.com/surfboard-stock", "builderStrategy": "us_html_stock_parser", "shippingScope": "us_only", "marketNotes": "US stock page and per-board detail metadata now support a safe HTML-based US manufacturer-direct build." },
     { "brandName": "Chemistry", "enabled": false, "validated": false, "sourceUrl": "https://chemistrysurfboards.com", "builderStrategy": "existing_au_builder_present", "marketNotes": "An AU builder exists and may inform a later US rollout after source review." },
-    { "brandName": "Rusty", "enabled": false, "validated": false, "sourceUrl": "https://rustysurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Plan US builder from the primary Rusty source." },
-    { "brandName": "Haydenshapes", "enabled": false, "validated": false, "sourceUrl": "https://haydenshapes.com", "builderStrategy": "new_or_adapted", "marketNotes": "Primary source differs from existing AU/EU assumptions and needs review." },
-    { "brandName": "Misfit", "enabled": false, "validated": false, "sourceUrl": "https://misfitshapes.com", "builderStrategy": "existing_au_builder_present", "marketNotes": "An AU builder exists and may inform a later US rollout after source review." },
-    { "brandName": "Chilli", "enabled": false, "validated": false, "sourceUrl": "https://chillisurfboards.com", "builderStrategy": "existing_au_builder_present", "marketNotes": "An AU builder exists and may inform a later US rollout after source review." },
-    { "brandName": "Pukas", "enabled": false, "validated": false, "sourceUrl": "https://pukasurf.com", "builderStrategy": "new_or_adapted", "marketNotes": "Needs US fulfilment relevance review before builder work." },
-    { "brandName": "Simon Anderson", "enabled": false, "validated": false, "sourceUrl": "https://simonandersonsurfboards.com", "builderStrategy": "new_or_adapted", "marketNotes": "Needs US fulfilment relevance review before builder work." }
+    { "brandName": "Rusty", "enabled": true, "validated": true, "sourceUrl": "https://rustysurfboards.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "Haydenshapes", "enabled": true, "validated": true, "sourceUrl": "https://haydenshapes.com", "builderStrategy": "shared_us_shopify_builder", "marketNotes": "Validated through the US Shopify-based manufacturer path." },
+    { "brandName": "Misfit Shapes", "enabled": true, "validated": true, "sourceUrl": "https://misfitshapes.com/collections/current-models", "builderStrategy": "adapted_shopify_plus_canonical_sizes", "shippingScope": "worldwide", "marketNotes": "US MFA reuses the global Shopify current-model feed and canonical size map while preserving the source storefront's native currency." },
+    { "brandName": "Chilli", "enabled": true, "validated": true, "sourceUrl": "https://www.chillisurfboards.com/?region=usa&direct=1", "builderStrategy": "adapted_shaperbuddy_plus_us_storefront_map", "shippingScope": "worldwide", "marketNotes": "US MFA uses the US storefront model map for URL and currency and the ShaperBuddy dimension availability feed for stockable sizes." },
+    { "brandName": "Pukas", "enabled": true, "validated": true, "sourceUrl": "https://pukassurfshop.com/collections/pukas-surfboards", "builderStrategy": "adapted_shopify_title_parser", "shippingScope": "worldwide", "marketNotes": "US MFA uses the public Pukas board feed, preserving native EUR pricing and marking the source as worldwide shipping." },
+    { "brandName": "Simon Anderson", "enabled": false, "validated": false, "sourceUrl": "https://simonandersonsurfboards.com", "builderStrategy": "australia_only_source", "shippingScope": "australia_only", "marketNotes": "Explicitly excluded from USA MFA. Simon Anderson remains AU-only until a reliable US or worldwide source exists." }
   ]
 }
