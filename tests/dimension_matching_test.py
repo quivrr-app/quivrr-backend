@@ -1,6 +1,7 @@
 import unittest
 import inspect
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import app
 
@@ -208,6 +209,7 @@ class DimensionMatchingTests(unittest.TestCase):
 
     def test_api_exact_and_close_queries_keep_region_and_brand_guards(self):
         source = inspect.getsource(app.search_inventory)
+        helper_source = inspect.getsource(app.should_include_other_model_matches)
         self.assertGreaterEqual(source.count("ri.RegionCode = :region_code"), 2)
         self.assertGreaterEqual(source.count("ri.BrandId = :brand_id"), 2)
         self.assertIn("ri.InventoryId NOT IN :exact_inventory_ids", source)
@@ -218,8 +220,9 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertIn("ri.BoardModelId <> :board_model_id", source)
         self.assertIn("timeout_seconds=OTHER_MODEL_MATCHES_TIMEOUT_SECONDS", source)
         self.assertIn("other_model_matches_timeout", source)
+        self.assertIn("thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX", helper_source)
 
-    def test_other_model_matches_only_show_when_primary_sections_are_empty(self):
+    def test_other_model_matches_only_show_for_supported_thin_results(self):
         self.assertFalse(app.OTHER_MODEL_MATCHES_ENABLED)
         self.assertTrue(
             app.should_include_other_model_matches(
@@ -229,43 +232,28 @@ class DimensionMatchingTests(unittest.TestCase):
                 [],
             )
         )
+        self.assertTrue(
+            app.should_include_other_model_matches(
+                "Rusty",
+                [],
+                [{"inventoryId": 1}],
+                [{"inventoryId": 2}],
+            )
+        )
         self.assertFalse(
-            app.should_run_other_model_matches(
+            app.should_include_other_model_matches(
+                "JS Industries",
                 [{"manufacturerInventoryId": 1}],
                 [],
                 [],
             )
         )
         self.assertFalse(
-            app.should_run_other_model_matches(
-                [],
-                [{"inventoryId": 1}],
-                [],
-            )
-        )
-        self.assertFalse(
-            app.should_run_other_model_matches(
-                [],
-                [],
-                [{"inventoryId": 1}],
-            )
-        )
-        self.assertFalse(app.should_run_other_model_matches([], [], []))
-
-    def test_other_model_matches_budget_guard(self):
-        self.assertFalse(app.should_skip_other_model_matches_for_budget(1499))
-        self.assertTrue(app.should_skip_other_model_matches_for_budget(1500))
-
-    def test_timeout_classifier_handles_timeout_text(self):
-        self.assertTrue(app.is_timeout_error(RuntimeError("query timeout expired")))
-        self.assertFalse(app.is_timeout_error(RuntimeError("other failure")))
-        self.assertEqual(app.SEARCH_VERSION, "search_timeout_fix_v2")
-        self.assertFalse(
             app.should_include_other_model_matches(
                 "JS Industries",
-                [{"inventoryId": 1}],
                 [],
-                [],
+                [{"inventoryId": 1}, {"inventoryId": 2}],
+                [{"inventoryId": 3}],
             )
         )
         self.assertFalse(
@@ -276,6 +264,106 @@ class DimensionMatchingTests(unittest.TestCase):
                 [],
             )
         )
+
+    def test_other_model_matches_run_gate_stays_disabled_by_default(self):
+        self.assertFalse(app.should_run_other_model_matches([], [], []))
+        self.assertFalse(
+            app.should_run_other_model_matches(
+                [],
+                [{"inventoryId": 1}],
+                [],
+            )
+        )
+        self.assertFalse(
+            app.should_run_other_model_matches(
+                [],
+                [{"inventoryId": 1}, {"inventoryId": 2}],
+                [{"inventoryId": 3}],
+            )
+        )
+
+    def test_other_model_matches_budget_guard(self):
+        self.assertFalse(app.should_skip_other_model_matches_for_budget(1499))
+        self.assertTrue(app.should_skip_other_model_matches_for_budget(1500))
+
+    def test_other_model_matches_run_gate_honours_env_toggle_and_thin_threshold(self):
+        with patch.object(app, "OTHER_MODEL_MATCHES_ENABLED", True):
+            self.assertTrue(app.should_run_other_model_matches([], [], []))
+            self.assertTrue(
+                app.should_run_other_model_matches(
+                    [],
+                    [{"inventoryId": 1}],
+                    [{"inventoryId": 2}],
+                )
+            )
+            self.assertFalse(
+                app.should_run_other_model_matches(
+                    [{"manufacturerInventoryId": 1}],
+                    [],
+                    [],
+                )
+            )
+            self.assertFalse(
+                app.should_run_other_model_matches(
+                    [],
+                    [{"inventoryId": 1}, {"inventoryId": 2}],
+                    [{"inventoryId": 3}],
+                )
+            )
+
+    def test_other_model_matches_limit_is_safely_capped(self):
+        with patch.object(app, "OTHER_MODEL_MATCHES_LIMIT", 6):
+            self.assertEqual(app.configured_other_model_matches_limit(), 6)
+
+        with patch.object(app, "OTHER_MODEL_MATCHES_LIMIT", 12):
+            self.assertEqual(app.configured_other_model_matches_limit(), 8)
+
+        with patch.object(app, "OTHER_MODEL_MATCHES_LIMIT", -4):
+            self.assertEqual(app.configured_other_model_matches_limit(), 0)
+
+    def test_timeout_classifier_handles_timeout_text(self):
+        self.assertTrue(app.is_timeout_error(RuntimeError("query timeout expired")))
+        self.assertFalse(app.is_timeout_error(RuntimeError("other failure")))
+        self.assertEqual(app.SEARCH_VERSION, "search_timeout_fix_v2_thin_fallback_v1")
+        self.assertFalse(
+            app.should_include_other_model_matches(
+                "JS Industries",
+                [{"inventoryId": 1}],
+                [],
+                [],
+            )
+        )
+
+    def test_env_flag_parses_truthy_and_falsy_values(self):
+        self.assertTrue(app.env_flag("__missing_truthy__", True))
+        self.assertFalse(app.env_flag("__missing_falsy__", False))
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_FLAG": "true"}, clear=False):
+            self.assertTrue(app.env_flag("QUIVRR_TEST_FLAG", False))
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_FLAG": "On"}, clear=False):
+            self.assertTrue(app.env_flag("QUIVRR_TEST_FLAG", False))
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_FLAG": "0"}, clear=False):
+            self.assertFalse(app.env_flag("QUIVRR_TEST_FLAG", True))
+
+    def test_env_int_returns_default_for_missing_or_invalid_values(self):
+        self.assertEqual(app.env_int("__missing_int__", 8), 8)
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_INT": "12"}, clear=False):
+            self.assertEqual(app.env_int("QUIVRR_TEST_INT", 8), 12)
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_INT": "bad"}, clear=False):
+            self.assertEqual(app.env_int("QUIVRR_TEST_INT", 8), 8)
+
+    def test_env_float_returns_default_for_missing_or_invalid_values(self):
+        self.assertEqual(app.env_float("__missing_float__", 1.5), 1.5)
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_FLOAT": "1.5"}, clear=False):
+            self.assertEqual(app.env_float("QUIVRR_TEST_FLOAT", 2.0), 1.5)
+
+        with patch.dict("os.environ", {"QUIVRR_TEST_FLOAT": "bad"}, clear=False):
+            self.assertEqual(app.env_float("QUIVRR_TEST_FLOAT", 2.0), 2.0)
 
     def test_close_match_excludes_au_exact_same_board_size(self):
         official = SimpleNamespace(

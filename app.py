@@ -19,6 +19,47 @@ from utils.manufacturer_shipping import shipping_metadata_for_brand
 load_dotenv()
 
 
+def env_flag(name: str, default: bool = False) -> bool:
+
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    return value.strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+def env_int(name: str, default: int) -> int:
+
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    try:
+        return int(value.strip())
+    except ValueError:
+        return default
+
+
+def env_float(name: str, default: float) -> float:
+
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    try:
+        return float(value.strip())
+    except ValueError:
+        return default
+
+
 def build_connection_string() -> str:
 
     server = os.getenv("SQL_SERVER")
@@ -76,11 +117,13 @@ SUPPORTED_CATALOGUE_BRANDS = {
     "Simon Anderson",
 }
 
-SEARCH_VERSION = "search_timeout_fix_v2"
-OTHER_MODEL_MATCHES_ENABLED = False
-OTHER_MODEL_MATCHES_LIMIT = 8
-OTHER_MODEL_MATCHES_TIMEOUT_SECONDS = 2
-OTHER_MODEL_MATCHES_BUDGET_MS = 1500
+SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1"
+# Keep the fallback disabled by default until it is explicitly revalidated.
+OTHER_MODEL_MATCHES_ENABLED = env_flag("OTHER_MODEL_MATCHES_ENABLED", False)
+OTHER_MODEL_MATCHES_LIMIT = env_int("OTHER_MODEL_MATCHES_LIMIT", 8)
+OTHER_MODEL_MATCHES_TIMEOUT_SECONDS = env_float("OTHER_MODEL_MATCHES_TIMEOUT_SECONDS", 2.0)
+OTHER_MODEL_MATCHES_BUDGET_MS = env_int("OTHER_MODEL_MATCHES_BUDGET_MS", 1500)
+OTHER_MODEL_MATCHES_THIN_RESULT_MAX = 2
 
 
 app = FastAPI(
@@ -425,9 +468,13 @@ def should_include_other_model_matches(official_brand_name, direct_matches, exac
     return (
         official_brand_name in SUPPORTED_CATALOGUE_BRANDS
         and not direct_matches
-        and not exact_matches
-        and not close_matches
+        and thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX
     )
+
+
+def thin_result_match_count(exact_matches, close_matches):
+
+    return len(exact_matches) + len(close_matches)
 
 
 def should_run_other_model_matches(direct_matches, exact_matches, close_matches):
@@ -435,14 +482,19 @@ def should_run_other_model_matches(direct_matches, exact_matches, close_matches)
     return (
         OTHER_MODEL_MATCHES_ENABLED
         and not direct_matches
-        and not exact_matches
-        and not close_matches
+        and thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX
+        and OTHER_MODEL_MATCHES_LIMIT > 0
     )
 
 
 def should_skip_other_model_matches_for_budget(elapsed_ms):
 
     return elapsed_ms >= OTHER_MODEL_MATCHES_BUDGET_MS
+
+
+def configured_other_model_matches_limit():
+
+    return max(0, min(OTHER_MODEL_MATCHES_LIMIT, 8))
 
 
 def search_log(event, **fields):
@@ -2322,13 +2374,15 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         exact_matches,
         close_matches,
     ):
+        other_model_matches_limit = configured_other_model_matches_limit()
         if should_run_other_model_matches(
             direct_matches,
             exact_matches,
             close_matches,
-        ) and not should_skip_other_model_matches_for_budget(elapsed_ms()):
+        ):
             excluded_inventory_ids = sorted(exact_ids | close_ids) or [-1]
             try:
+                other_model_stage_started = time.perf_counter()
                 other_model_rows = run_stage(
                     "other_model_matches_query",
                     lambda: execute_search(
@@ -2352,8 +2406,32 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                     modelName=official.ModelName,
                     construction=official.Construction,
                     length=official.LengthFeetInches,
-                    resultLimit=OTHER_MODEL_MATCHES_LIMIT,
+                    resultLimit=other_model_matches_limit,
                 )
+                other_model_stage_duration_ms = round(
+                    (time.perf_counter() - other_model_stage_started) * 1000,
+                    1,
+                )
+
+                if should_skip_other_model_matches_for_budget(other_model_stage_duration_ms):
+                    search_log(
+                        "other_model_matches_timeout",
+                        requestId=request_id,
+                        boardSizeId=boardSizeId,
+                        region=region_code,
+                        brandName=official.BrandName,
+                        modelName=official.ModelName,
+                        construction=official.Construction,
+                        length=official.LengthFeetInches,
+                        elapsedMs=elapsed_ms(),
+                        durationMs=other_model_stage_duration_ms,
+                        errorType="BudgetExceeded",
+                        errorMessage=(
+                            "other model fallback exceeded budget "
+                            f"({other_model_stage_duration_ms}ms > {OTHER_MODEL_MATCHES_BUDGET_MS}ms)"
+                        ),
+                    )
+                    other_model_rows = []
 
                 for row in other_model_rows:
                     if should_exclude_close_retailer_row(
@@ -2367,7 +2445,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                     result["canonicalModelName"] = getattr(row, "CanonicalModelName", None)
                     other_model_matches.append(result)
 
-                    if len(other_model_matches) >= OTHER_MODEL_MATCHES_LIMIT:
+                    if len(other_model_matches) >= other_model_matches_limit:
                         break
             except Exception as exc:
                 timeout_like = is_timeout_error(exc)
@@ -2389,15 +2467,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             log_stage(
                 "search_stage_skipped",
                 "other_model_matches_query",
-                reason=(
-                    "normal_results_exist"
-                    if should_run_other_model_matches(
-                        direct_matches,
-                        exact_matches,
-                        close_matches,
-                    ) is False
-                    else "budget_exceeded"
-                ),
+                reason="thin_result_threshold_met_or_direct_exists",
                 brandName=official.BrandName,
                 modelName=official.ModelName,
                 construction=official.Construction,
