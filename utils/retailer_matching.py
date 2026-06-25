@@ -1,4 +1,5 @@
 import re
+from decimal import Decimal
 
 from utils.dimensions import (
     DEFAULT_VOLUME_TOLERANCE,
@@ -7,6 +8,8 @@ from utils.dimensions import (
     length_to_inches,
     measurements_within,
 )
+
+DEFAULT_CLOSE_VOLUME_TOLERANCE = Decimal("2.0")
 
 
 CONSTRUCTION_ALIASES = {
@@ -146,3 +149,73 @@ def classify_retailer_exact(
     if width_missing or thickness_missing:
         return False, "missing_width_or_thickness"
     return False, "dimensions_outside_tolerance"
+
+
+def classify_retailer_close(
+    retailer,
+    canonical,
+    *,
+    brand_matches,
+    model_matches,
+    strong_model_title=False,
+):
+    """Classify conservative close matches after exact matches are excluded."""
+    if not brand_matches:
+        return False, "brand_mismatch"
+    if not model_matches:
+        return False, "model_mismatch"
+
+    parsed_title_dimensions = dimensions_from_title(retailer.get("title"))
+    retailer = {
+        **retailer,
+        "length": retailer.get("length") or parsed_title_dimensions.get("length"),
+        "width": retailer.get("width") or parsed_title_dimensions.get("width"),
+        "thickness": retailer.get("thickness") or parsed_title_dimensions.get("thickness"),
+        "volume": retailer.get("volume") or parsed_title_dimensions.get("volume"),
+    }
+
+    construction_ok, construction_reason = construction_compatible(retailer, canonical)
+    if not construction_ok:
+        return False, construction_reason
+
+    retailer_length = length_to_inches(retailer.get("length") or retailer.get("title"))
+    canonical_length = length_to_inches(canonical.get("length"))
+    if retailer_length is None or canonical_length is None:
+        return False, "missing_length"
+
+    length_delta = abs(retailer_length - canonical_length)
+    retailer_volume = retailer.get("volume")
+    canonical_volume = canonical.get("volume")
+    volume_available = retailer_volume not in (None, "") and canonical_volume not in (None, "")
+
+    exact, exact_reason = classify_retailer_exact(
+        retailer,
+        canonical,
+        brand_matches=brand_matches,
+        model_matches=model_matches,
+        strong_model_title=strong_model_title,
+    )
+    if exact:
+        return False, f"exact_{exact_reason}"
+
+    if length_delta == 0:
+        if volume_available and measurements_within(
+            retailer_volume,
+            canonical_volume,
+            DEFAULT_CLOSE_VOLUME_TOLERANCE,
+        ):
+            return True, "same_length_volume_variant"
+        return True, "same_length_size_family"
+
+    if length_delta == 1:
+        if volume_available and measurements_within(
+            retailer_volume,
+            canonical_volume,
+            DEFAULT_CLOSE_VOLUME_TOLERANCE,
+        ):
+            return True, "nearby_length_volume_variant"
+        if strong_model_title:
+            return True, "nearby_length_strong_model"
+        return False, "nearby_length_without_volume"
+
+    return False, "length_too_far"
