@@ -38,6 +38,19 @@ Do not create `PT`, `ES`, or `FR` primary `RegionCode` values yet. Portugal, Spa
 
 A region should only move stages after data quality, operational ownership, and rollback behavior are understood.
 
+Sprint 6 adds a shared operations layer for all active runtime regions:
+
+- source expectations:
+  `config/region_source_expectations.json`
+- metrics builder:
+  `scripts/observability/build_operations_dashboard_metrics.py`
+- protected internal endpoint:
+  `GET /api/ops/dashboard`
+- Azure Workbook guide:
+  `docs/azure/quivrr-operations-dashboard.md`
+
+That dashboard path is now the preferred way to compare retailer freshness, MFA freshness, and linkage quality across `AU`, `EU`, `ID`, and `US` without ad hoc SQL.
+
 ## AU Current State
 
 AU is the mature production region.
@@ -98,17 +111,36 @@ Sprint 5 is complete and Sprint 6 linkage uplift is active through one shared su
 
 The shared linker applies across `AU`, `EU`, `ID`, and `US` and scopes quality reporting to supported Quivrr manufacturers only. Unsupported brands, retailer house brands, and unsupported longboard catalogues are excluded from platform linkage quality metrics.
 
-Current supported-manufacturer linkage baseline after the latest shared apply:
+Current supported-manufacturer linkage state after Sprint 5.2 shared alias and parser recovery:
 
-- Global model linkage: `81.47%`
-- Global size linkage: `33.72%`
+- Global model linkage: `83.09%`
+- Global canonical size family linkage: `53.45%`
+- Global exact `BoardSizeId` linkage: `34.89%`
 
 Per-region supported linkage:
 
-- `AU`: model `88.76%`, size `26.80%`
-- `EU`: model `75.92%`, size `31.98%`
-- `ID`: model `85.21%`, size `62.69%`
-- `US`: model `78.19%`, size `36.11%`
+- `AU`: model `90.97%`, size family `53.36%`, exact size `28.49%`
+- `EU`: model `76.87%`, size family `48.06%`, exact size `32.69%`
+- `ID`: model `86.61%`, size family `70.48%`, exact size `63.70%`
+- `US`: model `80.22%`, size family `56.58%`, exact size `37.37%`
+
+Current shared blockers after Sprint 5.2:
+
+- Missing model linkage remains the largest blocker: `3,484` supported rows.
+- Rows ambiguous at exact `BoardSizeId` level: `3,253`.
+- Rows blocked by missing construction where multiple canonical construction families exist at the same length: `2,624`.
+- Rows still missing a usable length signal: `130`.
+
+Sprint 5.2 shared recoveries now include:
+
+- Brand-specific deterministic aliases for real canonical models such as `CI 2.Pro`, `The Wolverine`, `Mini Driver (Re Issue)`, `RNF Redux`, `Machadocado`, and `Feb's Fish`.
+- Shared title cleanup that strips embedded dimensions, fin-box metadata, stock IDs, condition prefixes, and leading construction labels before model scoring.
+- Construction-family preference that selects a more specific title construction such as `Spine-Tek` over a generic stored family such as `EPS` when the title clearly contains both.
+
+Known remaining ceiling:
+
+- Many of the top remaining unmatched rows do not have a safe canonical home today because the canonical model is missing entirely, for example `Voodoo Child`, `Baby Buggy`, `T-Low`, `DFR`, `Fred Rubble`, `Rocket 9`, `Balloon`, and `Tasty Treat`.
+- Other high-volume misses remain intentionally unlinked because the retailer title collapses multiple canonical models into one ambiguous family, for example `Driver 3.0`, `The Ripper`, `Pocket Rocket`, and `F1` without a safe round or squash discriminator.
 
 Shared search experience is now:
 
@@ -117,7 +149,30 @@ Shared search experience is now:
 - Close Matches
 - Other Models Available
 
-`Other Models Available` is deterministic, remains inside the same supported manufacturer, and only appears when direct, exact, and close matches are all empty.
+`Other Models Available` remains in incident-safe posture. The response shape is preserved, but the live API currently returns `otherModelMatches = []` under `searchVersion = search_timeout_fix_v2` until the fallback is explicitly re-proven safe.
+
+## Sprint 6 Operations Dashboard
+
+Operational visibility now has a first Azure-native dashboard path:
+
+- region/source expectation config:
+  `config/region_source_expectations.json`
+- metrics builder:
+  `scripts/observability/build_operations_dashboard_metrics.py`
+- workbook guide:
+  `docs/azure/quivrr-operations-dashboard.md`
+
+The dashboard is designed to answer:
+
+- which regions are healthy
+- which retailer or MFA sources are stale
+- current inventory row counts by region
+- current supported-model, size-family, and exact-size linkage quality
+- which supported models have no stock in a region
+
+Future regions should appear automatically once `RegionCode` rows exist in inventory tables and the new region is added to the expectations config.
+
+Exact retailer matches remain strict. Close matches now treat same-model, compatible-construction, same-length boards as legitimate canonical size-family matches even when width, thickness, or litres drift enough to make an exact `BoardSizeId` unsafe.
 
 ## UK Planned State
 

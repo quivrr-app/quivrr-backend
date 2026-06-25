@@ -26,6 +26,19 @@ Quivrr currently spans frontend, backend, data, scheduled jobs, AI, email, and m
 
 Quivrr uses stdout JSON structured logs for scheduled jobs and Bodhi API events. Azure Log Analytics ingests those events without adding new infrastructure or creating a second monitoring stack.
 
+Sprint 6 adds an operator dashboard layer on top of that model:
+
+- SQL and linkage-backed metrics:
+  `scripts/observability/build_operations_dashboard_metrics.py`
+- explicit regional applicability:
+  `config/region_source_expectations.json`
+- protected App Service endpoint:
+  `GET /api/ops/dashboard`
+- Azure Workbook documentation:
+  `docs/azure/quivrr-operations-dashboard.md`
+
+This keeps operations visibility inside Azure-native tooling rather than introducing a second bespoke frontend.
+
 Operational health combines:
 
 - structured job state from the latest successful or failed run
@@ -76,11 +89,14 @@ Primary endpoints:
 - `GET /api/constructions/{model_id}` lists constructions for a board model.
 - `GET /api/sizes/{model_id}/{construction}` lists canonical board sizes.
 - `GET /api/search` searches manufacturer direct and retailer inventory for a selected board size and region.
+- `GET /api/ops/dashboard` returns authenticated internal operations metrics with a short cache window.
 - `GET /api/test-db` validates database connectivity.
 
 The API should not run scrapers, catalogue imports, or database mutation jobs. Those workloads belong in scripts and scheduled jobs.
 
 `region` or `regionCode` is required for regional inventory behavior and must resolve to an active runtime region: `AU`, `EU`, `ID`, or `US`. Invalid values must be rejected or fail closed; they must not silently fall back to AU.
+
+The operations dashboard endpoint is not public runtime surface area. It must remain protected by `OPS_DASHBOARD_API_KEY` until a stronger auth layer such as Microsoft Entra ID or Static Web Apps authentication is introduced.
 
 ## Azure SQL Dependency
 
@@ -154,6 +170,8 @@ The active EU retailer set is 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, 
 
 Exact retailer matching accepts equivalent dimensions, including fractional and decimal inch representations, decimal-comma or decimal-point litres, and bounded width, thickness, and volume comparisons. For 58 Surf, discovery fetches product-detail attributes and retains width, thickness, volume, construction, and fin information through normalization and import. An exact result can therefore pass through equivalent dimensions even when `BoardSizeId` remains `NULL` because duplicate equivalent canonical sizes make deterministic size linking ambiguous.
 
+Sprint 5.1 adds canonical size-family linkage as a separate concept from exact `BoardSizeId` linkage. A retailer row is size-family linked when Quivrr can confidently match supported manufacturer, canonical model, compatible construction family, and canonical length even if width, thickness, or litres are not exact enough to choose one unique canonical size row.
+
 Supported-manufacturer linkage quality is now improved through a shared deterministic backfill path:
 
 ```powershell
@@ -161,9 +179,11 @@ python scripts/run_supported_inventory_linkage_backfill.py dry-run
 python scripts/run_supported_inventory_linkage_backfill.py apply --confirm-apply APPLY_SUPPORTED_LINKS
 ```
 
-This path scopes metrics to supported Quivrr manufacturers only, includes used boards when they link to existing canonical models and sizes, and produces global, regional, retailer, and manufacturer linkage reporting without changing SQL schema or retailer source behavior.
+This path scopes metrics to supported Quivrr manufacturers only, includes used boards when they link to existing canonical models and sizes, and produces global, regional, retailer, and manufacturer linkage reporting without changing SQL schema or retailer source behavior. The report now distinguishes model-linked rows, canonical size-family linked rows, and exact `BoardSizeId` linked rows.
 
-The search API now also exposes `otherModelMatches` as a deterministic final fallback section. It is only populated when manufacturer direct, exact retailer, and close retailer sections are all empty, and it remains inside the same supported manufacturer.
+Sprint 5.2 extends the shared linker with brand-aware deterministic aliases and retailer-title cleanup. The current safe recoveries include canonical mappings such as `CI 2.Pro`, `The Wolverine`, `Mini Driver (Re Issue)`, `RNF Redux`, `Machadocado`, and `Feb's Fish`, plus title parsing that removes embedded dimensions, fin-box metadata, stock IDs, and leading construction labels before model scoring.
+
+The search API still preserves `otherModelMatches` in the response contract, but the live incident posture keeps it disabled behind `searchVersion = search_timeout_fix_v2`. Manufacturer direct, exact retailer, and close retailer sections remain active, while `otherModelMatches` currently returns an empty list until the fallback path is explicitly re-validated. Close retailer results accept same-model, compatible-construction, same-length size-family matches even where exact width, thickness, or volume alignment is not strong enough for an exact result.
 
 ## Regional Rollout
 

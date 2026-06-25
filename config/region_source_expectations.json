@@ -1,0 +1,221 @@
+{
+  "regions": {
+    "AU": {
+      "displayName": "Australia",
+      "retailerRuntime": "legacy_root_runtime",
+      "mfaRuntime": "regional_live",
+      "notes": "Australia predates Gen 3 for retailer ingestion. Active AU retailer rows are treated as expected coverage unless explicitly marked otherwise."
+    },
+    "EU": {
+      "displayName": "Europe",
+      "retailerRuntime": "gen3_regional",
+      "mfaRuntime": "regional_live",
+      "notes": "Europe is the Gen 3 reference architecture."
+    },
+    "ID": {
+      "displayName": "Indonesia",
+      "retailerRuntime": "regional_live",
+      "mfaRuntime": "regional_live",
+      "notes": "Indonesia remains region-scoped. Retailer expectations still rely partly on live active rows while the regional registry matures."
+    },
+    "US": {
+      "displayName": "United States",
+      "retailerRuntime": "gen3_regional",
+      "mfaRuntime": "regional_live",
+      "notes": "USA is Production Beta."
+    }
+  },
+  "dealerNetworkOnlyBrands": [
+    "Lost"
+  ],
+  "australiaOnlyBrands": [
+    "Simon Anderson"
+  ],
+  "worldwideManufacturerSources": [
+    "Album",
+    "Chilli",
+    "Misfit Shapes",
+    "Pukas"
+  ],
+  "mfaBrands": {
+    "Album": {
+      "AU": "expected",
+      "EU": "planned",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Channel Islands": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Chemistry Surfboards": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "planned"
+    },
+    "Chilli": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Christenson": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "DHD": {
+      "AU": "expected",
+      "EU": "expected",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Firewire": {
+      "AU": "expected",
+      "EU": "expected",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Haydenshapes": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "JS Industries": {
+      "AU": "expected",
+      "EU": "expected",
+      "ID": "expected",
+      "US": "expected"
+    },
+    "Lost": {
+      "AU": "dealer_network_only",
+      "EU": "dealer_network_only",
+      "ID": "not_applicable",
+      "US": "dealer_network_only"
+    },
+    "Misfit Shapes": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Pukas": {
+      "AU": "not_applicable",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Pyzel": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Sharp Eye": {
+      "AU": "expected",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "expected"
+    },
+    "Simon Anderson": {
+      "AU": "planned",
+      "EU": "not_applicable",
+      "ID": "not_applicable",
+      "US": "not_applicable"
+    }
+  },
+  "retailers": {
+    "58 Surf": {
+      "EU": "expected"
+    },
+    "Bell Surf": {
+      "EU": "expected"
+    },
+    "Board Exchange": {
+      "EU": "expected"
+    },
+    "Catalyst Surf Shop": {
+      "US": "expected"
+    },
+    "Dark Arts Surf": {
+      "US": "expected"
+    },
+    "GSI Europe": {
+      "EU": "expected"
+    },
+    "Hawaiian South Shore": {
+      "US": "expected"
+    },
+    "Noordzee Boardstore": {
+      "EU": "expected"
+    },
+    "Pop Up Surf Shop": {
+      "EU": "expected"
+    },
+    "Pukas Surf Shop": {
+      "EU": "expected"
+    },
+    "Surf Boss": {
+      "EU": "expected"
+    },
+    "Surf Corner": {
+      "EU": "expected"
+    },
+    "Surf Station": {
+      "US": "expected"
+    },
+    "Real Watersports": {
+      "US": "expected"
+    },
+    "Cleanline Surf": {
+      "US": "expected"
+    },
+    "Bird's Surf Shed": {
+      "US": "expected"
+    },
+    "Jack's Surfboards": {
+      "US": "expected"
+    },
+    "Island Water Sports": {
+      "US": "expected"
+    },
+    "Surf N Sea": {
+      "US": "expected"
+    },
+    "Kimo's Surf Hut": {
+      "US": "expected"
+    },
+    "Moment Surf Co": {
+      "US": "expected"
+    },
+    "Degree 33 Surfboards": {
+      "US": "expected"
+    },
+    "Surfboard Broker": {
+      "US": "expected"
+    },
+    "Infinity Surfboards": {
+      "US": "expected"
+    },
+    "Walden Surfboards": {
+      "US": "expected"
+    },
+    "Stewart Surfboards": {
+      "US": "expected"
+    },
+    "Bing Surfboards": {
+      "US": "expected"
+    },
+    "Robert August Surf Company": {
+      "US": "expected"
+    },
+    "Warm Winds": {
+      "US": "expected"
+    }
+  }
+}
