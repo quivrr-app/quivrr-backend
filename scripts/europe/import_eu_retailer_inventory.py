@@ -116,6 +116,9 @@ GENERIC_MODEL_NAMES = {
 
 DETERMINISTIC_MODEL_ALIASES = {
     "421": "421 fish",
+    "black and": "black white",
+    "black and white": "black white",
+    "california twin": "cali twin",
     "f 1": "f1",
     "f 1 round": "f1 round",
     "f 1 squash": "f1 squash",
@@ -125,6 +128,7 @@ DETERMINISTIC_MODEL_ALIASES = {
     "fishbeard": "fish beard",
     "high line": "highline",
     "hk twin": "hk twin pin",
+    "juliette": "ee juliette",
     "mav s gun": "mavs gun",
     "mikey s shorty": "mikey february shorty",
     "mickstape sym": "micks tape sym",
@@ -136,6 +140,8 @@ DETERMINISTIC_MODEL_ALIASES = {
     "water hog": "waterhog",
     "whitetiger": "white tiger",
 }
+
+SAFE_MODEL_SCORE_GAP = 2500
 
 
 def clean(value: object) -> str:
@@ -206,6 +212,8 @@ def measurement_key(value: object) -> Decimal | None:
 def tolerant_model_key(value: object) -> str:
     """Remove only obvious merchandising suffixes after brand confidence exists."""
     key = model_key(value)
+    if key in {"black white", "black and white"}:
+        return "black white"
     key = re.sub(r"\s+by\s+[a-z][a-z ]+$", "", key)
     key = re.sub(
         r"\s+(?:white|black|blue|navy|red|orange|yellow|green|grey|gray|pink|sand|"
@@ -235,6 +243,7 @@ def clean_model_hint(value: object) -> str:
         model,
         flags=re.IGNORECASE,
     )
+    model = re.sub(r"\s*[-|/]+\s*$", "", model)
     return clean(model)
 
 
@@ -1152,6 +1161,13 @@ def select_model_candidate(row: dict, models_by_brand: dict[int, list[dict]]) ->
     selected = dict(candidates[0])
     selected["candidateCount"] = len(candidates)
     selected["ambiguous"] = len(candidates) > 1
+    if len(candidates) > 1:
+        selected["scoreGap"] = candidates[0]["score"] - candidates[1]["score"]
+        if (
+            selected["scoreGap"] >= SAFE_MODEL_SCORE_GAP
+            and not candidates[0]["isGeneric"]
+        ):
+            selected["ambiguous"] = False
     selected["candidates"] = candidates[:5]
     return selected
 

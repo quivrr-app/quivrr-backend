@@ -18,6 +18,9 @@ class EuCanonicalLinkingTests(unittest.TestCase):
             ("Spud Nick", "Spudnick"),
             ("421", "421 Fish"),
             ("WhiteTiger", "White Tiger"),
+            ("California Twin", "Cali Twin"),
+            ("Juliette", "EE Juliette"),
+            ("Black and White", "Black/White"),
         ]
         for retailer_model, canonical_model in cases:
             with self.subTest(retailer_model=retailer_model):
@@ -51,6 +54,28 @@ class EuCanonicalLinkingTests(unittest.TestCase):
                 )
                 self.assertIsNotNone(selected)
                 self.assertEqual(selected["modelName"], expected)
+
+    def test_select_model_candidate_accepts_clear_score_gap(self):
+        models_by_brand = {
+            1: [
+                {"boardModelId": 20, "brandId": 1, "modelName": "Happy", "modelKey": "happy"},
+                {"boardModelId": 21, "brandId": 1, "modelName": "Happy Everyday", "modelKey": "happy everyday"},
+            ]
+        }
+        selected = select_model_candidate(
+            {
+                "brandId": 1,
+                "brandName": "Channel Islands",
+                "rawProductTitle": "Channel Islands Happy Everyday",
+                "normalisedProductTitle": "Channel Islands Happy Everyday",
+                "parsedModel": "Happy Everyday",
+            },
+            models_by_brand,
+        )
+        self.assertIsNotNone(selected)
+        self.assertEqual(selected["modelName"], "Happy Everyday")
+        self.assertFalse(selected["ambiguous"])
+        self.assertGreaterEqual(selected["scoreGap"], 2500)
 
     def test_extract_model_hint_strips_used_prefix_length_and_stock_codes(self):
         self.assertEqual(
