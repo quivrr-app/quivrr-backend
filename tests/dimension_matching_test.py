@@ -54,6 +54,12 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertEqual(length_to_inches("6'0"), 72)
         self.assertNotEqual(length_to_inches("5'11"), length_to_inches("6'0"))
 
+    def test_inches_to_length_formats_cross_foot_boundaries(self):
+        self.assertEqual(app.inches_to_length(70), "5'10")
+        self.assertEqual(app.inches_to_length(71), "5'11")
+        self.assertEqual(app.inches_to_length(72), "6'0")
+        self.assertIsNone(app.inches_to_length(-1))
+
     def test_equivalent_dimensions_require_exact_length(self):
         canonical = {"length": "5'11", "width": "18 3/4", "thickness": "2 7/16", "volume": 28}
         retailer = {"length": "5ft11", "width": "18.88", "thickness": "2.38", "volume": "28.0L"}
@@ -217,7 +223,9 @@ class DimensionMatchingTests(unittest.TestCase):
         self.assertIn('"otherModelMatches": other_model_matches', source)
         self.assertIn('"searchVersion": SEARCH_VERSION', source)
         self.assertIn("TOP 8", source)
-        self.assertIn("ri.BoardModelId <> :board_model_id", source)
+        self.assertIn("WHEN ri.BoardModelId = :board_model_id THEN 240", source)
+        self.assertIn("ri.LengthFeetInches IN (:two_down_length, :two_up_length)", source)
+        self.assertNotIn("AND (\n                ri.LengthFeetInches = :length", source)
         self.assertIn("timeout_seconds=OTHER_MODEL_MATCHES_TIMEOUT_SECONDS", source)
         self.assertIn("other_model_matches_timeout", source)
         self.assertIn("thin_result_match_count(exact_matches, close_matches) <= OTHER_MODEL_MATCHES_THIN_RESULT_MAX", helper_source)
@@ -324,7 +332,7 @@ class DimensionMatchingTests(unittest.TestCase):
     def test_timeout_classifier_handles_timeout_text(self):
         self.assertTrue(app.is_timeout_error(RuntimeError("query timeout expired")))
         self.assertFalse(app.is_timeout_error(RuntimeError("other failure")))
-        self.assertEqual(app.SEARCH_VERSION, "search_timeout_fix_v2_thin_fallback_v1")
+        self.assertTrue(app.SEARCH_VERSION.startswith("search_timeout_fix_v2_thin_fallback_v1"))
         self.assertFalse(
             app.should_include_other_model_matches(
                 "JS Industries",

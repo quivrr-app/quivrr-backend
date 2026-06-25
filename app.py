@@ -117,7 +117,7 @@ SUPPORTED_CATALOGUE_BRANDS = {
     "Simon Anderson",
 }
 
-SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1"
+SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback"
 # Keep the fallback disabled by default until it is explicitly revalidated.
 OTHER_MODEL_MATCHES_ENABLED = env_flag("OTHER_MODEL_MATCHES_ENABLED", False)
 OTHER_MODEL_MATCHES_LIMIT = env_int("OTHER_MODEL_MATCHES_LIMIT", 8)
@@ -331,6 +331,14 @@ def length_to_inches(length):
     inches = int(match.group("inches") or 0)
 
     return feet * 12 + inches
+
+
+def inches_to_length(value):
+
+    if value is None or value < 0:
+        return None
+
+    return f"{value // 12}'{value % 12}"
 
 
 def format_volume(value):
@@ -1859,17 +1867,23 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             r.LogoUrl,
             bm.ModelName AS CanonicalModelName,
             CASE
-                WHEN ri.Construction IS NOT NULL
-                     AND :construction IS NOT NULL
-                     AND LOWER(LTRIM(RTRIM(ri.Construction))) =
-                         LOWER(LTRIM(RTRIM(:construction)))
-                    THEN 120
+                WHEN ri.BoardModelId = :board_model_id THEN 240
                 ELSE 0
             END
             +
             CASE
-                WHEN ri.LengthFeetInches = :length THEN 30
-                WHEN ri.LengthFeetInches IN (:one_down_length, :one_up_length) THEN 20
+                WHEN ri.Construction IS NOT NULL
+                     AND :construction IS NOT NULL
+                     AND LOWER(LTRIM(RTRIM(ri.Construction))) =
+                         LOWER(LTRIM(RTRIM(:construction)))
+                    THEN 80
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.LengthFeetInches = :length THEN 40
+                WHEN ri.LengthFeetInches IN (:one_down_length, :one_up_length) THEN 25
+                WHEN ri.LengthFeetInches IN (:two_down_length, :two_up_length) THEN 10
                 ELSE 0
             END
             +
@@ -1877,11 +1891,26 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                 WHEN ri.VolumeLitres IS NOT NULL
                      AND :volume IS NOT NULL
                      AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
-                    THEN 25
+                    THEN 20
                 WHEN ri.VolumeLitres IS NOT NULL
                      AND :volume IS NOT NULL
                      AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 2.0
                     THEN 10
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.ProductImageUrl IS NOT NULL THEN 8
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.PriceAmount IS NOT NULL OR ri.PriceAud IS NOT NULL THEN 5
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.BoardSizeId IS NOT NULL THEN 3
                 ELSE 0
             END AS MatchScore
         FROM dbo.RetailerInventory ri
@@ -1893,7 +1922,6 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
           AND ri.RegionCode = :region_code
           AND ri.BrandId = :brand_id
           AND ri.BoardModelId IS NOT NULL
-          AND ri.BoardModelId <> :board_model_id
           AND ri.ProductUrl IS NOT NULL
           AND (
                 :excluded_inventory_ids_empty = 1
@@ -1914,13 +1942,16 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                     'true'
                 )
           )
-          AND (
-                ri.LengthFeetInches = :length
-                OR ri.LengthFeetInches = :one_down_length
-                OR ri.LengthFeetInches = :one_up_length
-          )
         ORDER BY
             MatchScore DESC,
+            CASE
+                WHEN ri.ProductImageUrl IS NULL THEN 1
+                ELSE 0
+            END,
+            CASE
+                WHEN ri.PriceAmount IS NULL AND ri.PriceAud IS NULL THEN 1
+                ELSE 0
+            END,
             CASE
                 WHEN ri.VolumeLitres IS NULL THEN 1
                 ELSE 0
@@ -1980,30 +2011,19 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
 
     one_down_length = None
     one_up_length = None
+    two_down_length = None
+    two_up_length = None
 
     if target_length_inches is not None:
-        one_down_length = (
-            f"{target_length_inches // 12}'"
-            f"{target_length_inches % 12 - 1}"
-        )
-
-        one_up_length = (
-            f"{target_length_inches // 12}'"
-            f"{target_length_inches % 12 + 1}"
-        )
-
         one_down_inches = target_length_inches - 1
         one_up_inches = target_length_inches + 1
+        two_down_inches = target_length_inches - 2
+        two_up_inches = target_length_inches + 2
 
-        one_down_length = (
-            f"{one_down_inches // 12}'"
-            f"{one_down_inches % 12}"
-        )
-
-        one_up_length = (
-            f"{one_up_inches // 12}'"
-            f"{one_up_inches % 12}"
-        )
+        one_down_length = inches_to_length(one_down_inches)
+        one_up_length = inches_to_length(one_up_inches)
+        two_down_length = inches_to_length(two_down_inches)
+        two_up_length = inches_to_length(two_up_inches)
 
     model_match = f"%{official.ModelName}%"
     model_family_match = f"%{model_family_name(official.ModelName)}%"
@@ -2396,6 +2416,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
                             "length": official.LengthFeetInches,
                             "one_down_length": one_down_length,
                             "one_up_length": one_up_length,
+                            "two_down_length": two_down_length,
+                            "two_up_length": two_up_length,
                             "volume": official.VolumeLitres,
                             "construction": official.Construction,
                             "region_code": region_code,
