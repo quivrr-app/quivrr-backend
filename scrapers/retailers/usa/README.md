@@ -8,7 +8,7 @@ US means United States fulfilment. US rollout work must stay region-scoped and m
 
 ## Current State
 
-This folder is the USA Gen 3 retailer rollout workspace. It follows the EU regional structure closely and currently supports discovery plus guarded readiness validation.
+This folder is the USA Gen 3 retailer rollout workspace. It follows the EU regional structure closely and now supports live guarded retailer inventory operations.
 
 The current production-ready dry-run set is limited to retailers that fit an existing lightweight regional adapter safely and that now produce validated normalised rows:
 
@@ -37,7 +37,15 @@ Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets. 
 
 WooCommerce, blocked, or opaque retailers remain documented in the target registry but disabled until a reviewed regional adapter path is available.
 
-There is no production US SQL importer or deployment step enabled from this scaffold.
+The USA retailer stack is now live in Production Beta:
+
+- Azure job: `quivrr-nightly-us-inventory`
+- Schedule: `30 21 * * *`
+- Live active US retailer rows: 7,812
+- Live active US retailers: 20
+- Current inventory link health: 3,120 model-linked rows and 1,432 canonical-size-linked rows
+
+US remains beta because linking quality is still uneven for several house-brand and longboard-heavy retailers, not because the operational pipeline is incomplete.
 
 ## Rollout Summary
 
@@ -124,5 +132,5 @@ Expected row uplift from this pass:
 
 - every accepted row must carry `RegionCode = US`
 - US discovery must not default rows to AU
-- this scaffold must not apply SQL without an explicit future importer review
+- guarded SQL apply is now operational only through the reviewed US importer and Azure job path
 - blocked or unsupported retailers stay documented but disabled

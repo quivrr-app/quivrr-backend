@@ -103,7 +103,7 @@ No UK live scraper, importer, search behavior, or Azure production job is active
 
 ## US Current State
 
-US is now a guarded rollout region following the EU Gen 3 structure.
+US is now a Production Beta region following the EU Gen 3 structure.
 
 - `RegionCode = US`.
 - Frontend regional route exists at `/united-states`.
@@ -114,8 +114,19 @@ US is now a guarded rollout region following the EU Gen 3 structure.
 - US WooCommerce discovery now supports category and Store API paths, but no WooCommerce retailer has yet been promoted from backlog.
 - The current production-ready dry-run retailer set is Surf Station, Jack's Surfboards, Real Watersports, Cleanline Surf, Hawaiian South Shore, Bird's Surf Shed, Island Water Sports, Surf N Sea, Kimo's Surf Hut, Moment Surf Co, Degree 33 Surfboards, Surfboard Broker, Infinity Surfboards, Walden Surfboards, Stewart Surfboards, Bing Surfboards, Robert August Surf Company, Dark Arts Surf, Catalyst Surf Shop, and Warm Winds.
 - Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets because the existing Shopify path does not yet recover safe surfboard inventory from their exposed feeds.
-- US MFA remains planning-first. `scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py` validates the rollout plan and writes a non-live readiness report, but no US manufacturer SQL importer is active yet.
-- No USA Azure Container Apps Jobs exist yet. Job creation should remain manual and follow the reviewed command plan.
+- US MFA now has a guarded regional pipeline through `scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py`.
+- The currently validated US MFA brand set is JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, and Sharp Eye.
+- The shared US MFA builder is Shopify-oriented and currently reuses one regional code path for JS Industries, Channel Islands, Pyzel, Firewire, Album, Haydenshapes, DHD, Rusty, and Sharp Eye while preserving `RegionCode = US`.
+- Lost, Chemistry, Christenson, Misfit, Chilli, Pukas, and Simon Anderson remain documented follow-up manufacturers because their US or global source paths were either blocked, not yet fulfilment-safe, or not yet validated in this pass.
+- `scripts/manufacturer_availability/import_us_manufacturer_availability.py` is US-only, requires explicit confirmation for apply mode, and protects AU, EU, ID, and `NULL` region counts.
+- USA Azure Container Apps Jobs are now live:
+  - `quivrr-us-mfr-availability` at `0 21 * * *`
+  - `quivrr-nightly-us-inventory` at `30 21 * * *`
+- The current live SQL baseline is:
+  - `ManufacturerInventory`: 4,141 active US rows across 9 brands
+  - `RetailerInventory`: 7,812 active US rows across 20 retailers
+- `scripts/run_inventory_link_health_report.py` now reports US beside AU, EU, and ID.
+- US remains beta because canonical linking quality is still uneven across several longboard and house-brand retailers even though operations are now live and region-scoped.
 
 ## Rollout Checklist
 
