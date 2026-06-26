@@ -83,17 +83,6 @@ STEPS = [
 
 REPORT_PATH = Path("scrapers/brands/output/weekly_brand_catalogue_report.json")
 
-POST_CATALOGUE_STEPS = [
-    {
-        "name": "AU Manufacturer Direct Availability",
-        "command": [
-            PYTHON,
-            "scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py",
-        ],
-    },
-]
-
-
 def run_step(step):
     command_path = Path(step["command"][1])
 
@@ -132,7 +121,7 @@ def main():
     started = time.perf_counter()
     emit_event("catalogue_refresh_started", "brand_catalogue", status="success")
     results = []
-    failed = False
+    failures = []
 
     for step in STEPS:
         try:
@@ -140,7 +129,7 @@ def main():
             results.append(run_step(step))
             emit_event("catalogue_brand_completed", "brand_catalogue", status="success", brand=step["name"])
         except Exception as exc:
-            failed = True
+            failures.append(step["name"])
             results.append({
                 "brand": step["name"],
                 "status": "failed",
@@ -155,31 +144,6 @@ def main():
                 error_type=type(exc).__name__,
                 error_message=str(exc),
             )
-            break
-
-    if not failed:
-        for post_step in POST_CATALOGUE_STEPS:
-            try:
-                emit_event("catalogue_brand_started", "brand_catalogue", status="success", brand=post_step["name"])
-                results.append(run_step(post_step))
-                emit_event("catalogue_brand_completed", "brand_catalogue", status="success", brand=post_step["name"])
-            except Exception as exc:
-                failed = True
-                results.append({
-                    "brand": post_step["name"],
-                    "status": "failed",
-                    "message": str(exc),
-                    "ended_at_utc": datetime.now(timezone.utc).isoformat(),
-                })
-                emit_event(
-                    "catalogue_brand_failed",
-                    "brand_catalogue",
-                    status="failed",
-                    brand=post_step["name"],
-                    error_type=type(exc).__name__,
-                    error_message=str(exc),
-                )
-                break
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
@@ -187,7 +151,9 @@ def main():
         json.dumps(
             {
                 "created_at_utc": datetime.now(timezone.utc).isoformat(),
-                "status": "failed" if failed else "succeeded",
+                "status": "failed" if failures else "succeeded",
+                "failed_brands": failures,
+                "succeeded_brands": [row["brand"] for row in results if row.get("status") == "succeeded"],
                 "results": results,
             },
             indent=2,
@@ -199,12 +165,42 @@ def main():
     print(f"Weekly brand catalogue report: {REPORT_PATH}")
     print("")
 
-    if failed:
-        emit_event("catalogue_refresh_failed", "brand_catalogue", status="failed", duration_seconds=round(time.perf_counter() - started, 3))
-        update_job_state("weekly_brand_catalogues", "catalogue", "brand_catalogue", "failed", duration_seconds=round(time.perf_counter() - started, 3))
+    if failures:
+        emit_event(
+            "catalogue_refresh_failed",
+            "brand_catalogue",
+            status="failed",
+            duration_seconds=round(time.perf_counter() - started, 3),
+            failed_brand_count=len(failures),
+            failed_brands=failures,
+            row_count=len(results),
+        )
+        update_job_state(
+            "weekly_brand_catalogues",
+            "catalogue",
+            "brand_catalogue",
+            "failed",
+            duration_seconds=round(time.perf_counter() - started, 3),
+            failed_brand_count=len(failures),
+            failed_brands=failures,
+            row_count=len(results),
+        )
         sys.exit(1)
-    emit_event("catalogue_refresh_completed", "brand_catalogue", status="success", duration_seconds=round(time.perf_counter() - started, 3), row_count=len(results))
-    update_job_state("weekly_brand_catalogues", "catalogue", "brand_catalogue", "success", duration_seconds=round(time.perf_counter() - started, 3), row_count=len(results))
+    emit_event(
+        "catalogue_refresh_completed",
+        "brand_catalogue",
+        status="success",
+        duration_seconds=round(time.perf_counter() - started, 3),
+        row_count=len(results),
+    )
+    update_job_state(
+        "weekly_brand_catalogues",
+        "catalogue",
+        "brand_catalogue",
+        "success",
+        duration_seconds=round(time.perf_counter() - started, 3),
+        row_count=len(results),
+    )
 
 
 if __name__ == "__main__":

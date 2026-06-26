@@ -144,10 +144,66 @@ def build_models(catalogue):
                 "board_category": clean(item.get("board_category")),
                 "official_product_url": clean(item.get("official_product_url")),
                 "official_image_url": clean(item.get("official_image_url")),
+                "description": clean(item.get("description")),
                 "is_active": bool(item.get("is_active", True)),
             }
+            continue
+
+        existing = models[model_name]
+        existing["model_family"] = existing["model_family"] or clean(item.get("model_family") or item.get("model_name")) or model_name
+        existing["board_category"] = existing["board_category"] or clean(item.get("board_category"))
+        existing["official_product_url"] = existing["official_product_url"] or clean(item.get("official_product_url"))
+        existing["official_image_url"] = existing["official_image_url"] or clean(item.get("official_image_url"))
+        existing["description"] = existing["description"] or clean(item.get("description"))
+        existing["is_active"] = existing["is_active"] and bool(item.get("is_active", True))
 
     return models
+
+
+def validate_missing_model_deactivation(
+    *,
+    brand_name,
+    existing_model_names,
+    incoming_model_names,
+    max_missing_without_override=5,
+    max_drop_ratio=0.2,
+    min_existing_for_ratio_guard=10,
+):
+    existing = {clean(name) for name in existing_model_names if clean(name)}
+    incoming = {clean(name) for name in incoming_model_names if clean(name)}
+
+    if not existing:
+        return []
+
+    missing = sorted(existing - incoming)
+
+    if not missing:
+        return []
+
+    allow_override = os.getenv("ALLOW_CATALOGUE_MODEL_DEACTIVATION", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+    missing_ratio = len(missing) / max(len(existing), 1)
+    exceeds_guard = (
+        len(missing) > max_missing_without_override
+        or (
+            len(existing) >= min_existing_for_ratio_guard
+            and missing_ratio > max_drop_ratio
+        )
+    )
+
+    if exceeds_guard and not allow_override:
+        sample = ", ".join(missing[:10])
+        raise RuntimeError(
+            f"{brand_name} catalogue regression guard blocked deactivation of "
+            f"{len(missing)} models ({missing_ratio:.0%} of active models). "
+            f"Sample missing models: {sample}. "
+            "Set ALLOW_CATALOGUE_MODEL_DEACTIVATION=1 only for an explicitly reviewed cleanup."
+        )
+
+    return missing
 
 
 def build_size_rows(catalogue, model_cache):
@@ -267,10 +323,11 @@ def run_import_transaction(brand_name, catalogue, models):
                 connection.execute(
                     text("""
                         UPDATE dbo.BoardModels
-                        SET ModelFamily = :model_family,
-                            BoardCategory = :board_category,
-                            OfficialProductUrl = :official_product_url,
-                            OfficialImageUrl = :official_image_url,
+                        SET ModelFamily = COALESCE(:model_family, ModelFamily),
+                            BoardCategory = COALESCE(:board_category, BoardCategory),
+                            OfficialProductUrl = COALESCE(:official_product_url, OfficialProductUrl),
+                            OfficialImageUrl = COALESCE(:official_image_url, OfficialImageUrl),
+                            Description = COALESCE(:description, Description),
                             IsActive = :is_active,
                             UpdatedAtUtc = GETUTCDATE()
                         WHERE BoardModelId = :model_id;
@@ -281,6 +338,7 @@ def run_import_transaction(brand_name, catalogue, models):
                         "board_category": model["board_category"],
                         "official_product_url": model["official_product_url"],
                         "official_image_url": model["official_image_url"],
+                        "description": model["description"],
                         "is_active": model["is_active"],
                     },
                 )
@@ -296,6 +354,7 @@ def run_import_transaction(brand_name, catalogue, models):
                         BoardCategory,
                         OfficialProductUrl,
                         OfficialImageUrl,
+                        Description,
                         IsActive,
                         CreatedAtUtc
                     )
@@ -307,6 +366,7 @@ def run_import_transaction(brand_name, catalogue, models):
                         :board_category,
                         :official_product_url,
                         :official_image_url,
+                        :description,
                         :is_active,
                         GETUTCDATE()
                     );
@@ -318,13 +378,18 @@ def run_import_transaction(brand_name, catalogue, models):
                     "board_category": model["board_category"],
                     "official_product_url": model["official_product_url"],
                     "official_image_url": model["official_image_url"],
+                    "description": model["description"],
                     "is_active": model["is_active"],
                 },
             ).fetchone()
 
             model_cache[model_name] = result.BoardModelId
 
-        missing_model_names = sorted(set(existing_model_ids_by_name) - set(model_cache))
+        missing_model_names = validate_missing_model_deactivation(
+            brand_name=brand_name,
+            existing_model_names=existing_model_ids_by_name.keys(),
+            incoming_model_names=model_cache.keys(),
+        )
         if missing_model_names:
             connection.execute(
                 text("""

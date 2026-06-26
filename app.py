@@ -587,6 +587,8 @@ def build_ops_dashboard_response(cache_status: str):
         "retailerHealthByRegion": metrics.get("retailerHealthByRegion", {}),
         "jobHealth": metrics.get("jobHealth", []),
         "jobHealthByRegion": metrics.get("jobHealthByRegion", {}),
+        "jobContracts": metrics.get("jobContracts", []),
+        "jobContractsByRegion": metrics.get("jobContractsByRegion", {}),
         "inventoryCounts": metrics.get("inventoryCounts", []),
         "searchQuality": metrics.get("searchQuality", []),
         "coverageGaps": metrics.get("coverageGaps", []),
@@ -610,6 +612,8 @@ def build_ops_dashboard_response(cache_status: str):
         retailerRegionCount=len(response["retailerHealthByRegion"]),
         jobHealthCount=len(response["jobHealth"]),
         jobHealthRegionCount=len(response["jobHealthByRegion"]),
+        jobContractCount=len(response["jobContracts"]),
+        jobContractRegionCount=len(response["jobContractsByRegion"]),
     )
     return response
 
@@ -676,6 +680,7 @@ def build_ops_dashboard_warming_response(cache_status: str, refresh_started: boo
                 },
                 "jobs": [],
             },
+            "jobContracts": [],
             "alerts": [],
             "mfaHealth": [],
         }
@@ -691,6 +696,8 @@ def build_ops_dashboard_warming_response(cache_status: str, refresh_started: boo
         "retailerHealthByRegion": {},
         "jobHealth": [],
         "jobHealthByRegion": {},
+        "jobContracts": [],
+        "jobContractsByRegion": {},
         "inventoryCounts": [],
         "searchQuality": [],
         "coverageGaps": [],

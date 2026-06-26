@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 
 
 BRAND = "Album"
-BASE_URL = "https://albumsurf.com.au"
-MODELS_PAGE = "https://albumsurf.com.au/pages/board-models"
+BASE_URL = "https://albumsurf.com"
+MODELS_PAGE = "https://albumsurf.com/pages/board-models"
 
 OUTPUT_FILE = Path("scrapers/brands/album/output/album_master_catalogue_clean.json")
 REPORT_FILE = Path("scrapers/brands/album/output/album_master_catalogue_clean_report.json")
@@ -201,6 +201,46 @@ def extract_model_page(url):
     return rows
 
 
+def model_name_from_url(url):
+    slug = url.split("/collections/")[-1]
+    slug = slug.replace("-concept", "")
+    slug = slug.replace("-1", "")
+    words = [part for part in slug.split("-") if part]
+    if not words:
+        return ""
+    name = " ".join(word.capitalize() for word in words)
+    aliases = {
+        "Dboa": "D'boa",
+        "Proto A Typical": "ProtoAtypical",
+        "Vbsm": "VBSM",
+    }
+    return aliases.get(name, name)
+
+
+def build_model_only_row(model_name, url):
+    return {
+        "brand": BRAND,
+        "model_name": model_name,
+        "model_family": model_name,
+        "board_category": "Surfboard",
+        "description": None,
+        "official_product_url": url,
+        "official_image_url": None,
+        "recommended_wave_range": None,
+        "recommended_surfer_weight": None,
+        "length_feet_inches": None,
+        "width": None,
+        "thickness": None,
+        "volume_litres": None,
+        "construction": None,
+        "fin_setup": None,
+        "tail_shape": None,
+        "source_product_title": model_name,
+        "source_variant_title": "Model overview",
+        "source": url,
+    }
+
+
 def main():
     candidate_urls = discover_candidate_pages()
 
@@ -211,6 +251,10 @@ def main():
     for url in candidate_urls:
         try:
             rows = extract_model_page(url)
+            if not rows:
+                model_name = model_name_from_url(url)
+                if model_name:
+                    rows = [build_model_only_row(model_name, url)]
 
             page_results.append({
                 "url": url,

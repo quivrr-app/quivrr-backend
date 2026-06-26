@@ -310,6 +310,8 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertIn("retailerHealthByRegion", metrics)
         self.assertIn("jobHealth", metrics)
         self.assertIn("jobHealthByRegion", metrics)
+        self.assertIn("jobContracts", metrics)
+        self.assertIn("jobContractsByRegion", metrics)
         self.assertIn("regionDetails", metrics)
         au_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "AU")
         us_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "US")
@@ -325,6 +327,7 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["activeRows"], 100)
         self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["configuredRetailers"], 4)
         self.assertIn("jobHealth", metrics["regionDetails"]["AU"])
+        self.assertIn("jobContracts", metrics["regionDetails"]["AU"])
 
     def test_region_level_stale_alert_suppresses_per_retailer_spam(self):
         now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)

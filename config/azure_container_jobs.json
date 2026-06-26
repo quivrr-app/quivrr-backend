@@ -9,7 +9,32 @@
       "stateFile": "weekly_brand_catalogues",
       "structuredLogEventName": "catalogue_refresh_completed",
       "freshnessHours": 168,
-      "metricSource": "catalogue"
+      "metricSource": "catalogue",
+      "entryScript": "python scripts/run_all_brand_catalogues.py",
+      "contractLayer": "global_canonical",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes"],
+      "writesTables": ["Brands", "BoardModels", "BoardSizes"],
+      "writesFields": [
+        "BrandName",
+        "ModelName",
+        "ModelFamily",
+        "BoardCategory",
+        "OfficialProductUrl",
+        "OfficialImageUrl",
+        "Description",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "FinSetup",
+        "TailShape",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/brands/*/output/*_master_catalogue*.json",
+        "scrapers/brands/output/weekly_brand_catalogue_report.json"
+      ]
     },
     {
       "jobName": "quivrr-market-intelligence",
@@ -20,7 +45,25 @@
       "stateFile": "market_intelligence_daily",
       "structuredLogEventName": "market_intelligence_completed",
       "freshnessHours": 48,
-      "metricSource": "job_state"
+      "metricSource": "job_state",
+      "entryScript": "python run_market_intelligence_job.py",
+      "contractLayer": "market_intelligence",
+      "readsTables": ["RetailerInventory", "RetailerInventorySnapshot", "RetailerInventoryDelta"],
+      "writesTables": ["RetailerInventorySnapshot", "RetailerInventoryDelta"],
+      "writesFields": [
+        "SnapshotDate",
+        "EventDate",
+        "EventType",
+        "RetailerName",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "RegionCode"
+      ],
+      "expectedSourceOutputs": [
+        "market_intelligence/reporting/*",
+        "output/observability/job_state/market_intelligence_daily.json"
+      ]
     },
     {
       "jobName": "quivrr-nightly-au-inventory",
@@ -31,7 +74,39 @@
       "stateFile": "inventory_au",
       "structuredLogEventName": "inventory_refresh_completed",
       "freshnessHours": 36,
-      "metricSource": "retailer_inventory"
+      "metricSource": "retailer_inventory",
+      "entryScript": "python scripts/run_nightly_inventory_refresh.py",
+      "contractLayer": "regional_retailer_inventory",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "Retailers", "RetailerInventory"],
+      "writesTables": ["Retailers", "RetailerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "RetailerId",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "RawProductTitle",
+        "NormalisedProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAud",
+        "StockStatus",
+        "StockQuantity",
+        "Construction",
+        "FinSetup",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "EstimatedShippingAud",
+        "InventoryConfidenceScore",
+        "LastCheckedUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/products/output/normalised_surfboards.json",
+        "scrapers/products/output/nightly_inventory_job_report.json"
+      ]
     },
     {
       "jobName": "quivrr-mfr-availability",
@@ -42,7 +117,40 @@
       "stateFile": "mfa_au",
       "structuredLogEventName": "mfa_refresh_completed",
       "freshnessHours": 72,
-      "metricSource": "manufacturer_inventory"
+      "metricSource": "manufacturer_inventory",
+      "entryScript": "python scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py",
+      "contractLayer": "regional_manufacturer_availability",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "ManufacturerInventory"],
+      "writesTables": ["ManufacturerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "BrandName",
+        "ModelName",
+        "RawProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "IsAvailable",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "FinSetup",
+        "AvailabilitySource",
+        "Source",
+        "SourcePayload",
+        "ScrapedAtUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/manufacturers/availability/*/output/*_au_manufacturer_inventory.json"
+      ]
     },
     {
       "jobName": "quivrr-nightly-eu-inventory",
@@ -53,7 +161,36 @@
       "stateFile": "inventory_eu",
       "structuredLogEventName": "inventory_refresh_completed",
       "freshnessHours": 36,
-      "metricSource": "retailer_inventory"
+      "metricSource": "retailer_inventory",
+      "entryScript": "python scripts/europe/run_eu_retailer_inventory_refresh.py apply",
+      "contractLayer": "regional_retailer_inventory",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "Retailers", "RetailerInventory"],
+      "writesTables": ["Retailers", "RetailerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "RetailerId",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "RawProductTitle",
+        "NormalisedProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "LastCheckedUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/retailers/europe/output/*.json",
+        "scripts/europe/output/eu_retailer_import_*.json"
+      ]
     },
     {
       "jobName": "quivrr-eu-mfr-availability",
@@ -64,7 +201,41 @@
       "stateFile": "mfa_eu",
       "structuredLogEventName": "mfa_refresh_completed",
       "freshnessHours": 72,
-      "metricSource": "manufacturer_inventory"
+      "metricSource": "manufacturer_inventory",
+      "entryScript": "python scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py apply",
+      "contractLayer": "regional_manufacturer_availability",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "ManufacturerInventory"],
+      "writesTables": ["ManufacturerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "BrandName",
+        "ModelName",
+        "RawProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "IsAvailable",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "FinSetup",
+        "AvailabilitySource",
+        "Source",
+        "SourcePayload",
+        "ScrapedAtUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/manufacturers/availability/*/output/*_eu_manufacturer_inventory.json",
+        "scripts/manufacturer_availability/output/eu_mfa_link_audit.json"
+      ]
     },
     {
       "jobName": "quivrr-nightly-id-inventory",
@@ -75,7 +246,35 @@
       "stateFile": "inventory_id",
       "structuredLogEventName": "inventory_refresh_completed",
       "freshnessHours": 36,
-      "metricSource": "retailer_inventory"
+      "metricSource": "retailer_inventory",
+      "entryScript": "python scrapers/retailers/indonesia/import_indonesia_retailer_inventory.py",
+      "contractLayer": "regional_retailer_inventory",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "Retailers", "RetailerInventory"],
+      "writesTables": ["Retailers", "RetailerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "RetailerId",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "RawProductTitle",
+        "NormalisedProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "LastCheckedUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/retailers/indonesia/*/output/*.json"
+      ]
     },
     {
       "jobName": "quivrr-id-mfr-availability",
@@ -86,7 +285,40 @@
       "stateFile": "mfa_id",
       "structuredLogEventName": "mfa_refresh_completed",
       "freshnessHours": 72,
-      "metricSource": "manufacturer_inventory"
+      "metricSource": "manufacturer_inventory",
+      "entryScript": "python scripts/manufacturer_availability/run_id_manufacturer_availability_pipeline.py",
+      "contractLayer": "regional_manufacturer_availability",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "ManufacturerInventory"],
+      "writesTables": ["ManufacturerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "BrandName",
+        "ModelName",
+        "RawProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "IsAvailable",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "FinSetup",
+        "AvailabilitySource",
+        "Source",
+        "SourcePayload",
+        "ScrapedAtUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/manufacturers/availability/js_industries/output/*_id_*.json"
+      ]
     },
     {
       "jobName": "quivrr-nightly-us-inventory",
@@ -97,7 +329,36 @@
       "stateFile": "inventory_us",
       "structuredLogEventName": "inventory_refresh_completed",
       "freshnessHours": 36,
-      "metricSource": "retailer_inventory"
+      "metricSource": "retailer_inventory",
+      "entryScript": "python scripts/usa/run_us_retailer_inventory_refresh.py apply",
+      "contractLayer": "regional_retailer_inventory",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "Retailers", "RetailerInventory"],
+      "writesTables": ["Retailers", "RetailerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "RetailerId",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "RawProductTitle",
+        "NormalisedProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "LastCheckedUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/retailers/usa/output/*.json",
+        "scripts/usa/output/us_retailer_import_*.json"
+      ]
     },
     {
       "jobName": "quivrr-us-mfr-availability",
@@ -108,7 +369,41 @@
       "stateFile": "mfa_us",
       "structuredLogEventName": "mfa_refresh_completed",
       "freshnessHours": 72,
-      "metricSource": "manufacturer_inventory"
+      "metricSource": "manufacturer_inventory",
+      "entryScript": "python scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py apply",
+      "contractLayer": "regional_manufacturer_availability",
+      "readsTables": ["Brands", "BoardModels", "BoardSizes", "ManufacturerInventory"],
+      "writesTables": ["ManufacturerInventory"],
+      "writesFields": [
+        "RegionCode",
+        "BrandId",
+        "BoardModelId",
+        "BoardSizeId",
+        "BrandName",
+        "ModelName",
+        "RawProductTitle",
+        "ProductUrl",
+        "ProductImageUrl",
+        "PriceAmount",
+        "PriceCurrency",
+        "StockStatus",
+        "IsAvailable",
+        "Construction",
+        "LengthFeetInches",
+        "Width",
+        "Thickness",
+        "VolumeLitres",
+        "FinSetup",
+        "AvailabilitySource",
+        "Source",
+        "SourcePayload",
+        "ScrapedAtUtc",
+        "IsActive"
+      ],
+      "expectedSourceOutputs": [
+        "scrapers/manufacturers/availability/us/output/*.json",
+        "scripts/manufacturer_availability/output/us_mfa_*.json"
+      ]
     }
   ]
 }

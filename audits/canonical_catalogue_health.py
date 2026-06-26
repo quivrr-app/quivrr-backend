@@ -1,21 +1,93 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from sqlalchemy import text
 
 from audits.common import (
-    ALBUM_EXPECTED_MODELS,
+    BRAND_SOURCE_FILES,
+    GLOBAL_ALIAS_CANDIDATES,
+    SCRIPT_OUTPUT_ROOT,
     SUPPORTED_BRANDS,
     choose_timestamp_expression,
     format_timestamp,
+    load_json_file,
     load_table_columns,
     normalize_text,
     resolve_supported_brands,
     row_to_dict,
 )
 from market_intelligence.db import execute_with_retry
+
+
+def _clean_model_name(value: Any) -> str:
+    return str(value or "").strip()
+
+
+def _extract_source_models(path: Path | None) -> list[str]:
+    if path is None or not path.exists():
+        return []
+    ignored_models = {"videos"}
+    data = load_json_file(path)
+    if isinstance(data, list) and data and isinstance(data[0], str):
+        return sorted(
+            {
+                cleaned
+                for item in data
+                for cleaned in [_clean_model_name(item)]
+                if cleaned and normalize_text(cleaned) not in ignored_models
+            }
+        )
+    if isinstance(data, list):
+        return sorted(
+            {
+                cleaned
+                for item in data
+                for cleaned in [
+                    _clean_model_name(item.get("model") or item.get("model_name") or item.get("modelName"))
+                ]
+                if isinstance(item, dict)
+                and cleaned
+                and normalize_text(cleaned) not in ignored_models
+            }
+        )
+    return []
+
+
+def _extract_latest_build_timestamp(report_path: Path | None) -> str | None:
+    if report_path is None or not report_path.exists():
+        return None
+    return datetime.fromtimestamp(report_path.stat().st_mtime, tz=timezone.utc).isoformat()
+
+
+def _source_report_summary(report_path: Path | None) -> dict[str, Any]:
+    if report_path is None or not report_path.exists():
+        return {"exists": False}
+    try:
+        data = load_json_file(report_path)
+    except Exception as exc:
+        return {"exists": True, "error": type(exc).__name__}
+    summary = {"exists": True}
+    for key in (
+        "rows",
+        "models",
+        "catalogue_rows",
+        "models_with_rows",
+        "products_seen",
+        "failure_count",
+        "failures",
+        "missing_models",
+        "scraped_model_count",
+        "expected_model_count",
+        "constructions",
+        "output_file",
+    ):
+        if key in data:
+            summary[key] = data[key]
+    return summary
 
 
 def summarize_brand_health(
@@ -32,16 +104,63 @@ def summarize_brand_health(
     dropdown_names = sorted(dropdown_models)
     canonical_name_set = set(canonical_model_names)
     dropdown_name_set = set(dropdown_names)
+    source_files = BRAND_SOURCE_FILES.get(brand_entry["displayName"], {})
+    source_models = _extract_source_models(source_files.get("expected_models") or source_files.get("catalogue"))
+    source_name_set = set(source_models)
+    canonical_by_normalized = {normalize_text(name): name for name in canonical_model_names}
+    source_by_normalized = {normalize_text(name): name for name in source_models}
+    canonical_normalized = set(canonical_by_normalized)
+    source_normalized = set(source_by_normalized)
+    alias_candidates = GLOBAL_ALIAS_CANDIDATES.get(brand_entry["displayName"], {})
+    alias_pairs = {
+        normalize_text(source_name): normalize_text(canonical_name)
+        for source_name, canonical_name in alias_candidates.items()
+    }
+    alias_candidate_rows = sorted(
+        (
+            source_by_normalized[source_key],
+            canonical_by_normalized[canonical_key],
+        )
+        for source_key, canonical_key in alias_pairs.items()
+        if source_key in source_normalized and canonical_key in canonical_normalized
+    )
+    direct_missing = sorted(
+        source_by_normalized[source_key]
+        for source_key in source_normalized
+        if source_key not in canonical_normalized
+        and (
+            source_key not in alias_pairs
+            or alias_pairs[source_key] not in canonical_normalized
+        )
+    )
+    retired_candidates = (
+        sorted(canonical_by_normalized[key] for key in canonical_normalized - source_normalized)
+        if source_name_set
+        else []
+    )
+    latest_weekly_build = _extract_latest_build_timestamp(source_files.get("report") or source_files.get("catalogue"))
+    source_report = _source_report_summary(source_files.get("report"))
 
     duplicate_normalized_names = sorted(
         normalized_name
         for normalized_name, count in Counter(normalize_text(name) for name in canonical_model_names).items()
         if normalized_name and count > 1
     )
+    models_with_description = sum(1 for row in model_rows if str(row.get("Description") or "").strip())
+    models_with_official_url = sum(1 for row in model_rows if str(row.get("OfficialProductUrl") or "").strip())
+    models_with_official_image = sum(1 for row in model_rows if str(row.get("OfficialImageUrl") or "").strip())
+    models_with_board_category = sum(1 for row in model_rows if str(row.get("BoardCategory") or "").strip())
+    models_with_wave_range = sum(1 for row in model_rows if str(row.get("RecommendedWaveRange") or "").strip())
+    models_with_surfer_weight = sum(1 for row in model_rows if str(row.get("RecommendedSurferWeight") or "").strip())
     models_without_sizes = sorted(
         str(row["ModelName"])
         for row in model_rows
         if size_count_by_model_id.get(int(row["BoardModelId"]), 0) == 0
+    )
+    models_missing_descriptions = sorted(
+        str(row["ModelName"])
+        for row in model_rows
+        if not str(row.get("Description") or "").strip()
     )
     timestamps = [
         row.get("ModelTimestamp")
@@ -57,6 +176,10 @@ def summarize_brand_health(
         suspicious_indicators.append(f"duplicate_normalized_model_names:{len(duplicate_normalized_names)}")
     if canonical_name_set != dropdown_name_set:
         suspicious_indicators.append("dropdown_model_mismatch")
+    if direct_missing:
+        suspicious_indicators.append(f"official_models_missing:{len(direct_missing)}")
+    if source_report.get("failure_count"):
+        suspicious_indicators.append(f"builder_failures:{source_report['failure_count']}")
 
     payload: dict[str, Any] = {
         "brandName": brand_entry["displayName"],
@@ -84,16 +207,34 @@ def summarize_brand_health(
         "modelsPresentInSqlButMissingFromApi": sorted(canonical_name_set - dropdown_name_set),
         "modelsWithNoSizes": models_without_sizes,
         "duplicateNormalisedModelNames": duplicate_normalized_names,
+        "modelsWithDescription": models_with_description,
+        "modelsMissingDescriptions": models_missing_descriptions,
+        "descriptionCoveragePct": round((models_with_description / len(model_rows)) * 100, 2) if model_rows else None,
+        "modelsWithOfficialUrl": models_with_official_url,
+        "officialUrlCoveragePct": round((models_with_official_url / len(model_rows)) * 100, 2) if model_rows else None,
+        "modelsWithOfficialImage": models_with_official_image,
+        "officialImageCoveragePct": round((models_with_official_image / len(model_rows)) * 100, 2) if model_rows else None,
+        "modelsWithBoardCategory": models_with_board_category,
+        "boardCategoryCoveragePct": round((models_with_board_category / len(model_rows)) * 100, 2) if model_rows else None,
+        "modelsWithRecommendedWaveRange": models_with_wave_range,
+        "recommendedWaveRangeCoveragePct": round((models_with_wave_range / len(model_rows)) * 100, 2) if model_rows else None,
+        "modelsWithRecommendedSurferWeight": models_with_surfer_weight,
+        "recommendedSurferWeightCoveragePct": round((models_with_surfer_weight / len(model_rows)) * 100, 2) if model_rows else None,
         "suspiciousModelLossIndicators": suspicious_indicators,
+        "officialModelCount": len(source_models),
+        "officialModels": source_models,
+        "officialModelsMissingFromCanonical": direct_missing,
+        "aliasCandidates": [
+            {
+                "sourceModel": source_name,
+                "canonicalModel": canonical_name,
+            }
+            for source_name, canonical_name in alias_candidate_rows
+        ],
+        "retiredCanonicalCandidates": retired_candidates,
+        "latestWeeklyBuildUtc": latest_weekly_build,
+        "sourceCatalogue": source_report,
     }
-    if brand_entry["displayName"] == "Album":
-        expected = set(ALBUM_EXPECTED_MODELS)
-        present = canonical_name_set & expected
-        missing = expected - canonical_name_set
-        payload["albumExpectedModelsPresent"] = sorted(present)
-        payload["albumExpectedModelsMissing"] = sorted(missing)
-        if missing:
-            payload["suspiciousModelLossIndicators"].append(f"album_expected_models_missing:{len(missing)}")
     return payload
 
 
@@ -105,6 +246,12 @@ def build_canonical_catalogue_health_report() -> dict[str, Any]:
         if model_timestamp_expr
         else "CAST(NULL AS datetimeoffset) AS ModelTimestamp"
     )
+    description_sql = "bm.Description AS Description" if "Description" in board_model_columns else "CAST(NULL AS nvarchar(max)) AS Description"
+    official_product_url_sql = "bm.OfficialProductUrl AS OfficialProductUrl" if "OfficialProductUrl" in board_model_columns else "CAST(NULL AS nvarchar(1000)) AS OfficialProductUrl"
+    official_image_url_sql = "bm.OfficialImageUrl AS OfficialImageUrl" if "OfficialImageUrl" in board_model_columns else "CAST(NULL AS nvarchar(1000)) AS OfficialImageUrl"
+    board_category_sql = "bm.BoardCategory AS BoardCategory" if "BoardCategory" in board_model_columns else "CAST(NULL AS nvarchar(255)) AS BoardCategory"
+    recommended_wave_range_sql = "bm.RecommendedWaveRange AS RecommendedWaveRange" if "RecommendedWaveRange" in board_model_columns else "CAST(NULL AS nvarchar(255)) AS RecommendedWaveRange"
+    recommended_surfer_weight_sql = "bm.RecommendedSurferWeight AS RecommendedSurferWeight" if "RecommendedSurferWeight" in board_model_columns else "CAST(NULL AS nvarchar(255)) AS RecommendedSurferWeight"
     brand_entries = resolve_supported_brands()
     if not any(entry["brandIds"] for entry in brand_entries):
         return {
@@ -135,6 +282,12 @@ def build_canonical_catalogue_health_report() -> dict[str, Any]:
                     bm.BoardModelId,
                     bm.BrandId,
                     bm.ModelName,
+                    {description_sql},
+                    {official_product_url_sql},
+                    {official_image_url_sql},
+                    {board_category_sql},
+                    {recommended_wave_range_sql},
+                    {recommended_surfer_weight_sql},
                     {model_timestamp_sql}
                 FROM dbo.BoardModels bm
                 WHERE bm.IsActive = 1
@@ -223,6 +376,17 @@ def build_canonical_catalogue_health_report() -> dict[str, Any]:
             )
         )
 
+    schema_support = {
+        "description": "Description" in board_model_columns,
+        "officialProductUrl": "OfficialProductUrl" in board_model_columns,
+        "officialImageUrl": "OfficialImageUrl" in board_model_columns,
+        "boardCategory": "BoardCategory" in board_model_columns,
+        "recommendedWaveRange": "RecommendedWaveRange" in board_model_columns,
+        "recommendedSurferWeight": "RecommendedSurferWeight" in board_model_columns,
+        "technologyNotes": False,
+        "aliases": False,
+        "sizeRange": False,
+    }
     return {
         "brands": brands,
         "summary": {
@@ -234,6 +398,21 @@ def build_canonical_catalogue_health_report() -> dict[str, Any]:
                 for brand in brands
                 if brand.get("suspiciousModelLossIndicators")
             ],
+            "brandsMissingDescriptions": [
+                {
+                    "brandName": brand["brandName"],
+                    "modelsMissingDescriptions": len(brand.get("modelsMissingDescriptions", [])),
+                    "descriptionCoveragePct": brand.get("descriptionCoveragePct"),
+                }
+                for brand in brands
+                if brand.get("modelsMissingDescriptions")
+            ],
+            "schemaSupport": schema_support,
+            "bodhiReadinessGaps": [
+                "Technology/construction notes do not have a dedicated canonical SQL column yet.",
+                "Model aliases are maintained in scraper/audit metadata, not a canonical SQL alias table.",
+                "Size range is derivable from BoardSizes but is not stored as a dedicated canonical field.",
+            ],
+            "canonicalAuditOutputFile": str(SCRIPT_OUTPUT_ROOT / "canonical_catalogue_audit.json"),
         },
     }
-

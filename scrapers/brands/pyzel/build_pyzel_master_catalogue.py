@@ -11,6 +11,29 @@ from scrapers.brands.common_shopify_catalogue import build_catalogue
 
 
 OUTPUT_FILE = Path("scrapers/brands/pyzel/output/pyzel_master_catalogue_clean.json")
+SUPPLEMENTAL_MODELS = [
+    {
+        "model": "74",
+        "model_family": "74",
+        "board_category": "Surfboards",
+        "length": None,
+        "width": None,
+        "thickness": None,
+        "volume_litres": None,
+        "construction": "PU",
+        "fin_system": None,
+        "tail_shape": None,
+        "official_product_url": "https://pyzelsurfboards.com/pages/board-model/74",
+        "official_image_url": None,
+        "source": "https://pyzelsurfboards.com",
+        "source_product_title": "74",
+        "source_product_id": None,
+        "source_variant_id": None,
+        "source_variant_title": "Model overview",
+        "scraped_at_utc": None,
+        "is_active": True,
+    }
+]
 
 
 MODEL_PRIORITY = [
@@ -189,6 +212,12 @@ def main():
 
         seen.add(key)
         cleaned.append(row)
+
+    existing_models = {row["model"] for row in cleaned if row.get("model")}
+    for row in SUPPLEMENTAL_MODELS:
+        if row["model"] in existing_models:
+            continue
+        cleaned.append(dict(row))
 
     OUTPUT_FILE.write_text(
         json.dumps(cleaned, indent=2, ensure_ascii=False),

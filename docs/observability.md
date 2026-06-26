@@ -113,6 +113,7 @@ The dashboard combines:
 
 - Azure SQL current-state inventory and MFA aggregates
 - supported inventory linkage quality from `scripts/run_supported_inventory_linkage_backfill.py`
+- canonical completeness from `scripts/audits/audit_canonical_catalogue_health.py`
 - explicit regional source applicability from `config/region_source_expectations.json`
 - explicit Azure job registry from `config/azure_container_jobs.json`
 - Log Analytics workbook queries for search/runtime telemetry
@@ -122,13 +123,32 @@ Job health additions:
 - top-level payload fields:
   - `jobHealth`
   - `jobHealthByRegion`
+  - `jobContracts`
+  - `jobContractsByRegion`
 - region drill-in now includes:
   - `regionDetails.<REGION>.jobHealth.summary`
   - `regionDetails.<REGION>.jobHealth.jobs`
+  - `regionDetails.<REGION>.jobContracts`
 - job status is derived from:
   - configured Azure Container App Job metadata captured in `config/azure_container_jobs.json`
   - SQL freshness timestamps for retailer inventory, manufacturer inventory, and canonical catalogue where applicable
   - runner-emitted `output/observability/job_state/*.json` when available
+
+Job contract additions:
+
+- every configured job now declares:
+  - `entryScript`
+  - `readsTables`
+  - `writesTables`
+  - `writesFields`
+  - `expectedSourceOutputs`
+  - `contractLayer`
+- the dashboard emits `contractStatus`, `contractLabel`, and `contractReason` per configured job
+- current contract checks flag:
+  - missing entry scripts
+  - canonical jobs that attempt to invoke regional stock pipelines
+  - MFA jobs that are still planning-only scaffolds
+  - retailer or MFA jobs that declare canonical table writes
 
 Current job types:
 
@@ -168,6 +188,30 @@ Sprint 6.2 dashboard truth notes:
   - red: `> 40%`
 - market coverage alert wording should read as a supply limitation, for example `AU market coverage limited`, not as an infrastructure outage
 - dashboard `job_state` telemetry that has not yet been mirrored into local `output/observability/job_state/*.json` is shown as `grey/telemetry_pending` and should be validated in Azure execution history rather than treated as a yellow failure
+
+Sprint 7 Gen 3 standardisation additions:
+
+- `regionalReadiness` scores every region across:
+  - operational
+  - search
+  - coverage
+  - catalogue
+  - overall
+- `canonicalCompleteness` exposes supported-brand catalogue health for the dashboard and engineering audit workflow
+- canonical completeness now includes per-brand coverage for:
+  - official descriptions
+  - official product URLs
+  - official images
+  - board category
+  - recommended wave range
+  - recommended surfer weight
+- `topUnmatchedModels` and `topUnmatchedRetailers` surface the highest-volume remaining supported-linkage backlog directly in the dashboard payload
+- the supported linkage dry-run now exposes blocker counts for:
+  - `missingModelRowsAfter`
+  - `missingLengthRowsAfter`
+  - `missingConstructionRowsAfter`
+  - `ambiguousBoardSizeRowsAfter`
+- `scripts/run_supported_inventory_linkage_backfill.py --regions AU ID` can be used to isolate AU/ID retrofit work without mutating other regions
 
 Current expectation notes:
 

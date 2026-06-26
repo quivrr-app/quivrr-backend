@@ -1,5 +1,6 @@
 ﻿import json
 import os
+import sys
 import time
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -7,6 +8,12 @@ from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from sqlalchemy import bindparam, create_engine, event, text
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.import_brand_catalogue_common import validate_missing_model_deactivation
 
 
 load_dotenv()
@@ -121,7 +128,16 @@ def build_models(catalogue):
                 "sizes": item.get("sizes") or [],
                 "constructions": item.get("constructions") or ["PU"],
                 "official_image_url": clean(item.get("official_image_url")),
+                "description": clean(item.get("description")),
+                "board_category": clean(item.get("board_category")),
             }
+            continue
+
+        existing = models[model_name]
+        existing["product_url"] = existing["product_url"] or clean(item.get("product_url"))
+        existing["official_image_url"] = existing["official_image_url"] or clean(item.get("official_image_url"))
+        existing["description"] = existing["description"] or clean(item.get("description"))
+        existing["board_category"] = existing["board_category"] or clean(item.get("board_category"))
 
     return models
 
@@ -336,8 +352,10 @@ def main():
                 connection.execute(
                     text("""
                         UPDATE dbo.BoardModels
-                        SET OfficialProductUrl = :product_url,
-                            OfficialImageUrl = :official_image_url,
+                        SET OfficialProductUrl = COALESCE(:product_url, OfficialProductUrl),
+                            OfficialImageUrl = COALESCE(:official_image_url, OfficialImageUrl),
+                            Description = COALESCE(:description, Description),
+                            BoardCategory = COALESCE(:board_category, BoardCategory),
                             IsActive = :is_active,
                             UpdatedAtUtc = GETUTCDATE()
                         WHERE BoardModelId = :model_id;
@@ -346,6 +364,8 @@ def main():
                         "model_id": existing_model_id,
                         "product_url": model["product_url"],
                         "official_image_url": model["official_image_url"],
+                        "description": model["description"],
+                        "board_category": model["board_category"],
                         "is_active": model["is_active"],
                     },
                 )
@@ -359,6 +379,8 @@ def main():
                         ModelName,
                         OfficialProductUrl,
                         OfficialImageUrl,
+                        Description,
+                        BoardCategory,
                         IsActive,
                         CreatedAtUtc
                     )
@@ -368,6 +390,8 @@ def main():
                         :model_name,
                         :product_url,
                         :official_image_url,
+                        :description,
+                        :board_category,
                         :is_active,
                         GETUTCDATE()
                     );
@@ -377,13 +401,19 @@ def main():
                     "model_name": model_name,
                     "product_url": model["product_url"],
                     "official_image_url": model["official_image_url"],
+                    "description": model["description"],
+                    "board_category": model["board_category"],
                     "is_active": model["is_active"],
                 }
             ).fetchone()
 
             model_cache[model_name] = result.BoardModelId
 
-        missing_model_names = sorted(set(existing_model_ids_by_name) - set(model_cache))
+        missing_model_names = validate_missing_model_deactivation(
+            brand_name=BRAND_NAME,
+            existing_model_names=existing_model_ids_by_name.keys(),
+            incoming_model_names=model_cache.keys(),
+        )
         if missing_model_names:
             connection.execute(
                 text("""

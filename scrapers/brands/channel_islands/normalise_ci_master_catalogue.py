@@ -137,14 +137,6 @@ def main():
 
         sizes = dedupe_sizes(item.get("sizes"))
 
-        if not sizes:
-            removed.append({
-                "slug": slug,
-                "model_name": model_name,
-                "reason": "no active stock dimensions",
-            })
-            continue
-
         if slug in seen_slugs:
             removed.append({
                 "slug": slug,
@@ -171,6 +163,7 @@ def main():
         "input_models": len(catalogue),
         "clean_models": len(clean_catalogue),
         "removed_models": len(removed),
+        "models_without_sizes": sum(1 for item in clean_catalogue if not item.get("sizes")),
         "total_sizes": sum(len(item["sizes"]) for item in clean_catalogue),
         "removed": removed,
     }

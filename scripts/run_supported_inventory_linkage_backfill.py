@@ -172,11 +172,46 @@ def load_active_inventory_rows(conn) -> list[dict]:
     return inventory
 
 
-def compute_supported_linkage_report(conn) -> dict:
-    brands = eu_import.brand_lookup(conn)
-    models_by_brand = eu_import.load_board_models(conn)
-    sizes_by_model = eu_import.load_board_sizes(conn)
-    inventory_rows = load_active_inventory_rows(conn)
+def infer_source_construction(row: dict) -> str:
+    title_constructions = eu_import.construction_from_title(row.get("rawProductTitle"))
+    if len(title_constructions) == 1:
+        return next(iter(title_constructions))
+    return eu_import.construction_key(row.get("construction")) or ""
+
+
+def parse_regions(region_codes: list[str] | None) -> set[str] | None:
+    if not region_codes:
+        return None
+    parsed = {
+        eu_import.clean(code).upper()
+        for code in region_codes
+        if eu_import.clean(code)
+    }
+    return parsed or None
+
+
+def compute_supported_linkage_report(
+    conn,
+    *,
+    region_codes: list[str] | None = None,
+    brands: dict[str, int] | None = None,
+    models_by_brand: dict[int, list[dict]] | None = None,
+    sizes_by_model: dict[int, list[dict]] | None = None,
+    inventory_rows: list[dict] | None = None,
+) -> dict:
+    selected_regions = parse_regions(region_codes)
+    brands = brands if brands is not None else eu_import.brand_lookup(conn)
+    models_by_brand = (
+        models_by_brand if models_by_brand is not None else eu_import.load_board_models(conn)
+    )
+    sizes_by_model = (
+        sizes_by_model if sizes_by_model is not None else eu_import.load_board_sizes(conn)
+    )
+    inventory_rows = inventory_rows if inventory_rows is not None else load_active_inventory_rows(conn)
+    if selected_regions:
+        inventory_rows = [
+            row for row in inventory_rows if (row.get("regionCode") or "").upper() in selected_regions
+        ]
     supported_model_ids = {
         model["boardModelId"]
         for brand_models in models_by_brand.values()
@@ -189,6 +224,7 @@ def compute_supported_linkage_report(conn) -> dict:
     alias_opportunities = Counter()
     unmatched_models = Counter()
     unmatched_examples: dict[tuple[str, str, str], list[str]] = defaultdict(list)
+    unmatched_retailers = Counter()
     retailer_metrics: dict[tuple[str, str], Counter] = defaultdict(Counter)
     manufacturer_metrics: dict[tuple[str, str], Counter] = defaultdict(Counter)
     retailer_model_coverage: dict[str, set[int]] = defaultdict(set)
@@ -262,6 +298,7 @@ def compute_supported_linkage_report(conn) -> dict:
 
         projected_model_linked = effective_model_id is not None
         projected_size_linked = row.get("boardSizeId") is not None
+        size_family_candidate = False
 
         if not projected_size_linked and effective_model_id is not None:
             selected_size = eu_import.select_size_candidate(
@@ -291,17 +328,20 @@ def compute_supported_linkage_report(conn) -> dict:
                 parsed_model or "<missing>",
             )
             unmatched_models[unmatched_key] += 1
+            unmatched_retailers[(region_code, row["retailerName"] or "missing")] += 1
             alias_opportunities[(effective_brand_name, parsed_model or "<missing>")] += 1
             if len(unmatched_examples[unmatched_key]) < 3:
                 unmatched_examples[unmatched_key].append(row["rawProductTitle"])
+            global_metrics["missingModelRowsAfter"] += 1
 
         projected_size_family_linked = False
         if effective_model_id is not None:
-            projected_size_family_linked = has_size_family_candidate(
+            size_family_candidate = has_size_family_candidate(
                 match_row,
                 int(effective_model_id),
                 sizes_by_model,
             )
+            projected_size_family_linked = size_family_candidate
         if projected_size_family_linked:
             retailer_metrics[retailer_key]["linkedSizeFamilyRowsAfter"] += 1
             manufacturer_metrics[manufacturer_key]["linkedSizeFamilyRowsAfter"] += 1
@@ -311,6 +351,13 @@ def compute_supported_linkage_report(conn) -> dict:
             retailer_metrics[retailer_key]["linkedSizeRowsAfter"] += 1
             manufacturer_metrics[manufacturer_key]["linkedSizeRowsAfter"] += 1
             global_metrics["linkedSizeRowsAfter"] += 1
+        elif effective_model_id is not None and size_family_candidate:
+            global_metrics["ambiguousBoardSizeRowsAfter"] += 1
+
+        if effective_model_id is not None and not eu_import.clean(row_dimensions(match_row)["lengthFeetInches"]):
+            global_metrics["missingLengthRowsAfter"] += 1
+        if effective_model_id is not None and not infer_source_construction(match_row):
+            global_metrics["missingConstructionRowsAfter"] += 1
 
     global_metrics["supportedRowsAfter"] = global_metrics["supportedRowsBefore"]
 
@@ -405,9 +452,13 @@ def compute_supported_linkage_report(conn) -> dict:
             "unlinkedModelRowsAfter": int(global_metrics["supportedRowsBefore"] - global_metrics["linkedModelRowsAfter"]),
             "unlinkedSizeRowsBefore": int(global_metrics["supportedRowsBefore"] - global_metrics["linkedSizeRowsBefore"]),
             "unlinkedSizeRowsAfter": int(global_metrics["supportedRowsBefore"] - global_metrics["linkedSizeRowsAfter"]),
+            "missingModelRowsAfter": int(global_metrics["missingModelRowsAfter"]),
+            "missingLengthRowsAfter": int(global_metrics["missingLengthRowsAfter"]),
+            "missingConstructionRowsAfter": int(global_metrics["missingConstructionRowsAfter"]),
+            "ambiguousBoardSizeRowsAfter": int(global_metrics["ambiguousBoardSizeRowsAfter"]),
         },
         "regionBreakdown": region_breakdown,
-            "retailerBreakdown": build_breakdown(retailer_metrics),
+        "retailerBreakdown": build_breakdown(retailer_metrics),
         "manufacturerBreakdown": build_breakdown(manufacturer_metrics),
         "regionCoverage": [
             {
@@ -436,6 +487,14 @@ def compute_supported_linkage_report(conn) -> dict:
             }
             for (brand_name, parsed_model), count in alias_opportunities.most_common(40)
             if parsed_model not in {"", "<missing>"}
+        ],
+        "topUnmatchedRetailers": [
+            {
+                "regionCode": region_code,
+                "retailerName": retailer_name,
+                "count": count,
+            }
+            for (region_code, retailer_name), count in unmatched_retailers.most_common(25)
         ],
         "updates": {
             "brandUpdates": brand_updates,
@@ -535,6 +594,11 @@ def parse_args() -> argparse.Namespace:
         choices=("dry-run", "apply"),
         default="dry-run",
     )
+    parser.add_argument(
+        "--regions",
+        nargs="+",
+        help="Optional region codes to scope the dry-run/apply, for example AU ID.",
+    )
     parser.add_argument("--confirm-apply", dest="confirm_apply")
     return parser.parse_args()
 
@@ -549,13 +613,13 @@ def main() -> None:
         )
 
     with eu_import.connect_with_retry(engine) as conn:
-        report = compute_supported_linkage_report(conn)
+        report = compute_supported_linkage_report(conn, region_codes=args.regions)
 
     if args.mode == "apply":
         with eu_import.begin_with_retry(engine) as conn:
             apply_result = apply_updates(conn, report["updates"])
         with eu_import.connect_with_retry(engine) as conn:
-            after_report = compute_supported_linkage_report(conn)
+            after_report = compute_supported_linkage_report(conn, region_codes=args.regions)
         after_report["applyResult"] = apply_result
         write_report(after_report)
         print_summary(after_report)

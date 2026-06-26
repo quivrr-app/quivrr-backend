@@ -8,6 +8,7 @@ from typing import Any, Callable
 
 from sqlalchemy import text
 
+from audits.canonical_catalogue_health import build_canonical_catalogue_health_report
 from market_intelligence.db import engine, execute_with_retry
 from scripts import run_supported_inventory_linkage_backfill as supported_linkage_backfill
 from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
@@ -16,7 +17,7 @@ from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
 EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
 JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
 SERVICE_NAME = "operations_dashboard"
-DASHBOARD_VERSION = "sprint6_2_signal_truth_v2"
+DASHBOARD_VERSION = "sprint7_gen3_regional_standardisation_v2"
 SUPPORTED_BRAND_SET = {
     "Album",
     "Channel Islands",
@@ -286,6 +287,51 @@ def load_source_expectations(path: Path | None = None) -> dict[str, Any]:
 
 def load_job_expectations(path: Path | None = None) -> dict[str, Any]:
     return _json_load(path or JOB_EXPECTATIONS_PATH)
+
+
+def _job_entry_script_path(entry_script: str | None) -> Path | None:
+    command = str(entry_script or "").strip()
+    if not command:
+        return None
+    parts = command.split()
+    if len(parts) < 2:
+        return None
+    return ROOT / parts[1]
+
+
+def _job_contract_status(definition: dict[str, Any]) -> StatusResult:
+    job_type = str(definition.get("jobType") or "").strip().lower()
+    entry_script = _job_entry_script_path(definition.get("entryScript"))
+    if entry_script is None:
+        return StatusResult("red", "missing_entry_script", "Job contract is missing an entry script.")
+    if not entry_script.exists():
+        return StatusResult("red", "missing_entry_script", f"Configured entry script is missing: {entry_script.relative_to(ROOT)}")
+
+    writes_tables = {str(name) for name in definition.get("writesTables", [])}
+    structured_event = str(definition.get("structuredLogEventName") or "").strip()
+    source_text = entry_script.read_text(encoding="utf-8")
+
+    if job_type == "catalogue":
+        if "run_au_manufacturer_availability_pipeline.py" in source_text:
+            return StatusResult("red", "contract_violation", "Global canonical runner still invokes manufacturer availability.")
+        if {"RetailerInventory", "ManufacturerInventory"} & writes_tables:
+            return StatusResult("red", "contract_violation", "Global canonical jobs must not write stock tables.")
+    elif job_type == "manufacturer_availability":
+        if any(table in writes_tables for table in ("BoardModels", "BoardSizes", "RetailerInventory")):
+            return StatusResult("red", "contract_violation", "Manufacturer availability jobs must not write canonical or retailer inventory tables.")
+        normalized_source = source_text.lower()
+        if "planning only" in normalized_source or "must not write sql" in normalized_source or "intentionally disabled" in normalized_source:
+            return StatusResult("red", "planning_only", "Configured manufacturer availability runner is still a planning scaffold, not a live SQL writer.")
+    elif job_type == "retailer_inventory":
+        if any(table in writes_tables for table in ("BoardModels", "BoardSizes", "ManufacturerInventory")):
+            return StatusResult("red", "contract_violation", "Retailer inventory jobs must not write canonical or manufacturer inventory tables.")
+    elif job_type == "market_intelligence":
+        if {"BoardModels", "BoardSizes", "ManufacturerInventory"} & writes_tables:
+            return StatusResult("red", "contract_violation", "Market intelligence jobs must not mutate canonical or manufacturer inventory tables.")
+
+    if not structured_event:
+        return StatusResult("yellow", "missing_structured_log", "Structured log event name is not configured for this job.")
+    return StatusResult("green", "healthy", "Configured job contract matches the Gen 3 layer definition.")
 
 
 def _load_job_state(job_name: str) -> dict[str, Any] | None:
@@ -593,6 +639,65 @@ def _build_job_health(
     return flat_rows, by_region
 
 
+def _build_job_contracts(
+    regions: list[str],
+    job_health_by_region: dict[str, dict[str, Any]],
+    *,
+    job_expectations_path: Path | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, list[dict[str, Any]]]]:
+    job_config = load_job_expectations(job_expectations_path)
+    health_lookup = {
+        (str(row.get("jobName") or ""), str(row.get("region") or "")): row
+        for payload in job_health_by_region.values()
+        for row in payload.get("jobs", [])
+    }
+    rows: list[dict[str, Any]] = []
+    by_region: dict[str, list[dict[str, Any]]] = {region: [] for region in regions}
+    for definition in job_config.get("jobs", []):
+        contract_status = _job_contract_status(definition)
+        for region in [str(item).upper() for item in definition.get("regions", []) if str(item).upper() in by_region]:
+            health = health_lookup.get((str(definition.get("jobName") or ""), region), {})
+            row = {
+                "region": region,
+                "jobName": definition.get("jobName"),
+                "jobType": definition.get("jobType"),
+                "contractLayer": definition.get("contractLayer"),
+                "schedule": definition.get("schedule"),
+                "entryScript": definition.get("entryScript"),
+                "readsTables": list(definition.get("readsTables", [])),
+                "writesTables": list(definition.get("writesTables", [])),
+                "writesFields": list(definition.get("writesFields", [])),
+                "expectedSourceOutputs": list(definition.get("expectedSourceOutputs", [])),
+                "structuredLogEventName": definition.get("structuredLogEventName"),
+                "lastSucceededUtc": health.get("lastSucceededUtc"),
+                "currentHealth": health.get("status", "grey"),
+                "currentHealthReason": health.get("statusReason"),
+                "contractStatus": contract_status.color,
+                "contractLabel": contract_status.label,
+                "contractReason": contract_status.reason,
+            }
+            rows.append(row)
+            by_region[region].append(row)
+    for region, region_rows in by_region.items():
+        region_rows.sort(
+            key=lambda row: (
+                -STATUS_PRIORITY.get(str(row.get("contractStatus") or "grey").lower(), -1),
+                -STATUS_PRIORITY.get(str(row.get("currentHealth") or "grey").lower(), -1),
+                str(row.get("jobType") or ""),
+                str(row.get("jobName") or ""),
+            )
+        )
+    rows.sort(
+        key=lambda row: (
+            _sort_region(str(row.get("region") or "")),
+            -STATUS_PRIORITY.get(str(row.get("contractStatus") or "grey").lower(), -1),
+            str(row.get("jobType") or ""),
+            str(row.get("jobName") or ""),
+        )
+    )
+    return rows, by_region
+
+
 def _coverage_status(no_stock_count: int, supported_total: int) -> StatusResult:
     if supported_total <= 0:
         return StatusResult("grey", "not_applicable", "Supported coverage cannot be assessed without canonical coverage.")
@@ -655,6 +760,23 @@ def _row_field(row: Any, field: str, default: Any = None) -> Any:
 
 def _build_supported_linkage_snapshot(conn: Any) -> dict[str, Any]:
     return supported_linkage_backfill.compute_supported_linkage_report(conn)
+
+
+def _build_canonical_completeness_snapshot() -> dict[str, Any]:
+    return build_canonical_catalogue_health_report()
+
+
+def _empty_canonical_completeness_snapshot(reason: str) -> dict[str, Any]:
+    return {
+        "brands": [],
+        "summary": {
+            "supportedBrandCount": 0,
+            "resolvedBrandCount": 0,
+            "brandsMissingFromSql": [],
+            "statusColor": "yellow",
+            "reason": reason,
+        },
+    }
 
 
 def _map_region_rows(rows: list[Any], region_field: str = "RegionCode") -> dict[str, dict[str, Any]]:
@@ -884,6 +1006,150 @@ def _region_linkage_lookup(linkage_report: dict[str, Any]) -> dict[str, dict[str
         item["regionCode"]: item
         for item in linkage_report.get("regionBreakdown", [])
     }
+
+
+def _clamp_pct(value: float | int | None) -> float:
+    if value is None:
+        return 0.0
+    return max(0.0, min(100.0, round(float(value), 2)))
+
+
+def _status_score(status: str | None) -> float:
+    normalized = str(status or "").lower()
+    if normalized == "green":
+        return 100.0
+    if normalized == "yellow":
+        return 70.0
+    if normalized == "grey":
+        return 100.0
+    return 40.0
+
+
+def _build_catalogue_score_lookup(
+    canonical_report: dict[str, Any],
+    expectations: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    brand_lookup = {
+        str(item.get("brandName")): item
+        for item in canonical_report.get("brands", [])
+    }
+    retailer_regions_by_brand: dict[str, set[str]] = {}
+    for retailer_name, region_map in expectations.get("retailers", {}).items():
+        del retailer_name
+        for region, applicability in region_map.items():
+            if applicability == "not_applicable":
+                continue
+            retailer_regions_by_brand.setdefault(region, set())
+
+    per_region: dict[str, dict[str, Any]] = {}
+    for region in expectations.get("regions", {}).keys():
+        applicable_brands: set[str] = {
+            brand
+            for brand, region_map in expectations.get("mfaBrands", {}).items()
+            if region_map.get(region) not in {None, "not_applicable"}
+        }
+        if region in retailer_regions_by_brand:
+            applicable_brands.update(brand_lookup.keys())
+        rows = []
+        healthy = 0
+        for brand in sorted(applicable_brands):
+            item = brand_lookup.get(brand)
+            if not item:
+                rows.append(
+                    {
+                        "brand": brand,
+                        "statusColor": "red",
+                        "reason": "brand_missing_from_canonical_sql",
+                        "canonicalModelCount": 0,
+                        "canonicalSizeCount": 0,
+                    }
+                )
+                continue
+            suspicious = list(item.get("suspiciousModelLossIndicators") or [])
+            status_color = "green" if not suspicious else "yellow"
+            if status_color == "green":
+                healthy += 1
+            rows.append(
+                {
+                    "brand": brand,
+                    "statusColor": status_color,
+                    "reason": suspicious or ["healthy"],
+                    "canonicalModelCount": int(item.get("canonicalModelCount", 0) or 0),
+                    "canonicalSizeCount": int(item.get("canonicalSizeCount", 0) or 0),
+                }
+            )
+        total = len(rows)
+        score = _clamp_pct((healthy / total) * 100.0) if total else 100.0
+        per_region[region] = {
+            "score": score,
+            "applicableBrandCount": total,
+            "healthyBrandCount": healthy,
+            "brands": rows,
+        }
+    return per_region
+
+
+def _build_region_readiness(
+    region_overview: list[dict[str, Any]],
+    retailer_health_by_region: dict[str, dict[str, Any]],
+    canonical_report: dict[str, Any],
+    expectations: dict[str, Any],
+    linkage_report: dict[str, Any],
+) -> list[dict[str, Any]]:
+    overview_lookup = {item["region"]: item for item in region_overview}
+    linkage_lookup = _region_linkage_lookup(linkage_report)
+    catalogue_lookup = _build_catalogue_score_lookup(canonical_report, expectations)
+    readiness = []
+    for region in sorted(overview_lookup.keys(), key=_sort_region):
+        overview = overview_lookup[region]
+        linkage = linkage_lookup.get(region, {})
+        retailer_summary = retailer_health_by_region.get(region, {}).get("summary", {})
+        operational = round(
+            (
+                _status_score(overview.get("retailerStatus"))
+                + _status_score(overview.get("mfaStatus"))
+                + _status_score(overview.get("overallStatus"))
+            )
+            / 3.0,
+            2,
+        )
+        search = round(
+            (
+                _clamp_pct(linkage.get("linkedModelPctAfter")) * 0.55
+                + _clamp_pct(linkage.get("linkedSizeFamilyPctAfter")) * 0.35
+                + _clamp_pct(linkage.get("linkedSizePctAfter")) * 0.10
+            ),
+            2,
+        )
+        coverage = _clamp_pct(100.0 - float(overview.get("coverageGapPct") or 0.0))
+        catalogue = float(catalogue_lookup.get(region, {}).get("score", 100.0))
+        overall = round(
+            operational * 0.35 + search * 0.30 + coverage * 0.20 + catalogue * 0.15,
+            2,
+        )
+        readiness.append(
+            {
+                "region": region,
+                "displayName": overview.get("displayName", region),
+                "operationalScore": operational,
+                "searchScore": search,
+                "coverageScore": coverage,
+                "catalogueScore": catalogue,
+                "overallScore": overall,
+                "supportedRows": int(linkage.get("supportedRows", 0) or 0),
+                "supportedModelLinkPct": linkage.get("linkedModelPctAfter"),
+                "canonicalSizeFamilyLinkPct": linkage.get("linkedSizeFamilyPctAfter"),
+                "exactBoardSizeLinkPct": linkage.get("linkedSizePctAfter"),
+                "fallbackEligibleRows": int(retailer_summary.get("availableRows", 0) or 0),
+                "applicableCatalogueBrandCount": int(
+                    catalogue_lookup.get(region, {}).get("applicableBrandCount", 0) or 0
+                ),
+                "healthyCatalogueBrandCount": int(
+                    catalogue_lookup.get(region, {}).get("healthyBrandCount", 0) or 0
+                ),
+            }
+        )
+    return readiness
 
 
 def _build_region_overview(
@@ -1299,21 +1565,27 @@ def _build_region_details(
     mfa_matrix: list[dict[str, Any]],
     alert_summary: dict[str, Any],
     job_health_by_region: dict[str, dict[str, Any]],
+    job_contracts_by_region: dict[str, list[dict[str, Any]]],
+    readiness_rows: list[dict[str, Any]],
+    canonical_report: dict[str, Any],
 ) -> dict[str, Any]:
     overview_lookup = {row["region"]: row for row in region_overview}
     inventory_lookup = {row["region"]: row for row in inventory_counts}
     search_lookup = {row["region"]: row for row in search_quality}
     coverage_lookup = {row["region"]: row for row in coverage_gaps}
+    readiness_lookup = {row["region"]: row for row in readiness_rows}
     region_details: dict[str, Any] = {}
     for region in regions:
         region_details[region] = {
             "region": region,
             "overview": overview_lookup.get(region, {}),
+            "readiness": readiness_lookup.get(region, {}),
             "inventoryCounts": inventory_lookup.get(region, {}),
             "searchQuality": search_lookup.get(region, {}),
             "coverageGaps": coverage_lookup.get(region, {}),
             "retailerHealth": retailer_health_by_region.get(region, {"summary": {}, "retailers": []}),
             "jobHealth": job_health_by_region.get(region, {"summary": {}, "jobs": []}),
+            "jobContracts": job_contracts_by_region.get(region, []),
             "mfaHealth": [
                 {
                     "brand": item["brand"],
@@ -1322,6 +1594,7 @@ def _build_region_details(
                 for item in mfa_matrix
                 if item["regions"].get(region, {}).get("applicability") != "not_applicable"
             ],
+            "canonicalCompleteness": canonical_report,
             "alerts": alert_summary.get("byRegion", {}).get(region, []),
         }
     return region_details
@@ -1360,6 +1633,12 @@ def build_operations_dashboard_metrics(
         },
         key=_sort_region,
     )
+    try:
+        canonical_report = _build_canonical_completeness_snapshot()
+    except Exception as exc:
+        canonical_report = _empty_canonical_completeness_snapshot(
+            f"canonical_completeness_unavailable:{type(exc).__name__}"
+        )
     with engine.begin() as conn:
         linkage_report = linkage_report_builder(conn)
 
@@ -1373,6 +1652,11 @@ def build_operations_dashboard_metrics(
         now=now,
         job_expectations_path=job_expectations_path,
     )
+    job_contracts, job_contracts_by_region = _build_job_contracts(
+        regions,
+        job_health_by_region,
+        job_expectations_path=job_expectations_path,
+    )
     coverage_gaps = _build_coverage_gaps(
         regions,
         supported_model_total,
@@ -1383,6 +1667,13 @@ def build_operations_dashboard_metrics(
     region_overview = _build_region_overview(regions, expectations, retailer_region_rows, mfa_region_rows, linkage_report, coverage_gaps_by_region, now)
     inventory_counts = _build_inventory_counts(regions, retailer_region_rows, mfa_region_rows, supported_counts)
     search_quality = _build_search_quality(regions, linkage_report)
+    readiness = _build_region_readiness(
+        region_overview,
+        retailer_health_by_region,
+        canonical_report,
+        expectations,
+        linkage_report,
+    )
     alert_summary = _build_alert_summary(region_overview, retailer_health_by_region, mfa_matrix, job_health_by_region)
     region_details = _build_region_details(
         regions,
@@ -1394,6 +1685,9 @@ def build_operations_dashboard_metrics(
         mfa_matrix,
         alert_summary,
         job_health_by_region,
+        job_contracts_by_region,
+        readiness,
+        canonical_report,
     )
 
     return {
@@ -1407,9 +1701,15 @@ def build_operations_dashboard_metrics(
         "retailerHealthByRegion": retailer_health_by_region,
         "jobHealth": job_health,
         "jobHealthByRegion": job_health_by_region,
+        "jobContracts": job_contracts,
+        "jobContractsByRegion": job_contracts_by_region,
         "inventoryCounts": inventory_counts,
         "searchQuality": search_quality,
+        "regionalReadiness": readiness,
+        "canonicalCompleteness": canonical_report,
         "coverageGaps": coverage_gaps,
+        "topUnmatchedModels": linkage_report.get("topRemainingUnmatchedModels", []),
+        "topUnmatchedRetailers": linkage_report.get("topUnmatchedRetailers", []),
         "alerts": alert_summary["topAlerts"],
         "alertSummary": alert_summary,
         "regionDetails": region_details,

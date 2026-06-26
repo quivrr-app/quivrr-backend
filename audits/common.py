@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import re
 from collections import defaultdict
+from pathlib import Path
 from typing import Any
 
 from sqlalchemy import text
@@ -38,35 +40,69 @@ AVAILABLE_STOCK_STATUSES = {
     "available",
     "true",
 }
-ALBUM_EXPECTED_MODELS = (
-    "Bom Dia",
-    "CLS",
-    "Darkness",
-    "Delma",
-    "Disaster",
-    "Disorder",
-    "Fascination",
-    "Freewing",
-    "Insanity",
-    "Ledge",
-    "Lightbender",
-    "Lucent",
-    "Moonstone",
-    "Plasmic",
-    "Protoatypical",
-    "Sunstone",
-    "Symphony",
-    "The End",
-    "Townsend",
-    "Twinsman",
-    "Twinsman AP",
-    "Twinsman Mega",
-    "Twinsman Pin",
-    "VBSM",
-    "Veebee",
-    "Warp Twin",
-    "Winzman",
-)
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPT_OUTPUT_ROOT = ROOT / "scripts" / "output"
+BRAND_OUTPUT_ROOT = ROOT / "scrapers" / "brands"
+
+BRAND_SOURCE_FILES: dict[str, dict[str, Path]] = {
+    "Album": {
+        "catalogue": BRAND_OUTPUT_ROOT / "album" / "output" / "album_master_catalogue_clean.json",
+        "report": BRAND_OUTPUT_ROOT / "album" / "output" / "album_master_catalogue_clean_report.json",
+    },
+    "Channel Islands": {
+        "catalogue": BRAND_OUTPUT_ROOT / "channel_islands" / "output" / "ci_master_catalogue_clean.json",
+        "report": BRAND_OUTPUT_ROOT / "channel_islands" / "output" / "ci_master_catalogue_clean_report.json",
+        "expected_models": BRAND_OUTPUT_ROOT / "channel_islands" / "output" / "ci_canonical_model_links.json",
+    },
+    "Haydenshapes": {
+        "catalogue": BRAND_OUTPUT_ROOT / "haydenshapes" / "output" / "haydenshapes_master_catalogue_clean.json",
+        "report": BRAND_OUTPUT_ROOT / "haydenshapes" / "output" / "haydenshapes_master_catalogue_clean_report.json",
+    },
+    "JS Industries": {
+        "catalogue": BRAND_OUTPUT_ROOT / "js" / "output" / "js_page_catalogue.json",
+        "report": BRAND_OUTPUT_ROOT / "js" / "output" / "js_page_catalogue_report.json",
+        "expected_models": BRAND_OUTPUT_ROOT / "js" / "js_canonical_models.json",
+    },
+    "Lost": {
+        "catalogue": BRAND_OUTPUT_ROOT / "lost" / "output" / "lost_master_catalogue_clean.json",
+        "report": BRAND_OUTPUT_ROOT / "lost" / "output" / "lost_master_catalogue_clean_report.json",
+    },
+    "Pyzel": {
+        "catalogue": BRAND_OUTPUT_ROOT / "pyzel" / "output" / "pyzel_master_catalogue_clean.json",
+        "report": BRAND_OUTPUT_ROOT / "pyzel" / "output" / "pyzel_master_catalogue_clean_report.json",
+    },
+}
+
+GLOBAL_ALIAS_CANDIDATES: dict[str, dict[str, str]] = {
+    "Album": {
+        "Protoatypical": "ProtoAtypical",
+    },
+    "Channel Islands": {
+        "Feb's Fish": "Feb's Fish",
+        "Black and White": "Black/White",
+        "FishBeard": "Fish Beard",
+        "M-23": "M23",
+        "Mikey Febs Fish": "Feb's Fish",
+        "Mikey February's Fish": "Feb's Fish",
+        "Mikey February Shorty": "Mikey February Shorty",
+        "TPH Single": "Tri Plane Hull",
+        "The Black Beauty": "Black Beauty",
+        "The Water Hog": "Waterhog",
+    },
+    "Haydenshapes": {
+        "Hypto Twin": "Hypto Krypto Twin",
+        "Hypto Twin FF": "Hypto Krypto Twin",
+        "Hypto Twin PU": "Hypto Krypto Twin",
+    },
+    "JS Industries": {
+        "Big Horse Tier 1 & 2": "Big Horse",
+        "Big Horse Tier 3": "Big Horse",
+    },
+    "Lost": {
+        "California Twin": "Cali Twin",
+        "Mini Driver": "Mini Driver (Re Issue)",
+    },
+}
 
 
 def normalize_text(value: Any) -> str:
@@ -209,3 +245,6 @@ def format_timestamp(value: Any) -> str | None:
         return value.isoformat()
     return str(value)
 
+
+def load_json_file(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))

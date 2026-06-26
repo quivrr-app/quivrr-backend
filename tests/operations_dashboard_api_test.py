@@ -56,6 +56,8 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
             "jobHealth": [{"region": "AU", "jobName": "quivrr-nightly-au-inventory"}],
             "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 1}, "jobs": [{"jobName": "quivrr-nightly-au-inventory"}]}},
+            "jobContracts": [{"region": "AU", "jobName": "quivrr-nightly-au-inventory", "contractStatus": "green"}],
+            "jobContractsByRegion": {"AU": [{"jobName": "quivrr-nightly-au-inventory", "contractStatus": "green"}]},
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
@@ -88,6 +90,8 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertIn("retailerHealthByRegion", body)
         self.assertIn("jobHealth", body)
         self.assertIn("jobHealthByRegion", body)
+        self.assertIn("jobContracts", body)
+        self.assertIn("jobContractsByRegion", body)
         self.assertIn("inventoryCounts", body)
         self.assertIn("linkQuality", body)
         self.assertIn("coverageGaps", body)

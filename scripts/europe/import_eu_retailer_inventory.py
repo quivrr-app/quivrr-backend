@@ -105,15 +105,22 @@ DETERMINISTIC_MODEL_ALIASES = {
     "fishbeard": "fish beard",
     "high line": "highline",
     "hk twin": "hk twin pin",
+    "juliette": "ee juliette",
+    "machado cado": "machadocado",
     "mav s gun": "mavs gun",
+    "mikey febs fish": "feb s fish",
+    "mini driver": "mini driver re issue",
     "mikey s shorty": "mikey february shorty",
+    "california twin": "cali twin",
     "mickstape sym": "micks tape sym",
     "neck beard 2": "neckbeard 2",
     "sabo taj": "sabotaj",
     "spud nick": "spudnick",
     "sword fish": "swordfish",
+    "sweetspot": "sweet spot 4",
     "water hog": "waterhog",
     "whitetiger": "white tiger",
+    "hypto twin": "hypto krypto twin",
 }
 
 
@@ -183,6 +190,7 @@ def clean_model_hint(value: object) -> str:
         model,
         flags=re.IGNORECASE,
     )
+    model = re.sub(r"[\s\-–—:|,/]+$", "", model)
     return clean(model)
 
 
@@ -258,7 +266,8 @@ def extract_model_hint(title: object, brand_name: object = "") -> str:
     )
     value = re.split(
         r"\b(?:PU|EPS|SPINE\s*-?\s*TEK|LIGHT\s*SPEED|LIGHTSPEED|"
-        r"HELIUM|IBOLIC|VOLCANIC|LFT|FST|PE|TIMBERTEK|THUNDERBOLT)\b",
+        r"HELIUM|IBOLIC|VOLCANIC|LFT|FST|PE|TIMBERTEK|THUNDERBOLT|"
+        r"FUTURE\s*FLEX|FUTUREFLEX)\b",
         value,
         maxsplit=1,
         flags=re.IGNORECASE,
@@ -1089,7 +1098,14 @@ def select_model_candidate(row: dict, models_by_brand: dict[int, list[dict]]) ->
         return None
     selected = dict(candidates[0])
     selected["candidateCount"] = len(candidates)
-    selected["ambiguous"] = len(candidates) > 1
+    top_score = selected["score"]
+    top_score_candidates = [
+        candidate
+        for candidate in candidates
+        if candidate["score"] == top_score
+    ]
+    selected["ambiguous"] = len(top_score_candidates) > 1
+    selected["ambiguousCandidateCount"] = len(top_score_candidates)
     selected["candidates"] = candidates[:5]
     return selected
 

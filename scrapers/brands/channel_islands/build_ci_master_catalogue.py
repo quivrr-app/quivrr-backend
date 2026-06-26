@@ -49,7 +49,6 @@ FIN_TERMS = [
 ]
 
 INVALID_MODEL_SLUGS = {
-    "4",
     "gift-card",
 }
 

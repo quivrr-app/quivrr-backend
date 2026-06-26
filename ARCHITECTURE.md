@@ -33,7 +33,7 @@ Operational health combines:
 - region leakage checks
 - Board Guide API dependency checks
 
-Europe remains the Gen 3 reference architecture for dashboards, alert rules, and future monitoring rollout patterns.
+Europe remains the Gen 3 reference architecture for dashboards, alert rules, and future monitoring rollout patterns. Sprint 7 standardises AU and ID onto the same shared regional linkage and observability model, with US already following the Gen 3 path.
 
 ## Azure Resource Map
 
@@ -80,7 +80,7 @@ Primary endpoints:
 
 The API should not run scrapers, catalogue imports, or database mutation jobs. Those workloads belong in scripts and scheduled jobs.
 
-`region` or `regionCode` is required for regional inventory behavior and must resolve to an active runtime region: `AU`, `EU`, or `ID`. Invalid values must be rejected or fail closed; they must not silently fall back to AU.
+`region` or `regionCode` is required for regional inventory behavior and must resolve to an active runtime region: `AU`, `EU`, `ID`, or `US`. Invalid values must be rejected or fail closed; they must not silently fall back to AU.
 
 ## Azure SQL Dependency
 
@@ -161,6 +161,8 @@ Exact retailer matching accepts equivalent dimensions, including fractional and 
 AU is the mature production region. Existing retailer master data, active scrape targets, and nightly inventory jobs are AU-oriented unless a file explicitly says otherwise.
 
 ID is active in code but less mature operationally. `app.py` contains Indonesia-specific matching behavior for `regionCode=ID`, including relaxed construction, length, and volume constraints in retailer search. Indonesia inventory uses `RegionCode = 'ID'`, `Country = 'Indonesia'`, `PriceCurrency = 'IDR'`, and `PriceAmount` for native currency amounts.
+
+US is active in Production Beta using the Gen 3 regional runtime. Manufacturer direct and retailer inventory remain region-scoped with `RegionCode = 'US'`, and the same backend search pipeline is shared across all four runtime regions.
 
 Regional counts must be protected independently. Importers and scheduled jobs fail closed if AU or ID counts drift during EU work, if EU unexpectedly decreases, or if a `NULL` `RegionCode` is introduced.
 
@@ -262,7 +264,7 @@ Live stock claims must always come from regional `ManufacturerInventory` or `Ret
 | --- | --- | --- | --- | --- |
 | `quivrr-nightly-au-inventory` | Azure Container Apps Job | `python scripts/run_nightly_inventory_refresh.py` | `30 16 * * *` | Refresh AU retailer inventory. |
 | `quivrr-nightly-eu-inventory` | Azure Container Apps Job | `python scripts/europe/run_eu_retailer_inventory_refresh.py apply` | `30 19 * * *` | Refresh EU retailer inventory. |
-| `quivrr-weekly-brand-catalogues` | Azure Container Apps Job | `python scripts/run_all_brand_catalogues.py` | `0 3 * * 1` | Refresh canonical brand catalogues and post-catalogue availability. |
+| `quivrr-weekly-brand-catalogues` | Azure Container Apps Job | `python scripts/run_all_brand_catalogues.py` | `0 3 * * 1` | Refresh global canonical brand catalogues only. It must not trigger regional MFA or retailer stock writes. |
 | `quivrr-mfr-availability` | Azure Container Apps Job | `python scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py` | `0 17 * * *` | Refresh AU manufacturer direct availability. |
 | `quivrr-eu-mfr-availability` | Azure Container Apps Job | `python scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py apply` | `30 20 * * *` | Refresh EU manufacturer direct availability. |
 | `quivrr-market-intelligence` | Azure Container Apps Job | `python run_market_intelligence_job.py` | `0 18 * * *` | Snapshot inventory, calculate deltas, send report. |
@@ -279,8 +281,11 @@ The `Dockerfile` installs Python dependencies, Microsoft ODBC dependencies, Play
 ## Architectural Principles
 
 - The canonical catalogue is authoritative for brands, models, constructions, and sizes.
+- Global canonical jobs may write `Brands`, `BoardModels`, and `BoardSizes`, including official descriptions, images, and official URLs, but must not write `ManufacturerInventory` or `RetailerInventory`.
 - MFA means current manufacturer direct stock and must remain distinct from catalogue definitions.
+- Regional MFA jobs may read canonical tables and write only `ManufacturerInventory`.
 - Retailer inventory is a separate availability source and must not overwrite canonical catalogue meaning.
+- Regional retailer jobs may read canonical tables and write only `Retailers` and `RetailerInventory`.
 - `RegionCode` must be respected for every regional rollout and search path.
 - Regional inventory rows must never have a `NULL` `RegionCode`; invalid regions fail closed rather than falling back to AU.
 - Native currency should use `PriceAmount` and `PriceCurrency`; AU compatibility can use `PriceAud`.

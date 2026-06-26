@@ -7,6 +7,7 @@ from playwright.async_api import async_playwright
 
 
 OUTPUT_FILE = Path("scrapers/brands/js/output/js_page_catalogue.json")
+REPORT_FILE = Path("scrapers/brands/js/output/js_page_catalogue_report.json")
 
 PRODUCT_URLS = [
     "https://jsindustries.com/products/mother-trucker",
@@ -298,6 +299,7 @@ async def main():
     )
 
     all_rows = []
+    failures = []
 
     async with async_playwright() as playwright:
 
@@ -324,6 +326,11 @@ async def main():
 
             except Exception as error:
                 print(f"Failed {url}: {error}")
+                failures.append({
+                    "url": url,
+                    "model": model_from_url(url),
+                    "error": str(error),
+                })
 
         await browser.close()
 
@@ -354,10 +361,36 @@ async def main():
         encoding="utf-8"
     )
 
+    scraped_models = sorted({row.get("model") for row in final_rows if row.get("model")})
+    expected_models = sorted(set(MODEL_BY_SLUG.values()))
+    missing_models = sorted(set(expected_models) - set(scraped_models))
+    report = {
+        "rows_scraped": len(all_rows),
+        "rows_deduped": len(final_rows),
+        "expected_model_count": len(expected_models),
+        "scraped_model_count": len(scraped_models),
+        "missing_models": missing_models,
+        "failures": failures,
+        "failure_count": len(failures),
+        "output_file": str(OUTPUT_FILE),
+    }
+    REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    REPORT_FILE.write_text(
+        json.dumps(report, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
     print("\nJS page catalogue built")
     print(f"Rows scraped: {len(all_rows)}")
     print(f"Rows deduped: {len(final_rows)}")
     print(f"Output: {OUTPUT_FILE}")
+    print(f"Report: {REPORT_FILE}")
+
+    if failures or missing_models:
+        raise RuntimeError(
+            "JS Industries catalogue scrape incomplete. "
+            f"Failures={len(failures)} MissingModels={len(missing_models)}"
+        )
 
 
 if __name__ == "__main__":

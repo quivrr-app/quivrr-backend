@@ -1,5 +1,6 @@
 ﻿import json
 import os
+import sys
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import quote_plus
@@ -7,6 +8,11 @@ from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from sqlalchemy import bindparam, create_engine, event, text
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.import_brand_catalogue_common import validate_missing_model_deactivation
 
 load_dotenv()
 
@@ -95,6 +101,9 @@ def load_legacy_overrides():
             "brand_id": BRAND_ID,
             "model_name": model_name,
             "product_url": clean(item.get("product_url")),
+            "official_image_url": clean(item.get("official_image_url")),
+            "description": clean(item.get("description")),
+            "board_category": clean(item.get("board_category")),
             "status": clean(item.get("status")) or "legacy",
             "source": clean(item.get("source")) or "manual_override",
             "reason": clean(item.get("reason")),
@@ -119,12 +128,22 @@ def build_catalogue_models(catalogue, legacy_overrides):
                 "brand_id": BRAND_ID,
                 "model_name": model_name,
                 "product_url": clean(item.get("product_url")),
+                "official_image_url": clean(item.get("official_image_url")),
+                "description": clean(item.get("description")),
+                "board_category": clean(item.get("board_category")),
                 "status": "current",
                 "source": "manufacturer_catalogue",
                 "reason": None,
                 "is_active": True,
                 "sizes": [],
             }
+            continue
+
+        existing = models[model_name]
+        existing["product_url"] = existing["product_url"] or clean(item.get("product_url"))
+        existing["official_image_url"] = existing["official_image_url"] or clean(item.get("official_image_url"))
+        existing["description"] = existing["description"] or clean(item.get("description"))
+        existing["board_category"] = existing["board_category"] or clean(item.get("board_category"))
 
     for legacy_model in legacy_overrides:
         model_name = legacy_model["model_name"]
@@ -334,7 +353,10 @@ def main():
                 connection.execute(
                     text("""
                         UPDATE dbo.BoardModels
-                        SET OfficialProductUrl = :product_url,
+                        SET OfficialProductUrl = COALESCE(:product_url, OfficialProductUrl),
+                            OfficialImageUrl = COALESCE(:official_image_url, OfficialImageUrl),
+                            Description = COALESCE(:description, Description),
+                            BoardCategory = COALESCE(:board_category, BoardCategory),
                             IsActive = :is_active,
                             UpdatedAtUtc = GETUTCDATE()
                         WHERE BoardModelId = :model_id;
@@ -342,6 +364,9 @@ def main():
                     {
                         "model_id": existing_model_id,
                         "product_url": model["product_url"],
+                        "official_image_url": model["official_image_url"],
+                        "description": model["description"],
+                        "board_category": model["board_category"],
                         "is_active": model["is_active"],
                     },
                 )
@@ -354,6 +379,9 @@ def main():
                         BrandId,
                         ModelName,
                         OfficialProductUrl,
+                        OfficialImageUrl,
+                        Description,
+                        BoardCategory,
                         IsActive,
                         CreatedAtUtc
                     )
@@ -362,6 +390,9 @@ def main():
                         :brand_id,
                         :model_name,
                         :product_url,
+                        :official_image_url,
+                        :description,
+                        :board_category,
                         :is_active,
                         GETUTCDATE()
                     );
@@ -370,13 +401,20 @@ def main():
                     "brand_id": model["brand_id"],
                     "model_name": model_name,
                     "product_url": model["product_url"],
+                    "official_image_url": model["official_image_url"],
+                    "description": model["description"],
+                    "board_category": model["board_category"],
                     "is_active": model["is_active"],
                 }
             ).fetchone()
 
             model_cache[model_name] = result.BoardModelId
 
-        missing_model_names = sorted(set(existing_model_ids_by_name) - set(model_cache))
+        missing_model_names = validate_missing_model_deactivation(
+            brand_name="JS Industries",
+            existing_model_names=existing_model_ids_by_name.keys(),
+            incoming_model_names=model_cache.keys(),
+        )
         if missing_model_names:
             connection.execute(
                 text("""

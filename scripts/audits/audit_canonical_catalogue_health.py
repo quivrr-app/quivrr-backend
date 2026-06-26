@@ -12,22 +12,30 @@ if str(ROOT) not in sys.path:
 
 from audits.canonical_catalogue_health import build_canonical_catalogue_health_report
 
+OUTPUT_FILE = ROOT / "scripts" / "output" / "canonical_catalogue_audit.json"
+
 
 def main() -> None:
     report = build_canonical_catalogue_health_report()
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_FILE.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report, indent=2, ensure_ascii=False))
     print()
     print("Canonical Catalogue Health")
     print("==========================")
     for brand in report.get("brands", []):
         print(
-            f"{brand['brandName']}: models={brand['canonicalModelCount']} "
+            f"{brand['brandName']}: official={brand.get('officialModelCount', 0)} "
+            f"canonical={brand['canonicalModelCount']} "
             f"sizes={brand['canonicalSizeCount']} dropdown={brand['dropdownModelCount']} "
-            f"missingSizes={len(brand.get('modelsWithNoSizes', []))} "
+            f"missingOfficial={len(brand.get('officialModelsMissingFromCanonical', []))} "
+            f"aliases={len(brand.get('aliasCandidates', []))} "
+            f"retiredCandidates={len(brand.get('retiredCanonicalCandidates', []))} "
             f"indicators={','.join(brand.get('suspiciousModelLossIndicators', [])) or 'none'}"
         )
+    print()
+    print(f"Audit file: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
     main()
-
