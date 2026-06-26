@@ -60,6 +60,20 @@ Inventory link health report:
 - The inventory link health report now sorts `EU`, `AU`, `ID`, and `US` as explicit regional snapshots when those active rows exist.
 - Before SQL activation from a blocked local environment, the operational readiness signals are the US dry-run normalised row count, importable row count, retailer count, and per-retailer coverage from `scripts/usa/run_us_retailer_inventory_refresh.py`.
 
+Supported catalogue linkage backfill:
+
+- Command: `python scripts/run_supported_inventory_linkage_backfill.py dry-run`
+- Apply: `python scripts/run_supported_inventory_linkage_backfill.py apply --confirm-apply APPLY_SUPPORTED_LINKS`
+- The report scopes metrics to supported Quivrr manufacturers only and ignores unsupported or house-brand inventory when measuring platform linkage quality.
+- The backfill uses one shared parser and canonical matcher across `AU`, `EU`, `ID`, and `US`.
+- Used inventory is eligible when it belongs to a supported manufacturer and links to an existing canonical model or size.
+- The report emits before/after supported-row linkage coverage globally and per region, retailer, and manufacturer, plus top remaining unmatched models and alias opportunities.
+- The primary size metric is now `linkedSizeFamilyPctAfter`, which reflects confident canonical model + construction family + length linkage even when an exact `BoardSizeId` remains ambiguous.
+- Exact canonical size linkage remains `linkedSizePctAfter` and continues to require a conservative unique `BoardSizeId`.
+- The report also emits blocker counts for `ambiguousBoardSizeRowsAfter`, `missingLengthRowsAfter`, `missingConstructionRowsAfter`, and `missingModelRowsAfter`.
+- Sprint 5.2 shared recovery added brand-aware safe aliases and title cleanup for supported manufacturers only. Observable recovered examples include `CI 2.Pro`, `The Wolverine`, `Mini Driver (Re Issue)`, `RNF Redux`, `Machadocado`, and `Feb's Fish`.
+- Remaining top unmatched aliases should be treated as a catalogue or ambiguity backlog unless a real canonical model exists and the retailer title safely disambiguates it. High-volume examples include `Driver 3.0`, `The Ripper`, `Voodoo Child`, `Baby Buggy`, `T-Low`, `DFR`, and `Tasty Treat`.
+
 ## Health Model
 
 The observability health module calculates:
@@ -79,3 +93,47 @@ Status model:
 - `Critical`: API, SQL, or OpenAI dependency unavailable
 
 The framework prefers latest-state and freshness logic over historical failure counts, which keeps alert noise down when an old failure has already been superseded by a later success.
+
+## Operations Dashboard
+
+Sprint 6 adds a first-pass operator dashboard path for Quivrr:
+
+- metric builder:
+  `python scripts/observability/build_operations_dashboard_metrics.py`
+- expectation config:
+  `config/region_source_expectations.json`
+- workbook guide:
+  `docs/azure/quivrr-operations-dashboard.md`
+- workbook scaffold:
+  `docs/azure/workbooks/quivrr-operations-workbook.json`
+- protected API endpoint:
+  `GET /api/ops/dashboard`
+
+The dashboard combines:
+
+- Azure SQL current-state inventory and MFA aggregates
+- supported inventory linkage quality from `scripts/run_supported_inventory_linkage_backfill.py`
+- explicit regional source applicability from `config/region_source_expectations.json`
+- Log Analytics workbook queries for search/runtime telemetry
+
+Current dashboard semantics:
+
+- `green`: healthy and expected
+- `yellow`: partial, planned, degraded, or stale within the warning window
+- `red`: expected and failing, stale, or unexpectedly zero-row
+- `grey`: not applicable or intentionally dealer-network-only
+
+Current expectation notes:
+
+- `Lost` is treated as `dealer_network_only` in every live region until Quivrr has evidence of genuine manufacturer-direct stock, so it should not page as a failed MFA source.
+- `Simon Anderson` remains Australia-only for direct manufacturer applicability.
+
+Search latency, timeout, and 5xx rollups are intentionally left to Azure Monitor Workbook KQL queries rather than duplicated into a separate SQL metrics table.
+
+Ops endpoint notes:
+
+- Authentication uses `OPS_DASHBOARD_API_KEY`.
+- Accepted request headers are `Authorization: Bearer <key>` or `x-ops-dashboard-key: <key>`.
+- Missing or incorrect request key returns `403`.
+- Missing server-side key keeps the endpoint disabled with `503`.
+- The endpoint caches the dashboard payload for five minutes by default through `OPS_DASHBOARD_CACHE_TTL_SECONDS`.

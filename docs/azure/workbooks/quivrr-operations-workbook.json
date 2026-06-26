@@ -1,0 +1,86 @@
+{
+  "version": "Notebook/1.0",
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "items": [
+    {
+      "type": 1,
+      "name": "dashboard-overview",
+      "content": {
+        "json": "# Quivrr Operations Dashboard\n\nUse this workbook with the Quivrr production Log Analytics workspace and App Service telemetry.\n\nPrimary views:\n- Regional overview\n- MFA health\n- Retailer health\n- Inventory counts\n- Search quality\n- Coverage gaps\n- Alert summary\n\nCurrent SQL-built linkage and inventory metrics come from `python scripts/observability/build_operations_dashboard_metrics.py`.\n\nSearch latency and runtime failures should be queried from Log Analytics."
+      }
+    },
+    {
+      "type": 9,
+      "name": "region-parameter",
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "region",
+            "name": "Region",
+            "type": 2,
+            "value": "All",
+            "options": [
+              {
+                "value": "All",
+                "label": "All"
+              },
+              {
+                "value": "AU",
+                "label": "AU"
+              },
+              {
+                "value": "EU",
+                "label": "EU"
+              },
+              {
+                "value": "ID",
+                "label": "ID"
+              },
+              {
+                "value": "US",
+                "label": "US"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": 9,
+      "name": "inventory-link-health",
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppTraces\n| extend payload = parse_json(Message)\n| where tostring(payload.service) == \"inventory_link_health\"\n| where tostring(payload.event) == \"inventory_link_health_snapshot\"\n| extend region = tostring(payload.region)\n| where '{region}' == 'All' or region == '{region}'\n| project timestamp=todatetime(payload.generated_at_utc), region, total_rows=toint(payload.total_rows), linked_model_pct=todouble(payload.linked_model_pct), canonical_size_linked_pct=todouble(payload.canonical_size_linked_pct), retailer_count=toint(payload.retailer_count)\n| order by timestamp desc",
+        "size": 0,
+        "title": "Inventory Link Health",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 9,
+      "name": "search-health",
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppTraces\n| extend payload = parse_json(Message)\n| where tostring(payload.service) == \"quivrr-api\"\n| where tostring(payload.event) == \"search_request_complete\"\n| extend region = tostring(payload.region)\n| where '{region}' == 'All' or region == '{region}'\n| summarize requests=count(), avgLatencyMs=avg(todouble(payload.totalDurationMs)), p95LatencyMs=percentile(todouble(payload.totalDurationMs), 95), timeouts=countif(tostring(payload.errorType) has \"Timeout\"), otherModelMatches=sum(toint(payload.otherModelMatchesCount)) by region\n| order by region asc",
+        "size": 0,
+        "title": "Search Health",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 1,
+      "name": "workbook-notes",
+      "content": {
+        "json": "## Deployment Notes\n\n- Import this workbook JSON into Azure Monitor Workbooks.\n- Point the KQL queries at the Quivrr production Log Analytics workspace.\n- Use the SQL metric builder output as the operator truth for current counts and linkage quality.\n- Add SQL-native tiles later if an Azure Workbook data source is introduced for direct SQL rendering."
+      }
+    }
+  ],
+  "fromTemplateId": "quivrr-operations-dashboard"
+}

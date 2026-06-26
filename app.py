@@ -1,18 +1,34 @@
+import json
 import os
 import re
 import time
+from threading import Lock
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 
+from observability.operations_dashboard import DASHBOARD_VERSION, build_operations_dashboard_metrics
 from utils.retailer_matching import classify_retailer_exact
 
 
 load_dotenv()
+
+
+def env_int(name: str, default: int) -> int:
+
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    try:
+        return int(value.strip())
+    except ValueError:
+        return default
 
 
 def build_connection_string() -> str:
@@ -50,6 +66,15 @@ engine = create_engine(
     pool_size=5,
     max_overflow=10
 )
+
+
+OPS_DASHBOARD_API_KEY = os.getenv("OPS_DASHBOARD_API_KEY", "").strip()
+OPS_DASHBOARD_CACHE_TTL_SECONDS = env_int("OPS_DASHBOARD_CACHE_TTL_SECONDS", 300)
+_ops_dashboard_cache_lock = Lock()
+_ops_dashboard_cache = {
+    "generated_at": 0.0,
+    "payload": None,
+}
 
 
 app = FastAPI(
@@ -328,6 +353,69 @@ def retailer_result(row, result_type):
     return result
 
 
+def ops_dashboard_log(event, **fields):
+
+    payload = {
+        "event": event,
+        "service": "quivrr-api",
+        "dashboardVersion": DASHBOARD_VERSION,
+        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    payload.update(fields)
+    print(json.dumps(payload, default=str), flush=True)
+
+
+def extract_ops_dashboard_key(
+    authorization: str | None,
+    x_ops_dashboard_key: str | None,
+):
+    if x_ops_dashboard_key:
+        return x_ops_dashboard_key.strip()
+    if authorization:
+        scheme, _, token = authorization.partition(" ")
+        if scheme.lower() == "bearer" and token.strip():
+            return token.strip()
+    return ""
+
+
+def build_ops_dashboard_response(cache_status: str):
+    metrics = build_operations_dashboard_metrics()
+    response = dict(metrics)
+    response["alerts"] = metrics.get("alerts", metrics.get("alertSummary", []))
+    response["cacheStatus"] = cache_status
+    response["version"] = metrics.get("version", DASHBOARD_VERSION)
+    return response
+
+
+def get_cached_ops_dashboard_response():
+    now_seconds = time.time()
+    with _ops_dashboard_cache_lock:
+        cached_payload = _ops_dashboard_cache.get("payload")
+        cached_generated_at = float(_ops_dashboard_cache.get("generated_at", 0.0))
+        if (
+            cached_payload is not None
+            and OPS_DASHBOARD_CACHE_TTL_SECONDS > 0
+            and (now_seconds - cached_generated_at) < OPS_DASHBOARD_CACHE_TTL_SECONDS
+        ):
+            ops_dashboard_log(
+                "ops_dashboard_cache_hit",
+                cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
+            )
+            cached_response = dict(cached_payload)
+            cached_response["cacheStatus"] = "hit"
+            return cached_response
+
+    payload = build_ops_dashboard_response("miss")
+    with _ops_dashboard_cache_lock:
+        _ops_dashboard_cache["generated_at"] = now_seconds
+        _ops_dashboard_cache["payload"] = dict(payload)
+    ops_dashboard_log(
+        "ops_dashboard_cache_miss",
+        cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
+    )
+    return payload
+
+
 @app.get("/")
 def root():
 
@@ -335,6 +423,38 @@ def root():
         "status": "online",
         "service": "quivrr-api"
     }
+
+
+@app.get("/api/ops/dashboard")
+def get_ops_dashboard(
+    authorization: str | None = Header(default=None),
+    x_ops_dashboard_key: str | None = Header(default=None),
+):
+
+    if not OPS_DASHBOARD_API_KEY:
+        ops_dashboard_log("ops_dashboard_disabled", reason="missing_api_key")
+        raise HTTPException(
+            status_code=503,
+            detail="Operations dashboard endpoint is not enabled."
+        )
+
+    provided_key = extract_ops_dashboard_key(authorization, x_ops_dashboard_key)
+    if provided_key != OPS_DASHBOARD_API_KEY:
+        ops_dashboard_log("ops_dashboard_forbidden")
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    try:
+        return get_cached_ops_dashboard_response()
+    except Exception as exc:
+        ops_dashboard_log(
+            "ops_dashboard_failed",
+            errorType=type(exc).__name__,
+            errorMessage=str(exc),
+        )
+        raise HTTPException(
+            status_code=503,
+            detail="Operations dashboard is temporarily unavailable."
+        ) from exc
 
 
 @app.get("/api/brands")
