@@ -74,6 +74,12 @@ Caching:
 
 The endpoint reuses `observability.operations_dashboard.build_operations_dashboard_metrics()` and does not duplicate SQL aggregation logic.
 
+Live API note:
+
+- the protected API now returns a summary-first payload sized for the MVP portal
+- coverage gap rows are count-based in the live response rather than full per-model sample lists
+- heavy internal sections such as full expectation config and full retailer / manufacturer linkage breakdown stay in the local builder path rather than the browser payload
+
 ## Status Colours
 
 - `green`
@@ -134,6 +140,15 @@ The current workbook and JSON metric builder support:
 - search linkage quality by region
 - stock and coverage gap views
 - alert summary rollup
+
+For the live browser endpoint, the MVP favours:
+
+- regional status cards
+- inventory counts
+- search linkage summaries
+- count-based coverage gaps
+- MFA and retailer health matrices
+- alert rollups
 
 The current SQL builder does **not** yet persist or aggregate historical search latency, 5xx, timeout, or thin-fallback counts. Those should come from Log Analytics workbook queries rather than SQL.
 

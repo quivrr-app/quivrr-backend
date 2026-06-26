@@ -380,10 +380,34 @@ def extract_ops_dashboard_key(
 
 def build_ops_dashboard_response(cache_status: str):
     metrics = build_operations_dashboard_metrics()
-    response = dict(metrics)
-    response["alerts"] = metrics.get("alerts", metrics.get("alertSummary", []))
-    response["cacheStatus"] = cache_status
-    response["version"] = metrics.get("version", DASHBOARD_VERSION)
+    response = {
+        "generatedAtUtc": metrics.get("generatedAtUtc"),
+        "service": metrics.get("service"),
+        "version": metrics.get("version", DASHBOARD_VERSION),
+        "regions": metrics.get("regions", []),
+        "regionOverview": metrics.get("regionOverview", []),
+        "mfaHealth": metrics.get("mfaHealth", []),
+        "retailerHealth": metrics.get("retailerHealth", []),
+        "inventoryCounts": metrics.get("inventoryCounts", []),
+        "searchQuality": metrics.get("searchQuality", []),
+        "coverageGaps": metrics.get("coverageGaps", []),
+        "alerts": metrics.get("alerts", metrics.get("alertSummary", [])),
+        "alertSummary": metrics.get("alertSummary", metrics.get("alerts", [])),
+        "linkQuality": {
+            "global": metrics.get("linkQuality", {}).get("global", {}),
+            "regionBreakdown": metrics.get("linkQuality", {}).get("regionBreakdown", []),
+            "supportedBrands": metrics.get("linkQuality", {}).get("supportedBrands", []),
+        },
+        "cacheStatus": cache_status,
+    }
+    ops_dashboard_log(
+        "ops_dashboard_response_built",
+        cacheStatus=cache_status,
+        regionCount=len(response["regions"]),
+        alertCount=len(response["alerts"]),
+        mfaHealthCount=len(response["mfaHealth"]),
+        retailerHealthCount=len(response["retailerHealth"]),
+    )
     return response
 
 

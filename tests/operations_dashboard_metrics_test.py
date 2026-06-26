@@ -5,15 +5,13 @@ from unittest.mock import patch
 from observability import operations_dashboard as dashboard
 from observability.operations_dashboard import (
     STATUS_PRIORITY,
-    ACTIVE_MFA_MODELS_QUERY,
-    ACTIVE_RETAILER_MODELS_QUERY,
     EXPECTATIONS_PATH,
     MFA_HEALTH_QUERY,
     MFA_REGION_QUERY,
     RETAILER_HEALTH_QUERY,
     RETAILER_REGION_QUERY,
     SUPPORTED_COUNTS_QUERY,
-    SUPPORTED_MODELS_QUERY,
+    SUPPORTED_COVERAGE_GAPS_QUERY,
     build_operations_dashboard_metrics,
     classify_search_health,
     classify_source_status,
@@ -203,17 +201,21 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "UsedSupportedRows": 2,
                 },
             ],
-            SUPPORTED_MODELS_QUERY: [
-                {"BoardModelId": 1, "BrandName": "JS Industries", "ModelName": "Monsta"},
-                {"BoardModelId": 2, "BrandName": "Rusty", "ModelName": "1984"},
-            ],
-            ACTIVE_RETAILER_MODELS_QUERY: [
-                {"RegionCode": "AU", "BoardModelId": 1},
-                {"RegionCode": "US", "BoardModelId": 2},
-            ],
-            ACTIVE_MFA_MODELS_QUERY: [
-                {"RegionCode": "AU", "BoardModelId": 1},
-                {"RegionCode": "US", "BoardModelId": 1},
+            SUPPORTED_COVERAGE_GAPS_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "SupportedModelCount": 2,
+                    "RetailerModelCount": 1,
+                    "MfaModelCount": 1,
+                    "StockedAnywhereModelCount": 1,
+                },
+                {
+                    "RegionCode": "US",
+                    "SupportedModelCount": 2,
+                    "RetailerModelCount": 1,
+                    "MfaModelCount": 1,
+                    "StockedAnywhereModelCount": 2,
+                },
             ],
         }
 
@@ -294,6 +296,7 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertIn("alerts", metrics)
         au_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "AU")
         us_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "US")
+        self.assertEqual(au_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 1)
         self.assertEqual(au_gaps["modelsAvailableOnlyViaMfa"]["count"], 0)
         self.assertEqual(us_gaps["modelsAvailableOnlyViaRetailers"]["count"], 1)
         self.assertEqual(us_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 0)

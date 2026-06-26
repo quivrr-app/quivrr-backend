@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -149,11 +148,8 @@ WHERE ri.IsActive = 1
 GROUP BY COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>')
 """
 
-SUPPORTED_MODELS_QUERY = f"""
-SELECT
-    bm.BoardModelId,
-    b.BrandName,
-    bm.ModelName
+SUPPORTED_MODEL_TOTAL_QUERY = f"""
+SELECT COUNT(*) AS SupportedModelCount
 FROM dbo.BoardModels bm
 INNER JOIN dbo.Brands b
     ON b.BrandId = bm.BrandId
@@ -161,22 +157,53 @@ WHERE bm.IsActive = 1
   AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
 """
 
-ACTIVE_RETAILER_MODELS_QUERY = """
-SELECT DISTINCT
-    COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>') AS RegionCode,
-    ri.BoardModelId
-FROM dbo.RetailerInventory ri
-WHERE ri.IsActive = 1
-  AND ri.BoardModelId IS NOT NULL
-"""
-
-ACTIVE_MFA_MODELS_QUERY = """
-SELECT DISTINCT
-    COALESCE(NULLIF(LTRIM(RTRIM(mi.RegionCode)), ''), '<NULL>') AS RegionCode,
-    mi.BoardModelId
-FROM dbo.ManufacturerInventory mi
-WHERE COALESCE(mi.IsActive, 1) = 1
-  AND mi.BoardModelId IS NOT NULL
+SUPPORTED_COVERAGE_GAPS_QUERY = f"""
+WITH SupportedModels AS (
+    SELECT bm.BoardModelId
+    FROM dbo.BoardModels bm
+    INNER JOIN dbo.Brands b
+        ON b.BrandId = bm.BrandId
+    WHERE bm.IsActive = 1
+      AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
+),
+RetailerActive AS (
+    SELECT DISTINCT
+        COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>') AS RegionCode,
+        ri.BoardModelId
+    FROM dbo.RetailerInventory ri
+    INNER JOIN SupportedModels sm
+        ON sm.BoardModelId = ri.BoardModelId
+    WHERE ri.IsActive = 1
+      AND ri.BoardModelId IS NOT NULL
+),
+MfaActive AS (
+    SELECT DISTINCT
+        COALESCE(NULLIF(LTRIM(RTRIM(mi.RegionCode)), ''), '<NULL>') AS RegionCode,
+        mi.BoardModelId
+    FROM dbo.ManufacturerInventory mi
+    INNER JOIN SupportedModels sm
+        ON sm.BoardModelId = mi.BoardModelId
+    WHERE COALESCE(mi.IsActive, 1) = 1
+      AND mi.BoardModelId IS NOT NULL
+),
+Regions AS (
+    SELECT RegionCode FROM RetailerActive
+    UNION
+    SELECT RegionCode FROM MfaActive
+)
+SELECT
+    r.RegionCode,
+    (SELECT COUNT(*) FROM SupportedModels) AS SupportedModelCount,
+    COUNT(DISTINCT ra.BoardModelId) AS RetailerModelCount,
+    COUNT(DISTINCT ma.BoardModelId) AS MfaModelCount,
+    COUNT(DISTINCT CASE WHEN ra.BoardModelId IS NOT NULL OR ma.BoardModelId IS NOT NULL THEN COALESCE(ra.BoardModelId, ma.BoardModelId) END) AS StockedAnywhereModelCount
+FROM Regions r
+LEFT JOIN RetailerActive ra
+    ON ra.RegionCode = r.RegionCode
+LEFT JOIN MfaActive ma
+    ON ma.RegionCode = r.RegionCode
+   AND ma.BoardModelId = ra.BoardModelId
+GROUP BY r.RegionCode
 """
 
 SUPPORTED_RETAILER_LINKAGE_REGION_QUERY = f"""
@@ -684,105 +711,44 @@ def _build_search_quality(
 
 def _build_coverage_gaps(
     regions: list[str],
-    supported_models: list[dict[str, Any]],
-    retailer_models_by_region: dict[str, set[int]],
-    mfa_models_by_region: dict[str, set[int]],
-    retailer_matrix: list[dict[str, Any]],
-    mfa_matrix: list[dict[str, Any]],
+    supported_gap_rows: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    supported_by_region: dict[str, dict[str, Any]] = {}
+    supported_by_region: list[dict[str, Any]] = []
     for region in regions:
-        retailer_models = retailer_models_by_region.get(region, set())
-        mfa_models = mfa_models_by_region.get(region, set())
-        no_retailer = []
-        no_mfa = []
-        no_stock = []
-        only_mfa = []
-        only_retailer = []
-        brands_low_coverage: defaultdict[str, dict[str, int]] = defaultdict(lambda: {"total": 0, "stocked": 0})
-        for model in supported_models:
-            board_model_id = int(model["boardModelId"])
-            brand_name = str(model["brandName"])
-            stocked_retailer = board_model_id in retailer_models
-            stocked_mfa = board_model_id in mfa_models
-            brands_low_coverage[brand_name]["total"] += 1
-            if stocked_retailer or stocked_mfa:
-                brands_low_coverage[brand_name]["stocked"] += 1
-            model_label = f"{brand_name} {model['modelName']}"
-            if not stocked_retailer:
-                no_retailer.append(model_label)
-            if not stocked_mfa:
-                no_mfa.append(model_label)
-            if not stocked_retailer and not stocked_mfa:
-                no_stock.append(model_label)
-            if stocked_mfa and not stocked_retailer:
-                only_mfa.append(model_label)
-            if stocked_retailer and not stocked_mfa:
-                only_retailer.append(model_label)
-
-        low_retailers = []
-        for row in retailer_matrix:
-            region_cell = row["regions"].get(region, {})
-            pct_value = region_cell.get("linkedModelPct")
-            if region_cell.get("statusColor") != "grey" and pct_value is not None and pct_value < 60:
-                low_retailers.append(
-                    {
-                        "retailer": row["retailer"],
-                        "linkedModelPct": pct_value,
-                        "canonicalSizeFamilyPct": region_cell.get("canonicalSizeFamilyPct"),
-                        "exactBoardSizePct": region_cell.get("exactBoardSizePct"),
-                    }
-                )
-
-        low_manufacturers = []
-        for row in mfa_matrix:
-            region_cell = row["regions"].get(region, {})
-            pct_value = region_cell.get("supportedModelLinkPct")
-            if region_cell.get("statusColor") != "grey" and pct_value is not None and pct_value < 60:
-                low_manufacturers.append(
-                    {
-                        "brand": row["brand"],
-                        "linkedModelPct": pct_value,
-                        "canonicalSizeFamilyPct": region_cell.get("canonicalSizeFamilyLinkPct"),
-                        "exactBoardSizePct": region_cell.get("exactBoardSizeLinkPct"),
-                    }
-                )
-
-        supported_by_region[region] = {
-            "region": region,
-            "supportedCanonicalModelsNoActiveRetailerStock": {
-                "count": len(no_retailer),
-                "sample": no_retailer[:20],
-            },
-            "supportedCanonicalModelsNoActiveMfaStock": {
-                "count": len(no_mfa),
-                "sample": no_mfa[:20],
-            },
-            "supportedCanonicalModelsNoStockAnywhere": {
-                "count": len(no_stock),
-                "sample": no_stock[:20],
-            },
-            "modelsAvailableOnlyViaMfa": {
-                "count": len(only_mfa),
-                "sample": only_mfa[:20],
-            },
-            "modelsAvailableOnlyViaRetailers": {
-                "count": len(only_retailer),
-                "sample": only_retailer[:20],
-            },
-            "brandsWithLowStockCoverage": [
-                {
-                    "brand": brand,
-                    "stockCoveragePct": pct(counts["stocked"], counts["total"]),
-                    "supportedModelCount": counts["total"],
-                }
-                for brand, counts in sorted(brands_low_coverage.items())
-                if pct(counts["stocked"], counts["total"]) < 25
-            ][:20],
-            "retailersWithLowLinkageQuality": sorted(low_retailers, key=lambda item: (item["linkedModelPct"], item["retailer"]))[:20],
-            "manufacturersWithLowLinkageQuality": sorted(low_manufacturers, key=lambda item: (item["linkedModelPct"], item["brand"]))[:20],
-        }
-    return sorted(supported_by_region.values(), key=region_sort_key)
+        row = supported_gap_rows.get(region, {})
+        supported_total = int(row.get("SupportedModelCount", 0))
+        retailer_models = int(row.get("RetailerModelCount", 0))
+        mfa_models = int(row.get("MfaModelCount", 0))
+        stocked_anywhere_models = int(row.get("StockedAnywhereModelCount", 0))
+        supported_by_region.append(
+            {
+                "region": region,
+                "supportedCanonicalModelsNoActiveRetailerStock": {
+                    "count": max(0, supported_total - retailer_models),
+                    "sample": [],
+                },
+                "supportedCanonicalModelsNoActiveMfaStock": {
+                    "count": max(0, supported_total - mfa_models),
+                    "sample": [],
+                },
+                "supportedCanonicalModelsNoStockAnywhere": {
+                    "count": max(0, supported_total - stocked_anywhere_models),
+                    "sample": [],
+                },
+                "modelsAvailableOnlyViaMfa": {
+                    "count": max(0, stocked_anywhere_models - retailer_models),
+                    "sample": [],
+                },
+                "modelsAvailableOnlyViaRetailers": {
+                    "count": max(0, stocked_anywhere_models - mfa_models),
+                    "sample": [],
+                },
+                "brandsWithLowStockCoverage": [],
+                "retailersWithLowLinkageQuality": [],
+                "manufacturersWithLowLinkageQuality": [],
+            }
+        )
+    return sorted(supported_by_region, key=region_sort_key)
 
 
 def _build_alert_summary(
@@ -865,9 +831,7 @@ def build_operations_dashboard_metrics(
     mfa_health_rows = _rows(MFA_HEALTH_QUERY)
     supported_counts_rows = _rows(SUPPORTED_COUNTS_QUERY)
     supported_counts = _map_region_rows(supported_counts_rows)
-    supported_models_rows = _rows(SUPPORTED_MODELS_QUERY)
-    active_retailer_models_rows = _rows(ACTIVE_RETAILER_MODELS_QUERY)
-    active_mfa_models_rows = _rows(ACTIVE_MFA_MODELS_QUERY)
+    supported_gap_rows = _map_region_rows(_rows(SUPPORTED_COVERAGE_GAPS_QUERY))
 
     regions = sorted(
         {
@@ -879,33 +843,15 @@ def build_operations_dashboard_metrics(
         },
         key=_sort_region,
     )
-    retailer_models_by_region: defaultdict[str, set[int]] = defaultdict(set)
-    for row in active_retailer_models_rows:
-        region = str(_row_field(row, "RegionCode", "<NULL>")).upper()
-        retailer_models_by_region[region].add(int(_row_field(row, "BoardModelId", 0)))
-    mfa_models_by_region: defaultdict[str, set[int]] = defaultdict(set)
-    for row in active_mfa_models_rows:
-        region = str(_row_field(row, "RegionCode", "<NULL>")).upper()
-        mfa_models_by_region[region].add(int(_row_field(row, "BoardModelId", 0)))
-
     with engine.begin() as conn:
         linkage_report = linkage_report_builder(conn)
-
-    supported_models = [
-        {
-            "boardModelId": int(_row_field(row, "BoardModelId", 0)),
-            "brandName": str(_row_field(row, "BrandName", "")),
-            "modelName": str(_row_field(row, "ModelName", "")),
-        }
-        for row in supported_models_rows
-    ]
 
     retailer_matrix = _build_retailer_matrix(regions, expectations, retailer_health_rows, linkage_report, now)
     mfa_matrix = _build_mfa_matrix(regions, expectations, mfa_health_rows, linkage_report, now)
     region_overview = _build_region_overview(regions, expectations, retailer_region_rows, mfa_region_rows, linkage_report, now)
     inventory_counts = _build_inventory_counts(regions, retailer_region_rows, mfa_region_rows, supported_counts)
     search_quality = _build_search_quality(regions, linkage_report)
-    coverage_gaps = _build_coverage_gaps(regions, supported_models, retailer_models_by_region, mfa_models_by_region, retailer_matrix, mfa_matrix)
+    coverage_gaps = _build_coverage_gaps(regions, supported_gap_rows)
     alert_summary = _build_alert_summary(region_overview, retailer_matrix, mfa_matrix)
 
     return {
