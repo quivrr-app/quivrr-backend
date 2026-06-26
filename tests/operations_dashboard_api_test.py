@@ -48,7 +48,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
     def test_ops_dashboard_returns_metrics_with_authorization_header(self):
         payload = {
             "generatedAtUtc": "2026-06-26T00:00:00Z",
-            "version": "dashboard-version",
+            "version": backend_app.DASHBOARD_VERSION,
             "regions": ["AU", "EU", "ID", "US"],
             "regionOverview": [],
             "mfaHealth": [],
@@ -80,7 +80,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         body = response.json()
-        self.assertEqual(body["version"], "dashboard-version")
+        self.assertEqual(body["version"], backend_app.DASHBOARD_VERSION)
         self.assertEqual(body["cacheStatus"], "miss")
         self.assertEqual(body["regions"], ["AU", "EU", "ID", "US"])
         self.assertIn("mfaHealth", body)
@@ -98,7 +98,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
     def test_ops_dashboard_cache_hits_after_first_request(self):
         payload = {
             "generatedAtUtc": "2026-06-26T00:00:00Z",
-            "version": "dashboard-version",
+            "version": backend_app.DASHBOARD_VERSION,
             "regions": ["AU"],
             "regionOverview": [],
             "mfaHealth": [],
@@ -163,7 +163,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
     def test_ops_dashboard_serves_stale_cache_while_refreshing(self):
         payload = {
             "generatedAtUtc": "2026-06-26T00:00:00Z",
-            "version": "dashboard-version",
+            "version": backend_app.DASHBOARD_VERSION,
             "regions": ["AU"],
             "regionOverview": [],
             "mfaHealth": [],
@@ -207,7 +207,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
     def test_ops_dashboard_loads_cached_snapshot_from_disk(self):
         payload = {
             "generatedAtUtc": "2026-06-26T00:00:00Z",
-            "version": "dashboard-version",
+            "version": backend_app.DASHBOARD_VERSION,
             "regions": ["AU"],
             "regionOverview": [],
             "mfaHealth": [],
@@ -223,7 +223,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "regionDetails": {"AU": {}},
         }
         self.cache_file.write_text(
-            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "' + backend_app.DASHBOARD_VERSION + '", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )
 
@@ -248,7 +248,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
     def test_ops_dashboard_loads_bootstrap_snapshot_when_runtime_cache_missing(self):
         payload = {
             "generatedAtUtc": "2026-06-26T00:00:00Z",
-            "version": "dashboard-version",
+            "version": backend_app.DASHBOARD_VERSION,
             "regions": ["AU"],
             "regionOverview": [],
             "mfaHealth": [],
@@ -264,7 +264,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "regionDetails": {"AU": {}},
         }
         self.bootstrap_file.write_text(
-            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "' + backend_app.DASHBOARD_VERSION + '", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )
 
@@ -284,6 +284,56 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["cacheStatus"], "hit")
         self.assertEqual(response.json()["version"], payload["version"])
+        builder.assert_not_called()
+
+    def test_ops_dashboard_ignores_cached_snapshot_with_old_version(self):
+        self.cache_file.write_text(
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            encoding="utf-8",
+        )
+
+        with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "_start_ops_dashboard_refresh_locked",
+            return_value=True,
+        ) as refresh_starter, patch.object(
+            backend_app,
+            "build_operations_dashboard_metrics",
+        ) as builder:
+            response = self.client.get(
+                "/api/ops/dashboard",
+                headers={"x-ops-dashboard-key": "secret-key"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["cacheStatus"], "warming")
+        self.assertTrue(response.json()["warmingUp"])
+        self.assertEqual(refresh_starter.call_count, 1)
+        builder.assert_not_called()
+
+    def test_ops_dashboard_ignores_bootstrap_snapshot_with_old_version(self):
+        self.bootstrap_file.write_text(
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            encoding="utf-8",
+        )
+
+        with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "_start_ops_dashboard_refresh_locked",
+            return_value=True,
+        ) as refresh_starter, patch.object(
+            backend_app,
+            "build_operations_dashboard_metrics",
+        ) as builder:
+            response = self.client.get(
+                "/api/ops/dashboard",
+                headers={"x-ops-dashboard-key": "secret-key"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["cacheStatus"], "warming")
+        self.assertTrue(response.json()["warmingUp"])
+        self.assertEqual(refresh_starter.call_count, 1)
         builder.assert_not_called()
 
 

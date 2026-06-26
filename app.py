@@ -751,6 +751,15 @@ def _read_ops_dashboard_snapshot(path: Path):
     if payload is None or generated_at <= 0:
         return None, 0.0
 
+    if payload.get("version") != DASHBOARD_VERSION:
+        ops_dashboard_log(
+            "ops_dashboard_snapshot_version_mismatch",
+            cacheFile=str(path),
+            snapshotVersion=payload.get("version"),
+            expectedVersion=DASHBOARD_VERSION,
+        )
+        return None, 0.0
+
     return payload, generated_at
 
 
