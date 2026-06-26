@@ -238,6 +238,35 @@ def normalise_construction(value):
     return value
 
 
+def christenson_category_from_type(model_type):
+    value = clean(model_type)
+
+    if not value:
+        return "Shortboard"
+
+    lowered = value.lower()
+
+    if "fish" in lowered:
+        return "Fish"
+
+    if "hybrid" in lowered:
+        return "Hybrid"
+
+    if "mid" in lowered:
+        return "Mid Length"
+
+    if "long" in lowered:
+        return "Longboard"
+
+    if "gun" in lowered or "step" in lowered:
+        return "Step Up"
+
+    if "twin" in lowered:
+        return "Twin"
+
+    return "Shortboard"
+
+
 def is_surfboard(product):
     title = clean(product.get("title")).lower()
     product_type = clean(product.get("product_type")).lower()
