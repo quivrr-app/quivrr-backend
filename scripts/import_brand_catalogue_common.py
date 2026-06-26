@@ -1,11 +1,12 @@
 ﻿import json
 import os
 import time
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, event, text
+from sqlalchemy import bindparam, create_engine, event, text
 from sqlalchemy.exc import OperationalError
 
 
@@ -179,35 +180,113 @@ def build_size_rows(catalogue, model_cache):
     return rows
 
 
+def normalise_volume(value):
+    if value in (None, ""):
+        return None
+
+    try:
+        normalised = Decimal(str(value)).normalize()
+    except (InvalidOperation, ValueError):
+        text_value = str(value).strip()
+        return text_value or None
+
+    rendered = format(normalised, "f")
+    if "." in rendered:
+        rendered = rendered.rstrip("0").rstrip(".")
+    return rendered
+
+
+def size_signature(row):
+    return (
+        int(row["model_id"]),
+        clean(row.get("length")) or "",
+        clean(row.get("width")) or "",
+        clean(row.get("thickness")) or "",
+        normalise_volume(row.get("volume")),
+        clean(row.get("construction")) or "",
+        clean(row.get("fin_setup")) or "",
+        clean(row.get("tail_shape")) or "",
+    )
+
+
+def existing_size_signature(row):
+    return (
+        int(row.BoardModelId),
+        clean(row.LengthFeetInches) or "",
+        clean(row.Width) or "",
+        clean(row.Thickness) or "",
+        normalise_volume(row.VolumeLitres),
+        clean(row.Construction) or "",
+        clean(row.FinSetup) or "",
+        clean(row.TailShape) or "",
+    )
+
+
+def partition_new_size_rows(existing_rows, incoming_rows):
+    existing_signatures = {existing_size_signature(row) for row in existing_rows}
+    rows_to_insert = []
+
+    for row in incoming_rows:
+        signature = size_signature(row)
+        if signature in existing_signatures:
+            continue
+        existing_signatures.add(signature)
+        rows_to_insert.append(row)
+
+    return rows_to_insert
+
+
 def run_import_transaction(brand_name, catalogue, models):
     with engine.begin() as connection:
         brand_id = get_or_create_brand(connection, brand_name)
 
         print(f"BrandId: {brand_id}")
-        print(f"Cleaning existing {brand_name} catalogue")
+        print(f"Syncing existing {brand_name} catalogue")
 
-        connection.execute(
+        existing_models = connection.execute(
             text("""
-                DELETE bs
-                FROM dbo.BoardSizes bs
-                INNER JOIN dbo.BoardModels bm
-                    ON bs.BoardModelId = bm.BoardModelId
-                WHERE bm.BrandId = :brand_id;
-            """),
-            {"brand_id": brand_id},
-        )
-
-        connection.execute(
-            text("""
-                DELETE FROM dbo.BoardModels
+                SELECT BoardModelId, ModelName
+                FROM dbo.BoardModels
                 WHERE BrandId = :brand_id;
             """),
             {"brand_id": brand_id},
-        )
+        ).fetchall()
+        existing_model_ids_by_name = {
+            clean(row.ModelName): int(row.BoardModelId)
+            for row in existing_models
+            if clean(row.ModelName)
+        }
 
         model_cache = {}
 
         for model in models.values():
+            model_name = model["model_name"]
+            existing_model_id = existing_model_ids_by_name.get(model_name)
+
+            if existing_model_id is not None:
+                connection.execute(
+                    text("""
+                        UPDATE dbo.BoardModels
+                        SET ModelFamily = :model_family,
+                            BoardCategory = :board_category,
+                            OfficialProductUrl = :official_product_url,
+                            OfficialImageUrl = :official_image_url,
+                            IsActive = :is_active,
+                            UpdatedAtUtc = GETUTCDATE()
+                        WHERE BoardModelId = :model_id;
+                    """),
+                    {
+                        "model_id": existing_model_id,
+                        "model_family": model["model_family"],
+                        "board_category": model["board_category"],
+                        "official_product_url": model["official_product_url"],
+                        "official_image_url": model["official_image_url"],
+                        "is_active": model["is_active"],
+                    },
+                )
+                model_cache[model_name] = existing_model_id
+                continue
+
             result = connection.execute(
                 text("""
                     INSERT INTO dbo.BoardModels (
@@ -234,7 +313,7 @@ def run_import_transaction(brand_name, catalogue, models):
                 """),
                 {
                     "brand_id": brand_id,
-                    "model_name": model["model_name"],
+                    "model_name": model_name,
                     "model_family": model["model_family"],
                     "board_category": model["board_category"],
                     "official_product_url": model["official_product_url"],
@@ -243,13 +322,49 @@ def run_import_transaction(brand_name, catalogue, models):
                 },
             ).fetchone()
 
-            model_cache[model["model_name"]] = result.BoardModelId
+            model_cache[model_name] = result.BoardModelId
+
+        missing_model_names = sorted(set(existing_model_ids_by_name) - set(model_cache))
+        if missing_model_names:
+            connection.execute(
+                text("""
+                    UPDATE dbo.BoardModels
+                    SET IsActive = 0,
+                        UpdatedAtUtc = GETUTCDATE()
+                    WHERE BrandId = :brand_id
+                      AND ModelName IN :model_names;
+                """).bindparams(bindparam("model_names", expanding=True)),
+                {
+                    "brand_id": brand_id,
+                    "model_names": missing_model_names,
+                },
+            )
 
         size_rows = build_size_rows(catalogue, model_cache)
+        existing_sizes = connection.execute(
+            text("""
+                SELECT
+                    bs.BoardSizeId,
+                    bs.BoardModelId,
+                    bs.LengthFeetInches,
+                    bs.Width,
+                    bs.Thickness,
+                    bs.VolumeLitres,
+                    bs.Construction,
+                    bs.FinSetup,
+                    bs.TailShape
+                FROM dbo.BoardSizes bs
+                INNER JOIN dbo.BoardModels bm
+                    ON bs.BoardModelId = bm.BoardModelId
+                WHERE bm.BrandId = :brand_id;
+            """),
+            {"brand_id": brand_id},
+        ).fetchall()
+        new_size_rows = partition_new_size_rows(existing_sizes, size_rows)
 
-        print(f"Batch inserting sizes: {len(size_rows)}")
+        print(f"Batch inserting new sizes: {len(new_size_rows)}")
 
-        if size_rows:
+        if new_size_rows:
             connection.execute(
                 text("""
                     INSERT INTO dbo.BoardSizes (
@@ -277,10 +392,10 @@ def run_import_transaction(brand_name, catalogue, models):
                         GETUTCDATE()
                     );
                 """),
-                size_rows,
+                new_size_rows,
             )
 
-    return model_cache, size_rows
+    return model_cache, new_size_rows
 
 
 def import_catalogue(brand_name, catalogue_path):

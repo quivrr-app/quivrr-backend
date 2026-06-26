@@ -1,11 +1,12 @@
 ﻿import json
 import os
 import time
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, event, text
+from sqlalchemy import bindparam, create_engine, event, text
 
 
 load_dotenv()
@@ -211,6 +212,62 @@ def insert_size_rows(connection, size_rows):
     )
 
 
+def normalise_volume(value):
+    if value in (None, ""):
+        return None
+
+    try:
+        normalised = Decimal(str(value)).normalize()
+    except (InvalidOperation, ValueError):
+        text_value = str(value).strip()
+        return text_value or None
+
+    rendered = format(normalised, "f")
+    if "." in rendered:
+        rendered = rendered.rstrip("0").rstrip(".")
+    return rendered
+
+
+def size_signature(row):
+    return (
+        int(row["model_id"]),
+        clean(row.get("length")) or "",
+        clean(row.get("width")) or "",
+        clean(row.get("thickness")) or "",
+        normalise_volume(row.get("volume")),
+        clean(row.get("construction")) or "",
+        clean(row.get("fin_setup")) or "",
+        clean(row.get("tail_shape")) or "",
+    )
+
+
+def existing_size_signature(row):
+    return (
+        int(row.BoardModelId),
+        clean(row.LengthFeetInches) or "",
+        clean(row.Width) or "",
+        clean(row.Thickness) or "",
+        normalise_volume(row.VolumeLitres),
+        clean(row.Construction) or "",
+        clean(row.FinSetup) or "",
+        clean(row.TailShape) or "",
+    )
+
+
+def partition_new_size_rows(existing_rows, incoming_rows):
+    existing_signatures = {existing_size_signature(row) for row in existing_rows}
+    rows_to_insert = []
+
+    for row in incoming_rows:
+        signature = size_signature(row)
+        if signature in existing_signatures:
+            continue
+        existing_signatures.add(signature)
+        rows_to_insert.append(row)
+
+    return rows_to_insert
+
+
 def verify_brand(connection):
     row = connection.execute(
         text("""
@@ -251,36 +308,50 @@ def main():
     with begin_with_retry() as connection:
         verify_brand(connection)
 
-        print("Cleaning existing Channel Islands catalogue...")
+        print("Syncing existing Channel Islands catalogue...")
 
-        connection.execute(
+        existing_models = connection.execute(
             text("""
-                DELETE bs
-                FROM dbo.BoardSizes bs
-                INNER JOIN dbo.BoardModels bm
-                    ON bs.BoardModelId = bm.BoardModelId
-                WHERE bm.BrandId = :brand_id;
-            """),
-            {
-                "brand_id": BRAND_ID
-            }
-        )
-
-        connection.execute(
-            text("""
-                DELETE FROM dbo.BoardModels
+                SELECT BoardModelId, ModelName
+                FROM dbo.BoardModels
                 WHERE BrandId = :brand_id;
             """),
-            {
-                "brand_id": BRAND_ID
-            }
-        )
+            {"brand_id": BRAND_ID},
+        ).fetchall()
+        existing_model_ids_by_name = {
+            clean(row.ModelName): int(row.BoardModelId)
+            for row in existing_models
+            if clean(row.ModelName)
+        }
 
-        print(f"Inserting models: {len(models)}")
+        print(f"Syncing models: {len(models)}")
 
         model_cache = {}
 
         for model in models.values():
+            model_name = model["model_name"]
+            existing_model_id = existing_model_ids_by_name.get(model_name)
+
+            if existing_model_id is not None:
+                connection.execute(
+                    text("""
+                        UPDATE dbo.BoardModels
+                        SET OfficialProductUrl = :product_url,
+                            OfficialImageUrl = :official_image_url,
+                            IsActive = :is_active,
+                            UpdatedAtUtc = GETUTCDATE()
+                        WHERE BoardModelId = :model_id;
+                    """),
+                    {
+                        "model_id": existing_model_id,
+                        "product_url": model["product_url"],
+                        "official_image_url": model["official_image_url"],
+                        "is_active": model["is_active"],
+                    },
+                )
+                model_cache[model_name] = existing_model_id
+                continue
+
             result = connection.execute(
                 text("""
                     INSERT INTO dbo.BoardModels (
@@ -303,29 +374,65 @@ def main():
                 """),
                 {
                     "brand_id": model["brand_id"],
-                    "model_name": model["model_name"],
+                    "model_name": model_name,
                     "product_url": model["product_url"],
                     "official_image_url": model["official_image_url"],
                     "is_active": model["is_active"],
                 }
             ).fetchone()
 
-            model_cache[model["model_name"]] = result.BoardModelId
+            model_cache[model_name] = result.BoardModelId
+
+        missing_model_names = sorted(set(existing_model_ids_by_name) - set(model_cache))
+        if missing_model_names:
+            connection.execute(
+                text("""
+                    UPDATE dbo.BoardModels
+                    SET IsActive = 0,
+                        UpdatedAtUtc = GETUTCDATE()
+                    WHERE BrandId = :brand_id
+                      AND ModelName IN :model_names;
+                """).bindparams(bindparam("model_names", expanding=True)),
+                {
+                    "brand_id": BRAND_ID,
+                    "model_names": missing_model_names,
+                },
+            )
 
         size_rows = build_size_rows(
             models,
             model_cache
         )
+        existing_sizes = connection.execute(
+            text("""
+                SELECT
+                    bs.BoardSizeId,
+                    bs.BoardModelId,
+                    bs.LengthFeetInches,
+                    bs.Width,
+                    bs.Thickness,
+                    bs.VolumeLitres,
+                    bs.Construction,
+                    bs.FinSetup,
+                    bs.TailShape
+                FROM dbo.BoardSizes bs
+                INNER JOIN dbo.BoardModels bm
+                    ON bs.BoardModelId = bm.BoardModelId
+                WHERE bm.BrandId = :brand_id;
+            """),
+            {"brand_id": BRAND_ID},
+        ).fetchall()
+        new_size_rows = partition_new_size_rows(existing_sizes, size_rows)
 
-        print(f"Batch inserting sizes: {len(size_rows)}")
+        print(f"Batch inserting new sizes: {len(new_size_rows)}")
 
         insert_size_rows(
             connection,
-            size_rows
+            new_size_rows
         )
 
     print(f"Models imported: {len(model_cache)}")
-    print(f"Rows inserted: {len(size_rows)}")
+    print(f"Rows inserted: {len(new_size_rows)}")
     print("")
     print("Channel Islands import complete.")
     print("")
