@@ -13,8 +13,10 @@ class OperationsDashboardApiTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = TemporaryDirectory()
         self.cache_file = Path(self.temp_dir.name) / "ops_dashboard_cache.json"
+        self.bootstrap_file = Path(self.temp_dir.name) / "ops_dashboard_bootstrap.json"
         self.lock_file = Path(self.temp_dir.name) / "ops_dashboard_cache.lock"
         backend_app.OPS_DASHBOARD_CACHE_FILE = self.cache_file
+        backend_app.OPS_DASHBOARD_BOOTSTRAP_FILE = self.bootstrap_file
         backend_app.OPS_DASHBOARD_REFRESH_LOCK_FILE = self.lock_file
         backend_app.OPS_DASHBOARD_PREWARM_ON_STARTUP = False
         backend_app.OPS_DASHBOARD_ALLOW_SYNC_BUILD = False
@@ -221,6 +223,47 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "regionDetails": {"AU": {}},
         }
         self.cache_file.write_text(
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            encoding="utf-8",
+        )
+
+        with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "OPS_DASHBOARD_CACHE_TTL_SECONDS",
+            3600,
+        ), patch.object(
+            backend_app,
+            "build_operations_dashboard_metrics",
+        ) as builder:
+            response = self.client.get(
+                "/api/ops/dashboard",
+                headers={"x-ops-dashboard-key": "secret-key"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["cacheStatus"], "hit")
+        self.assertEqual(response.json()["version"], payload["version"])
+        builder.assert_not_called()
+
+    def test_ops_dashboard_loads_bootstrap_snapshot_when_runtime_cache_missing(self):
+        payload = {
+            "generatedAtUtc": "2026-06-26T00:00:00Z",
+            "version": "dashboard-version",
+            "regions": ["AU"],
+            "regionOverview": [],
+            "mfaHealth": [],
+            "retailerHealth": [],
+            "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
+            "jobHealth": [],
+            "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}},
+            "inventoryCounts": [],
+            "linkQuality": {},
+            "coverageGaps": [],
+            "alerts": [],
+            "alertSummary": {"summary": {"critical": 0}},
+            "regionDetails": {"AU": {}},
+        }
+        self.bootstrap_file.write_text(
             '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )

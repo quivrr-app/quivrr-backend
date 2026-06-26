@@ -88,6 +88,12 @@ OPS_DASHBOARD_CACHE_FILE = Path(
         str(Path(os.getenv("HOME", ".")) / "data" / "ops_dashboard_metrics_cache.json"),
     )
 )
+OPS_DASHBOARD_BOOTSTRAP_FILE = Path(
+    os.getenv(
+        "OPS_DASHBOARD_BOOTSTRAP_FILE",
+        str(Path(__file__).resolve().parent / "config" / "ops_dashboard_bootstrap.json"),
+    )
+)
 OPS_DASHBOARD_REFRESH_LOCK_FILE = Path(
     os.getenv(
         "OPS_DASHBOARD_REFRESH_LOCK_FILE",
@@ -581,6 +587,21 @@ def _persist_ops_dashboard_cache(payload, generated_at):
     )
 
 
+def _read_ops_dashboard_snapshot(path: Path):
+
+    if not path.exists():
+        return None, 0.0
+
+    raw_payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = raw_payload.get("payload")
+    generated_at = float(raw_payload.get("generated_at", 0.0))
+
+    if payload is None or generated_at <= 0:
+        return None, 0.0
+
+    return payload, generated_at
+
+
 def _try_acquire_ops_dashboard_refresh_file_lock():
 
     OPS_DASHBOARD_REFRESH_LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -638,28 +659,36 @@ def _load_ops_dashboard_cache_from_disk_locked():
         return
 
     _ops_dashboard_cache["loaded_from_disk"] = True
-    if not OPS_DASHBOARD_CACHE_FILE.exists():
-        return
-
-    try:
-        raw_payload = json.loads(OPS_DASHBOARD_CACHE_FILE.read_text(encoding="utf-8"))
-        payload = raw_payload.get("payload")
-        generated_at = float(raw_payload.get("generated_at", 0.0))
-        if payload is None or generated_at <= 0:
-            return
-
-        _ops_dashboard_cache["payload"] = payload
-        _ops_dashboard_cache["generated_at"] = generated_at
-        ops_dashboard_log(
+    for snapshot_path, loaded_event, failed_event in (
+        (
+            OPS_DASHBOARD_CACHE_FILE,
             "ops_dashboard_cache_loaded",
-            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
-        )
-    except Exception as exc:
-        ops_dashboard_log(
             "ops_dashboard_cache_load_failed",
-            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
-            error=str(exc),
-        )
+        ),
+        (
+            OPS_DASHBOARD_BOOTSTRAP_FILE,
+            "ops_dashboard_bootstrap_loaded",
+            "ops_dashboard_bootstrap_load_failed",
+        ),
+    ):
+        try:
+            payload, generated_at = _read_ops_dashboard_snapshot(snapshot_path)
+            if payload is None or generated_at <= 0:
+                continue
+
+            _ops_dashboard_cache["payload"] = payload
+            _ops_dashboard_cache["generated_at"] = generated_at
+            ops_dashboard_log(
+                loaded_event,
+                cacheFile=str(snapshot_path),
+            )
+            return
+        except Exception as exc:
+            ops_dashboard_log(
+                failed_event,
+                cacheFile=str(snapshot_path),
+                error=str(exc),
+            )
 
 
 def _store_ops_dashboard_cache(payload, generated_at):
