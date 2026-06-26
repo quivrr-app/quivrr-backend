@@ -1,4 +1,7 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+import time
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -9,12 +12,20 @@ import app as backend_app
 class OperationsDashboardApiTests(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(backend_app.app)
+        self.temp_dir = TemporaryDirectory()
+        self.cache_file = Path(self.temp_dir.name) / "ops_dashboard_cache.json"
+        backend_app.OPS_DASHBOARD_CACHE_FILE = self.cache_file
         backend_app._ops_dashboard_cache["generated_at"] = 0.0
         backend_app._ops_dashboard_cache["payload"] = None
+        backend_app._ops_dashboard_cache["loaded_from_disk"] = False
+        backend_app._ops_dashboard_cache["refresh_in_progress"] = False
 
     def tearDown(self):
         backend_app._ops_dashboard_cache["generated_at"] = 0.0
         backend_app._ops_dashboard_cache["payload"] = None
+        backend_app._ops_dashboard_cache["loaded_from_disk"] = False
+        backend_app._ops_dashboard_cache["refresh_in_progress"] = False
+        self.temp_dir.cleanup()
 
     def test_ops_dashboard_requires_key(self):
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"):
@@ -112,6 +123,91 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertEqual(first_response.json()["cacheStatus"], "miss")
         self.assertEqual(second_response.json()["cacheStatus"], "hit")
         self.assertEqual(builder.call_count, 1)
+
+    def test_ops_dashboard_serves_stale_cache_while_refreshing(self):
+        payload = {
+            "generatedAtUtc": "2026-06-26T00:00:00Z",
+            "version": "dashboard-version",
+            "regions": ["AU"],
+            "regionOverview": [],
+            "mfaHealth": [],
+            "retailerHealth": [],
+            "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
+            "jobHealth": [],
+            "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}},
+            "inventoryCounts": [],
+            "linkQuality": {},
+            "coverageGaps": [],
+            "alerts": [],
+            "alertSummary": {"summary": {"critical": 0}},
+            "regionDetails": {"AU": {}},
+        }
+        backend_app._ops_dashboard_cache["generated_at"] = 1.0
+        backend_app._ops_dashboard_cache["payload"] = dict(payload)
+        backend_app._ops_dashboard_cache["loaded_from_disk"] = True
+
+        with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "OPS_DASHBOARD_CACHE_TTL_SECONDS",
+            1,
+        ), patch.object(
+            backend_app,
+            "_start_ops_dashboard_refresh_locked",
+            return_value=True,
+        ) as refresh_starter, patch.object(
+            backend_app,
+            "build_operations_dashboard_metrics",
+        ) as builder:
+            response = self.client.get(
+                "/api/ops/dashboard",
+                headers={"x-ops-dashboard-key": "secret-key"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["cacheStatus"], "stale")
+        self.assertEqual(refresh_starter.call_count, 1)
+        builder.assert_not_called()
+
+    def test_ops_dashboard_loads_cached_snapshot_from_disk(self):
+        payload = {
+            "generatedAtUtc": "2026-06-26T00:00:00Z",
+            "version": "dashboard-version",
+            "regions": ["AU"],
+            "regionOverview": [],
+            "mfaHealth": [],
+            "retailerHealth": [],
+            "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
+            "jobHealth": [],
+            "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}},
+            "inventoryCounts": [],
+            "linkQuality": {},
+            "coverageGaps": [],
+            "alerts": [],
+            "alertSummary": {"summary": {"critical": 0}},
+            "regionDetails": {"AU": {}},
+        }
+        self.cache_file.write_text(
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            encoding="utf-8",
+        )
+
+        with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "OPS_DASHBOARD_CACHE_TTL_SECONDS",
+            3600,
+        ), patch.object(
+            backend_app,
+            "build_operations_dashboard_metrics",
+        ) as builder:
+            response = self.client.get(
+                "/api/ops/dashboard",
+                headers={"x-ops-dashboard-key": "secret-key"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["cacheStatus"], "hit")
+        self.assertEqual(response.json()["version"], payload["version"])
+        builder.assert_not_called()
 
 
 if __name__ == "__main__":

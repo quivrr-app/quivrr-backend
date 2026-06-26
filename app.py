@@ -2,7 +2,8 @@ import json
 import os
 import re
 import time
-from threading import Lock
+from pathlib import Path
+from threading import Lock, Thread
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
@@ -70,10 +71,18 @@ engine = create_engine(
 
 OPS_DASHBOARD_API_KEY = os.getenv("OPS_DASHBOARD_API_KEY", "").strip()
 OPS_DASHBOARD_CACHE_TTL_SECONDS = env_int("OPS_DASHBOARD_CACHE_TTL_SECONDS", 300)
+OPS_DASHBOARD_CACHE_FILE = Path(
+    os.getenv(
+        "OPS_DASHBOARD_CACHE_FILE",
+        str(Path(os.getenv("HOME", ".")) / "data" / "ops_dashboard_metrics_cache.json"),
+    )
+)
 _ops_dashboard_cache_lock = Lock()
 _ops_dashboard_cache = {
     "generated_at": 0.0,
     "payload": None,
+    "loaded_from_disk": False,
+    "refresh_in_progress": False,
 }
 
 
@@ -418,9 +427,99 @@ def build_ops_dashboard_response(cache_status: str):
     return response
 
 
+def _persist_ops_dashboard_cache(payload, generated_at):
+    OPS_DASHBOARD_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OPS_DASHBOARD_CACHE_FILE.write_text(
+        json.dumps(
+            {
+                "generated_at": generated_at,
+                "payload": payload,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def _load_ops_dashboard_cache_from_disk_locked():
+    if _ops_dashboard_cache.get("loaded_from_disk"):
+        return
+
+    _ops_dashboard_cache["loaded_from_disk"] = True
+    if not OPS_DASHBOARD_CACHE_FILE.exists():
+        return
+
+    try:
+        raw_payload = json.loads(OPS_DASHBOARD_CACHE_FILE.read_text(encoding="utf-8"))
+        payload = raw_payload.get("payload")
+        generated_at = float(raw_payload.get("generated_at", 0.0))
+        if payload is None or generated_at <= 0:
+            return
+
+        _ops_dashboard_cache["payload"] = payload
+        _ops_dashboard_cache["generated_at"] = generated_at
+        ops_dashboard_log(
+            "ops_dashboard_cache_loaded",
+            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+        )
+    except Exception as exc:
+        ops_dashboard_log(
+            "ops_dashboard_cache_load_failed",
+            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+            error=str(exc),
+        )
+
+
+def _store_ops_dashboard_cache(payload, generated_at):
+    with _ops_dashboard_cache_lock:
+        _ops_dashboard_cache["generated_at"] = generated_at
+        _ops_dashboard_cache["payload"] = dict(payload)
+        _ops_dashboard_cache["loaded_from_disk"] = True
+        _ops_dashboard_cache["refresh_in_progress"] = False
+    try:
+        _persist_ops_dashboard_cache(payload, generated_at)
+    except Exception as exc:
+        ops_dashboard_log(
+            "ops_dashboard_cache_persist_failed",
+            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+            error=str(exc),
+        )
+
+
+def _refresh_ops_dashboard_cache_worker():
+    try:
+        payload = build_ops_dashboard_response("refresh")
+        _store_ops_dashboard_cache(payload, time.time())
+        ops_dashboard_log(
+            "ops_dashboard_cache_refresh_completed",
+            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+        )
+    except Exception as exc:
+        with _ops_dashboard_cache_lock:
+            _ops_dashboard_cache["refresh_in_progress"] = False
+        ops_dashboard_log(
+            "ops_dashboard_cache_refresh_failed",
+            cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+            error=str(exc),
+        )
+
+
+def _start_ops_dashboard_refresh_locked():
+    if _ops_dashboard_cache.get("refresh_in_progress"):
+        return False
+
+    _ops_dashboard_cache["refresh_in_progress"] = True
+    Thread(
+        target=_refresh_ops_dashboard_cache_worker,
+        name="ops-dashboard-refresh",
+        daemon=True,
+    ).start()
+    return True
+
+
 def get_cached_ops_dashboard_response():
     now_seconds = time.time()
     with _ops_dashboard_cache_lock:
+        _load_ops_dashboard_cache_from_disk_locked()
         cached_payload = _ops_dashboard_cache.get("payload")
         cached_generated_at = float(_ops_dashboard_cache.get("generated_at", 0.0))
         if (
@@ -435,11 +534,19 @@ def get_cached_ops_dashboard_response():
             cached_response = dict(cached_payload)
             cached_response["cacheStatus"] = "hit"
             return cached_response
+        if cached_payload is not None:
+            started_refresh = _start_ops_dashboard_refresh_locked()
+            ops_dashboard_log(
+                "ops_dashboard_cache_stale_served",
+                cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
+                refreshStarted=started_refresh,
+            )
+            cached_response = dict(cached_payload)
+            cached_response["cacheStatus"] = "stale"
+            return cached_response
 
     payload = build_ops_dashboard_response("miss")
-    with _ops_dashboard_cache_lock:
-        _ops_dashboard_cache["generated_at"] = now_seconds
-        _ops_dashboard_cache["payload"] = dict(payload)
+    _store_ops_dashboard_cache(payload, now_seconds)
     ops_dashboard_log(
         "ops_dashboard_cache_miss",
         cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
