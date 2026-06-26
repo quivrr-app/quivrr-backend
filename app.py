@@ -126,7 +126,7 @@ OPS_DASHBOARD_PREWARM_ON_STARTUP = env_bool(
     "OPS_DASHBOARD_PREWARM_ON_STARTUP",
     bool(os.getenv("WEBSITE_INSTANCE_ID")),
 )
-SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate_sprint6_1"
+SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate_sprint6_1_legacy_brand_rows"
 SUPPORTED_CATALOGUE_BRANDS = {
     "Album",
     "Channel Islands",
@@ -2342,12 +2342,11 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         FROM dbo.RetailerInventory ri
         INNER JOIN dbo.Retailers r
             ON ri.RetailerId = r.RetailerId
-        INNER JOIN dbo.BoardModels bm
+        LEFT JOIN dbo.BoardModels bm
             ON bm.BoardModelId = ri.BoardModelId
         WHERE ri.IsActive = 1
           AND ri.RegionCode = :region_code
           AND ri.BrandId = :brand_id
-          AND ri.BoardModelId IS NOT NULL
           AND ri.ProductUrl IS NOT NULL
           AND (
                 :excluded_inventory_ids_empty = 1
@@ -2757,7 +2756,7 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             direct_matches,
             exact_matches,
             close_matches,
-        ) and not should_skip_other_model_matches_for_budget(elapsed_ms()):
+        ):
             excluded_inventory_ids = sorted(exact_ids | close_ids) or [-1]
             try:
                 other_model_rows = execute_with_retry(

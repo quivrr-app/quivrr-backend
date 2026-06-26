@@ -83,7 +83,7 @@ class SearchFallbackTests(unittest.TestCase):
         body = response.json()
         self.assertEqual(
             body["searchVersion"],
-            "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate_sprint6_1",
+            "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate_sprint6_1_legacy_brand_rows",
         )
         self.assertEqual(body["exactRetailerMatches"], [])
         self.assertEqual(body["closeRetailerMatches"], [])
@@ -124,6 +124,48 @@ class SearchFallbackTests(unittest.TestCase):
         self.assertEqual(len(body["exactRetailerMatches"]), 1)
         self.assertEqual(body["otherModelMatches"], [])
         self.assertEqual(execute_mock.call_count, 4)
+
+    def test_fallback_does_not_require_canonical_model_link_for_same_brand_row(self):
+        legacy_row = retailer_row(
+            InventoryId=1003,
+            RawProductTitle='Rusty Blade 6\'0 x 20" x 2 1/2" 33.5L',
+            NormalisedProductTitle="rusty blade 6 0 20 2 1 2 33 5l",
+            ProductUrl="https://retailer.example.com/rusty-blade",
+            BrandId=10,
+            BoardModelId=None,
+            BoardSizeId=None,
+            CanonicalModelName=None,
+        )
+        with patch.object(backend_app, "OTHER_MODEL_MATCHES_ENABLED", True), patch.object(
+            backend_app,
+            "fetch_one_with_retry",
+            return_value=official_board(
+                BrandId=10,
+                BrandName="Rusty",
+                BoardModelId=7904,
+                ModelName="1984",
+                OfficialProductUrl="https://rustysurfboards.com/collections/1984",
+                Construction="Standard",
+            ),
+        ), patch.object(
+            backend_app,
+            "execute_with_retry",
+            side_effect=[
+                [],
+                [],
+                [],
+                [],
+                [legacy_row],
+            ],
+        ):
+            response = self.client.get("/api/search?boardSizeId=185196&region=AU")
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["exactRetailerMatches"], [])
+        self.assertEqual(body["closeRetailerMatches"], [])
+        self.assertEqual(len(body["otherModelMatches"]), 1)
+        self.assertIsNone(body["otherModelMatches"][0]["canonicalModelName"])
 
 
 if __name__ == "__main__":
