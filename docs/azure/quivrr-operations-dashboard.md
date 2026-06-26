@@ -138,6 +138,7 @@ Current source model:
 - Azure job registry is maintained in `config/azure_container_jobs.json`
 - live freshness comes from Azure SQL-backed timestamps where available
 - local or runner-emitted state comes from `output/observability/job_state/*.json`
+- when a `job_state`-only source has no mirrored local state yet, the dashboard should show `grey/telemetry_pending` and operators should validate the job in Azure execution history instead of treating it as a failed run
 
 Each job row includes:
 

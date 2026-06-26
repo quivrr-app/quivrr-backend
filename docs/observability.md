@@ -155,16 +155,19 @@ Sprint 6.2 dashboard truth notes:
 - operational status is now kept separate from data quality status
 - AU legacy retailer runtime uses live active retailer counts when the explicit retailer registry is incomplete
 - supported search quality now uses the shared supported linkage recovery path from `scripts/run_supported_inventory_linkage_backfill.py`
-- coverage quality now measures supported canonical models with no stock anywhere by region
+- market coverage now measures supported canonical models with no stock anywhere by region
+- market coverage is reported separately from search/linkage data quality so stock scarcity is not presented like a parser or outage failure
 - search quality thresholds are:
   - green: model `>= 85%` and size family `>= 60%`
   - yellow: model `75%` to `84.99%` or size family `40%` to `59.99%`
   - red: below those safe thresholds
 - exact size linkage is displayed but does not trigger red search alerts on its own
-- coverage quality thresholds are:
+- market coverage thresholds are:
   - green: no-stock-anywhere `< 20%`
   - yellow: `20%` to `40%`
   - red: `> 40%`
+- market coverage alert wording should read as a supply limitation, for example `AU market coverage limited`, not as an infrastructure outage
+- dashboard `job_state` telemetry that has not yet been mirrored into local `output/observability/job_state/*.json` is shown as `grey/telemetry_pending` and should be validated in Azure execution history rather than treated as a yellow failure
 
 Current expectation notes:
 

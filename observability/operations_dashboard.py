@@ -16,7 +16,7 @@ from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
 EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
 JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
 SERVICE_NAME = "operations_dashboard"
-DASHBOARD_VERSION = "sprint6_2_metrics_truth_v1"
+DASHBOARD_VERSION = "sprint6_2_signal_truth_v2"
 SUPPORTED_BRAND_SET = {
     "Album",
     "Channel Islands",
@@ -479,6 +479,14 @@ def _classify_job_health(
     return StatusResult("red", "stale", f"Latest successful run is stale beyond the {freshness_hours * 2} hour failure threshold.")
 
 
+def _job_state_visibility_status() -> StatusResult:
+    return StatusResult(
+        "grey",
+        "telemetry_pending",
+        "Azure execution telemetry is not yet mirrored into dashboard job-state files. Validate this job in Azure execution history.",
+    )
+
+
 def _build_job_health(
     regions: list[str],
     retailer_region_rows: dict[str, dict[str, Any]],
@@ -525,13 +533,16 @@ def _build_job_health(
             )
             if latest_success is None and state is not None:
                 latest_success = _parse_timestamp(state.get("latest_success_timestamp_utc"))
-            status = _classify_job_health(
-                latest_success,
-                active_rows_after,
-                int(definition.get("freshnessHours") or 24),
-                latest_state=state,
-                now=now,
-            )
+            if source == "job_state" and latest_success is None and state is None:
+                status = _job_state_visibility_status()
+            else:
+                status = _classify_job_health(
+                    latest_success,
+                    active_rows_after,
+                    int(definition.get("freshnessHours") or 24),
+                    latest_state=state,
+                    now=now,
+                )
             last_status_timestamp = _parse_timestamp((state or {}).get("latest_status_timestamp_utc"))
             row = {
                 "region": region,
@@ -587,10 +598,10 @@ def _coverage_status(no_stock_count: int, supported_total: int) -> StatusResult:
         return StatusResult("grey", "not_applicable", "Supported coverage cannot be assessed without canonical coverage.")
     no_stock_pct = pct(no_stock_count, supported_total)
     if no_stock_pct < 20:
-        return StatusResult("green", "healthy", "Most supported canonical models have stock in this region.")
+        return StatusResult("green", "healthy", "Market coverage is strong across supported canonical models.")
     if no_stock_pct <= 40:
-        return StatusResult("yellow", "degraded", "A meaningful share of supported canonical models have no stock in this region.")
-    return StatusResult("red", "degraded", "Too many supported canonical models have no stock in this region.")
+        return StatusResult("yellow", "limited", "Market coverage is limited: some supported canonical models currently have no active stock in this region.")
+    return StatusResult("red", "limited", "Market coverage is materially limited: many supported canonical models currently have no active stock in this region.")
 
 
 def _catalogue_metrics() -> dict[str, Any]:
@@ -915,7 +926,7 @@ def _build_region_overview(
         coverage_supported_total = int(coverage_row.get("supportedModelCount", 0))
         coverage_status = _coverage_status(coverage_no_stock, coverage_supported_total)
         operational_health_status = combine_status_colors(retailer_status.color, mfa_status.color)
-        data_quality_status = combine_status_colors(search_status.color, coverage_status.color)
+        data_quality_status = search_status.color
         overview.append(
             {
                 "region": region,
@@ -942,6 +953,8 @@ def _build_region_overview(
                 "coverageQualityStatus": coverage_status.color,
                 "coverageQualityReason": coverage_status.reason,
                 "coverageGapPct": coverage_row.get("supportedCanonicalModelsNoStockAnywherePct"),
+                "coverageSupportedModelCount": coverage_supported_total,
+                "coverageNoStockAnywhereCount": coverage_no_stock,
                 "retailerRuntime": region_config.get("retailerRuntime"),
                 "mfaRuntime": region_config.get("mfaRuntime"),
             }
@@ -1147,20 +1160,34 @@ def _build_alert_summary(
             alerts.append(alert)
             alerts_by_region[region_code].append(alert)
         if region.get("coverageQualityStatus") in {"yellow", "red"}:
+            no_stock_count = region.get("coverageNoStockAnywhereCount")
+            supported_count = region.get("coverageSupportedModelCount")
+            coverage_pct = region.get("coverageGapPct")
+            if no_stock_count is not None and supported_count:
+                coverage_message = (
+                    f"{no_stock_count} of {supported_count} supported canonical models "
+                    f"currently have no active stock in this region"
+                )
+                if coverage_pct is not None:
+                    coverage_message += f" ({coverage_pct}%)."
+                else:
+                    coverage_message += "."
+            else:
+                coverage_message = region.get("coverageQualityReason")
             alert = {
-                "category": "coverage_quality",
+                "category": "market_coverage",
                 "alertGroup": "linkage_warnings",
                 "severity": _alert_severity_from_status(region["coverageQualityStatus"]),
                 "statusColor": region["coverageQualityStatus"],
                 "region": region_code,
-                "title": f"{region_code} coverage quality needs attention",
-                "message": region.get("coverageQualityReason"),
+                "title": f"{region_code} market coverage limited",
+                "message": coverage_message,
                 "metricName": "noStockAnywherePct",
-                "currentValue": region.get("coverageGapPct"),
+                "currentValue": coverage_pct,
                 "threshold": 20.0 if region.get("coverageQualityStatus") == "yellow" else 40.0,
                 "sourceType": "supported_linkage_truth",
                 "reason": region.get("coverageQualityReason"),
-                "suggestedAction": f"Review supported {region_code} model coverage and retailer availability for genuine stock gaps.",
+                "suggestedAction": f"Review supported {region_code} model coverage, retailer reach, and whether the gap reflects a genuine market limitation.",
             }
             alerts.append(alert)
             alerts_by_region[region_code].append(alert)

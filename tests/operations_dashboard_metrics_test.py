@@ -723,13 +723,96 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
 
         alerts = metrics["alertSummary"]["allAlerts"]
         search_alert = next(alert for alert in alerts if alert["category"] == "search_quality" and alert["region"] == "EU")
-        coverage_alert = next(alert for alert in alerts if alert["category"] == "coverage_quality" and alert["region"] == "EU")
+        coverage_alert = next(alert for alert in alerts if alert["category"] == "market_coverage" and alert["region"] == "EU")
         self.assertEqual(search_alert["metricName"], "modelLinkPct")
         self.assertEqual(search_alert["currentValue"], 76.96)
         self.assertEqual(search_alert["threshold"], 85.0)
         self.assertTrue(search_alert["suggestedAction"])
         self.assertEqual(coverage_alert["metricName"], "noStockAnywherePct")
         self.assertEqual(coverage_alert["threshold"], 20.0)
+        self.assertEqual(coverage_alert["title"], "EU market coverage limited")
+        self.assertIn("3 of 10 supported canonical models", coverage_alert["message"])
+        overview = next(row for row in metrics["regionOverview"] if row["region"] == "EU")
+        self.assertEqual(overview["dataQualityStatus"], "yellow")
+        self.assertEqual(overview["coverageQualityStatus"], "yellow")
+
+    def test_job_state_only_jobs_without_local_state_are_informational_grey(self):
+        now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)
+        query_results = {
+            RETAILER_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveRetailerRows": 100,
+                    "AvailableRetailerRows": 80,
+                    "LinkedModelRows": 70,
+                    "LinkedSizeRows": 40,
+                    "RetailerCount": 2,
+                    "LatestRetailerRefreshUtc": now - timedelta(hours=2),
+                },
+            ],
+            MFA_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveMfaRows": 20,
+                    "AvailableMfaRows": 20,
+                    "LinkedModelRows": 15,
+                    "LinkedSizeRows": 10,
+                    "BrandCount": 1,
+                    "LatestMfaRefreshUtc": now - timedelta(hours=2),
+                }
+            ],
+            RETAILER_HEALTH_QUERY: [],
+            MFA_HEALTH_QUERY: [],
+            SUPPORTED_COUNTS_QUERY: [{"RegionCode": "AU", "SupportedRows": 100, "UnsupportedRows": 0, "UsedSupportedRows": 0}],
+            dashboard.SUPPORTED_MODEL_TOTAL_QUERY: [{"SupportedModelCount": 10}],
+            dashboard.SUPPORTED_MFA_MODEL_IDS_QUERY: [{"RegionCode": "AU", "BoardModelId": 1}],
+        }
+
+        class FakeContext:
+            def __enter__(self):
+                return object()
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        with patch.object(dashboard, "_rows", side_effect=lambda query, params=None: query_results[query]), patch.object(
+            dashboard.engine, "begin", return_value=FakeContext()
+        ), patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-25T00:00:00Z", "modelCount": 500},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
+        ):
+            metrics = build_operations_dashboard_metrics(
+                now=now,
+                expectations_path=EXPECTATIONS_PATH,
+                linkage_report_builder=lambda _conn: {
+                    "regionBreakdown": [
+                        {
+                            "regionCode": "AU",
+                            "linkedModelPctAfter": 80.0,
+                            "linkedSizeFamilyPctAfter": 50.0,
+                            "linkedSizePctAfter": 20.0,
+                            "projectedRetailerModelIds": [1, 2, 3],
+                        }
+                    ],
+                    "retailerBreakdown": [],
+                    "manufacturerBreakdown": [],
+                    "global": {},
+                    "supportedBrands": [],
+                    "regionCoverage": [{"regionCode": "AU", "projectedRetailerModelIds": [1, 2, 3]}],
+                },
+            )
+
+        market_job = next(
+            row for row in metrics["jobHealthByRegion"]["AU"]["jobs"]
+            if row["jobName"] == "quivrr-market-intelligence"
+        )
+        self.assertEqual(market_job["status"], "grey")
+        self.assertEqual(market_job["statusLabel"], "telemetry_pending")
 
 
 if __name__ == "__main__":
