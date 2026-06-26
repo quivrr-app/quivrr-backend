@@ -10,7 +10,6 @@ from typing import Any, Callable
 from sqlalchemy import text
 
 from market_intelligence.db import engine, execute_with_retry
-from scripts.run_supported_inventory_linkage_backfill import compute_supported_linkage_report
 from utils.structured_logging import ROOT, utc_timestamp
 
 
@@ -180,6 +179,74 @@ WHERE COALESCE(mi.IsActive, 1) = 1
   AND mi.BoardModelId IS NOT NULL
 """
 
+SUPPORTED_RETAILER_LINKAGE_REGION_QUERY = f"""
+SELECT
+    COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>') AS RegionCode,
+    COUNT(*) AS SupportedRows,
+    SUM(CASE WHEN ri.BoardModelId IS NOT NULL THEN 1 ELSE 0 END) AS LinkedModelRowsAfter,
+    SUM(CASE
+            WHEN ri.BoardModelId IS NOT NULL
+             AND NULLIF(LTRIM(RTRIM(COALESCE(ri.Construction, ''))), '') IS NOT NULL
+             AND NULLIF(LTRIM(RTRIM(COALESCE(ri.LengthFeetInches, ''))), '') IS NOT NULL
+                THEN 1 ELSE 0
+        END) AS LinkedSizeFamilyRowsAfter,
+    SUM(CASE WHEN ri.BoardSizeId IS NOT NULL THEN 1 ELSE 0 END) AS LinkedSizeRowsAfter
+FROM dbo.RetailerInventory ri
+LEFT JOIN dbo.Brands b
+    ON b.BrandId = ri.BrandId
+WHERE ri.IsActive = 1
+  AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
+GROUP BY COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>')
+"""
+
+SUPPORTED_RETAILER_LINKAGE_RETAILER_QUERY = f"""
+SELECT
+    COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>') AS RegionCode,
+    r.RetailerName AS Name,
+    COUNT(*) AS SupportedRows,
+    SUM(CASE WHEN ri.BoardModelId IS NOT NULL THEN 1 ELSE 0 END) AS LinkedModelRowsAfter,
+    SUM(CASE
+            WHEN ri.BoardModelId IS NOT NULL
+             AND NULLIF(LTRIM(RTRIM(COALESCE(ri.Construction, ''))), '') IS NOT NULL
+             AND NULLIF(LTRIM(RTRIM(COALESCE(ri.LengthFeetInches, ''))), '') IS NOT NULL
+                THEN 1 ELSE 0
+        END) AS LinkedSizeFamilyRowsAfter,
+    SUM(CASE WHEN ri.BoardSizeId IS NOT NULL THEN 1 ELSE 0 END) AS LinkedSizeRowsAfter
+FROM dbo.RetailerInventory ri
+INNER JOIN dbo.Retailers r
+    ON r.RetailerId = ri.RetailerId
+LEFT JOIN dbo.Brands b
+    ON b.BrandId = ri.BrandId
+WHERE ri.IsActive = 1
+  AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
+GROUP BY
+    COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>'),
+    r.RetailerName
+"""
+
+SUPPORTED_MFA_LINKAGE_BRAND_QUERY = f"""
+SELECT
+    COALESCE(NULLIF(LTRIM(RTRIM(mi.RegionCode)), ''), '<NULL>') AS RegionCode,
+    b.BrandName AS Name,
+    COUNT(*) AS SupportedRows,
+    SUM(CASE WHEN mi.BoardModelId IS NOT NULL THEN 1 ELSE 0 END) AS LinkedModelRowsAfter,
+    SUM(CASE
+            WHEN mi.BoardModelId IS NOT NULL
+             AND NULLIF(LTRIM(RTRIM(COALESCE(mi.Construction, ''))), '') IS NOT NULL
+             AND NULLIF(LTRIM(RTRIM(COALESCE(mi.LengthFeetInches, ''))), '') IS NOT NULL
+                THEN 1 ELSE 0
+        END) AS LinkedSizeFamilyRowsAfter,
+    SUM(CASE WHEN mi.BoardSizeId IS NOT NULL THEN 1 ELSE 0 END) AS LinkedSizeRowsAfter
+FROM dbo.ManufacturerInventory mi
+LEFT JOIN dbo.Brands b
+    ON b.BrandId = mi.BrandId
+WHERE COALESCE(mi.IsActive, 1) = 1
+  AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
+GROUP BY
+    COALESCE(NULLIF(LTRIM(RTRIM(mi.RegionCode)), ''), '<NULL>'),
+    b.BrandName
+"""
+
 
 @dataclass(frozen=True)
 class StatusResult:
@@ -302,6 +369,67 @@ def _row_field(row: Any, field: str, default: Any = None) -> Any:
         value = row.get(field, default)
         return default if value is None else value
     return default
+
+
+def _build_supported_linkage_snapshot(conn: Any) -> dict[str, Any]:
+    def rows(query: str) -> list[Any]:
+        return conn.execute(text(query)).fetchall()
+
+    def breakdown(items: list[Any], *, include_name: bool) -> list[dict[str, Any]]:
+        output = []
+        for row in items:
+            supported_rows = int(_row_field(row, "SupportedRows", 0))
+            linked_model_rows = int(_row_field(row, "LinkedModelRowsAfter", 0))
+            linked_size_family_rows = int(_row_field(row, "LinkedSizeFamilyRowsAfter", 0))
+            linked_size_rows = int(_row_field(row, "LinkedSizeRowsAfter", 0))
+            item = {
+                "regionCode": str(_row_field(row, "RegionCode", "<NULL>")).upper(),
+                "supportedRows": supported_rows,
+                "linkedModelRowsAfter": linked_model_rows,
+                "linkedSizeFamilyRowsAfter": linked_size_family_rows,
+                "linkedSizeRowsAfter": linked_size_rows,
+                "linkedModelPctAfter": pct(linked_model_rows, supported_rows),
+                "linkedSizeFamilyPctAfter": pct(linked_size_family_rows, supported_rows),
+                "linkedSizePctAfter": pct(linked_size_rows, supported_rows),
+            }
+            if include_name:
+                item["name"] = str(_row_field(row, "Name", ""))
+            output.append(item)
+        return output
+
+    retailer_region = breakdown(
+        rows(SUPPORTED_RETAILER_LINKAGE_REGION_QUERY),
+        include_name=False,
+    )
+    retailer_breakdown = breakdown(
+        rows(SUPPORTED_RETAILER_LINKAGE_RETAILER_QUERY),
+        include_name=True,
+    )
+    manufacturer_breakdown = breakdown(
+        rows(SUPPORTED_MFA_LINKAGE_BRAND_QUERY),
+        include_name=True,
+    )
+
+    global_supported_rows = sum(item["supportedRows"] for item in retailer_region)
+    global_linked_model_rows = sum(item["linkedModelRowsAfter"] for item in retailer_region)
+    global_linked_size_family_rows = sum(item["linkedSizeFamilyRowsAfter"] for item in retailer_region)
+    global_linked_size_rows = sum(item["linkedSizeRowsAfter"] for item in retailer_region)
+
+    return {
+        "supportedBrands": sorted(SUPPORTED_BRAND_SET),
+        "global": {
+            "supportedRows": global_supported_rows,
+            "linkedModelRowsAfter": global_linked_model_rows,
+            "linkedSizeFamilyRowsAfter": global_linked_size_family_rows,
+            "linkedSizeRowsAfter": global_linked_size_rows,
+            "linkedModelPctAfter": pct(global_linked_model_rows, global_supported_rows),
+            "linkedSizeFamilyPctAfter": pct(global_linked_size_family_rows, global_supported_rows),
+            "linkedSizePctAfter": pct(global_linked_size_rows, global_supported_rows),
+        },
+        "regionBreakdown": retailer_region,
+        "retailerBreakdown": retailer_breakdown,
+        "manufacturerBreakdown": manufacturer_breakdown,
+    }
 
 
 def _map_region_rows(rows: list[Any], region_field: str = "RegionCode") -> dict[str, dict[str, Any]]:
@@ -729,7 +857,7 @@ def build_operations_dashboard_metrics(
     expectations = load_source_expectations(expectations_path)
     generated_at_utc = generated_at_utc or utc_timestamp()
     now = now or _utcnow()
-    linkage_report_builder = linkage_report_builder or compute_supported_linkage_report
+    linkage_report_builder = linkage_report_builder or _build_supported_linkage_snapshot
 
     retailer_region_rows = _map_region_rows(_rows(RETAILER_REGION_QUERY))
     mfa_region_rows = _map_region_rows(_rows(MFA_REGION_QUERY))
