@@ -2,6 +2,7 @@ import json
 import os
 import re
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock, Thread
 from urllib.parse import quote_plus
@@ -30,6 +31,16 @@ def env_int(name: str, default: int) -> int:
         return int(value.strip())
     except ValueError:
         return default
+
+
+def env_bool(name: str, default: bool) -> bool:
+
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def build_connection_string() -> str:
@@ -76,6 +87,24 @@ OPS_DASHBOARD_CACHE_FILE = Path(
         "OPS_DASHBOARD_CACHE_FILE",
         str(Path(os.getenv("HOME", ".")) / "data" / "ops_dashboard_metrics_cache.json"),
     )
+)
+OPS_DASHBOARD_REFRESH_LOCK_FILE = Path(
+    os.getenv(
+        "OPS_DASHBOARD_REFRESH_LOCK_FILE",
+        str(OPS_DASHBOARD_CACHE_FILE.with_suffix(".lock")),
+    )
+)
+OPS_DASHBOARD_REFRESH_LOCK_TIMEOUT_SECONDS = env_int(
+    "OPS_DASHBOARD_REFRESH_LOCK_TIMEOUT_SECONDS",
+    900,
+)
+OPS_DASHBOARD_ALLOW_SYNC_BUILD = env_bool(
+    "OPS_DASHBOARD_ALLOW_SYNC_BUILD",
+    False,
+)
+OPS_DASHBOARD_PREWARM_ON_STARTUP = env_bool(
+    "OPS_DASHBOARD_PREWARM_ON_STARTUP",
+    bool(os.getenv("WEBSITE_INSTANCE_ID")),
 )
 _ops_dashboard_cache_lock = Lock()
 _ops_dashboard_cache = {
@@ -427,6 +456,114 @@ def build_ops_dashboard_response(cache_status: str):
     return response
 
 
+def build_ops_dashboard_warming_response(cache_status: str, refresh_started: bool):
+
+    generated_at_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    regions = ["AU", "EU", "ID", "US"]
+    region_overview = []
+    region_details = {}
+
+    for region in regions:
+        overview = {
+            "region": region,
+            "displayName": region,
+            "operationalHealthStatus": "grey",
+            "dataFreshnessStatus": "grey",
+            "dataQualityStatus": "grey",
+            "searchHealthStatus": "grey",
+            "coverageQualityStatus": "grey",
+            "retailerStatus": "grey",
+            "mfaStatus": "grey",
+            "supportedModelLinkagePct": None,
+            "coverageGapPct": None,
+            "retailerRuntime": "warming",
+            "lastRetailerInventoryRefreshUtc": None,
+            "lastMfaRefreshUtc": None,
+        }
+        region_overview.append(overview)
+        region_details[region] = {
+            "overview": overview,
+            "searchQuality": {
+                "supportedModelLinkagePct": None,
+                "canonicalSizeFamilyLinkagePct": None,
+                "exactBoardSizeLinkagePct": None,
+            },
+            "coverageGaps": {
+                "supportedCanonicalModelsNoStockAnywherePct": None,
+                "supportedCanonicalModelsNoStockAnywhere": {"count": None},
+                "supportedCanonicalModelsNoActiveRetailerStock": {"count": None},
+                "supportedCanonicalModelsNoActiveMfaStock": {"count": None},
+                "supportedModelCount": None,
+            },
+            "retailerHealth": {
+                "summary": {
+                    "configuredRetailers": None,
+                    "healthyRetailers": None,
+                    "staleRetailers": None,
+                    "failingRetailers": None,
+                    "activeRows": None,
+                    "availableRows": None,
+                    "averageModelLinkagePct": None,
+                    "retailerRuntime": "warming",
+                },
+                "retailers": [],
+            },
+            "jobHealth": {
+                "summary": {
+                    "configuredJobs": None,
+                    "healthy": None,
+                    "yellow": None,
+                    "red": None,
+                    "lastSuccessfulJobUtc": None,
+                },
+                "jobs": [],
+            },
+            "alerts": [],
+            "mfaHealth": [],
+        }
+
+    response = {
+        "generatedAtUtc": generated_at_utc,
+        "service": "operations_dashboard",
+        "version": DASHBOARD_VERSION,
+        "regions": regions,
+        "regionOverview": region_overview,
+        "mfaHealth": [],
+        "retailerHealth": [],
+        "retailerHealthByRegion": {},
+        "jobHealth": [],
+        "jobHealthByRegion": {},
+        "inventoryCounts": [],
+        "searchQuality": [],
+        "coverageGaps": [],
+        "alerts": [],
+        "alertSummary": {
+            "summary": {
+                "critical": 0,
+                "warnings": 0,
+                "staleSources": 0,
+                "linkageWarnings": 0,
+            },
+            "allAlerts": [],
+        },
+        "regionDetails": region_details,
+        "linkQuality": {
+            "global": {},
+            "regionBreakdown": [],
+            "supportedBrands": [],
+        },
+        "cacheStatus": cache_status,
+        "warmingUp": True,
+        "refreshStarted": refresh_started,
+    }
+    ops_dashboard_log(
+        "ops_dashboard_warming_served",
+        cacheStatus=cache_status,
+        refreshStarted=refresh_started,
+    )
+    return response
+
+
 def _persist_ops_dashboard_cache(payload, generated_at):
     OPS_DASHBOARD_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
     OPS_DASHBOARD_CACHE_FILE.write_text(
@@ -438,6 +575,62 @@ def _persist_ops_dashboard_cache(payload, generated_at):
         ),
         encoding="utf-8",
     )
+    ops_dashboard_log(
+        "ops_dashboard_cache_persisted",
+        cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+    )
+
+
+def _try_acquire_ops_dashboard_refresh_file_lock():
+
+    OPS_DASHBOARD_REFRESH_LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    if OPS_DASHBOARD_REFRESH_LOCK_FILE.exists():
+        age_seconds = time.time() - OPS_DASHBOARD_REFRESH_LOCK_FILE.stat().st_mtime
+        if age_seconds > OPS_DASHBOARD_REFRESH_LOCK_TIMEOUT_SECONDS:
+            try:
+                OPS_DASHBOARD_REFRESH_LOCK_FILE.unlink()
+                ops_dashboard_log(
+                    "ops_dashboard_refresh_lock_stale_removed",
+                    lockFile=str(OPS_DASHBOARD_REFRESH_LOCK_FILE),
+                    ageSeconds=round(age_seconds, 2),
+                )
+            except OSError:
+                return False
+        else:
+            return False
+
+    try:
+        file_descriptor = os.open(
+            str(OPS_DASHBOARD_REFRESH_LOCK_FILE),
+            os.O_CREAT | os.O_EXCL | os.O_WRONLY,
+        )
+        with os.fdopen(file_descriptor, "w", encoding="utf-8") as handle:
+            handle.write(
+                json.dumps(
+                    {
+                        "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+                        "pid": os.getpid(),
+                    }
+                )
+            )
+        return True
+    except FileExistsError:
+        return False
+
+
+def _release_ops_dashboard_refresh_file_lock():
+
+    try:
+        OPS_DASHBOARD_REFRESH_LOCK_FILE.unlink()
+    except FileNotFoundError:
+        return
+    except OSError as exc:
+        ops_dashboard_log(
+            "ops_dashboard_refresh_lock_release_failed",
+            lockFile=str(OPS_DASHBOARD_REFRESH_LOCK_FILE),
+            error=str(exc),
+        )
 
 
 def _load_ops_dashboard_cache_from_disk_locked():
@@ -501,10 +694,20 @@ def _refresh_ops_dashboard_cache_worker():
             cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
             error=str(exc),
         )
+    finally:
+        _release_ops_dashboard_refresh_file_lock()
 
 
 def _start_ops_dashboard_refresh_locked():
     if _ops_dashboard_cache.get("refresh_in_progress"):
+        return False
+
+    if not _try_acquire_ops_dashboard_refresh_file_lock():
+        ops_dashboard_log(
+            "ops_dashboard_refresh_skipped",
+            reason="refresh_lock_held",
+            lockFile=str(OPS_DASHBOARD_REFRESH_LOCK_FILE),
+        )
         return False
 
     _ops_dashboard_cache["refresh_in_progress"] = True
@@ -513,6 +716,11 @@ def _start_ops_dashboard_refresh_locked():
         name="ops-dashboard-refresh",
         daemon=True,
     ).start()
+    ops_dashboard_log(
+        "ops_dashboard_refresh_started",
+        cacheFile=str(OPS_DASHBOARD_CACHE_FILE),
+        lockFile=str(OPS_DASHBOARD_REFRESH_LOCK_FILE),
+    )
     return True
 
 
@@ -545,6 +753,11 @@ def get_cached_ops_dashboard_response():
             cached_response["cacheStatus"] = "stale"
             return cached_response
 
+    if not OPS_DASHBOARD_ALLOW_SYNC_BUILD:
+        with _ops_dashboard_cache_lock:
+            started_refresh = _start_ops_dashboard_refresh_locked()
+        return build_ops_dashboard_warming_response("warming", started_refresh)
+
     payload = build_ops_dashboard_response("miss")
     _store_ops_dashboard_cache(payload, now_seconds)
     ops_dashboard_log(
@@ -554,6 +767,26 @@ def get_cached_ops_dashboard_response():
     return payload
 
 
+def prewarm_ops_dashboard_cache():
+
+    if not OPS_DASHBOARD_PREWARM_ON_STARTUP:
+        return
+
+    with _ops_dashboard_cache_lock:
+        _load_ops_dashboard_cache_from_disk_locked()
+        if _ops_dashboard_cache.get("payload") is not None:
+            ops_dashboard_log(
+                "ops_dashboard_prewarm_skipped",
+                reason="cache_already_loaded",
+            )
+            return
+        started_refresh = _start_ops_dashboard_refresh_locked()
+    ops_dashboard_log(
+        "ops_dashboard_prewarm_checked",
+        refreshStarted=started_refresh,
+    )
+
+
 @app.get("/")
 def root():
 
@@ -561,6 +794,12 @@ def root():
         "status": "online",
         "service": "quivrr-api"
     }
+
+
+@app.on_event("startup")
+def startup_prewarm_ops_dashboard():
+
+    prewarm_ops_dashboard_cache()
 
 
 @app.get("/api/ops/dashboard")

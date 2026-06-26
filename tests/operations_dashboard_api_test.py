@@ -11,14 +11,18 @@ import app as backend_app
 
 class OperationsDashboardApiTests(unittest.TestCase):
     def setUp(self):
-        self.client = TestClient(backend_app.app)
         self.temp_dir = TemporaryDirectory()
         self.cache_file = Path(self.temp_dir.name) / "ops_dashboard_cache.json"
+        self.lock_file = Path(self.temp_dir.name) / "ops_dashboard_cache.lock"
         backend_app.OPS_DASHBOARD_CACHE_FILE = self.cache_file
+        backend_app.OPS_DASHBOARD_REFRESH_LOCK_FILE = self.lock_file
+        backend_app.OPS_DASHBOARD_PREWARM_ON_STARTUP = False
+        backend_app.OPS_DASHBOARD_ALLOW_SYNC_BUILD = False
         backend_app._ops_dashboard_cache["generated_at"] = 0.0
         backend_app._ops_dashboard_cache["payload"] = None
         backend_app._ops_dashboard_cache["loaded_from_disk"] = False
         backend_app._ops_dashboard_cache["refresh_in_progress"] = False
+        self.client = TestClient(backend_app.app)
 
     def tearDown(self):
         backend_app._ops_dashboard_cache["generated_at"] = 0.0
@@ -59,6 +63,10 @@ class OperationsDashboardApiTests(unittest.TestCase):
         }
 
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "OPS_DASHBOARD_ALLOW_SYNC_BUILD",
+            True,
+        ), patch.object(
             backend_app,
             "build_operations_dashboard_metrics",
             return_value=payload,
@@ -106,6 +114,10 @@ class OperationsDashboardApiTests(unittest.TestCase):
 
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
             backend_app,
+            "OPS_DASHBOARD_ALLOW_SYNC_BUILD",
+            True,
+        ), patch.object(
+            backend_app,
             "build_operations_dashboard_metrics",
             return_value=payload,
         ) as builder:
@@ -123,6 +135,28 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertEqual(first_response.json()["cacheStatus"], "miss")
         self.assertEqual(second_response.json()["cacheStatus"], "hit")
         self.assertEqual(builder.call_count, 1)
+
+    def test_ops_dashboard_cold_miss_returns_warming_payload_without_sync_build(self):
+        with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "_start_ops_dashboard_refresh_locked",
+            return_value=True,
+        ) as refresh_starter, patch.object(
+            backend_app,
+            "build_operations_dashboard_metrics",
+        ) as builder:
+            response = self.client.get(
+                "/api/ops/dashboard",
+                headers={"x-ops-dashboard-key": "secret-key"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["cacheStatus"], "warming")
+        self.assertTrue(body["warmingUp"])
+        self.assertEqual(body["regions"], ["AU", "EU", "ID", "US"])
+        self.assertEqual(refresh_starter.call_count, 1)
+        builder.assert_not_called()
 
     def test_ops_dashboard_serves_stale_cache_while_refreshing(self):
         payload = {
