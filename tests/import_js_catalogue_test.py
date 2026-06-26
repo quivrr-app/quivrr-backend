@@ -1,0 +1,71 @@
+import unittest
+
+from scripts import import_js_catalogue
+
+
+class ExistingSizeRow:
+    def __init__(
+        self,
+        model_id,
+        length,
+        width,
+        thickness,
+        volume,
+        construction,
+        fin_setup,
+        tail_shape,
+    ):
+        self.BoardModelId = model_id
+        self.LengthFeetInches = length
+        self.Width = width
+        self.Thickness = thickness
+        self.VolumeLitres = volume
+        self.Construction = construction
+        self.FinSetup = fin_setup
+        self.TailShape = tail_shape
+
+
+class ImportJsCatalogueTests(unittest.TestCase):
+    def test_partition_new_size_rows_skips_existing_exact_signature(self):
+        existing_rows = [
+            ExistingSizeRow(101, "5'8", "19 1/2", "2 7/16", 29.3, "PU", "FCS II", "Squash")
+        ]
+        incoming_rows = [
+            {
+                "model_id": 101,
+                "length": "5'8",
+                "width": "19 1/2",
+                "thickness": "2 7/16",
+                "volume": "29.30",
+                "construction": "PU",
+                "fin_setup": "FCS II",
+                "tail_shape": "Squash",
+            },
+            {
+                "model_id": 101,
+                "length": "5'9",
+                "width": "19 3/4",
+                "thickness": "2 1/2",
+                "volume": 30.5,
+                "construction": "PU",
+                "fin_setup": "FCS II",
+                "tail_shape": "Squash",
+            },
+        ]
+
+        rows_to_insert = import_js_catalogue.partition_new_size_rows(
+            existing_rows,
+            incoming_rows,
+        )
+
+        self.assertEqual(len(rows_to_insert), 1)
+        self.assertEqual(rows_to_insert[0]["length"], "5'9")
+
+    def test_normalise_volume_collapses_equivalent_decimal_strings(self):
+        self.assertEqual(import_js_catalogue.normalise_volume("29.30"), "29.3")
+        self.assertEqual(import_js_catalogue.normalise_volume(29.300), "29.3")
+        self.assertIsNone(import_js_catalogue.normalise_volume(None))
+
+
+if __name__ == "__main__":
+    unittest.main()
