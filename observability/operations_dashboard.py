@@ -9,12 +9,13 @@ from typing import Any, Callable
 from sqlalchemy import text
 
 from market_intelligence.db import engine, execute_with_retry
-from utils.structured_logging import ROOT, utc_timestamp
+from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
 
 
 EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
+JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
 SERVICE_NAME = "operations_dashboard"
-DASHBOARD_VERSION = "sprint6_operations_dashboard_v1"
+DASHBOARD_VERSION = "sprint6_1_job_health_v1"
 SUPPORTED_BRAND_SET = {
     "Album",
     "Channel Islands",
@@ -315,6 +316,20 @@ def load_source_expectations(path: Path | None = None) -> dict[str, Any]:
     return _json_load(path or EXPECTATIONS_PATH)
 
 
+def load_job_expectations(path: Path | None = None) -> dict[str, Any]:
+    return _json_load(path or JOB_EXPECTATIONS_PATH)
+
+
+def _load_job_state(job_name: str) -> dict[str, Any] | None:
+    path = STATE_DIR / f"{job_name}.json"
+    if not path.exists():
+        return None
+    try:
+        return _json_load(path)
+    except Exception:
+        return None
+
+
 def pct(numerator: int, denominator: int) -> float:
     if not denominator:
         return 0.0
@@ -410,6 +425,186 @@ def _alert_severity_from_status(color: str) -> str:
     return "info"
 
 
+def _job_row_metric(
+    metric_source: str,
+    region: str,
+    retailer_region_rows: dict[str, dict[str, Any]],
+    mfa_region_rows: dict[str, dict[str, Any]],
+    catalogue_metrics: dict[str, Any],
+) -> tuple[datetime | None, int | None, str]:
+    normalized_source = str(metric_source or "").strip().lower()
+    if normalized_source == "retailer_inventory":
+        row = retailer_region_rows.get(region, {})
+        return (
+            _parse_timestamp(row.get("LatestRetailerRefreshUtc")),
+            int(row.get("ActiveRetailerRows") or 0),
+            "sql_freshness",
+        )
+    if normalized_source == "manufacturer_inventory":
+        row = mfa_region_rows.get(region, {})
+        return (
+            _parse_timestamp(row.get("LatestMfaRefreshUtc")),
+            int(row.get("ActiveMfaRows") or 0),
+            "sql_freshness",
+        )
+    if normalized_source == "catalogue":
+        return (
+            _parse_timestamp(catalogue_metrics.get("latestSuccessUtc")),
+            int(catalogue_metrics.get("modelCount") or 0),
+            "sql_catalogue_freshness",
+        )
+    return (None, None, "job_state")
+
+
+def _job_rows_from_state(state: dict[str, Any] | None) -> tuple[int | None, int | None]:
+    if not state:
+        return (None, None)
+    rows_inserted = state.get("rows_inserted")
+    if rows_inserted is None:
+        rows_inserted = state.get("row_count")
+    rows_updated = state.get("rows_updated")
+    if rows_updated is None:
+        rows_updated = state.get("rows_loaded")
+    return (
+        None if rows_inserted is None else int(rows_inserted),
+        None if rows_updated is None else int(rows_updated),
+    )
+
+
+def _classify_job_health(
+    latest_success: datetime | None,
+    row_count: int | None,
+    freshness_hours: int,
+    *,
+    latest_state: dict[str, Any] | None,
+    now: datetime,
+) -> StatusResult:
+    latest_status = str((latest_state or {}).get("status") or "").strip().lower()
+    latest_status_timestamp = _parse_timestamp((latest_state or {}).get("latest_status_timestamp_utc"))
+    if latest_status == "failed":
+        if latest_success is None:
+            return StatusResult("red", "failed", "Latest observed job state is failed and no successful run is recorded.")
+        age = now - latest_success
+        if age <= timedelta(hours=freshness_hours):
+            return StatusResult("yellow", "failed", "Latest observed job state failed, but the most recent successful data is still within the freshness window.")
+        return StatusResult("red", "failed", "Latest observed job state failed and the last successful data is stale.")
+    if latest_success is None:
+        if latest_status_timestamp is not None:
+            return StatusResult("yellow", "configured", "Job is configured but no successful run has been observed yet in the current dashboard sources.")
+        return StatusResult("yellow", "configured", "Job is configured, but dashboard sources do not yet include a successful run timestamp.")
+    if row_count is not None and row_count <= 0:
+        return StatusResult("red", "zero_rows", "Job completed without any active rows in the target dataset.")
+    age = now - latest_success
+    if age <= timedelta(hours=freshness_hours):
+        return StatusResult("green", "healthy", f"Latest successful run is within the {freshness_hours} hour freshness window.")
+    if age <= timedelta(hours=freshness_hours * 2):
+        return StatusResult("yellow", "stale", f"Latest successful run is outside the {freshness_hours} hour freshness window but still within the warning band.")
+    return StatusResult("red", "stale", f"Latest successful run is stale beyond the {freshness_hours * 2} hour failure threshold.")
+
+
+def _build_job_health(
+    regions: list[str],
+    retailer_region_rows: dict[str, dict[str, Any]],
+    mfa_region_rows: dict[str, dict[str, Any]],
+    *,
+    now: datetime,
+    job_expectations_path: Path | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    job_config = load_job_expectations(job_expectations_path)
+    catalogue_metrics = _catalogue_metrics()
+    flat_rows: list[dict[str, Any]] = []
+    by_region: dict[str, dict[str, Any]] = {
+        region: {
+            "summary": {
+                "configuredJobs": 0,
+                "healthy": 0,
+                "yellow": 0,
+                "red": 0,
+                "grey": 0,
+                "lastSuccessfulJobUtc": None,
+                "worstStatus": "grey",
+            },
+            "jobs": [],
+        }
+        for region in regions
+    }
+
+    for definition in job_config.get("jobs", []):
+        applicable_regions = [
+            str(region).upper()
+            for region in definition.get("regions", [])
+            if str(region).upper() in by_region
+        ]
+        expected_region = str(definition.get("expectedRegion") or "GLOBAL").upper()
+        state = _load_job_state(str(definition.get("stateFile") or "").strip()) if definition.get("stateFile") else None
+        rows_inserted, rows_updated = _job_rows_from_state(state)
+        for region in applicable_regions:
+            latest_success, active_rows_after, source = _job_row_metric(
+                str(definition.get("metricSource") or ""),
+                region,
+                retailer_region_rows,
+                mfa_region_rows,
+                catalogue_metrics,
+            )
+            if latest_success is None and state is not None:
+                latest_success = _parse_timestamp(state.get("latest_success_timestamp_utc"))
+            status = _classify_job_health(
+                latest_success,
+                active_rows_after,
+                int(definition.get("freshnessHours") or 24),
+                latest_state=state,
+                now=now,
+            )
+            last_status_timestamp = _parse_timestamp((state or {}).get("latest_status_timestamp_utc"))
+            row = {
+                "region": region,
+                "jobName": definition.get("jobName"),
+                "jobType": definition.get("jobType"),
+                "status": status.color,
+                "statusLabel": status.label,
+                "statusReason": status.reason,
+                "schedule": definition.get("schedule"),
+                "expectedRegion": expected_region,
+                "lastStartedUtc": last_status_timestamp.isoformat().replace("+00:00", "Z") if last_status_timestamp else (latest_success.isoformat().replace("+00:00", "Z") if latest_success else None),
+                "lastSucceededUtc": latest_success.isoformat().replace("+00:00", "Z") if latest_success else None,
+                "lastFailedUtc": last_status_timestamp.isoformat().replace("+00:00", "Z") if last_status_timestamp and str((state or {}).get("status") or "").lower() == "failed" else None,
+                "durationSeconds": (state or {}).get("duration_seconds"),
+                "rowsInserted": rows_inserted,
+                "rowsUpdated": rows_updated,
+                "activeRowsAfter": active_rows_after,
+                "source": source,
+                "structuredLogEventName": definition.get("structuredLogEventName"),
+                "azureContainerAppJobName": definition.get("jobName"),
+            }
+            flat_rows.append(row)
+            by_region[region]["jobs"].append(row)
+
+    for region, payload in by_region.items():
+        jobs = payload["jobs"]
+        jobs.sort(
+            key=lambda row: (
+                -STATUS_PRIORITY.get(str(row.get("status") or "grey").lower(), -1),
+                str(row.get("jobType") or ""),
+                str(row.get("jobName") or ""),
+            )
+        )
+        summary = payload["summary"]
+        summary["configuredJobs"] = len(jobs)
+        summary["healthy"] = sum(1 for row in jobs if row["status"] == "green")
+        summary["yellow"] = sum(1 for row in jobs if row["status"] == "yellow")
+        summary["red"] = sum(1 for row in jobs if row["status"] == "red")
+        summary["grey"] = sum(1 for row in jobs if row["status"] == "grey")
+        successful_runs = [
+            _parse_timestamp(row.get("lastSucceededUtc"))
+            for row in jobs
+            if row.get("lastSucceededUtc")
+        ]
+        latest_success = max((item for item in successful_runs if item is not None), default=None)
+        summary["lastSuccessfulJobUtc"] = latest_success.isoformat().replace("+00:00", "Z") if latest_success else None
+        summary["worstStatus"] = combine_status_colors(*(row["status"] for row in jobs)) if jobs else "grey"
+    return flat_rows, by_region
+
+
 def _coverage_status(no_stock_count: int, supported_total: int) -> StatusResult:
     if supported_total <= 0:
         return StatusResult("grey", "not_applicable", "Supported coverage cannot be assessed without canonical coverage.")
@@ -419,6 +614,41 @@ def _coverage_status(no_stock_count: int, supported_total: int) -> StatusResult:
     if no_stock_pct <= 45:
         return StatusResult("yellow", "degraded", "A meaningful share of supported canonical models have no stock in this region.")
     return StatusResult("red", "degraded", "Too many supported canonical models have no stock in this region.")
+
+
+def _catalogue_metrics() -> dict[str, Any]:
+    models = _rows(
+        """
+        SELECT
+            COUNT(*) AS ModelCount,
+            MAX(COALESCE(UpdatedAtUtc, CreatedAtUtc)) AS LatestModelUtc
+        FROM dbo.BoardModels
+        WHERE IsActive = 1
+        """
+    )[0]
+    sizes = _rows(
+        """
+        SELECT
+            COUNT(*) AS SizeCount,
+            MAX(COALESCE(UpdatedAtUtc, CreatedAtUtc)) AS LatestSizeUtc
+        FROM dbo.BoardSizes
+        """
+    )[0]
+    latest_success = max(
+        filter(
+            None,
+            [
+                _parse_timestamp(_row_field(models, "LatestModelUtc")),
+                _parse_timestamp(_row_field(sizes, "LatestSizeUtc")),
+            ],
+        ),
+        default=None,
+    )
+    return {
+        "modelCount": int(_row_field(models, "ModelCount", 0)),
+        "sizeCount": int(_row_field(sizes, "SizeCount", 0)),
+        "latestSuccessUtc": latest_success.isoformat().replace("+00:00", "Z") if latest_success else None,
+    }
 
 
 def _rows(query: str, params: dict[str, Any] | None = None) -> list[Any]:
@@ -878,6 +1108,7 @@ def _build_alert_summary(
     region_overview: list[dict[str, Any]],
     retailer_health_by_region: dict[str, dict[str, Any]],
     mfa_matrix: list[dict[str, Any]],
+    job_health_by_region: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     alerts: list[dict[str, Any]] = []
     alerts_by_region: dict[str, list[dict[str, Any]]] = {region["region"]: [] for region in region_overview}
@@ -973,6 +1204,25 @@ def _build_alert_summary(
                 alerts.append(alert)
                 alerts_by_region.setdefault(region_code, []).append(alert)
 
+    for region_code, payload in (job_health_by_region or {}).items():
+        for job in payload.get("jobs", []):
+            if job.get("status") not in {"yellow", "red"}:
+                continue
+            if job.get("expectedRegion") == "GLOBAL" and job.get("status") == "yellow":
+                continue
+            alert = {
+                "category": "job_health",
+                "alertGroup": "critical" if job["status"] == "red" else "stale_sources",
+                "severity": _alert_severity_from_status(job["status"]),
+                "statusColor": job["status"],
+                "region": region_code,
+                "source": job.get("jobName"),
+                "title": f"{region_code} job attention required: {job.get('jobType', 'job')}",
+                "message": job.get("statusReason") or f"{job.get('jobName')} requires attention.",
+            }
+            alerts.append(alert)
+            alerts_by_region.setdefault(region_code, []).append(alert)
+
     grouped_counts = {
         "critical": sum(1 for alert in alerts if alert["severity"] == "critical"),
         "warnings": sum(1 for alert in alerts if alert["severity"] == "warning"),
@@ -1005,6 +1255,7 @@ def _build_region_details(
     retailer_health_by_region: dict[str, dict[str, Any]],
     mfa_matrix: list[dict[str, Any]],
     alert_summary: dict[str, Any],
+    job_health_by_region: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
     overview_lookup = {row["region"]: row for row in region_overview}
     inventory_lookup = {row["region"]: row for row in inventory_counts}
@@ -1019,6 +1270,7 @@ def _build_region_details(
             "searchQuality": search_lookup.get(region, {}),
             "coverageGaps": coverage_lookup.get(region, {}),
             "retailerHealth": retailer_health_by_region.get(region, {"summary": {}, "retailers": []}),
+            "jobHealth": job_health_by_region.get(region, {"summary": {}, "jobs": []}),
             "mfaHealth": [
                 {
                     "brand": item["brand"],
@@ -1037,6 +1289,7 @@ def build_operations_dashboard_metrics(
     generated_at_utc: str | None = None,
     now: datetime | None = None,
     expectations_path: Path | None = None,
+    job_expectations_path: Path | None = None,
     linkage_report_builder: Callable[[Any], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     expectations = load_source_expectations(expectations_path)
@@ -1068,12 +1321,19 @@ def build_operations_dashboard_metrics(
     retailer_matrix = _build_retailer_matrix(regions, expectations, retailer_health_rows, linkage_report, now)
     retailer_health_by_region = _build_retailer_health_by_region(regions, expectations, retailer_matrix)
     mfa_matrix = _build_mfa_matrix(regions, expectations, mfa_health_rows, linkage_report, now)
+    job_health, job_health_by_region = _build_job_health(
+        regions,
+        retailer_region_rows,
+        mfa_region_rows,
+        now=now,
+        job_expectations_path=job_expectations_path,
+    )
     coverage_gaps = _build_coverage_gaps(regions, supported_gap_rows)
     coverage_gaps_by_region = {row["region"]: row for row in coverage_gaps}
     region_overview = _build_region_overview(regions, expectations, retailer_region_rows, mfa_region_rows, linkage_report, coverage_gaps_by_region, now)
     inventory_counts = _build_inventory_counts(regions, retailer_region_rows, mfa_region_rows, supported_counts)
     search_quality = _build_search_quality(regions, linkage_report)
-    alert_summary = _build_alert_summary(region_overview, retailer_health_by_region, mfa_matrix)
+    alert_summary = _build_alert_summary(region_overview, retailer_health_by_region, mfa_matrix, job_health_by_region)
     region_details = _build_region_details(
         regions,
         region_overview,
@@ -1083,6 +1343,7 @@ def build_operations_dashboard_metrics(
         retailer_health_by_region,
         mfa_matrix,
         alert_summary,
+        job_health_by_region,
     )
 
     return {
@@ -1094,6 +1355,8 @@ def build_operations_dashboard_metrics(
         "mfaHealth": mfa_matrix,
         "retailerHealth": retailer_matrix,
         "retailerHealthByRegion": retailer_health_by_region,
+        "jobHealth": job_health,
+        "jobHealthByRegion": job_health_by_region,
         "inventoryCounts": inventory_counts,
         "searchQuality": search_quality,
         "coverageGaps": coverage_gaps,

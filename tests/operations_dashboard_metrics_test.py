@@ -280,6 +280,14 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
 
         with patch.object(dashboard, "_rows", side_effect=fake_rows), patch.object(
             dashboard.engine, "begin", return_value=FakeContext()
+        ), patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-20T00:00:00Z", "modelCount": 500},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
         ):
             metrics = build_operations_dashboard_metrics(
                 now=now,
@@ -296,6 +304,8 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(metrics["inventoryCounts"][0]["newSupportedBoards"], 85)
         self.assertIn("alerts", metrics)
         self.assertIn("retailerHealthByRegion", metrics)
+        self.assertIn("jobHealth", metrics)
+        self.assertIn("jobHealthByRegion", metrics)
         self.assertIn("regionDetails", metrics)
         au_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "AU")
         us_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "US")
@@ -305,9 +315,11 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(us_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 0)
         self.assertEqual(metrics["retailerHealthByRegion"]["AU"]["summary"]["healthyRetailers"], 1)
         self.assertEqual(metrics["retailerHealthByRegion"]["US"]["summary"]["configuredRetailers"], 20)
+        self.assertGreater(metrics["jobHealthByRegion"]["AU"]["summary"]["configuredJobs"], 0)
         self.assertIn("summary", metrics["alertSummary"])
         self.assertIn("topAlerts", metrics["alertSummary"])
         self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["activeRows"], 100)
+        self.assertIn("jobHealth", metrics["regionDetails"]["AU"])
 
     def test_region_level_stale_alert_suppresses_per_retailer_spam(self):
         now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)
@@ -414,6 +426,14 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
 
         with patch.object(dashboard, "_rows", side_effect=fake_rows), patch.object(
             dashboard.engine, "begin", return_value=FakeContext()
+        ), patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-25T00:00:00Z", "modelCount": 500},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
         ):
             metrics = build_operations_dashboard_metrics(
                 now=now,
@@ -424,6 +444,96 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         alerts = metrics["alerts"]
         self.assertTrue(any(alert["category"] == "retailer_inventory" for alert in alerts))
         self.assertFalse(any(alert["category"] == "retailer_source" for alert in alerts))
+
+    def test_job_health_uses_job_state_failures_when_present(self):
+        now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)
+        query_results = {
+            RETAILER_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveRetailerRows": 100,
+                    "AvailableRetailerRows": 75,
+                    "LinkedModelRows": 90,
+                    "LinkedSizeRows": 60,
+                    "RetailerCount": 4,
+                    "LatestRetailerRefreshUtc": now - timedelta(hours=80),
+                },
+            ],
+            MFA_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveMfaRows": 50,
+                    "AvailableMfaRows": 25,
+                    "LinkedModelRows": 48,
+                    "LinkedSizeRows": 45,
+                    "BrandCount": 4,
+                    "LatestMfaRefreshUtc": now - timedelta(hours=96),
+                },
+            ],
+            RETAILER_HEALTH_QUERY: [],
+            MFA_HEALTH_QUERY: [],
+            SUPPORTED_COUNTS_QUERY: [],
+            SUPPORTED_COVERAGE_GAPS_QUERY: [],
+        }
+
+        class FakeContext:
+            def __enter__(self):
+                return object()
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        def fake_rows(query: str, params=None):
+            return query_results[query]
+
+        def fake_job_state(name: str):
+            if name == "inventory_au":
+                return {
+                    "status": "failed",
+                    "latest_status_timestamp_utc": "2026-06-25T16:30:25Z",
+                    "latest_success_timestamp_utc": "2026-06-22T16:30:00Z",
+                    "duration_seconds": 31.4,
+                }
+            if name == "mfa_au":
+                return {
+                    "status": "failed",
+                    "latest_status_timestamp_utc": "2026-06-25T17:00:28Z",
+                    "latest_success_timestamp_utc": "2026-06-22T17:00:00Z",
+                    "duration_seconds": 28.1,
+                }
+            return None
+
+        with patch.object(dashboard, "_rows", side_effect=fake_rows), patch.object(
+            dashboard.engine, "begin", return_value=FakeContext()
+        ), patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-24T03:00:00Z", "modelCount": 500},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            side_effect=fake_job_state,
+        ):
+            metrics = build_operations_dashboard_metrics(
+                now=now,
+                expectations_path=EXPECTATIONS_PATH,
+                linkage_report_builder=lambda _conn: {
+                    "regionBreakdown": [],
+                    "retailerBreakdown": [],
+                    "manufacturerBreakdown": [],
+                    "global": {},
+                    "supportedBrands": [],
+                },
+            )
+
+        au_jobs = metrics["jobHealthByRegion"]["AU"]["jobs"]
+        inventory_job = next(row for row in au_jobs if row["jobName"] == "quivrr-nightly-au-inventory")
+        mfa_job = next(row for row in au_jobs if row["jobName"] == "quivrr-mfr-availability")
+        self.assertEqual(inventory_job["status"], "red")
+        self.assertEqual(inventory_job["statusLabel"], "failed")
+        self.assertEqual(inventory_job["lastFailedUtc"], "2026-06-25T16:30:25Z")
+        self.assertEqual(mfa_job["status"], "red")
+        self.assertTrue(any(alert["category"] == "job_health" for alert in metrics["alerts"]))
 
 
 if __name__ == "__main__":

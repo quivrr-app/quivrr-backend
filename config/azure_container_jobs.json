@@ -1,0 +1,114 @@
+{
+  "jobs": [
+    {
+      "jobName": "quivrr-weekly-brand-catalogues",
+      "jobType": "catalogue",
+      "schedule": "0 3 * * 1",
+      "expectedRegion": "GLOBAL",
+      "regions": ["AU", "EU", "ID", "US"],
+      "stateFile": "weekly_brand_catalogues",
+      "structuredLogEventName": "catalogue_refresh_completed",
+      "freshnessHours": 168,
+      "metricSource": "catalogue"
+    },
+    {
+      "jobName": "quivrr-market-intelligence",
+      "jobType": "market_intelligence",
+      "schedule": "0 18 * * *",
+      "expectedRegion": "GLOBAL",
+      "regions": ["AU", "EU", "ID", "US"],
+      "stateFile": "market_intelligence_daily",
+      "structuredLogEventName": "market_intelligence_completed",
+      "freshnessHours": 48,
+      "metricSource": "job_state"
+    },
+    {
+      "jobName": "quivrr-nightly-au-inventory",
+      "jobType": "retailer_inventory",
+      "schedule": "30 16 * * *",
+      "expectedRegion": "AU",
+      "regions": ["AU"],
+      "stateFile": "inventory_au",
+      "structuredLogEventName": "inventory_refresh_completed",
+      "freshnessHours": 36,
+      "metricSource": "retailer_inventory"
+    },
+    {
+      "jobName": "quivrr-mfr-availability",
+      "jobType": "manufacturer_availability",
+      "schedule": "0 17 * * *",
+      "expectedRegion": "AU",
+      "regions": ["AU"],
+      "stateFile": "mfa_au",
+      "structuredLogEventName": "mfa_refresh_completed",
+      "freshnessHours": 72,
+      "metricSource": "manufacturer_inventory"
+    },
+    {
+      "jobName": "quivrr-nightly-eu-inventory",
+      "jobType": "retailer_inventory",
+      "schedule": "30 19 * * *",
+      "expectedRegion": "EU",
+      "regions": ["EU"],
+      "stateFile": "inventory_eu",
+      "structuredLogEventName": "inventory_refresh_completed",
+      "freshnessHours": 36,
+      "metricSource": "retailer_inventory"
+    },
+    {
+      "jobName": "quivrr-eu-mfr-availability",
+      "jobType": "manufacturer_availability",
+      "schedule": "30 20 * * *",
+      "expectedRegion": "EU",
+      "regions": ["EU"],
+      "stateFile": "mfa_eu",
+      "structuredLogEventName": "mfa_refresh_completed",
+      "freshnessHours": 72,
+      "metricSource": "manufacturer_inventory"
+    },
+    {
+      "jobName": "quivrr-nightly-id-inventory",
+      "jobType": "retailer_inventory",
+      "schedule": "30 20 * * *",
+      "expectedRegion": "ID",
+      "regions": ["ID"],
+      "stateFile": "inventory_id",
+      "structuredLogEventName": "inventory_refresh_completed",
+      "freshnessHours": 36,
+      "metricSource": "retailer_inventory"
+    },
+    {
+      "jobName": "quivrr-id-mfr-availability",
+      "jobType": "manufacturer_availability",
+      "schedule": "15 21 * * *",
+      "expectedRegion": "ID",
+      "regions": ["ID"],
+      "stateFile": "mfa_id",
+      "structuredLogEventName": "mfa_refresh_completed",
+      "freshnessHours": 72,
+      "metricSource": "manufacturer_inventory"
+    },
+    {
+      "jobName": "quivrr-nightly-us-inventory",
+      "jobType": "retailer_inventory",
+      "schedule": "30 21 * * *",
+      "expectedRegion": "US",
+      "regions": ["US"],
+      "stateFile": "inventory_us",
+      "structuredLogEventName": "inventory_refresh_completed",
+      "freshnessHours": 36,
+      "metricSource": "retailer_inventory"
+    },
+    {
+      "jobName": "quivrr-us-mfr-availability",
+      "jobType": "manufacturer_availability",
+      "schedule": "0 21 * * *",
+      "expectedRegion": "US",
+      "regions": ["US"],
+      "stateFile": "mfa_us",
+      "structuredLogEventName": "mfa_refresh_completed",
+      "freshnessHours": 72,
+      "metricSource": "manufacturer_inventory"
+    }
+  ]
+}

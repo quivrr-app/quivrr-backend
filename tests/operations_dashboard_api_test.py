@@ -37,6 +37,8 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "mfaHealth": [],
             "retailerHealth": [],
             "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
+            "jobHealth": [{"region": "AU", "jobName": "quivrr-nightly-au-inventory"}],
+            "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 1}, "jobs": [{"jobName": "quivrr-nightly-au-inventory"}]}},
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
@@ -63,6 +65,8 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertIn("mfaHealth", body)
         self.assertIn("retailerHealth", body)
         self.assertIn("retailerHealthByRegion", body)
+        self.assertIn("jobHealth", body)
+        self.assertIn("jobHealthByRegion", body)
         self.assertIn("inventoryCounts", body)
         self.assertIn("linkQuality", body)
         self.assertIn("coverageGaps", body)
@@ -79,6 +83,8 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "mfaHealth": [],
             "retailerHealth": [],
             "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
+            "jobHealth": [],
+            "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}},
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],

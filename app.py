@@ -389,6 +389,8 @@ def build_ops_dashboard_response(cache_status: str):
         "mfaHealth": metrics.get("mfaHealth", []),
         "retailerHealth": metrics.get("retailerHealth", []),
         "retailerHealthByRegion": metrics.get("retailerHealthByRegion", {}),
+        "jobHealth": metrics.get("jobHealth", []),
+        "jobHealthByRegion": metrics.get("jobHealthByRegion", {}),
         "inventoryCounts": metrics.get("inventoryCounts", []),
         "searchQuality": metrics.get("searchQuality", []),
         "coverageGaps": metrics.get("coverageGaps", []),
@@ -410,6 +412,8 @@ def build_ops_dashboard_response(cache_status: str):
         mfaHealthCount=len(response["mfaHealth"]),
         retailerHealthCount=len(response["retailerHealth"]),
         retailerRegionCount=len(response["retailerHealthByRegion"]),
+        jobHealthCount=len(response["jobHealth"]),
+        jobHealthRegionCount=len(response["jobHealthByRegion"]),
     )
     return response
 

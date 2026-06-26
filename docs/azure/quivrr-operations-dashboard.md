@@ -38,6 +38,8 @@ The builder emits JSON with these top-level sections:
 
 - `generatedAtUtc`
 - `version`
+- `jobHealth`
+- `jobHealthByRegion`
 - `regionOverview`
 - `mfaHealth`
 - `retailerHealth`
@@ -82,8 +84,10 @@ Live API note:
 - coverage gap rows are count-based in the live response rather than full per-model sample lists
 - heavy internal sections such as full expectation config and full retailer / manufacturer linkage breakdown stay in the local builder path rather than the browser payload
 - retailer health is now region-first for the portal:
-  - `retailerHealthByRegion.<REGION>.summary`
-  - `retailerHealthByRegion.<REGION>.retailers`
+- `retailerHealthByRegion.<REGION>.summary`
+- `retailerHealthByRegion.<REGION>.retailers`
+- `jobHealthByRegion.<REGION>.summary`
+- `jobHealthByRegion.<REGION>.jobs`
 - alerts are now grouped and trimmed:
   - `alerts` returns the top actionable items
   - `alertSummary.summary` returns grouped counts
@@ -100,6 +104,88 @@ Live API note:
   Expected and failing, stale beyond 48 hours, or unexpectedly zero-row.
 - `grey`
   Not applicable or intentionally not configured.
+
+## Job Health
+
+Sprint 6.1 adds job health visibility to the operations payload and portal.
+
+Current source model:
+
+- Azure job registry is maintained in `config/azure_container_jobs.json`
+- live freshness comes from Azure SQL-backed timestamps where available
+- local or runner-emitted state comes from `output/observability/job_state/*.json`
+
+Each job row includes:
+
+- `region`
+- `jobName`
+- `jobType`
+- `status`
+- `statusLabel`
+- `statusReason`
+- `schedule`
+- `expectedRegion`
+- `lastStartedUtc`
+- `lastSucceededUtc`
+- `lastFailedUtc`
+- `durationSeconds`
+- `rowsInserted`
+- `rowsUpdated`
+- `activeRowsAfter`
+- `structuredLogEventName`
+- `azureContainerAppJobName`
+
+Current configured job registry:
+
+- `quivrr-weekly-brand-catalogues`
+- `quivrr-market-intelligence`
+- `quivrr-nightly-au-inventory`
+- `quivrr-mfr-availability`
+- `quivrr-nightly-eu-inventory`
+- `quivrr-eu-mfr-availability`
+- `quivrr-nightly-id-inventory`
+- `quivrr-id-mfr-availability`
+- `quivrr-nightly-us-inventory`
+- `quivrr-us-mfr-availability`
+
+Region drill-in behaviour:
+
+- selected region shows only that region's jobs plus shared global jobs
+- mobile uses stacked cards
+- desktop uses a scrollable table
+
+## AU Job Recovery
+
+AU stale retailer and MFA status in late June 2026 mapped to real Azure job failures.
+
+Observed failure signature in Azure Container Apps logs:
+
+- `ModuleNotFoundError: No module named 'utils'`
+- failing entrypoints:
+  - `scripts/run_nightly_inventory_refresh.py`
+  - `scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py`
+
+Root cause:
+
+- AU runner entrypoints were invoked as script paths inside the shared job image
+- they did not insert the repository root into `sys.path`
+- the updated shared image therefore could not import `utils.structured_logging`
+
+Recovery pattern:
+
+1. Build and publish the shared `quivrr-inventory-job:latest` image with the runner bootstrap fix.
+2. Manually start:
+   - `az containerapp job start --resource-group quivrr-production-rg --name quivrr-nightly-au-inventory`
+   - `az containerapp job start --resource-group quivrr-production-rg --name quivrr-mfr-availability`
+3. Confirm fresh SQL timestamps for AU retailer and AU MFA rows.
+4. Reload `/operations` and confirm AU job health moves from red to green or yellow.
+
+Manual verification targets:
+
+- `ContainerAppConsoleLogs_CL`
+- `ContainerAppSystemLogs_CL`
+- `dbo.RetailerInventory` latest AU timestamps
+- `dbo.ManufacturerInventory` latest AU timestamps
 
 Special handling:
 

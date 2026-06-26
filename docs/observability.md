@@ -114,7 +114,34 @@ The dashboard combines:
 - Azure SQL current-state inventory and MFA aggregates
 - supported inventory linkage quality from `scripts/run_supported_inventory_linkage_backfill.py`
 - explicit regional source applicability from `config/region_source_expectations.json`
+- explicit Azure job registry from `config/azure_container_jobs.json`
 - Log Analytics workbook queries for search/runtime telemetry
+
+Job health additions:
+
+- top-level payload fields:
+  - `jobHealth`
+  - `jobHealthByRegion`
+- region drill-in now includes:
+  - `regionDetails.<REGION>.jobHealth.summary`
+  - `regionDetails.<REGION>.jobHealth.jobs`
+- job status is derived from:
+  - configured Azure Container App Job metadata captured in `config/azure_container_jobs.json`
+  - SQL freshness timestamps for retailer inventory, manufacturer inventory, and canonical catalogue where applicable
+  - runner-emitted `output/observability/job_state/*.json` when available
+
+Current job types:
+
+- `catalogue`
+- `market_intelligence`
+- `retailer_inventory`
+- `manufacturer_availability`
+
+Current scheduled-runner bootstrap hardening:
+
+- AU inventory, AU MFA, ID MFA, weekly catalogue, and observability email entrypoints now add the repository root to `sys.path`
+- this prevents shared job-image failures like:
+  - `ModuleNotFoundError: No module named 'utils'`
 
 Current dashboard semantics:
 
