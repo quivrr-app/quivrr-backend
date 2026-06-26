@@ -41,11 +41,13 @@ The builder emits JSON with these top-level sections:
 - `regionOverview`
 - `mfaHealth`
 - `retailerHealth`
+- `retailerHealthByRegion`
 - `inventoryCounts`
 - `searchQuality`
 - `coverageGaps`
 - `alerts`
 - `alertSummary`
+- `regionDetails`
 - `sourceExpectations`
 - `linkQuality`
 
@@ -79,6 +81,14 @@ Live API note:
 - the protected API now returns a summary-first payload sized for the MVP portal
 - coverage gap rows are count-based in the live response rather than full per-model sample lists
 - heavy internal sections such as full expectation config and full retailer / manufacturer linkage breakdown stay in the local builder path rather than the browser payload
+- retailer health is now region-first for the portal:
+  - `retailerHealthByRegion.<REGION>.summary`
+  - `retailerHealthByRegion.<REGION>.retailers`
+- alerts are now grouped and trimmed:
+  - `alerts` returns the top actionable items
+  - `alertSummary.summary` returns grouped counts
+  - `alertSummary.allAlerts` retains the full in-memory list for the current payload
+  - `regionDetails.<REGION>.alerts` supports the region drill-in view
 
 ## Status Colours
 
@@ -144,10 +154,12 @@ The current workbook and JSON metric builder support:
 For the live browser endpoint, the MVP favours:
 
 - regional status cards
+- grouped alert posture
 - inventory counts
 - search linkage summaries
 - count-based coverage gaps
 - MFA and retailer health matrices
+- region-first retailer operating tables
 - alert rollups
 
 The current SQL builder does **not** yet persist or aggregate historical search latency, 5xx, timeout, or thin-fallback counts. Those should come from Log Analytics workbook queries rather than SQL.

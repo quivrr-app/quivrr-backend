@@ -388,11 +388,13 @@ def build_ops_dashboard_response(cache_status: str):
         "regionOverview": metrics.get("regionOverview", []),
         "mfaHealth": metrics.get("mfaHealth", []),
         "retailerHealth": metrics.get("retailerHealth", []),
+        "retailerHealthByRegion": metrics.get("retailerHealthByRegion", {}),
         "inventoryCounts": metrics.get("inventoryCounts", []),
         "searchQuality": metrics.get("searchQuality", []),
         "coverageGaps": metrics.get("coverageGaps", []),
         "alerts": metrics.get("alerts", metrics.get("alertSummary", [])),
-        "alertSummary": metrics.get("alertSummary", metrics.get("alerts", [])),
+        "alertSummary": metrics.get("alertSummary", {}),
+        "regionDetails": metrics.get("regionDetails", {}),
         "linkQuality": {
             "global": metrics.get("linkQuality", {}).get("global", {}),
             "regionBreakdown": metrics.get("linkQuality", {}).get("regionBreakdown", []),
@@ -407,6 +409,7 @@ def build_ops_dashboard_response(cache_status: str):
         alertCount=len(response["alerts"]),
         mfaHealthCount=len(response["mfaHealth"]),
         retailerHealthCount=len(response["retailerHealth"]),
+        retailerRegionCount=len(response["retailerHealthByRegion"]),
     )
     return response
 

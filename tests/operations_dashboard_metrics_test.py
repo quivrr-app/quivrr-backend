@@ -205,9 +205,9 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                 {
                     "RegionCode": "AU",
                     "SupportedModelCount": 2,
-                    "RetailerModelCount": 1,
+                    "RetailerModelCount": 2,
                     "MfaModelCount": 1,
-                    "StockedAnywhereModelCount": 1,
+                    "StockedAnywhereModelCount": 2,
                 },
                 {
                     "RegionCode": "US",
@@ -291,15 +291,139 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(metrics["version"], dashboard.DASHBOARD_VERSION)
         self.assertEqual(metrics["regionOverview"][0]["region"], "AU")
         self.assertEqual(metrics["regionOverview"][0]["statusColor"], "green")
+        self.assertEqual(metrics["regionOverview"][0]["coverageQualityStatus"], "green")
         self.assertEqual(metrics["inventoryCounts"][0]["activeRetailerInventoryRows"], 100)
         self.assertEqual(metrics["inventoryCounts"][0]["newSupportedBoards"], 85)
         self.assertIn("alerts", metrics)
+        self.assertIn("retailerHealthByRegion", metrics)
+        self.assertIn("regionDetails", metrics)
         au_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "AU")
         us_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "US")
-        self.assertEqual(au_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 1)
+        self.assertEqual(au_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 0)
         self.assertEqual(au_gaps["modelsAvailableOnlyViaMfa"]["count"], 0)
         self.assertEqual(us_gaps["modelsAvailableOnlyViaRetailers"]["count"], 1)
         self.assertEqual(us_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 0)
+        self.assertEqual(metrics["retailerHealthByRegion"]["AU"]["summary"]["healthyRetailers"], 1)
+        self.assertEqual(metrics["retailerHealthByRegion"]["US"]["summary"]["configuredRetailers"], 20)
+        self.assertIn("summary", metrics["alertSummary"])
+        self.assertIn("topAlerts", metrics["alertSummary"])
+        self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["activeRows"], 100)
+
+    def test_region_level_stale_alert_suppresses_per_retailer_spam(self):
+        now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)
+        query_results = {
+            RETAILER_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveRetailerRows": 100,
+                    "AvailableRetailerRows": 75,
+                    "LinkedModelRows": 90,
+                    "LinkedSizeRows": 60,
+                    "RetailerCount": 2,
+                    "LatestRetailerRefreshUtc": now - timedelta(hours=72),
+                },
+            ],
+            MFA_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveMfaRows": 50,
+                    "AvailableMfaRows": 25,
+                    "LinkedModelRows": 48,
+                    "LinkedSizeRows": 45,
+                    "BrandCount": 4,
+                    "LatestMfaRefreshUtc": now - timedelta(hours=2),
+                },
+            ],
+            RETAILER_HEALTH_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "RetailerName": "Aloha Surf Manly",
+                    "ActiveRows": 60,
+                    "AvailableRows": 45,
+                    "LinkedModelRows": 50,
+                    "LinkedSizeRows": 30,
+                    "LatestRefreshUtc": now - timedelta(hours=72),
+                },
+                {
+                    "RegionCode": "AU",
+                    "RetailerName": "Another AU Retailer",
+                    "ActiveRows": 40,
+                    "AvailableRows": 30,
+                    "LinkedModelRows": 35,
+                    "LinkedSizeRows": 20,
+                    "LatestRefreshUtc": now - timedelta(hours=72),
+                },
+            ],
+            MFA_HEALTH_QUERY: [],
+            SUPPORTED_COUNTS_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "SupportedRows": 90,
+                    "UnsupportedRows": 10,
+                    "UsedSupportedRows": 5,
+                },
+            ],
+            SUPPORTED_COVERAGE_GAPS_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "SupportedModelCount": 10,
+                    "RetailerModelCount": 8,
+                    "MfaModelCount": 7,
+                    "StockedAnywhereModelCount": 9,
+                },
+            ],
+        }
+
+        class FakeContext:
+            def __enter__(self):
+                return object()
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        linkage_report = {
+            "regionBreakdown": [
+                {
+                    "regionCode": "AU",
+                    "linkedModelPctAfter": 90.0,
+                    "linkedSizeFamilyPctAfter": 55.0,
+                    "linkedSizePctAfter": 30.0,
+                }
+            ],
+            "retailerBreakdown": [
+                {
+                    "regionCode": "AU",
+                    "name": "Aloha Surf Manly",
+                    "linkedModelPctAfter": 80.0,
+                    "linkedSizeFamilyPctAfter": 45.0,
+                    "linkedSizePctAfter": 20.0,
+                },
+                {
+                    "regionCode": "AU",
+                    "name": "Another AU Retailer",
+                    "linkedModelPctAfter": 75.0,
+                    "linkedSizeFamilyPctAfter": 40.0,
+                    "linkedSizePctAfter": 15.0,
+                },
+            ],
+            "manufacturerBreakdown": [],
+        }
+
+        def fake_rows(query: str, params=None):
+            return query_results[query]
+
+        with patch.object(dashboard, "_rows", side_effect=fake_rows), patch.object(
+            dashboard.engine, "begin", return_value=FakeContext()
+        ):
+            metrics = build_operations_dashboard_metrics(
+                now=now,
+                expectations_path=EXPECTATIONS_PATH,
+                linkage_report_builder=lambda _conn: linkage_report,
+            )
+
+        alerts = metrics["alerts"]
+        self.assertTrue(any(alert["category"] == "retailer_inventory" for alert in alerts))
+        self.assertFalse(any(alert["category"] == "retailer_source" for alert in alerts))
 
 
 if __name__ == "__main__":

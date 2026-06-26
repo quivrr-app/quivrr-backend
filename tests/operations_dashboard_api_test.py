@@ -36,10 +36,13 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "regionOverview": [],
             "mfaHealth": [],
             "retailerHealth": [],
+            "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
             "alerts": [{"severity": "red"}],
+            "alertSummary": {"summary": {"critical": 1}},
+            "regionDetails": {"AU": {}},
         }
 
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
@@ -59,10 +62,13 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertEqual(body["regions"], ["AU", "EU", "ID", "US"])
         self.assertIn("mfaHealth", body)
         self.assertIn("retailerHealth", body)
+        self.assertIn("retailerHealthByRegion", body)
         self.assertIn("inventoryCounts", body)
         self.assertIn("linkQuality", body)
         self.assertIn("coverageGaps", body)
         self.assertIn("alerts", body)
+        self.assertIn("alertSummary", body)
+        self.assertIn("regionDetails", body)
 
     def test_ops_dashboard_cache_hits_after_first_request(self):
         payload = {
@@ -72,10 +78,13 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "regionOverview": [],
             "mfaHealth": [],
             "retailerHealth": [],
+            "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}},
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
             "alerts": [],
+            "alertSummary": {"summary": {"critical": 0}},
+            "regionDetails": {"AU": {}},
         }
 
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(

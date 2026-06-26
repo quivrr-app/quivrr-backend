@@ -57,6 +57,11 @@ STATUS_PRIORITY = {
     "green": 1,
     "grey": 0,
 }
+SEVERITY_PRIORITY = {
+    "critical": 3,
+    "warning": 2,
+    "info": 1,
+}
 
 
 RETAILER_REGION_QUERY = """
@@ -384,6 +389,38 @@ def combine_status_colors(*colors: str) -> str:
     return selected
 
 
+def _average_pct(values: list[float | None]) -> float | None:
+    numeric = [float(value) for value in values if value is not None]
+    if not numeric:
+        return None
+    return round(sum(numeric) / len(numeric), 2)
+
+
+def _status_sort_value(color: str) -> tuple[int, int]:
+    normalized = str(color or "grey").lower()
+    return (-STATUS_PRIORITY.get(normalized, -1), 0)
+
+
+def _alert_severity_from_status(color: str) -> str:
+    normalized = str(color or "").lower()
+    if normalized == "red":
+        return "critical"
+    if normalized == "yellow":
+        return "warning"
+    return "info"
+
+
+def _coverage_status(no_stock_count: int, supported_total: int) -> StatusResult:
+    if supported_total <= 0:
+        return StatusResult("grey", "not_applicable", "Supported coverage cannot be assessed without canonical coverage.")
+    no_stock_pct = pct(no_stock_count, supported_total)
+    if no_stock_pct <= 20:
+        return StatusResult("green", "healthy", "Most supported canonical models have stock in this region.")
+    if no_stock_pct <= 45:
+        return StatusResult("yellow", "degraded", "A meaningful share of supported canonical models have no stock in this region.")
+    return StatusResult("red", "degraded", "Too many supported canonical models have no stock in this region.")
+
+
 def _rows(query: str, params: dict[str, Any] | None = None) -> list[Any]:
     return execute_with_retry(text(query), params or {})
 
@@ -579,6 +616,79 @@ def _build_retailer_matrix(
     return matrix
 
 
+def _build_retailer_health_by_region(
+    regions: list[str],
+    expectations: dict[str, Any],
+    retailer_matrix: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    by_region: dict[str, dict[str, Any]] = {}
+    for region in regions:
+        configured_retailers = [
+            retailer_name
+            for retailer_name, config in expectations.get("retailers", {}).items()
+            if config.get(region) not in {None, "not_applicable"}
+        ]
+        region_rows: list[dict[str, Any]] = []
+        for retailer in retailer_matrix:
+            cell = dict(retailer["regions"].get(region, {}))
+            applicability = str(cell.get("applicability") or "not_applicable")
+            if applicability == "not_applicable":
+                continue
+            row = {
+                "retailer": retailer["retailer"],
+                "statusColor": cell.get("statusColor", "grey"),
+                "statusLabel": cell.get("statusLabel", "not_applicable"),
+                "notes": cell.get("reason"),
+                "activeRows": int(cell.get("activeRowCount", 0)),
+                "availableRows": int(cell.get("availableBoardCount", 0)),
+                "lastUpdatedUtc": cell.get("lastSuccessfulUpdateUtc"),
+                "modelLinkPct": cell.get("linkedModelPct"),
+                "sizeFamilyLinkPct": cell.get("canonicalSizeFamilyPct"),
+                "exactSizeLinkPct": cell.get("exactBoardSizePct"),
+                "applicability": applicability,
+                "isLowLinkage": any(
+                    value is not None and float(value) < 60.0
+                    for value in (
+                        cell.get("linkedModelPct"),
+                        cell.get("canonicalSizeFamilyPct"),
+                        cell.get("exactBoardSizePct"),
+                    )
+                ),
+            }
+            region_rows.append(row)
+
+        sorted_rows = sorted(
+            region_rows,
+            key=lambda row: (
+                -STATUS_PRIORITY.get(str(row.get("statusColor") or "grey").lower(), -1),
+                -int(row.get("activeRows", 0)),
+                str(row.get("retailer") or ""),
+            ),
+        )
+        status_counts = {
+            "healthy": sum(1 for row in sorted_rows if row["statusColor"] == "green"),
+            "yellow": sum(1 for row in sorted_rows if row["statusColor"] == "yellow"),
+            "red": sum(1 for row in sorted_rows if row["statusColor"] == "red"),
+            "grey": sum(1 for row in sorted_rows if row["statusColor"] == "grey"),
+        }
+        by_region[region] = {
+            "summary": {
+                "configuredRetailers": len(configured_retailers),
+                "healthyRetailers": status_counts["healthy"],
+                "staleRetailers": status_counts["yellow"],
+                "failingRetailers": status_counts["red"],
+                "notApplicableRetailers": status_counts["grey"],
+                "activeRows": sum(row["activeRows"] for row in sorted_rows),
+                "availableRows": sum(row["availableRows"] for row in sorted_rows),
+                "averageModelLinkagePct": _average_pct([row["modelLinkPct"] for row in sorted_rows]),
+                "averageSizeFamilyLinkagePct": _average_pct([row["sizeFamilyLinkPct"] for row in sorted_rows]),
+                "averageExactSizeLinkagePct": _average_pct([row["exactSizeLinkPct"] for row in sorted_rows]),
+            },
+            "retailers": sorted_rows,
+        }
+    return by_region
+
+
 def _iso(value: Any) -> str | None:
     parsed = _parse_timestamp(value)
     if not parsed:
@@ -599,6 +709,7 @@ def _build_region_overview(
     retailer_region_rows: dict[str, dict[str, Any]],
     mfa_region_rows: dict[str, dict[str, Any]],
     linkage_report: dict[str, Any],
+    coverage_gaps_by_region: dict[str, dict[str, Any]],
     now: datetime,
 ) -> list[dict[str, Any]]:
     region_linkage = _region_linkage_lookup(linkage_report)
@@ -624,13 +735,20 @@ def _build_region_overview(
             linkage.get("linkedSizeFamilyPctAfter"),
             linkage.get("linkedSizePctAfter"),
         )
-        region_color = combine_status_colors(retailer_status.color, mfa_status.color, search_status.color)
+        coverage_row = coverage_gaps_by_region.get(region, {})
+        coverage_no_stock = int(
+            coverage_row.get("supportedCanonicalModelsNoStockAnywhere", {}).get("count", 0)
+        )
+        coverage_supported_total = int(coverage_row.get("supportedModelCount", 0))
+        coverage_status = _coverage_status(coverage_no_stock, coverage_supported_total)
+        region_color = combine_status_colors(retailer_status.color, mfa_status.color, search_status.color, coverage_status.color)
         overview.append(
             {
                 "region": region,
                 "displayName": expectations.get("regions", {}).get(region, {}).get("displayName", region),
                 "statusColor": region_color,
                 "regionStatus": region_color,
+                "overallStatus": region_color,
                 "lastRetailerInventoryRefreshUtc": _iso(retailer.get("LatestRetailerRefreshUtc")),
                 "lastMfaRefreshUtc": _iso(manufacturer.get("LatestMfaRefreshUtc")),
                 "activeRetailerBoardCount": int(retailer.get("ActiveRetailerRows", 0)),
@@ -644,6 +762,10 @@ def _build_region_overview(
                 "retailerReason": retailer_status.reason,
                 "mfaStatus": mfa_status.color,
                 "mfaReason": mfa_status.reason,
+                "operationalHealthStatus": combine_status_colors(retailer_status.color, mfa_status.color),
+                "dataFreshnessStatus": combine_status_colors(retailer_status.color, mfa_status.color),
+                "coverageQualityStatus": coverage_status.color,
+                "coverageQualityReason": coverage_status.reason,
             }
         )
     return sorted(overview, key=region_sort_key)
@@ -723,6 +845,7 @@ def _build_coverage_gaps(
         supported_by_region.append(
             {
                 "region": region,
+                "supportedModelCount": supported_total,
                 "supportedCanonicalModelsNoActiveRetailerStock": {
                     "count": max(0, supported_total - retailer_models),
                     "sample": [],
@@ -753,64 +876,160 @@ def _build_coverage_gaps(
 
 def _build_alert_summary(
     region_overview: list[dict[str, Any]],
-    retailer_matrix: list[dict[str, Any]],
+    retailer_health_by_region: dict[str, dict[str, Any]],
     mfa_matrix: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+) -> dict[str, Any]:
     alerts: list[dict[str, Any]] = []
-    for region in region_overview:
-        if region["retailerStatus"] in {"yellow", "red"}:
-            alerts.append(
-                {
-                    "category": "retailer_inventory",
-                    "severity": region["retailerStatus"],
-                    "region": region["region"],
-                    "message": region["retailerReason"],
-                }
-            )
-        if region["mfaStatus"] in {"yellow", "red"}:
-            alerts.append(
-                {
-                    "category": "manufacturer_availability",
-                    "severity": region["mfaStatus"],
-                    "region": region["region"],
-                    "message": region["mfaReason"],
-                }
-            )
-        if region["searchHealthStatus"] in {"yellow", "red"}:
-            alerts.append(
-                {
-                    "category": "search_quality",
-                    "severity": region["searchHealthStatus"],
-                    "region": region["region"],
-                    "message": region["searchHealthReason"],
-                }
-            )
+    alerts_by_region: dict[str, list[dict[str, Any]]] = {region["region"]: [] for region in region_overview}
+    region_lookup = {region["region"]: region for region in region_overview}
 
-    for retailer in retailer_matrix:
-        for region, cell in retailer["regions"].items():
-            if cell["statusColor"] == "red":
-                alerts.append(
-                    {
-                        "category": "retailer_source",
-                        "severity": "red",
-                        "region": region,
-                        "source": retailer["retailer"],
-                        "message": cell["reason"],
-                    }
-                )
+    for region in region_overview:
+        region_code = region["region"]
+        retailer_summary = retailer_health_by_region.get(region_code, {}).get("summary", {})
+        if region["retailerStatus"] in {"yellow", "red"}:
+            alert = {
+                "category": "retailer_inventory",
+                "alertGroup": "stale_sources",
+                "severity": _alert_severity_from_status(region["retailerStatus"]),
+                "statusColor": region["retailerStatus"],
+                "region": region_code,
+                "title": f"{region_code} retailer inventory needs attention",
+                "message": region["retailerReason"],
+                "affectedRetailers": retailer_summary.get("configuredRetailers", 0),
+            }
+            alerts.append(alert)
+            alerts_by_region[region_code].append(alert)
+        if region["mfaStatus"] in {"yellow", "red"}:
+            alert = {
+                "category": "manufacturer_availability",
+                "alertGroup": "stale_sources",
+                "severity": _alert_severity_from_status(region["mfaStatus"]),
+                "statusColor": region["mfaStatus"],
+                "region": region_code,
+                "title": f"{region_code} manufacturer availability needs attention",
+                "message": region["mfaReason"],
+            }
+            alerts.append(alert)
+            alerts_by_region[region_code].append(alert)
+        if region["searchHealthStatus"] in {"yellow", "red"}:
+            alert = {
+                "category": "search_quality",
+                "alertGroup": "linkage_warnings",
+                "severity": _alert_severity_from_status(region["searchHealthStatus"]),
+                "statusColor": region["searchHealthStatus"],
+                "region": region_code,
+                "title": f"{region_code} search quality below target",
+                "message": region["searchHealthReason"],
+            }
+            alerts.append(alert)
+            alerts_by_region[region_code].append(alert)
+        if region.get("coverageQualityStatus") in {"yellow", "red"}:
+            alert = {
+                "category": "coverage_quality",
+                "alertGroup": "linkage_warnings",
+                "severity": _alert_severity_from_status(region["coverageQualityStatus"]),
+                "statusColor": region["coverageQualityStatus"],
+                "region": region_code,
+                "title": f"{region_code} coverage quality needs attention",
+                "message": region.get("coverageQualityReason"),
+            }
+            alerts.append(alert)
+            alerts_by_region[region_code].append(alert)
+
+    for region_code, payload in retailer_health_by_region.items():
+        region_status = region_lookup.get(region_code, {})
+        if region_status.get("retailerStatus") in {"yellow", "red"}:
+            continue
+        for retailer in payload.get("retailers", []):
+            if retailer["statusColor"] == "red":
+                alert = {
+                    "category": "retailer_source",
+                    "alertGroup": "critical",
+                    "severity": "critical",
+                    "statusColor": "red",
+                    "region": region_code,
+                    "source": retailer["retailer"],
+                    "title": f"{retailer['retailer']} failing in {region_code}",
+                    "message": retailer["notes"],
+                }
+                alerts.append(alert)
+                alerts_by_region.setdefault(region_code, []).append(alert)
+
     for brand in mfa_matrix:
-        for region, cell in brand["regions"].items():
+        for region_code, cell in brand["regions"].items():
+            if region_lookup.get(region_code, {}).get("mfaStatus") in {"yellow", "red"}:
+                continue
             if cell["statusColor"] == "red":
-                alerts.append(
-                    {
-                        "category": "mfa_source",
-                        "severity": "red",
-                        "region": region,
-                        "source": brand["brand"],
-                        "message": cell["reason"],
-                    }
-                )
-    return alerts
+                alert = {
+                    "category": "mfa_source",
+                    "alertGroup": "critical",
+                    "severity": "critical",
+                    "statusColor": "red",
+                    "region": region_code,
+                    "source": brand["brand"],
+                    "title": f"{brand['brand']} failing in {region_code}",
+                    "message": cell["reason"],
+                }
+                alerts.append(alert)
+                alerts_by_region.setdefault(region_code, []).append(alert)
+
+    grouped_counts = {
+        "critical": sum(1 for alert in alerts if alert["severity"] == "critical"),
+        "warnings": sum(1 for alert in alerts if alert["severity"] == "warning"),
+        "staleSources": sum(1 for alert in alerts if alert["alertGroup"] == "stale_sources"),
+        "linkageWarnings": sum(1 for alert in alerts if alert["alertGroup"] == "linkage_warnings"),
+    }
+    sorted_alerts = sorted(
+        alerts,
+        key=lambda alert: (
+            -SEVERITY_PRIORITY.get(alert["severity"], -1),
+            -STATUS_PRIORITY.get(str(alert.get("statusColor") or "grey").lower(), -1),
+            str(alert.get("region") or ""),
+            str(alert.get("source") or alert.get("title") or ""),
+        ),
+    )
+    return {
+        "summary": grouped_counts,
+        "topAlerts": sorted_alerts[:10],
+        "allAlerts": sorted_alerts,
+        "byRegion": {region: sorted(items, key=lambda alert: (-SEVERITY_PRIORITY.get(alert["severity"], -1), str(alert.get("title") or ""))) for region, items in alerts_by_region.items()},
+    }
+
+
+def _build_region_details(
+    regions: list[str],
+    region_overview: list[dict[str, Any]],
+    inventory_counts: list[dict[str, Any]],
+    search_quality: list[dict[str, Any]],
+    coverage_gaps: list[dict[str, Any]],
+    retailer_health_by_region: dict[str, dict[str, Any]],
+    mfa_matrix: list[dict[str, Any]],
+    alert_summary: dict[str, Any],
+) -> dict[str, Any]:
+    overview_lookup = {row["region"]: row for row in region_overview}
+    inventory_lookup = {row["region"]: row for row in inventory_counts}
+    search_lookup = {row["region"]: row for row in search_quality}
+    coverage_lookup = {row["region"]: row for row in coverage_gaps}
+    region_details: dict[str, Any] = {}
+    for region in regions:
+        region_details[region] = {
+            "region": region,
+            "overview": overview_lookup.get(region, {}),
+            "inventoryCounts": inventory_lookup.get(region, {}),
+            "searchQuality": search_lookup.get(region, {}),
+            "coverageGaps": coverage_lookup.get(region, {}),
+            "retailerHealth": retailer_health_by_region.get(region, {"summary": {}, "retailers": []}),
+            "mfaHealth": [
+                {
+                    "brand": item["brand"],
+                    **item["regions"].get(region, {}),
+                }
+                for item in mfa_matrix
+                if item["regions"].get(region, {}).get("applicability") != "not_applicable"
+            ],
+            "alerts": alert_summary.get("byRegion", {}).get(region, []),
+        }
+    return region_details
 
 
 def build_operations_dashboard_metrics(
@@ -847,12 +1066,24 @@ def build_operations_dashboard_metrics(
         linkage_report = linkage_report_builder(conn)
 
     retailer_matrix = _build_retailer_matrix(regions, expectations, retailer_health_rows, linkage_report, now)
+    retailer_health_by_region = _build_retailer_health_by_region(regions, expectations, retailer_matrix)
     mfa_matrix = _build_mfa_matrix(regions, expectations, mfa_health_rows, linkage_report, now)
-    region_overview = _build_region_overview(regions, expectations, retailer_region_rows, mfa_region_rows, linkage_report, now)
+    coverage_gaps = _build_coverage_gaps(regions, supported_gap_rows)
+    coverage_gaps_by_region = {row["region"]: row for row in coverage_gaps}
+    region_overview = _build_region_overview(regions, expectations, retailer_region_rows, mfa_region_rows, linkage_report, coverage_gaps_by_region, now)
     inventory_counts = _build_inventory_counts(regions, retailer_region_rows, mfa_region_rows, supported_counts)
     search_quality = _build_search_quality(regions, linkage_report)
-    coverage_gaps = _build_coverage_gaps(regions, supported_gap_rows)
-    alert_summary = _build_alert_summary(region_overview, retailer_matrix, mfa_matrix)
+    alert_summary = _build_alert_summary(region_overview, retailer_health_by_region, mfa_matrix)
+    region_details = _build_region_details(
+        regions,
+        region_overview,
+        inventory_counts,
+        search_quality,
+        coverage_gaps,
+        retailer_health_by_region,
+        mfa_matrix,
+        alert_summary,
+    )
 
     return {
         "generatedAtUtc": generated_at_utc,
@@ -862,11 +1093,13 @@ def build_operations_dashboard_metrics(
         "regionOverview": region_overview,
         "mfaHealth": mfa_matrix,
         "retailerHealth": retailer_matrix,
+        "retailerHealthByRegion": retailer_health_by_region,
         "inventoryCounts": inventory_counts,
         "searchQuality": search_quality,
         "coverageGaps": coverage_gaps,
-        "alerts": alert_summary,
+        "alerts": alert_summary["topAlerts"],
         "alertSummary": alert_summary,
+        "regionDetails": region_details,
         "sourceExpectations": expectations,
         "linkQuality": linkage_report,
     }
