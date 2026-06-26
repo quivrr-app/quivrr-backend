@@ -9,13 +9,14 @@ from typing import Any, Callable
 from sqlalchemy import text
 
 from market_intelligence.db import engine, execute_with_retry
+from scripts import run_supported_inventory_linkage_backfill as supported_linkage_backfill
 from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
 
 
 EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
 JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
 SERVICE_NAME = "operations_dashboard"
-DASHBOARD_VERSION = "sprint6_1_job_health_v1"
+DASHBOARD_VERSION = "sprint6_2_metrics_truth_v1"
 SUPPORTED_BRAND_SET = {
     "Album",
     "Channel Islands",
@@ -163,53 +164,20 @@ WHERE bm.IsActive = 1
   AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
 """
 
-SUPPORTED_COVERAGE_GAPS_QUERY = f"""
-WITH SupportedModels AS (
-    SELECT bm.BoardModelId
-    FROM dbo.BoardModels bm
-    INNER JOIN dbo.Brands b
-        ON b.BrandId = bm.BrandId
-    WHERE bm.IsActive = 1
-      AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
-),
-RetailerActive AS (
-    SELECT DISTINCT
-        COALESCE(NULLIF(LTRIM(RTRIM(ri.RegionCode)), ''), '<NULL>') AS RegionCode,
-        ri.BoardModelId
-    FROM dbo.RetailerInventory ri
-    INNER JOIN SupportedModels sm
-        ON sm.BoardModelId = ri.BoardModelId
-    WHERE ri.IsActive = 1
-      AND ri.BoardModelId IS NOT NULL
-),
-MfaActive AS (
-    SELECT DISTINCT
-        COALESCE(NULLIF(LTRIM(RTRIM(mi.RegionCode)), ''), '<NULL>') AS RegionCode,
-        mi.BoardModelId
-    FROM dbo.ManufacturerInventory mi
-    INNER JOIN SupportedModels sm
-        ON sm.BoardModelId = mi.BoardModelId
-    WHERE COALESCE(mi.IsActive, 1) = 1
-      AND mi.BoardModelId IS NOT NULL
-),
-Regions AS (
-    SELECT RegionCode FROM RetailerActive
-    UNION
-    SELECT RegionCode FROM MfaActive
-)
-SELECT
-    r.RegionCode,
-    (SELECT COUNT(*) FROM SupportedModels) AS SupportedModelCount,
-    COUNT(DISTINCT ra.BoardModelId) AS RetailerModelCount,
-    COUNT(DISTINCT ma.BoardModelId) AS MfaModelCount,
-    COUNT(DISTINCT CASE WHEN ra.BoardModelId IS NOT NULL OR ma.BoardModelId IS NOT NULL THEN COALESCE(ra.BoardModelId, ma.BoardModelId) END) AS StockedAnywhereModelCount
-FROM Regions r
-LEFT JOIN RetailerActive ra
-    ON ra.RegionCode = r.RegionCode
-LEFT JOIN MfaActive ma
-    ON ma.RegionCode = r.RegionCode
-   AND ma.BoardModelId = ra.BoardModelId
-GROUP BY r.RegionCode
+SUPPORTED_COVERAGE_GAPS_QUERY = "-- coverage gaps now derive from supported linkage truth"
+
+SUPPORTED_MFA_MODEL_IDS_QUERY = f"""
+SELECT DISTINCT
+    COALESCE(NULLIF(LTRIM(RTRIM(mi.RegionCode)), ''), '<NULL>') AS RegionCode,
+    mi.BoardModelId
+FROM dbo.ManufacturerInventory mi
+INNER JOIN dbo.BoardModels bm
+    ON bm.BoardModelId = mi.BoardModelId
+INNER JOIN dbo.Brands b
+    ON b.BrandId = bm.BrandId
+WHERE COALESCE(mi.IsActive, 1) = 1
+  AND mi.BoardModelId IS NOT NULL
+  AND b.BrandName IN ({SUPPORTED_BRANDS_SQL_LIST})
 """
 
 SUPPORTED_RETAILER_LINKAGE_REGION_QUERY = f"""
@@ -384,13 +352,13 @@ def classify_search_health(
     canonical_size_family_link_pct: float | None,
     exact_board_size_link_pct: float | None,
 ) -> StatusResult:
-    if supported_model_link_pct is None or canonical_size_family_link_pct is None or exact_board_size_link_pct is None:
-        return StatusResult("yellow", "partial", "Search telemetry is incomplete; using current linkage metrics only.")
-    if supported_model_link_pct >= 75 and canonical_size_family_link_pct >= 45 and exact_board_size_link_pct >= 25:
-        return StatusResult("green", "healthy", "Regional linkage quality is within current operating thresholds.")
-    if supported_model_link_pct >= 60 and canonical_size_family_link_pct >= 30 and exact_board_size_link_pct >= 15:
-        return StatusResult("yellow", "degraded", "Regional linkage quality is usable but below preferred targets.")
-    return StatusResult("red", "degraded", "Regional linkage quality is below safe operating thresholds.")
+    if supported_model_link_pct is None or canonical_size_family_link_pct is None:
+        return StatusResult("yellow", "partial", "Search quality metrics are incomplete; linkage truth is not yet available for this region.")
+    if supported_model_link_pct >= 85 and canonical_size_family_link_pct >= 60:
+        return StatusResult("green", "healthy", "Model and size-family linkage are within preferred operating thresholds.")
+    if supported_model_link_pct >= 75 and canonical_size_family_link_pct >= 40:
+        return StatusResult("yellow", "degraded", "Model and size-family linkage are usable but below preferred targets.")
+    return StatusResult("red", "degraded", "Model or size-family linkage is below the safe operating threshold.")
 
 
 def combine_status_colors(*colors: str) -> str:
@@ -409,6 +377,15 @@ def _average_pct(values: list[float | None]) -> float | None:
     if not numeric:
         return None
     return round(sum(numeric) / len(numeric), 2)
+
+
+def _safe_pct(value: Any) -> float | None:
+    if value is None:
+        return None
+    try:
+        return round(float(value), 2)
+    except (TypeError, ValueError):
+        return None
 
 
 def _status_sort_value(color: str) -> tuple[int, int]:
@@ -609,9 +586,9 @@ def _coverage_status(no_stock_count: int, supported_total: int) -> StatusResult:
     if supported_total <= 0:
         return StatusResult("grey", "not_applicable", "Supported coverage cannot be assessed without canonical coverage.")
     no_stock_pct = pct(no_stock_count, supported_total)
-    if no_stock_pct <= 20:
+    if no_stock_pct < 20:
         return StatusResult("green", "healthy", "Most supported canonical models have stock in this region.")
-    if no_stock_pct <= 45:
+    if no_stock_pct <= 40:
         return StatusResult("yellow", "degraded", "A meaningful share of supported canonical models have no stock in this region.")
     return StatusResult("red", "degraded", "Too many supported canonical models have no stock in this region.")
 
@@ -666,64 +643,7 @@ def _row_field(row: Any, field: str, default: Any = None) -> Any:
 
 
 def _build_supported_linkage_snapshot(conn: Any) -> dict[str, Any]:
-    def rows(query: str) -> list[Any]:
-        return conn.execute(text(query)).fetchall()
-
-    def breakdown(items: list[Any], *, include_name: bool) -> list[dict[str, Any]]:
-        output = []
-        for row in items:
-            supported_rows = int(_row_field(row, "SupportedRows", 0))
-            linked_model_rows = int(_row_field(row, "LinkedModelRowsAfter", 0))
-            linked_size_family_rows = int(_row_field(row, "LinkedSizeFamilyRowsAfter", 0))
-            linked_size_rows = int(_row_field(row, "LinkedSizeRowsAfter", 0))
-            item = {
-                "regionCode": str(_row_field(row, "RegionCode", "<NULL>")).upper(),
-                "supportedRows": supported_rows,
-                "linkedModelRowsAfter": linked_model_rows,
-                "linkedSizeFamilyRowsAfter": linked_size_family_rows,
-                "linkedSizeRowsAfter": linked_size_rows,
-                "linkedModelPctAfter": pct(linked_model_rows, supported_rows),
-                "linkedSizeFamilyPctAfter": pct(linked_size_family_rows, supported_rows),
-                "linkedSizePctAfter": pct(linked_size_rows, supported_rows),
-            }
-            if include_name:
-                item["name"] = str(_row_field(row, "Name", ""))
-            output.append(item)
-        return output
-
-    retailer_region = breakdown(
-        rows(SUPPORTED_RETAILER_LINKAGE_REGION_QUERY),
-        include_name=False,
-    )
-    retailer_breakdown = breakdown(
-        rows(SUPPORTED_RETAILER_LINKAGE_RETAILER_QUERY),
-        include_name=True,
-    )
-    manufacturer_breakdown = breakdown(
-        rows(SUPPORTED_MFA_LINKAGE_BRAND_QUERY),
-        include_name=True,
-    )
-
-    global_supported_rows = sum(item["supportedRows"] for item in retailer_region)
-    global_linked_model_rows = sum(item["linkedModelRowsAfter"] for item in retailer_region)
-    global_linked_size_family_rows = sum(item["linkedSizeFamilyRowsAfter"] for item in retailer_region)
-    global_linked_size_rows = sum(item["linkedSizeRowsAfter"] for item in retailer_region)
-
-    return {
-        "supportedBrands": sorted(SUPPORTED_BRAND_SET),
-        "global": {
-            "supportedRows": global_supported_rows,
-            "linkedModelRowsAfter": global_linked_model_rows,
-            "linkedSizeFamilyRowsAfter": global_linked_size_family_rows,
-            "linkedSizeRowsAfter": global_linked_size_rows,
-            "linkedModelPctAfter": pct(global_linked_model_rows, global_supported_rows),
-            "linkedSizeFamilyPctAfter": pct(global_linked_size_family_rows, global_supported_rows),
-            "linkedSizePctAfter": pct(global_linked_size_rows, global_supported_rows),
-        },
-        "regionBreakdown": retailer_region,
-        "retailerBreakdown": retailer_breakdown,
-        "manufacturerBreakdown": manufacturer_breakdown,
-    }
+    return supported_linkage_backfill.compute_supported_linkage_report(conn)
 
 
 def _map_region_rows(rows: list[Any], region_field: str = "RegionCode") -> dict[str, dict[str, Any]]:
@@ -731,6 +651,17 @@ def _map_region_rows(rows: list[Any], region_field: str = "RegionCode") -> dict[
     for row in rows:
         region = str(_row_field(row, region_field, "<NULL>")).upper()
         mapped[region] = dict(row._mapping) if hasattr(row, "_mapping") else dict(row)
+    return mapped
+
+
+def _map_region_model_ids(rows: list[Any], region_field: str = "RegionCode", model_field: str = "BoardModelId") -> dict[str, set[int]]:
+    mapped: dict[str, set[int]] = {}
+    for row in rows:
+        region = str(_row_field(row, region_field, "<NULL>")).upper()
+        model_id = _row_field(row, model_field)
+        if model_id is None:
+            continue
+        mapped.setdefault(region, set()).add(int(model_id))
     return mapped
 
 
@@ -850,14 +781,23 @@ def _build_retailer_health_by_region(
     regions: list[str],
     expectations: dict[str, Any],
     retailer_matrix: list[dict[str, Any]],
+    retailer_region_rows: dict[str, dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
     by_region: dict[str, dict[str, Any]] = {}
     for region in regions:
+        region_config = expectations.get("regions", {}).get(region, {})
+        retailer_runtime = str(region_config.get("retailerRuntime") or "").strip().lower()
         configured_retailers = [
             retailer_name
             for retailer_name, config in expectations.get("retailers", {}).items()
             if config.get(region) not in {None, "not_applicable"}
         ]
+        live_retailer_count = int(retailer_region_rows.get(region, {}).get("RetailerCount", 0) or 0)
+        configured_count = len(configured_retailers)
+        if configured_count == 0 and live_retailer_count > 0:
+            configured_count = live_retailer_count
+        elif retailer_runtime in {"legacy_root_runtime", "regional_live"} and live_retailer_count > configured_count:
+            configured_count = live_retailer_count
         region_rows: list[dict[str, Any]] = []
         for retailer in retailer_matrix:
             cell = dict(retailer["regions"].get(region, {}))
@@ -895,6 +835,7 @@ def _build_retailer_health_by_region(
                 str(row.get("retailer") or ""),
             ),
         )
+        configured_count = max(configured_count, len(sorted_rows), live_retailer_count)
         status_counts = {
             "healthy": sum(1 for row in sorted_rows if row["statusColor"] == "green"),
             "yellow": sum(1 for row in sorted_rows if row["statusColor"] == "yellow"),
@@ -903,7 +844,7 @@ def _build_retailer_health_by_region(
         }
         by_region[region] = {
             "summary": {
-                "configuredRetailers": len(configured_retailers),
+                "configuredRetailers": configured_count,
                 "healthyRetailers": status_counts["healthy"],
                 "staleRetailers": status_counts["yellow"],
                 "failingRetailers": status_counts["red"],
@@ -913,6 +854,7 @@ def _build_retailer_health_by_region(
                 "averageModelLinkagePct": _average_pct([row["modelLinkPct"] for row in sorted_rows]),
                 "averageSizeFamilyLinkagePct": _average_pct([row["sizeFamilyLinkPct"] for row in sorted_rows]),
                 "averageExactSizeLinkagePct": _average_pct([row["exactSizeLinkPct"] for row in sorted_rows]),
+                "retailerRuntime": region_config.get("retailerRuntime"),
             },
             "retailers": sorted_rows,
         }
@@ -945,6 +887,7 @@ def _build_region_overview(
     region_linkage = _region_linkage_lookup(linkage_report)
     overview = []
     for region in regions:
+        region_config = expectations.get("regions", {}).get(region, {})
         retailer = retailer_region_rows.get(region, {})
         manufacturer = mfa_region_rows.get(region, {})
         retailer_status = classify_source_status(
@@ -971,14 +914,15 @@ def _build_region_overview(
         )
         coverage_supported_total = int(coverage_row.get("supportedModelCount", 0))
         coverage_status = _coverage_status(coverage_no_stock, coverage_supported_total)
-        region_color = combine_status_colors(retailer_status.color, mfa_status.color, search_status.color, coverage_status.color)
+        operational_health_status = combine_status_colors(retailer_status.color, mfa_status.color)
+        data_quality_status = combine_status_colors(search_status.color, coverage_status.color)
         overview.append(
             {
                 "region": region,
-                "displayName": expectations.get("regions", {}).get(region, {}).get("displayName", region),
-                "statusColor": region_color,
-                "regionStatus": region_color,
-                "overallStatus": region_color,
+                "displayName": region_config.get("displayName", region),
+                "statusColor": operational_health_status,
+                "regionStatus": operational_health_status,
+                "overallStatus": operational_health_status,
                 "lastRetailerInventoryRefreshUtc": _iso(retailer.get("LatestRetailerRefreshUtc")),
                 "lastMfaRefreshUtc": _iso(manufacturer.get("LatestMfaRefreshUtc")),
                 "activeRetailerBoardCount": int(retailer.get("ActiveRetailerRows", 0)),
@@ -992,10 +936,14 @@ def _build_region_overview(
                 "retailerReason": retailer_status.reason,
                 "mfaStatus": mfa_status.color,
                 "mfaReason": mfa_status.reason,
-                "operationalHealthStatus": combine_status_colors(retailer_status.color, mfa_status.color),
-                "dataFreshnessStatus": combine_status_colors(retailer_status.color, mfa_status.color),
+                "operationalHealthStatus": operational_health_status,
+                "dataFreshnessStatus": operational_health_status,
+                "dataQualityStatus": data_quality_status,
                 "coverageQualityStatus": coverage_status.color,
                 "coverageQualityReason": coverage_status.reason,
+                "coverageGapPct": coverage_row.get("supportedCanonicalModelsNoStockAnywherePct"),
+                "retailerRuntime": region_config.get("retailerRuntime"),
+                "mfaRuntime": region_config.get("mfaRuntime"),
             }
         )
     return sorted(overview, key=region_sort_key)
@@ -1039,12 +987,23 @@ def _build_search_quality(
     rows = []
     for region in regions:
         linkage = region_linkage.get(region, {})
+        status = classify_search_health(
+            linkage.get("linkedModelPctAfter"),
+            linkage.get("linkedSizeFamilyPctAfter"),
+            linkage.get("linkedSizePctAfter"),
+        )
         rows.append(
             {
                 "region": region,
                 "supportedModelLinkagePct": linkage.get("linkedModelPctAfter"),
                 "canonicalSizeFamilyLinkagePct": linkage.get("linkedSizeFamilyPctAfter"),
                 "exactBoardSizeLinkagePct": linkage.get("linkedSizePctAfter"),
+                "status": status.color,
+                "statusReason": status.reason,
+                "modelLinkThresholdGreen": 85.0,
+                "modelLinkThresholdRed": 75.0,
+                "sizeFamilyThresholdGreen": 60.0,
+                "sizeFamilyThresholdRed": 40.0,
                 "searchTelemetryAvailable": False,
                 "exactMatchAvailabilityRate": None,
                 "closeMatchAvailabilityRate": None,
@@ -1055,7 +1014,7 @@ def _build_search_quality(
                 "searchErrors": None,
                 "searchTimeouts": None,
                 "search503s": None,
-                "notes": "Latency/error search telemetry should be surfaced through Log Analytics workbook queries. SQL builder currently reports linkage quality only.",
+                "notes": "Latency/error search telemetry should be surfaced through Log Analytics workbook queries. Dashboard search quality currently uses supported linkage truth.",
             }
         )
     return sorted(rows, key=region_sort_key)
@@ -1063,39 +1022,54 @@ def _build_search_quality(
 
 def _build_coverage_gaps(
     regions: list[str],
-    supported_gap_rows: dict[str, dict[str, Any]],
+    supported_model_total: int,
+    linkage_report: dict[str, Any],
+    mfa_supported_model_ids_by_region: dict[str, set[int]],
 ) -> list[dict[str, Any]]:
+    retailer_coverage_lookup = {
+        str(item.get("regionCode") or "").upper(): {
+            "projectedRetailerModelIds": {
+                int(model_id)
+                for model_id in item.get("projectedRetailerModelIds", [])
+                if model_id is not None
+            }
+        }
+        for item in linkage_report.get("regionCoverage", [])
+    }
     supported_by_region: list[dict[str, Any]] = []
     for region in regions:
-        row = supported_gap_rows.get(region, {})
-        supported_total = int(row.get("SupportedModelCount", 0))
-        retailer_models = int(row.get("RetailerModelCount", 0))
-        mfa_models = int(row.get("MfaModelCount", 0))
-        stocked_anywhere_models = int(row.get("StockedAnywhereModelCount", 0))
+        retailer_model_ids = retailer_coverage_lookup.get(region, {}).get("projectedRetailerModelIds", set())
+        mfa_model_ids = mfa_supported_model_ids_by_region.get(region, set())
+        stocked_anywhere_model_ids = retailer_model_ids | mfa_model_ids
+        retailer_models = len(retailer_model_ids)
+        mfa_models = len(mfa_model_ids)
+        stocked_anywhere_models = len(stocked_anywhere_model_ids)
+        no_stock_anywhere_pct = _safe_pct(pct(max(0, supported_model_total - stocked_anywhere_models), supported_model_total))
         supported_by_region.append(
             {
                 "region": region,
-                "supportedModelCount": supported_total,
+                "supportedModelCount": supported_model_total,
                 "supportedCanonicalModelsNoActiveRetailerStock": {
-                    "count": max(0, supported_total - retailer_models),
+                    "count": max(0, supported_model_total - retailer_models),
                     "sample": [],
                 },
                 "supportedCanonicalModelsNoActiveMfaStock": {
-                    "count": max(0, supported_total - mfa_models),
+                    "count": max(0, supported_model_total - mfa_models),
                     "sample": [],
                 },
                 "supportedCanonicalModelsNoStockAnywhere": {
-                    "count": max(0, supported_total - stocked_anywhere_models),
+                    "count": max(0, supported_model_total - stocked_anywhere_models),
                     "sample": [],
                 },
                 "modelsAvailableOnlyViaMfa": {
-                    "count": max(0, stocked_anywhere_models - retailer_models),
+                    "count": len(mfa_model_ids - retailer_model_ids),
                     "sample": [],
                 },
                 "modelsAvailableOnlyViaRetailers": {
-                    "count": max(0, stocked_anywhere_models - mfa_models),
+                    "count": len(retailer_model_ids - mfa_model_ids),
                     "sample": [],
                 },
+                "supportedCanonicalModelsNoStockAnywherePct": no_stock_anywhere_pct,
                 "brandsWithLowStockCoverage": [],
                 "retailersWithLowLinkageQuality": [],
                 "manufacturersWithLowLinkageQuality": [],
@@ -1127,6 +1101,12 @@ def _build_alert_summary(
                 "title": f"{region_code} retailer inventory needs attention",
                 "message": region["retailerReason"],
                 "affectedRetailers": retailer_summary.get("configuredRetailers", 0),
+                "metricName": "retailerFreshness",
+                "currentValue": region.get("lastRetailerInventoryRefreshUtc"),
+                "threshold": "24h green / 48h red",
+                "sourceType": "sql_freshness",
+                "reason": region["retailerReason"],
+                "suggestedAction": f"Review the {region_code} retailer refresh job and stale retailer sources.",
             }
             alerts.append(alert)
             alerts_by_region[region_code].append(alert)
@@ -1139,6 +1119,12 @@ def _build_alert_summary(
                 "region": region_code,
                 "title": f"{region_code} manufacturer availability needs attention",
                 "message": region["mfaReason"],
+                "metricName": "mfaFreshness",
+                "currentValue": region.get("lastMfaRefreshUtc"),
+                "threshold": "24h green / 48h red",
+                "sourceType": "sql_freshness",
+                "reason": region["mfaReason"],
+                "suggestedAction": f"Review the {region_code} manufacturer availability job and degraded brand sources.",
             }
             alerts.append(alert)
             alerts_by_region[region_code].append(alert)
@@ -1151,6 +1137,12 @@ def _build_alert_summary(
                 "region": region_code,
                 "title": f"{region_code} search quality below target",
                 "message": region["searchHealthReason"],
+                "metricName": "modelLinkPct",
+                "currentValue": region.get("supportedModelLinkagePct"),
+                "threshold": 85.0 if region["searchHealthStatus"] == "yellow" else 75.0,
+                "sourceType": "supported_linkage_truth",
+                "reason": region["searchHealthReason"],
+                "suggestedAction": f"Improve {region_code} supported-manufacturer brand/model parsing and size-family linkage.",
             }
             alerts.append(alert)
             alerts_by_region[region_code].append(alert)
@@ -1163,6 +1155,12 @@ def _build_alert_summary(
                 "region": region_code,
                 "title": f"{region_code} coverage quality needs attention",
                 "message": region.get("coverageQualityReason"),
+                "metricName": "noStockAnywherePct",
+                "currentValue": region.get("coverageGapPct"),
+                "threshold": 20.0 if region.get("coverageQualityStatus") == "yellow" else 40.0,
+                "sourceType": "supported_linkage_truth",
+                "reason": region.get("coverageQualityReason"),
+                "suggestedAction": f"Review supported {region_code} model coverage and retailer availability for genuine stock gaps.",
             }
             alerts.append(alert)
             alerts_by_region[region_code].append(alert)
@@ -1177,12 +1175,18 @@ def _build_alert_summary(
                     "category": "retailer_source",
                     "alertGroup": "critical",
                     "severity": "critical",
-                    "statusColor": "red",
-                    "region": region_code,
-                    "source": retailer["retailer"],
-                    "title": f"{retailer['retailer']} failing in {region_code}",
-                    "message": retailer["notes"],
-                }
+                "statusColor": "red",
+                "region": region_code,
+                "source": retailer["retailer"],
+                "title": f"{retailer['retailer']} failing in {region_code}",
+                "message": retailer["notes"],
+                "metricName": "retailerFreshness",
+                "currentValue": retailer.get("lastUpdatedUtc"),
+                "threshold": "24h green / 48h red",
+                "sourceType": "retailer_health",
+                "reason": retailer["notes"],
+                "suggestedAction": f"Review {retailer['retailer']} source health in {region_code}.",
+            }
                 alerts.append(alert)
                 alerts_by_region.setdefault(region_code, []).append(alert)
 
@@ -1195,12 +1199,18 @@ def _build_alert_summary(
                     "category": "mfa_source",
                     "alertGroup": "critical",
                     "severity": "critical",
-                    "statusColor": "red",
-                    "region": region_code,
-                    "source": brand["brand"],
-                    "title": f"{brand['brand']} failing in {region_code}",
-                    "message": cell["reason"],
-                }
+                "statusColor": "red",
+                "region": region_code,
+                "source": brand["brand"],
+                "title": f"{brand['brand']} failing in {region_code}",
+                "message": cell["reason"],
+                "metricName": "mfaFreshness",
+                "currentValue": cell.get("lastSuccessfulUpdateUtc"),
+                "threshold": "24h green / 48h red",
+                "sourceType": "mfa_health",
+                "reason": cell["reason"],
+                "suggestedAction": f"Review {brand['brand']} manufacturer direct source health in {region_code}.",
+            }
                 alerts.append(alert)
                 alerts_by_region.setdefault(region_code, []).append(alert)
 
@@ -1219,6 +1229,12 @@ def _build_alert_summary(
                 "source": job.get("jobName"),
                 "title": f"{region_code} job attention required: {job.get('jobType', 'job')}",
                 "message": job.get("statusReason") or f"{job.get('jobName')} requires attention.",
+                "metricName": "jobFreshness",
+                "currentValue": job.get("lastSucceededUtc"),
+                "threshold": job.get("schedule"),
+                "sourceType": "job_health",
+                "reason": job.get("statusReason"),
+                "suggestedAction": f"Review Azure Container App Job {job.get('jobName')} for {region_code}.",
             }
             alerts.append(alert)
             alerts_by_region.setdefault(region_code, []).append(alert)
@@ -1303,7 +1319,9 @@ def build_operations_dashboard_metrics(
     mfa_health_rows = _rows(MFA_HEALTH_QUERY)
     supported_counts_rows = _rows(SUPPORTED_COUNTS_QUERY)
     supported_counts = _map_region_rows(supported_counts_rows)
-    supported_gap_rows = _map_region_rows(_rows(SUPPORTED_COVERAGE_GAPS_QUERY))
+    supported_model_total_row = (_rows(SUPPORTED_MODEL_TOTAL_QUERY) or [{}])[0]
+    supported_model_total = int(_row_field(supported_model_total_row, "SupportedModelCount", 0) or 0)
+    supported_mfa_model_ids_by_region = _map_region_model_ids(_rows(SUPPORTED_MFA_MODEL_IDS_QUERY))
 
     regions = sorted(
         {
@@ -1319,7 +1337,7 @@ def build_operations_dashboard_metrics(
         linkage_report = linkage_report_builder(conn)
 
     retailer_matrix = _build_retailer_matrix(regions, expectations, retailer_health_rows, linkage_report, now)
-    retailer_health_by_region = _build_retailer_health_by_region(regions, expectations, retailer_matrix)
+    retailer_health_by_region = _build_retailer_health_by_region(regions, expectations, retailer_matrix, retailer_region_rows)
     mfa_matrix = _build_mfa_matrix(regions, expectations, mfa_health_rows, linkage_report, now)
     job_health, job_health_by_region = _build_job_health(
         regions,
@@ -1328,7 +1346,12 @@ def build_operations_dashboard_metrics(
         now=now,
         job_expectations_path=job_expectations_path,
     )
-    coverage_gaps = _build_coverage_gaps(regions, supported_gap_rows)
+    coverage_gaps = _build_coverage_gaps(
+        regions,
+        supported_model_total,
+        linkage_report,
+        supported_mfa_model_ids_by_region,
+    )
     coverage_gaps_by_region = {row["region"]: row for row in coverage_gaps}
     region_overview = _build_region_overview(regions, expectations, retailer_region_rows, mfa_region_rows, linkage_report, coverage_gaps_by_region, now)
     inventory_counts = _build_inventory_counts(regions, retailer_region_rows, mfa_region_rows, supported_counts)

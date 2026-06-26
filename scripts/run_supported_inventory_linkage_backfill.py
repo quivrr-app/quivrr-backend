@@ -37,6 +37,73 @@ OUTPUT_FILE = Path("scripts/output/supported_inventory_linkage_backfill_report.j
 CONFIRM_TOKEN = "APPLY_SUPPORTED_LINKS"
 
 
+def row_dimensions(row: dict) -> dict[str, object]:
+    title_dimensions = eu_import.dimensions_from_title(row.get("rawProductTitle"))
+    return {
+        "lengthFeetInches": row.get("lengthFeetInches") or title_dimensions.get("length"),
+        "width": row.get("width") or title_dimensions.get("width"),
+        "thickness": row.get("thickness") or title_dimensions.get("thickness"),
+        "volumeLitres": row.get("volumeLitres") or title_dimensions.get("volume"),
+    }
+
+
+def has_size_family_candidate(
+    row: dict,
+    board_model_id: int,
+    sizes_by_model: dict[int, list[dict]],
+) -> bool:
+    source_dimensions = row_dimensions(row)
+    length = eu_import.clean(source_dimensions["lengthFeetInches"])
+    length_inches = eu_import.length_to_inches(length)
+    if length_inches is None:
+        return False
+
+    candidates = [
+        dict(size)
+        for size in sizes_by_model.get(board_model_id, [])
+        if eu_import.length_to_inches(size.get("lengthFeetInches")) == length_inches
+    ]
+    if not candidates:
+        return False
+
+    for field, tolerance_value in (
+        ("width", eu_import.DEFAULT_WIDTH_TOLERANCE),
+        ("thickness", eu_import.DEFAULT_THICKNESS_TOLERANCE),
+    ):
+        if eu_import.measurement_key(source_dimensions.get(field)) is None:
+            continue
+        equivalent = [
+            item
+            for item in candidates
+            if eu_import.measurements_within(
+                source_dimensions.get(field),
+                item.get(field),
+                tolerance_value,
+            )
+        ]
+        if not equivalent:
+            return False
+        candidates = equivalent
+
+    title_constructions = eu_import.construction_from_title(row.get("rawProductTitle"))
+    source_construction = (
+        next(iter(title_constructions))
+        if len(title_constructions) == 1
+        else eu_import.construction_key(row.get("construction"))
+    )
+    if source_construction:
+        matching_construction = [
+            item
+            for item in candidates
+            if eu_import.construction_key(item.get("construction")) == source_construction
+        ]
+        if not matching_construction:
+            return False
+        candidates = matching_construction
+
+    return bool(candidates)
+
+
 def load_active_inventory_rows(conn) -> list[dict]:
     rows = conn.execute(
         eu_import.text(
@@ -110,6 +177,11 @@ def compute_supported_linkage_report(conn) -> dict:
     models_by_brand = eu_import.load_board_models(conn)
     sizes_by_model = eu_import.load_board_sizes(conn)
     inventory_rows = load_active_inventory_rows(conn)
+    supported_model_ids = {
+        model["boardModelId"]
+        for brand_models in models_by_brand.values()
+        for model in brand_models
+    }
 
     brand_updates = []
     model_updates = []
@@ -119,6 +191,7 @@ def compute_supported_linkage_report(conn) -> dict:
     unmatched_examples: dict[tuple[str, str, str], list[str]] = defaultdict(list)
     retailer_metrics: dict[tuple[str, str], Counter] = defaultdict(Counter)
     manufacturer_metrics: dict[tuple[str, str], Counter] = defaultdict(Counter)
+    retailer_model_coverage: dict[str, set[int]] = defaultdict(set)
     global_metrics = Counter()
 
     for row in inventory_rows:
@@ -210,6 +283,7 @@ def compute_supported_linkage_report(conn) -> dict:
             retailer_metrics[retailer_key]["linkedModelRowsAfter"] += 1
             manufacturer_metrics[manufacturer_key]["linkedModelRowsAfter"] += 1
             global_metrics["linkedModelRowsAfter"] += 1
+            retailer_model_coverage[region_code].add(int(effective_model_id))
         else:
             unmatched_key = (
                 region_code,
@@ -220,6 +294,18 @@ def compute_supported_linkage_report(conn) -> dict:
             alias_opportunities[(effective_brand_name, parsed_model or "<missing>")] += 1
             if len(unmatched_examples[unmatched_key]) < 3:
                 unmatched_examples[unmatched_key].append(row["rawProductTitle"])
+
+        projected_size_family_linked = False
+        if effective_model_id is not None:
+            projected_size_family_linked = has_size_family_candidate(
+                match_row,
+                int(effective_model_id),
+                sizes_by_model,
+            )
+        if projected_size_family_linked:
+            retailer_metrics[retailer_key]["linkedSizeFamilyRowsAfter"] += 1
+            manufacturer_metrics[manufacturer_key]["linkedSizeFamilyRowsAfter"] += 1
+            global_metrics["linkedSizeFamilyRowsAfter"] += 1
 
         if projected_size_linked:
             retailer_metrics[retailer_key]["linkedSizeRowsAfter"] += 1
@@ -244,10 +330,12 @@ def compute_supported_linkage_report(conn) -> dict:
                     "supportedRows": total,
                     "linkedModelRowsBefore": int(metrics["linkedModelRowsBefore"]),
                     "linkedModelRowsAfter": int(metrics["linkedModelRowsAfter"]),
+                    "linkedSizeFamilyRowsAfter": int(metrics["linkedSizeFamilyRowsAfter"]),
                     "linkedSizeRowsBefore": int(metrics["linkedSizeRowsBefore"]),
                     "linkedSizeRowsAfter": int(metrics["linkedSizeRowsAfter"]),
                     "linkedModelPctBefore": pct(int(metrics["linkedModelRowsBefore"]), total),
                     "linkedModelPctAfter": pct(int(metrics["linkedModelRowsAfter"]), total),
+                    "linkedSizeFamilyPctAfter": pct(int(metrics["linkedSizeFamilyRowsAfter"]), total),
                     "linkedSizePctBefore": pct(int(metrics["linkedSizeRowsBefore"]), total),
                     "linkedSizePctAfter": pct(int(metrics["linkedSizeRowsAfter"]), total),
                 }
@@ -261,6 +349,7 @@ def compute_supported_linkage_report(conn) -> dict:
         region_totals[region_code]["supportedRows"] += item["supportedRows"]
         region_totals[region_code]["linkedModelRowsBefore"] += item["linkedModelRowsBefore"]
         region_totals[region_code]["linkedModelRowsAfter"] += item["linkedModelRowsAfter"]
+        region_totals[region_code]["linkedSizeFamilyRowsAfter"] += item["linkedSizeFamilyRowsAfter"]
         region_totals[region_code]["linkedSizeRowsBefore"] += item["linkedSizeRowsBefore"]
         region_totals[region_code]["linkedSizeRowsAfter"] += item["linkedSizeRowsAfter"]
     for region_code, metrics in sorted(region_totals.items()):
@@ -271,12 +360,15 @@ def compute_supported_linkage_report(conn) -> dict:
                 "supportedRows": total,
                 "linkedModelRowsBefore": int(metrics["linkedModelRowsBefore"]),
                 "linkedModelRowsAfter": int(metrics["linkedModelRowsAfter"]),
+                "linkedSizeFamilyRowsAfter": int(metrics["linkedSizeFamilyRowsAfter"]),
                 "linkedSizeRowsBefore": int(metrics["linkedSizeRowsBefore"]),
                 "linkedSizeRowsAfter": int(metrics["linkedSizeRowsAfter"]),
                 "linkedModelPctBefore": pct(int(metrics["linkedModelRowsBefore"]), total),
                 "linkedModelPctAfter": pct(int(metrics["linkedModelRowsAfter"]), total),
+                "linkedSizeFamilyPctAfter": pct(int(metrics["linkedSizeFamilyRowsAfter"]), total),
                 "linkedSizePctBefore": pct(int(metrics["linkedSizeRowsBefore"]), total),
                 "linkedSizePctAfter": pct(int(metrics["linkedSizeRowsAfter"]), total),
+                "projectedRetailerModelCount": len(retailer_model_coverage.get(region_code, set())),
             }
         )
 
@@ -286,6 +378,7 @@ def compute_supported_linkage_report(conn) -> dict:
             "supportedRows": int(global_metrics["supportedRowsBefore"]),
             "linkedModelRowsBefore": int(global_metrics["linkedModelRowsBefore"]),
             "linkedModelRowsAfter": int(global_metrics["linkedModelRowsAfter"]),
+            "linkedSizeFamilyRowsAfter": int(global_metrics["linkedSizeFamilyRowsAfter"]),
             "linkedSizeRowsBefore": int(global_metrics["linkedSizeRowsBefore"]),
             "linkedSizeRowsAfter": int(global_metrics["linkedSizeRowsAfter"]),
             "linkedModelPctBefore": pct(
@@ -294,6 +387,10 @@ def compute_supported_linkage_report(conn) -> dict:
             ),
             "linkedModelPctAfter": pct(
                 int(global_metrics["linkedModelRowsAfter"]),
+                int(global_metrics["supportedRowsBefore"]),
+            ),
+            "linkedSizeFamilyPctAfter": pct(
+                int(global_metrics["linkedSizeFamilyRowsAfter"]),
                 int(global_metrics["supportedRowsBefore"]),
             ),
             "linkedSizePctBefore": pct(
@@ -310,8 +407,17 @@ def compute_supported_linkage_report(conn) -> dict:
             "unlinkedSizeRowsAfter": int(global_metrics["supportedRowsBefore"] - global_metrics["linkedSizeRowsAfter"]),
         },
         "regionBreakdown": region_breakdown,
-        "retailerBreakdown": build_breakdown(retailer_metrics),
+            "retailerBreakdown": build_breakdown(retailer_metrics),
         "manufacturerBreakdown": build_breakdown(manufacturer_metrics),
+        "regionCoverage": [
+            {
+                "regionCode": region_code,
+                "supportedModelCount": len(supported_model_ids),
+                "projectedRetailerModelCount": len(model_ids),
+                "projectedRetailerModelIds": sorted(model_ids),
+            }
+            for region_code, model_ids in sorted(retailer_model_coverage.items())
+        ],
         "topRemainingUnmatchedModels": [
             {
                 "regionCode": region_code,

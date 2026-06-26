@@ -80,9 +80,9 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(result.label, "planned")
 
     def test_search_health_thresholds(self):
-        healthy = classify_search_health(80, 55, 30)
-        degraded = classify_search_health(65, 35, 18)
-        broken = classify_search_health(45, 20, 10)
+        healthy = classify_search_health(86, 61, 30)
+        degraded = classify_search_health(80, 45, 18)
+        broken = classify_search_health(74.9, 39.9, 10)
         partial = classify_search_health(None, None, None)
         self.assertEqual(healthy.color, "green")
         self.assertEqual(degraded.color, "yellow")
@@ -201,20 +201,19 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "UsedSupportedRows": 2,
                 },
             ],
-            SUPPORTED_COVERAGE_GAPS_QUERY: [
+            dashboard.SUPPORTED_MODEL_TOTAL_QUERY: [
+                {
+                    "SupportedModelCount": 2,
+                },
+            ],
+            dashboard.SUPPORTED_MFA_MODEL_IDS_QUERY: [
                 {
                     "RegionCode": "AU",
-                    "SupportedModelCount": 2,
-                    "RetailerModelCount": 2,
-                    "MfaModelCount": 1,
-                    "StockedAnywhereModelCount": 2,
+                    "BoardModelId": 1,
                 },
                 {
                     "RegionCode": "US",
-                    "SupportedModelCount": 2,
-                    "RetailerModelCount": 1,
-                    "MfaModelCount": 1,
-                    "StockedAnywhereModelCount": 2,
+                    "BoardModelId": 2,
                 },
             ],
         }
@@ -233,12 +232,14 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "linkedModelPctAfter": 90.0,
                     "linkedSizeFamilyPctAfter": 55.0,
                     "linkedSizePctAfter": 30.0,
+                    "projectedRetailerModelIds": [1, 2],
                 },
                 {
                     "regionCode": "US",
                     "linkedModelPctAfter": 70.0,
                     "linkedSizeFamilyPctAfter": 40.0,
                     "linkedSizePctAfter": 20.0,
+                    "projectedRetailerModelIds": [1],
                 },
             ],
             "retailerBreakdown": [
@@ -273,6 +274,10 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "linkedSizePctAfter": 80.0,
                 },
             ],
+            "regionCoverage": [
+                {"regionCode": "AU", "projectedRetailerModelIds": [1, 2]},
+                {"regionCode": "US", "projectedRetailerModelIds": [1]},
+            ],
         }
 
         def fake_rows(query: str, params=None):
@@ -299,7 +304,6 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(metrics["version"], dashboard.DASHBOARD_VERSION)
         self.assertEqual(metrics["regionOverview"][0]["region"], "AU")
         self.assertEqual(metrics["regionOverview"][0]["statusColor"], "green")
-        self.assertEqual(metrics["regionOverview"][0]["coverageQualityStatus"], "green")
         self.assertEqual(metrics["inventoryCounts"][0]["activeRetailerInventoryRows"], 100)
         self.assertEqual(metrics["inventoryCounts"][0]["newSupportedBoards"], 85)
         self.assertIn("alerts", metrics)
@@ -319,6 +323,7 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertIn("summary", metrics["alertSummary"])
         self.assertIn("topAlerts", metrics["alertSummary"])
         self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["activeRows"], 100)
+        self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["configuredRetailers"], 4)
         self.assertIn("jobHealth", metrics["regionDetails"]["AU"])
 
     def test_region_level_stale_alert_suppresses_per_retailer_spam(self):
@@ -375,14 +380,19 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "UsedSupportedRows": 5,
                 },
             ],
-            SUPPORTED_COVERAGE_GAPS_QUERY: [
+            dashboard.SUPPORTED_MODEL_TOTAL_QUERY: [
                 {
-                    "RegionCode": "AU",
                     "SupportedModelCount": 10,
-                    "RetailerModelCount": 8,
-                    "MfaModelCount": 7,
-                    "StockedAnywhereModelCount": 9,
                 },
+            ],
+            dashboard.SUPPORTED_MFA_MODEL_IDS_QUERY: [
+                {"RegionCode": "AU", "BoardModelId": 1},
+                {"RegionCode": "AU", "BoardModelId": 2},
+                {"RegionCode": "AU", "BoardModelId": 3},
+                {"RegionCode": "AU", "BoardModelId": 4},
+                {"RegionCode": "AU", "BoardModelId": 5},
+                {"RegionCode": "AU", "BoardModelId": 6},
+                {"RegionCode": "AU", "BoardModelId": 7},
             ],
         }
 
@@ -400,6 +410,7 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "linkedModelPctAfter": 90.0,
                     "linkedSizeFamilyPctAfter": 55.0,
                     "linkedSizePctAfter": 30.0,
+                    "projectedRetailerModelIds": [1, 2, 3, 4, 5, 6, 7, 8],
                 }
             ],
             "retailerBreakdown": [
@@ -419,6 +430,9 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                 },
             ],
             "manufacturerBreakdown": [],
+            "regionCoverage": [
+                {"regionCode": "AU", "projectedRetailerModelIds": [1, 2, 3, 4, 5, 6, 7, 8]},
+            ],
         }
 
         def fake_rows(query: str, params=None):
@@ -473,7 +487,8 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
             RETAILER_HEALTH_QUERY: [],
             MFA_HEALTH_QUERY: [],
             SUPPORTED_COUNTS_QUERY: [],
-            SUPPORTED_COVERAGE_GAPS_QUERY: [],
+            dashboard.SUPPORTED_MODEL_TOTAL_QUERY: [{"SupportedModelCount": 0}],
+            dashboard.SUPPORTED_MFA_MODEL_IDS_QUERY: [],
         }
 
         class FakeContext:
@@ -523,6 +538,7 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
                     "manufacturerBreakdown": [],
                     "global": {},
                     "supportedBrands": [],
+                    "regionCoverage": [],
                 },
             )
 
@@ -534,6 +550,186 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(inventory_job["lastFailedUtc"], "2026-06-25T16:30:25Z")
         self.assertEqual(mfa_job["status"], "red")
         self.assertTrue(any(alert["category"] == "job_health" for alert in metrics["alerts"]))
+
+    def test_legacy_region_uses_live_retailer_count_when_expectations_missing(self):
+        now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)
+        query_results = {
+            RETAILER_REGION_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "ActiveRetailerRows": 50,
+                    "AvailableRetailerRows": 45,
+                    "LinkedModelRows": 0,
+                    "LinkedSizeRows": 0,
+                    "RetailerCount": 3,
+                    "LatestRetailerRefreshUtc": now - timedelta(hours=1),
+                },
+            ],
+            MFA_REGION_QUERY: [],
+            RETAILER_HEALTH_QUERY: [
+                {
+                    "RegionCode": "AU",
+                    "RetailerName": "Legacy One",
+                    "ActiveRows": 20,
+                    "AvailableRows": 20,
+                    "LinkedModelRows": 0,
+                    "LinkedSizeRows": 0,
+                    "LatestRefreshUtc": now - timedelta(hours=1),
+                },
+                {
+                    "RegionCode": "AU",
+                    "RetailerName": "Legacy Two",
+                    "ActiveRows": 15,
+                    "AvailableRows": 15,
+                    "LinkedModelRows": 0,
+                    "LinkedSizeRows": 0,
+                    "LatestRefreshUtc": now - timedelta(hours=1),
+                },
+                {
+                    "RegionCode": "AU",
+                    "RetailerName": "Legacy Three",
+                    "ActiveRows": 15,
+                    "AvailableRows": 10,
+                    "LinkedModelRows": 0,
+                    "LinkedSizeRows": 0,
+                    "LatestRefreshUtc": now - timedelta(hours=1),
+                },
+            ],
+            MFA_HEALTH_QUERY: [],
+            SUPPORTED_COUNTS_QUERY: [
+                {"RegionCode": "AU", "SupportedRows": 50, "UnsupportedRows": 0, "UsedSupportedRows": 0},
+            ],
+            dashboard.SUPPORTED_MODEL_TOTAL_QUERY: [{"SupportedModelCount": 10}],
+            dashboard.SUPPORTED_MFA_MODEL_IDS_QUERY: [],
+        }
+
+        class FakeContext:
+            def __enter__(self):
+                return object()
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        with patch.object(dashboard, "_rows", side_effect=lambda query, params=None: query_results[query]), patch.object(
+            dashboard.engine, "begin", return_value=FakeContext()
+        ), patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-25T00:00:00Z", "modelCount": 500},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
+        ):
+            metrics = build_operations_dashboard_metrics(
+                now=now,
+                expectations_path=EXPECTATIONS_PATH,
+                linkage_report_builder=lambda _conn: {
+                    "regionBreakdown": [
+                        {
+                            "regionCode": "AU",
+                            "linkedModelPctAfter": 76.66,
+                            "linkedSizeFamilyPctAfter": 46.41,
+                            "linkedSizePctAfter": 23.13,
+                            "projectedRetailerModelIds": [1, 2, 3, 4, 5, 6],
+                        }
+                    ],
+                    "retailerBreakdown": [
+                        {"regionCode": "AU", "name": "Legacy One", "linkedModelPctAfter": 80.0, "linkedSizeFamilyPctAfter": 50.0, "linkedSizePctAfter": 30.0},
+                        {"regionCode": "AU", "name": "Legacy Two", "linkedModelPctAfter": 70.0, "linkedSizeFamilyPctAfter": 40.0, "linkedSizePctAfter": 20.0},
+                        {"regionCode": "AU", "name": "Legacy Three", "linkedModelPctAfter": 60.0, "linkedSizeFamilyPctAfter": 30.0, "linkedSizePctAfter": 10.0},
+                    ],
+                    "manufacturerBreakdown": [],
+                    "global": {},
+                    "supportedBrands": [],
+                    "regionCoverage": [{"regionCode": "AU", "projectedRetailerModelIds": [1, 2, 3, 4, 5, 6]}],
+                },
+            )
+
+        summary = metrics["retailerHealthByRegion"]["AU"]["summary"]
+        self.assertEqual(summary["configuredRetailers"], 3)
+        self.assertEqual(metrics["regionDetails"]["AU"]["searchQuality"]["supportedModelLinkagePct"], 76.66)
+
+    def test_quality_alerts_include_metric_context(self):
+        now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)
+        query_results = {
+            RETAILER_REGION_QUERY: [
+                {
+                    "RegionCode": "EU",
+                    "ActiveRetailerRows": 100,
+                    "AvailableRetailerRows": 80,
+                    "LinkedModelRows": 0,
+                    "LinkedSizeRows": 0,
+                    "RetailerCount": 2,
+                    "LatestRetailerRefreshUtc": now - timedelta(hours=2),
+                },
+            ],
+            MFA_REGION_QUERY: [
+                {
+                    "RegionCode": "EU",
+                    "ActiveMfaRows": 20,
+                    "AvailableMfaRows": 20,
+                    "LinkedModelRows": 20,
+                    "LinkedSizeRows": 10,
+                    "BrandCount": 1,
+                    "LatestMfaRefreshUtc": now - timedelta(hours=2),
+                }
+            ],
+            RETAILER_HEALTH_QUERY: [],
+            MFA_HEALTH_QUERY: [],
+            SUPPORTED_COUNTS_QUERY: [{"RegionCode": "EU", "SupportedRows": 100, "UnsupportedRows": 0, "UsedSupportedRows": 0}],
+            dashboard.SUPPORTED_MODEL_TOTAL_QUERY: [{"SupportedModelCount": 10}],
+            dashboard.SUPPORTED_MFA_MODEL_IDS_QUERY: [{"RegionCode": "EU", "BoardModelId": 1}],
+        }
+
+        class FakeContext:
+            def __enter__(self):
+                return object()
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        with patch.object(dashboard, "_rows", side_effect=lambda query, params=None: query_results[query]), patch.object(
+            dashboard.engine, "begin", return_value=FakeContext()
+        ), patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-25T00:00:00Z", "modelCount": 500},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
+        ):
+            metrics = build_operations_dashboard_metrics(
+                now=now,
+                expectations_path=EXPECTATIONS_PATH,
+                linkage_report_builder=lambda _conn: {
+                    "regionBreakdown": [
+                        {
+                            "regionCode": "EU",
+                            "linkedModelPctAfter": 76.96,
+                            "linkedSizeFamilyPctAfter": 58.3,
+                            "linkedSizePctAfter": 32.71,
+                            "projectedRetailerModelIds": [1, 2, 3, 4, 5, 6, 7],
+                        }
+                    ],
+                    "retailerBreakdown": [],
+                    "manufacturerBreakdown": [],
+                    "global": {},
+                    "supportedBrands": [],
+                    "regionCoverage": [{"regionCode": "EU", "projectedRetailerModelIds": [1, 2, 3, 4, 5, 6, 7]}],
+                },
+            )
+
+        alerts = metrics["alertSummary"]["allAlerts"]
+        search_alert = next(alert for alert in alerts if alert["category"] == "search_quality" and alert["region"] == "EU")
+        coverage_alert = next(alert for alert in alerts if alert["category"] == "coverage_quality" and alert["region"] == "EU")
+        self.assertEqual(search_alert["metricName"], "modelLinkPct")
+        self.assertEqual(search_alert["currentValue"], 76.96)
+        self.assertEqual(search_alert["threshold"], 85.0)
+        self.assertTrue(search_alert["suggestedAction"])
+        self.assertEqual(coverage_alert["metricName"], "noStockAnywherePct")
+        self.assertEqual(coverage_alert["threshold"], 20.0)
 
 
 if __name__ == "__main__":

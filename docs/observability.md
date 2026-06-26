@@ -150,6 +150,22 @@ Current dashboard semantics:
 - `red`: expected and failing, stale, or unexpectedly zero-row
 - `grey`: not applicable or intentionally dealer-network-only
 
+Sprint 6.2 dashboard truth notes:
+
+- operational status is now kept separate from data quality status
+- AU legacy retailer runtime uses live active retailer counts when the explicit retailer registry is incomplete
+- supported search quality now uses the shared supported linkage recovery path from `scripts/run_supported_inventory_linkage_backfill.py`
+- coverage quality now measures supported canonical models with no stock anywhere by region
+- search quality thresholds are:
+  - green: model `>= 85%` and size family `>= 60%`
+  - yellow: model `75%` to `84.99%` or size family `40%` to `59.99%`
+  - red: below those safe thresholds
+- exact size linkage is displayed but does not trigger red search alerts on its own
+- coverage quality thresholds are:
+  - green: no-stock-anywhere `< 20%`
+  - yellow: `20%` to `40%`
+  - red: `> 40%`
+
 Current expectation notes:
 
 - `Lost` is treated as `dealer_network_only` in every live region until Quivrr has evidence of genuine manufacturer-direct stock, so it should not page as a failed MFA source.

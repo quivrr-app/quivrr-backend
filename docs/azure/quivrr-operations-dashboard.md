@@ -13,6 +13,12 @@ Current delivery path:
 - Azure Workbook scaffold
 - internal frontend scaffold at `quivrr-frontend/operations/index.html`
 
+Sprint 6.2 truth model:
+
+- operational health is separated from data quality
+- AU legacy retailer runtime falls back to live active retailer counts when no modern Gen 3 target registry exists
+- supported linkage truth comes from `scripts/run_supported_inventory_linkage_backfill.py`, not from raw `BoardModelId` and `BoardSizeId` columns alone
+
 ## Primary Data Sources
 
 - Azure SQL production
@@ -93,6 +99,13 @@ Live API note:
   - `alertSummary.summary` returns grouped counts
   - `alertSummary.allAlerts` retains the full in-memory list for the current payload
   - `regionDetails.<REGION>.alerts` supports the region drill-in view
+- actionable quality alerts now include:
+  - `metricName`
+  - `currentValue`
+  - `threshold`
+  - `sourceType`
+  - `reason`
+  - `suggestedAction`
 
 ## Status Colours
 
@@ -104,6 +117,17 @@ Live API note:
   Expected and failing, stale beyond 48 hours, or unexpectedly zero-row.
 - `grey`
   Not applicable or intentionally not configured.
+
+Sprint 6.2 region card semantics:
+
+- `Operational`
+  retailer freshness + MFA freshness
+- `Data quality`
+  search linkage + supported coverage
+- `Search quality`
+  model linkage and size-family linkage thresholds
+- `Coverage quality`
+  supported canonical no-stock-anywhere threshold
 
 ## Job Health
 
