@@ -10,11 +10,12 @@ from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, text
-from sqlalchemy.exc import OperationalError
+from sqlalchemy import bindparam, create_engine, text
+from sqlalchemy.exc import DBAPIError, OperationalError
 
 from observability.operations_dashboard import DASHBOARD_VERSION, build_operations_dashboard_metrics
 from utils.retailer_matching import classify_retailer_exact
+from utils.dimensions import dimensions_from_title
 
 
 load_dotenv()
@@ -41,6 +42,19 @@ def env_bool(name: str, default: bool) -> bool:
         return default
 
     return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def env_float(name: str, default: float) -> float:
+
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    try:
+        return float(value.strip())
+    except ValueError:
+        return default
 
 
 def build_connection_string() -> str:
@@ -112,6 +126,28 @@ OPS_DASHBOARD_PREWARM_ON_STARTUP = env_bool(
     "OPS_DASHBOARD_PREWARM_ON_STARTUP",
     bool(os.getenv("WEBSITE_INSTANCE_ID")),
 )
+SEARCH_VERSION = "search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate_sprint6_1"
+SUPPORTED_CATALOGUE_BRANDS = {
+    "Album",
+    "Channel Islands",
+    "Chemistry Surfboards",
+    "Chilli",
+    "Christenson",
+    "DHD",
+    "Firewire",
+    "Haydenshapes",
+    "JS Industries",
+    "Lost",
+    "Misfit Shapes",
+    "Pyzel",
+    "Rusty",
+    "Sharp Eye",
+    "Simon Anderson",
+}
+OTHER_MODEL_MATCHES_ENABLED = env_bool("OTHER_MODEL_MATCHES_ENABLED", True)
+OTHER_MODEL_MATCHES_LIMIT = env_int("OTHER_MODEL_MATCHES_LIMIT", 6)
+OTHER_MODEL_MATCHES_TIMEOUT_SECONDS = env_float("OTHER_MODEL_MATCHES_TIMEOUT_SECONDS", 1.5)
+OTHER_MODEL_MATCHES_BUDGET_MS = env_int("OTHER_MODEL_MATCHES_BUDGET_MS", 1500)
 _ops_dashboard_cache_lock = Lock()
 _ops_dashboard_cache = {
     "generated_at": 0.0,
@@ -136,12 +172,14 @@ app.add_middleware(
 )
 
 
-def execute_with_retry(query, params=None, attempts=3):
+def execute_with_retry(query, params=None, attempts=3, timeout_seconds=None):
     last_error = None
 
     for attempt in range(1, attempts + 1):
         try:
             with engine.connect() as connection:
+                if timeout_seconds is not None:
+                    connection = connection.execution_options(timeout=timeout_seconds)
                 return list(
                     connection.execute(
                         query,
@@ -149,7 +187,7 @@ def execute_with_retry(query, params=None, attempts=3):
                     )
                 )
 
-        except OperationalError as exc:
+        except (OperationalError, DBAPIError) as exc:
             last_error = exc
 
             if attempt == attempts:
@@ -160,18 +198,20 @@ def execute_with_retry(query, params=None, attempts=3):
     raise last_error
 
 
-def fetch_one_with_retry(query, params=None, attempts=3):
+def fetch_one_with_retry(query, params=None, attempts=3, timeout_seconds=None):
     last_error = None
 
     for attempt in range(1, attempts + 1):
         try:
             with engine.connect() as connection:
+                if timeout_seconds is not None:
+                    connection = connection.execution_options(timeout=timeout_seconds)
                 return connection.execute(
                     query,
                     params or {}
                 ).fetchone()
 
-        except OperationalError as exc:
+        except (OperationalError, DBAPIError) as exc:
             last_error = exc
 
             if attempt == attempts:
@@ -395,6 +435,118 @@ def retailer_result(row, result_type):
         )
 
     return result
+
+
+def retailer_row_matches_selected_exactly(row, official):
+
+    if getattr(row, "BoardSizeId", None) is not None and row.BoardSizeId == official.BoardSizeId:
+        return True
+
+    title = (
+        f"{getattr(row, 'RawProductTitle', '') or ''} "
+        f"{getattr(row, 'NormalisedProductTitle', '') or ''}"
+    )
+    parsed_title_dimensions = dimensions_from_title(title)
+    strong_model_title = text_contains_phrase(
+        getattr(row, "RawProductTitle", None),
+        getattr(row, "NormalisedProductTitle", None),
+        official.ModelName,
+    )
+
+    exact, _reason = classify_retailer_exact(
+        {
+            "boardSizeId": getattr(row, "BoardSizeId", None),
+            "title": title,
+            "length": parsed_title_dimensions.get("length") or getattr(row, "LengthFeetInches", None),
+            "width": parsed_title_dimensions.get("width") or getattr(row, "Width", None),
+            "thickness": parsed_title_dimensions.get("thickness") or getattr(row, "Thickness", None),
+            "volume": parsed_title_dimensions.get("volume") or getattr(row, "VolumeLitres", None),
+            "construction": getattr(row, "Construction", None),
+        },
+        {
+            "boardSizeId": official.BoardSizeId,
+            "length": official.LengthFeetInches,
+            "width": official.Width,
+            "thickness": official.Thickness,
+            "volume": official.VolumeLitres,
+            "construction": official.Construction,
+        },
+        brand_matches=(getattr(row, "BrandId", None) == official.BrandId),
+        model_matches=(
+            getattr(row, "BoardModelId", None) == official.BoardModelId
+            or strong_model_title
+        ),
+        strong_model_title=strong_model_title,
+    )
+
+    return exact
+
+
+def should_exclude_close_retailer_row(row, official, exact_inventory_ids):
+
+    if getattr(row, "InventoryId", None) in exact_inventory_ids:
+        return True
+
+    return retailer_row_matches_selected_exactly(row, official)
+
+
+def exact_match_count(exact_matches):
+
+    return len(exact_matches)
+
+
+def close_match_count(close_matches):
+
+    return len(close_matches)
+
+
+def should_include_other_model_matches(official_brand_name, direct_matches, exact_matches, close_matches):
+
+    return (
+        official_brand_name in SUPPORTED_CATALOGUE_BRANDS
+        and not direct_matches
+        and exact_match_count(exact_matches) == 0
+        and close_match_count(close_matches) < 3
+    )
+
+
+def should_run_other_model_matches(direct_matches, exact_matches, close_matches):
+
+    return (
+        OTHER_MODEL_MATCHES_ENABLED
+        and not direct_matches
+        and exact_match_count(exact_matches) == 0
+        and close_match_count(close_matches) < 3
+        and OTHER_MODEL_MATCHES_LIMIT > 0
+    )
+
+
+def should_skip_other_model_matches_for_budget(elapsed_ms):
+
+    return elapsed_ms >= OTHER_MODEL_MATCHES_BUDGET_MS
+
+
+def configured_other_model_matches_limit():
+
+    return max(0, min(OTHER_MODEL_MATCHES_LIMIT, 8))
+
+
+def search_log(event, **fields):
+
+    payload = {
+        "event": event,
+        "service": "quivrr-api",
+        "searchVersion": SEARCH_VERSION,
+        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    payload.update(fields)
+    print(json.dumps(payload, default=str), flush=True)
+
+
+def is_timeout_error(exc):
+
+    message = str(exc).lower()
+    return "timeout" in message or "timed out" in message
 
 
 def ops_dashboard_log(event, **fields):
@@ -1166,6 +1318,13 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
 
     if region_code not in {"AU", "ID", "EU", "US"}:
         region_code = "AU"
+
+    request_started_at = time.perf_counter()
+    request_id = f"{boardSizeId}:{int(time.time() * 1000)}"
+
+    def elapsed_ms():
+
+        return round((time.perf_counter() - request_started_at) * 1000, 1)
 
     official_query = text("""
         SELECT
@@ -2100,6 +2259,124 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
             r.RetailerName ASC
     """)
 
+    other_models_query = text("""
+        SELECT TOP 8
+            ri.InventoryId,
+            ri.BrandId,
+            ri.BoardModelId,
+            ri.BoardSizeId,
+            ri.RawProductTitle,
+            ri.NormalisedProductTitle,
+            ri.ProductUrl,
+            ri.ProductImageUrl,
+            ri.PriceAud,
+            ri.PriceAmount,
+            ri.PriceCurrency,
+            ri.StockStatus,
+            ri.Construction,
+            ri.FinSetup,
+            ri.LengthFeetInches,
+            ri.Width,
+            ri.Thickness,
+            ri.VolumeLitres,
+            r.RetailerName,
+            r.WebsiteUrl,
+            r.LogoUrl,
+            bm.ModelName AS CanonicalModelName,
+            CASE
+                WHEN ri.BoardModelId = :board_model_id THEN 240
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.Construction IS NOT NULL
+                     AND :construction IS NOT NULL
+                     AND LOWER(LTRIM(RTRIM(ri.Construction))) =
+                         LOWER(LTRIM(RTRIM(:construction)))
+                    THEN 80
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.LengthFeetInches = :length THEN 40
+                WHEN ri.LengthFeetInches IN (:one_down_length, :one_up_length) THEN 25
+                WHEN ri.LengthFeetInches IN (:two_down_length, :two_up_length) THEN 10
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.VolumeLitres IS NOT NULL
+                     AND :volume IS NOT NULL
+                     AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 0.75
+                    THEN 20
+                WHEN ri.VolumeLitres IS NOT NULL
+                     AND :volume IS NOT NULL
+                     AND ABS(CAST(ri.VolumeLitres AS float) - CAST(:volume AS float)) <= 2.0
+                    THEN 10
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.ProductImageUrl IS NOT NULL THEN 8
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.PriceAmount IS NOT NULL OR ri.PriceAud IS NOT NULL THEN 5
+                ELSE 0
+            END
+            +
+            CASE
+                WHEN ri.BoardSizeId IS NOT NULL THEN 3
+                ELSE 0
+            END AS MatchScore
+        FROM dbo.RetailerInventory ri
+        INNER JOIN dbo.Retailers r
+            ON ri.RetailerId = r.RetailerId
+        INNER JOIN dbo.BoardModels bm
+            ON bm.BoardModelId = ri.BoardModelId
+        WHERE ri.IsActive = 1
+          AND ri.RegionCode = :region_code
+          AND ri.BrandId = :brand_id
+          AND ri.BoardModelId IS NOT NULL
+          AND ri.ProductUrl IS NOT NULL
+          AND (
+                :excluded_inventory_ids_empty = 1
+                OR ri.InventoryId NOT IN :excluded_inventory_ids
+          )
+          AND (
+                :board_size_id IS NULL
+                OR ri.BoardSizeId IS NULL
+                OR ri.BoardSizeId <> :board_size_id
+          )
+          AND (
+                ri.StockStatus IS NULL
+                OR LOWER(LTRIM(RTRIM(ri.StockStatus))) IN (
+                    'in stock',
+                    'instock',
+                    'in_stock',
+                    'available',
+                    'true'
+                )
+          )
+        ORDER BY
+            MatchScore DESC,
+            CASE
+                WHEN ri.ProductImageUrl IS NULL THEN 1
+                ELSE 0
+            END,
+            CASE
+                WHEN ri.PriceAmount IS NULL AND ri.PriceAud IS NULL THEN 1
+                ELSE 0
+            END,
+            CASE
+                WHEN ri.VolumeLitres IS NULL THEN 1
+                ELSE 0
+            END,
+            ri.PriceAud ASC,
+            r.RetailerName ASC
+    """).bindparams(bindparam("excluded_inventory_ids", expanding=True))
+
     official = fetch_one_with_retry(
         official_query,
         {
@@ -2109,9 +2386,13 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
 
     if not official:
         return {
+            "apiBuild": "manufacturer-policy-v1-thin-fallback",
+            "searchVersion": SEARCH_VERSION,
+            "regionCode": region_code,
             "manufacturer": None,
             "exactRetailerMatches": [],
-            "closeRetailerMatches": []
+            "closeRetailerMatches": [],
+            "otherModelMatches": []
         }
 
     policy = manufacturer_search_policy(official.BrandName)
@@ -2135,6 +2416,8 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
 
     one_down_length = None
     one_up_length = None
+    two_down_length = None
+    two_up_length = None
 
     if target_length_inches is not None:
         one_down_length = (
@@ -2158,6 +2441,19 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         one_up_length = (
             f"{one_up_inches // 12}'"
             f"{one_up_inches % 12}"
+        )
+
+        two_down_inches = target_length_inches - 2
+        two_up_inches = target_length_inches + 2
+
+        two_down_length = (
+            f"{two_down_inches // 12}'"
+            f"{two_down_inches % 12}"
+        )
+
+        two_up_length = (
+            f"{two_up_inches // 12}'"
+            f"{two_up_inches % 12}"
         )
 
     model_match = f"%{official.ModelName}%"
@@ -2435,6 +2731,77 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         if len(close_matches) >= 50:
             break
 
+    other_model_matches = []
+    close_ids = {
+        row["inventoryId"]
+        for row in close_matches
+    }
+
+    if should_include_other_model_matches(
+        official.BrandName,
+        direct_matches,
+        exact_matches,
+        close_matches,
+    ):
+        other_model_matches_limit = configured_other_model_matches_limit()
+        if should_run_other_model_matches(
+            direct_matches,
+            exact_matches,
+            close_matches,
+        ) and not should_skip_other_model_matches_for_budget(elapsed_ms()):
+            excluded_inventory_ids = sorted(exact_ids | close_ids) or [-1]
+            try:
+                other_model_rows = execute_with_retry(
+                    other_models_query,
+                    {
+                        "excluded_inventory_ids": excluded_inventory_ids,
+                        "excluded_inventory_ids_empty": 1 if not (exact_ids or close_ids) else 0,
+                        "board_size_id": official.BoardSizeId,
+                        "board_model_id": official.BoardModelId,
+                        "brand_id": official.BrandId,
+                        "length": official.LengthFeetInches,
+                        "one_down_length": one_down_length,
+                        "one_up_length": one_up_length,
+                        "two_down_length": two_down_length,
+                        "two_up_length": two_up_length,
+                        "volume": official.VolumeLitres,
+                        "construction": official.Construction,
+                        "region_code": region_code,
+                    },
+                    timeout_seconds=OTHER_MODEL_MATCHES_TIMEOUT_SECONDS,
+                )
+
+                for row in other_model_rows:
+                    if should_exclude_close_retailer_row(
+                        row,
+                        official,
+                        exact_ids | close_ids,
+                    ):
+                        continue
+
+                    result = retailer_result(row, "retailerOtherModel")
+                    result["canonicalModelName"] = getattr(row, "CanonicalModelName", None)
+                    other_model_matches.append(result)
+
+                    if len(other_model_matches) >= other_model_matches_limit:
+                        break
+            except Exception as exc:
+                timeout_like = is_timeout_error(exc)
+                search_log(
+                    "other_model_matches_timeout" if timeout_like else "other_model_matches_skipped",
+                    requestId=request_id,
+                    boardSizeId=boardSizeId,
+                    region=region_code,
+                    brandName=official.BrandName,
+                    modelName=official.ModelName,
+                    construction=official.Construction,
+                    length=official.LengthFeetInches,
+                    elapsedMs=elapsed_ms(),
+                    errorType=type(exc).__name__,
+                    errorMessage=str(exc),
+                )
+                other_model_matches = []
+
     if official_result.get("directManufacturerMatches"):
         available_direct_matches = [
             match for match in official_result.get("directManufacturerMatches", [])
@@ -2473,8 +2840,9 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         official_result["stockStatus"] = "unavailable"
         official_result["isAvailable"] = False
 
-    return {
-        "apiBuild": "manufacturer-policy-v1",
+    response = {
+        "apiBuild": "manufacturer-policy-v1-thin-fallback",
+        "searchVersion": SEARCH_VERSION,
         "regionCode": region_code,
         "manufacturerSearchPolicy": {
             "brandName": official.BrandName,
@@ -2488,8 +2856,26 @@ def search_inventory(boardSizeId: int, regionCode: str = "AU", region: str | Non
         "directManufacturerMatches": official_result.get("directManufacturerMatches", []),
         "alternateManufacturerMatches": official_result.get("alternateManufacturerMatches", []),
         "exactRetailerMatches": exact_matches,
-        "closeRetailerMatches": close_matches
+        "closeRetailerMatches": close_matches,
+        "otherModelMatches": other_model_matches,
     }
+
+    search_log(
+        "search_request_complete",
+        requestId=request_id,
+        boardSizeId=boardSizeId,
+        region=region_code,
+        brandName=official.BrandName,
+        modelName=official.ModelName,
+        construction=official.Construction,
+        length=official.LengthFeetInches,
+        totalDurationMs=elapsed_ms(),
+        manufacturerDirectCount=len(response.get("directManufacturerMatches", [])),
+        exactRetailerCount=len(response.get("exactRetailerMatches", [])),
+        closeRetailerCount=len(response.get("closeRetailerMatches", [])),
+        otherModelMatchesCount=len(response.get("otherModelMatches", [])),
+    )
+    return response
 
 
 @app.get("/api/test-db")
