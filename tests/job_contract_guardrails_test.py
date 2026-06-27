@@ -71,8 +71,22 @@ class JobContractGuardrailsTests(unittest.TestCase):
                 "run_step",
                 side_effect=[
                     RuntimeError("broken"),
-                    {"brand": "Healthy Brand", "status": "succeeded"},
-                    {"brand": "Healthy Brand Two", "status": "succeeded"},
+                    {
+                        "brand": "Healthy Brand",
+                        "status": "succeeded",
+                        "command": "python healthy.py",
+                        "pipeline_path": "healthy.py",
+                        "return_code": 0,
+                        "duration_seconds": 1.0,
+                    },
+                    {
+                        "brand": "Healthy Brand Two",
+                        "status": "succeeded",
+                        "command": "python healthy_two.py",
+                        "pipeline_path": "healthy_two.py",
+                        "return_code": 0,
+                        "duration_seconds": 1.0,
+                    },
                 ],
             ):
                 with self.assertRaises(SystemExit) as raised:
@@ -90,6 +104,15 @@ class JobContractGuardrailsTests(unittest.TestCase):
             ]
             self.assertIn("Healthy Brand", completed_brands)
             self.assertIn("Healthy Brand Two", completed_brands)
+            failed_event = next(
+                kwargs
+                for _args, kwargs in events
+                if _args and _args[0] == "catalogue_brand_failed"
+            )
+            self.assertEqual(failed_event["brand"], "Broken Brand")
+            self.assertIn("traceback", failed_event)
+            self.assertIn("error_message", failed_event)
+            self.assertEqual(failed_event["command"], "python broken.py")
 
     def test_job_contract_matrix_flags_planning_only_us_mfa_runner(self):
         _, by_region = _build_job_contracts(

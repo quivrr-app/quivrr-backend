@@ -94,7 +94,7 @@ Status model:
 
 The framework prefers latest-state and freshness logic over historical failure counts, which keeps alert noise down when an old failure has already been superseded by a later success.
 
-## Operations Dashboard
+## Quivrr Operations Centre
 
 Sprint 6 adds a first-pass operator dashboard path for Quivrr:
 

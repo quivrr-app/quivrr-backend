@@ -8,7 +8,7 @@
       "type": 1,
       "name": "dashboard-overview",
       "content": {
-        "json": "# Quivrr Operations Dashboard\n\nUse this workbook with the Quivrr production Log Analytics workspace and App Service telemetry.\n\nPrimary views:\n- Regional overview\n- MFA health\n- Retailer health\n- Inventory counts\n- Search quality\n- Coverage gaps\n- Alert summary\n\nCurrent SQL-built linkage and inventory metrics come from `python scripts/observability/build_operations_dashboard_metrics.py`.\n\nSearch latency and runtime failures should be queried from Log Analytics."
+        "json": "# Quivrr Operations Centre\n\nUse this workbook with the Quivrr production Log Analytics workspace and App Service telemetry.\n\nPrimary views:\n- Regional overview\n- MFA health\n- Retailer health\n- Inventory counts\n- Search quality\n- Coverage gaps\n- Alert summary\n\nCurrent SQL-built linkage and inventory metrics come from `python scripts/observability/build_operations_dashboard_metrics.py`.\n\nSearch latency and runtime failures should be queried from Log Analytics."
       }
     },
     {

@@ -729,6 +729,44 @@ def build_ops_dashboard_warming_response(cache_status: str, refresh_started: boo
     return response
 
 
+def _ops_dashboard_payload_is_complete(payload):
+
+    if not isinstance(payload, dict):
+        return False
+
+    required_keys = (
+        "regions",
+        "regionOverview",
+        "mfaHealth",
+        "retailerHealth",
+        "retailerHealthByRegion",
+        "jobHealth",
+        "jobHealthByRegion",
+        "jobContracts",
+        "jobContractsByRegion",
+        "inventoryCounts",
+        "searchQuality",
+        "coverageGaps",
+        "alerts",
+        "alertSummary",
+        "regionDetails",
+        "linkQuality",
+    )
+    if any(key not in payload for key in required_keys):
+        return False
+
+    regions = payload.get("regions") or []
+    region_details = payload.get("regionDetails") or {}
+    if not regions or not isinstance(region_details, dict):
+        return False
+
+    for region in regions:
+        if region not in region_details:
+            return False
+
+    return True
+
+
 def _persist_ops_dashboard_cache(payload, generated_at):
     OPS_DASHBOARD_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
     OPS_DASHBOARD_CACHE_FILE.write_text(
@@ -756,15 +794,6 @@ def _read_ops_dashboard_snapshot(path: Path):
     generated_at = float(raw_payload.get("generated_at", 0.0))
 
     if payload is None or generated_at <= 0:
-        return None, 0.0
-
-    if payload.get("version") != DASHBOARD_VERSION:
-        ops_dashboard_log(
-            "ops_dashboard_snapshot_version_mismatch",
-            cacheFile=str(path),
-            snapshotVersion=payload.get("version"),
-            expectedVersion=DASHBOARD_VERSION,
-        )
         return None, 0.0
 
     return payload, generated_at
@@ -827,6 +856,8 @@ def _load_ops_dashboard_cache_from_disk_locked():
         return
 
     _ops_dashboard_cache["loaded_from_disk"] = True
+    fallback_payload = None
+    fallback_generated_at = 0.0
     for snapshot_path, loaded_event, failed_event in (
         (
             OPS_DASHBOARD_CACHE_FILE,
@@ -844,6 +875,18 @@ def _load_ops_dashboard_cache_from_disk_locked():
             if payload is None or generated_at <= 0:
                 continue
 
+            if payload.get("version") != DASHBOARD_VERSION:
+                ops_dashboard_log(
+                    "ops_dashboard_snapshot_version_mismatch",
+                    cacheFile=str(snapshot_path),
+                    snapshotVersion=payload.get("version"),
+                    expectedVersion=DASHBOARD_VERSION,
+                )
+                if _ops_dashboard_payload_is_complete(payload) and generated_at > fallback_generated_at:
+                    fallback_payload = payload
+                    fallback_generated_at = generated_at
+                continue
+
             _ops_dashboard_cache["payload"] = payload
             _ops_dashboard_cache["generated_at"] = generated_at
             ops_dashboard_log(
@@ -857,6 +900,15 @@ def _load_ops_dashboard_cache_from_disk_locked():
                 cacheFile=str(snapshot_path),
                 error=str(exc),
             )
+    if fallback_payload is not None:
+        _ops_dashboard_cache["payload"] = fallback_payload
+        _ops_dashboard_cache["generated_at"] = fallback_generated_at
+        ops_dashboard_log(
+            "ops_dashboard_legacy_snapshot_loaded",
+            snapshotVersion=fallback_payload.get("version"),
+            expectedVersion=DASHBOARD_VERSION,
+            generatedAt=fallback_generated_at,
+        )
 
 
 def _store_ops_dashboard_cache(payload, generated_at):

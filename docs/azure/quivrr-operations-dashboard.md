@@ -1,4 +1,4 @@
-# Quivrr Operations Dashboard
+# Quivrr Operations Centre
 
 ## Purpose
 
@@ -239,14 +239,14 @@ Import steps:
 3. Open `Workbooks`.
 4. Choose `+ New` then `Advanced Editor`.
 5. Paste the contents of [docs/azure/workbooks/quivrr-operations-workbook.json](/C:/Projects/quivrr.app/quivrr-backend/docs/azure/workbooks/quivrr-operations-workbook.json).
-6. Save as `Quivrr Operations Dashboard`.
+6. Save as `Quivrr Operations Centre`.
 7. Set the workbook resource context to `workspace-quivrrproductionrgUkqI`.
 8. Confirm the KQL tables resolve against production App Service / job telemetry.
 9. Pin the saved workbook to the Azure Portal dashboard named `Quivrr Operations` if a team dashboard is being maintained.
 
 Expected Azure location after import:
 
-- `Azure Portal -> Monitor -> Workbooks -> Quivrr Operations Dashboard`
+- `Azure Portal -> Monitor -> Workbooks -> Quivrr Operations Centre`
 - Optional pin target:
   `Azure Portal -> Dashboard -> Quivrr Operations`
 
