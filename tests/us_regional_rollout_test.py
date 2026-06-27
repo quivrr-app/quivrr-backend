@@ -319,6 +319,40 @@ class UsRegionalRolloutTests(unittest.TestCase):
             ) as update_job_state, patch.object(
                 mfa_runner, "assert_region_scope"
             ), patch.object(
+                mfa_runner,
+                "region_counts",
+                return_value={"AU": 10, "EU": 20, "ID": 30, "US": 40, "<NULL>": 0},
+            ), patch.object(
+                mfa_runner,
+                "build_brand",
+                side_effect=lambda slug, **_kwargs: {
+                    "slug": slug,
+                    "brand": mfa_runner.IMPLEMENTED_BRANDS[slug]["brandName"],
+                    "source_status": "fresh",
+                    "fresh_build_success": True,
+                    "used_stale_fallback": False,
+                    "rows_emitted": 12,
+                    "error_type": None,
+                    "error_message_summary": None,
+                },
+            ), patch.object(
+                mfa_runner,
+                "validate_output",
+                side_effect=lambda slug: {
+                    "brand": mfa_runner.IMPLEMENTED_BRANDS[slug]["brandName"],
+                    "rows": 12,
+                    "available_rows": 10,
+                    "rows_with_dimensions": 12,
+                    "output": f"mock/{slug}.json",
+                },
+            ), patch.object(
+                mfa_runner,
+                "run",
+            ), patch.object(
+                mfa_runner,
+                "import_report",
+                return_value={"brands": [{"brand": "Album", "linked_model_rows": 10, "linked_size_rows": 8}]},
+            ), patch.object(
                 mfa_runner, "REPORT_OUTPUT", report_path
             ), patch(
                 "sys.argv",

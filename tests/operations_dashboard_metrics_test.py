@@ -313,6 +313,9 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertIn("jobContracts", metrics)
         self.assertIn("jobContractsByRegion", metrics)
         self.assertIn("regionDetails", metrics)
+        self.assertIn("canonicalCompleteness", metrics)
+        self.assertIn("regionalReadiness", metrics)
+        self.assertIn("pipelineHealth", metrics)
         au_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "AU")
         us_gaps = next(item for item in metrics["coverageGaps"] if item["region"] == "US")
         self.assertEqual(au_gaps["supportedCanonicalModelsNoStockAnywhere"]["count"], 0)
@@ -328,6 +331,8 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(metrics["regionDetails"]["AU"]["retailerHealth"]["summary"]["configuredRetailers"], 4)
         self.assertIn("jobHealth", metrics["regionDetails"]["AU"])
         self.assertIn("jobContracts", metrics["regionDetails"]["AU"])
+        self.assertTrue(any(item["key"] == "global_canonical" for item in metrics["pipelineHealth"]))
+        self.assertTrue(any(item["key"] == "bodhi" and item["status"] == "grey" for item in metrics["pipelineHealth"]))
 
     def test_region_level_stale_alert_suppresses_per_retailer_spam(self):
         now = datetime(2026, 6, 26, 0, 0, tzinfo=timezone.utc)

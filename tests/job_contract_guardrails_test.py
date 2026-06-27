@@ -114,7 +114,7 @@ class JobContractGuardrailsTests(unittest.TestCase):
             self.assertIn("error_message", failed_event)
             self.assertEqual(failed_event["command"], "python broken.py")
 
-    def test_job_contract_matrix_flags_planning_only_us_mfa_runner(self):
+    def test_job_contract_matrix_marks_validated_us_mfa_runner_green(self):
         _, by_region = _build_job_contracts(
             ["AU", "EU", "ID", "US"],
             {
@@ -125,8 +125,8 @@ class JobContractGuardrailsTests(unittest.TestCase):
             },
         )
         us_mfa = next(row for row in by_region["US"] if row["jobName"] == "quivrr-us-mfr-availability")
-        self.assertEqual(us_mfa["contractStatus"], "red")
-        self.assertEqual(us_mfa["contractLabel"], "planning_only")
+        self.assertEqual(us_mfa["contractStatus"], "green")
+        self.assertEqual(us_mfa["contractLabel"], "healthy")
 
     def test_weekly_catalogue_runner_treats_guarded_failures_as_degraded(self):
         with TemporaryDirectory() as temp_dir:

@@ -61,6 +61,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
             "alerts": [{"severity": "red"}],
             "alertSummary": {"summary": {"critical": 1}},
             "regionDetails": {"AU": {}},
@@ -95,6 +98,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertIn("inventoryCounts", body)
         self.assertIn("linkQuality", body)
         self.assertIn("coverageGaps", body)
+        self.assertIn("canonicalCompleteness", body)
+        self.assertIn("regionalReadiness", body)
+        self.assertIn("pipelineHealth", body)
         self.assertIn("alerts", body)
         self.assertIn("alertSummary", body)
         self.assertIn("regionDetails", body)
@@ -113,6 +119,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
             "alerts": [],
             "alertSummary": {"summary": {"critical": 0}},
             "regionDetails": {"AU": {}},
@@ -178,6 +187,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
             "alerts": [],
             "alertSummary": {"summary": {"critical": 0}},
             "regionDetails": {"AU": {}},
@@ -222,12 +234,15 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
             "alerts": [],
             "alertSummary": {"summary": {"critical": 0}},
             "regionDetails": {"AU": {}},
         }
         self.cache_file.write_text(
-            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "' + backend_app.DASHBOARD_VERSION + '", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "' + backend_app.DASHBOARD_VERSION + '", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "canonicalCompleteness": {}, "regionalReadiness": [], "pipelineHealth": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )
 
@@ -263,12 +278,15 @@ class OperationsDashboardApiTests(unittest.TestCase):
             "inventoryCounts": [],
             "linkQuality": {},
             "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
             "alerts": [],
             "alertSummary": {"summary": {"critical": 0}},
             "regionDetails": {"AU": {}},
         }
         self.bootstrap_file.write_text(
-            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "' + backend_app.DASHBOARD_VERSION + '", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "' + backend_app.DASHBOARD_VERSION + '", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "inventoryCounts": [], "linkQuality": {}, "coverageGaps": [], "canonicalCompleteness": {}, "regionalReadiness": [], "pipelineHealth": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )
 
@@ -292,7 +310,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
 
     def test_ops_dashboard_serves_complete_legacy_cached_snapshot_when_runtime_cache_missing(self):
         self.cache_file.write_text(
-            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "jobContracts": [], "jobContractsByRegion": {"AU": []}, "inventoryCounts": [], "searchQuality": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "jobContracts": [], "jobContractsByRegion": {"AU": []}, "inventoryCounts": [], "searchQuality": [], "linkQuality": {}, "coverageGaps": [], "canonicalCompleteness": {}, "regionalReadiness": [], "pipelineHealth": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )
 
@@ -317,7 +335,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
 
     def test_ops_dashboard_serves_complete_legacy_bootstrap_snapshot_when_runtime_cache_missing(self):
         self.bootstrap_file.write_text(
-            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "jobContracts": [], "jobContractsByRegion": {"AU": []}, "inventoryCounts": [], "searchQuality": [], "linkQuality": {}, "coverageGaps": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
+            '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "jobContracts": [], "jobContractsByRegion": {"AU": []}, "inventoryCounts": [], "searchQuality": [], "linkQuality": {}, "coverageGaps": [], "canonicalCompleteness": {}, "regionalReadiness": [], "pipelineHealth": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
         )
 

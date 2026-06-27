@@ -370,7 +370,7 @@
       "structuredLogEventName": "mfa_refresh_completed",
       "freshnessHours": 72,
       "metricSource": "manufacturer_inventory",
-      "entryScript": "python scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py apply",
+        "entryScript": "python scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py apply --confirm-apply-us-mfa APPLY_US_MFA",
       "contractLayer": "regional_manufacturer_availability",
       "readsTables": ["Brands", "BoardModels", "BoardSizes", "ManufacturerInventory"],
       "writesTables": ["ManufacturerInventory"],

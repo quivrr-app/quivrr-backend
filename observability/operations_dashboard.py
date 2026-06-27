@@ -17,7 +17,7 @@ from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
 EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
 JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
 SERVICE_NAME = "operations_dashboard"
-DASHBOARD_VERSION = "sprint7_gen3_regional_standardisation_v2"
+DASHBOARD_VERSION = "sprint7_final_closeout_v1"
 SUPPORTED_BRAND_SET = {
     "Album",
     "Channel Islands",
@@ -1600,6 +1600,194 @@ def _build_region_details(
     return region_details
 
 
+def _latest_job_issue(
+    rows: list[dict[str, Any]],
+    *,
+    include_global: bool = False,
+) -> str:
+    relevant = []
+    for row in rows or []:
+        expected_region = str(row.get("expectedRegion") or "").upper()
+        if expected_region == "GLOBAL" and not include_global:
+            continue
+        if row.get("status") in {"yellow", "red"}:
+            relevant.append(row)
+    if not relevant:
+        return "No current issues."
+    relevant.sort(
+        key=lambda row: (
+            -STATUS_PRIORITY.get(str(row.get("status") or "grey").lower(), -1),
+            str(row.get("jobName") or ""),
+        )
+    )
+    item = relevant[0]
+    return f"{item.get('jobName')}: {item.get('statusReason') or item.get('statusLabel') or item.get('status')}"
+
+
+def _build_pipeline_health(
+    region_overview: list[dict[str, Any]],
+    job_health: list[dict[str, Any]],
+    alert_summary: dict[str, Any],
+    *,
+    cache_health_color: str,
+    cache_health_reason: str,
+) -> list[dict[str, Any]]:
+    global_jobs = [
+        row
+        for row in (job_health or [])
+        if str(row.get("expectedRegion") or "").upper() == "GLOBAL"
+    ]
+    global_catalogue_job = next(
+        (row for row in global_jobs if row.get("jobName") == "quivrr-weekly-brand-catalogues"),
+        None,
+    )
+    catalogue_status = "grey"
+    catalogue_reason = "Weekly canonical telemetry is unavailable."
+    catalogue_metric = "No recent global canonical execution"
+    if global_catalogue_job:
+        catalogue_status = str(global_catalogue_job.get("status") or "grey").lower()
+        catalogue_reason = (
+            global_catalogue_job.get("statusReason")
+            or "Weekly canonical telemetry is unavailable."
+        )
+        latest_success = global_catalogue_job.get("lastSucceededUtc")
+        catalogue_metric = (
+            f"Last success {latest_success}"
+            if latest_success
+            else "No recent global canonical success"
+        )
+        if catalogue_status == "yellow":
+            catalogue_reason = (
+                f"{catalogue_reason} Canonical truth preserved; review guarded source outputs in Azure."
+            )
+
+    mfa_regions = [row for row in region_overview if row.get("mfaStatus") in {"green", "yellow", "red"}]
+    retailer_regions = [row for row in region_overview if row.get("retailerStatus") in {"green", "yellow", "red"}]
+    search_regions = [row for row in region_overview if row.get("searchHealthStatus") in {"green", "yellow", "red"}]
+    linkage_regions = [row for row in region_overview if row.get("dataQualityStatus") in {"green", "yellow", "red"}]
+
+    def summarize_region_stage(rows: list[dict[str, Any]], status_key: str, reason_key: str, metric_key: str, metric_label: str) -> tuple[str, str, str]:
+        if not rows:
+            return "grey", "No regional telemetry available.", f"No {metric_label}"
+        color = combine_status_colors(*(str(row.get(status_key) or "grey").lower() for row in rows))
+        issues = [row for row in rows if str(row.get(status_key) or "").lower() in {"yellow", "red"}]
+        reason = "All expected regions are healthy."
+        if issues:
+            issues.sort(
+                key=lambda row: (
+                    -STATUS_PRIORITY.get(str(row.get(status_key) or "grey").lower(), -1),
+                    str(row.get("region") or ""),
+                )
+            )
+            issue = issues[0]
+            reason = f"{issue.get('region')}: {issue.get(reason_key) or issue.get(status_key)}"
+        metric = ", ".join(
+            f"{row.get('region')} {metric_label} {row.get(metric_key) if row.get(metric_key) is not None else 'n/a'}"
+            for row in rows
+        )
+        return color, reason, metric
+
+    mfa_status, mfa_reason, mfa_metric = summarize_region_stage(
+        mfa_regions,
+        "mfaStatus",
+        "mfaReason",
+        "activeMfaBoardCount",
+        "boards",
+    )
+    retailer_status, retailer_reason, retailer_metric = summarize_region_stage(
+        retailer_regions,
+        "retailerStatus",
+        "retailerReason",
+        "activeRetailerBoardCount",
+        "boards",
+    )
+    linkage_status, linkage_reason, linkage_metric = summarize_region_stage(
+        linkage_regions,
+        "dataQualityStatus",
+        "searchHealthReason",
+        "supportedModelLinkagePct",
+        "model%",
+    )
+    search_status, search_reason, search_metric = summarize_region_stage(
+        search_regions,
+        "searchHealthStatus",
+        "searchHealthReason",
+        "canonicalSizeFamilyLinkagePct",
+        "family%",
+    )
+
+    alerts_summary = alert_summary.get("summary", {}) if isinstance(alert_summary, dict) else {}
+    operations_metric = (
+        f"Critical {alerts_summary.get('critical', 0)} · Warnings {alerts_summary.get('warnings', 0)}"
+    )
+
+    return [
+        {
+            "key": "global_canonical",
+            "label": "Global Canonical",
+            "status": catalogue_status,
+            "lastSuccessUtc": global_catalogue_job.get("lastSucceededUtc") if global_catalogue_job else None,
+            "latestIssue": catalogue_reason,
+            "primaryMetric": catalogue_metric,
+            "anchor": "#job-health",
+        },
+        {
+            "key": "regional_mfa",
+            "label": "Regional Manufacturer Availability",
+            "status": mfa_status,
+            "lastSuccessUtc": max((row.get("lastMfaRefreshUtc") for row in mfa_regions if row.get("lastMfaRefreshUtc")), default=None),
+            "latestIssue": mfa_reason,
+            "primaryMetric": mfa_metric,
+            "anchor": "#mfa-health",
+        },
+        {
+            "key": "regional_retailer_inventory",
+            "label": "Regional Retailer Inventory",
+            "status": retailer_status,
+            "lastSuccessUtc": max((row.get("lastRetailerInventoryRefreshUtc") for row in retailer_regions if row.get("lastRetailerInventoryRefreshUtc")), default=None),
+            "latestIssue": retailer_reason,
+            "primaryMetric": retailer_metric,
+            "anchor": "#retailer-health",
+        },
+        {
+            "key": "linkage_quality",
+            "label": "Linkage Quality",
+            "status": linkage_status,
+            "lastSuccessUtc": None,
+            "latestIssue": linkage_reason,
+            "primaryMetric": linkage_metric,
+            "anchor": "#link-quality",
+        },
+        {
+            "key": "search_health",
+            "label": "Search Health",
+            "status": search_status,
+            "lastSuccessUtc": None,
+            "latestIssue": search_reason,
+            "primaryMetric": search_metric,
+            "anchor": "#search-quality",
+        },
+        {
+            "key": "operations_centre",
+            "label": "Operations Centre",
+            "status": cache_health_color,
+            "lastSuccessUtc": None,
+            "latestIssue": cache_health_reason,
+            "primaryMetric": operations_metric,
+            "anchor": "#alerts",
+        },
+        {
+            "key": "bodhi",
+            "label": "Future: Bodhi",
+            "status": "grey",
+            "lastSuccessUtc": None,
+            "latestIssue": "Future layer only. Bodhi is not active in the public Operations Centre.",
+            "primaryMetric": "Future layer",
+            "anchor": None,
+        },
+    ]
+
+
 def build_operations_dashboard_metrics(
     *,
     generated_at_utc: str | None = None,
@@ -1689,6 +1877,13 @@ def build_operations_dashboard_metrics(
         readiness,
         canonical_report,
     )
+    pipeline_health = _build_pipeline_health(
+        region_overview,
+        job_health,
+        alert_summary,
+        cache_health_color="green",
+        cache_health_reason="Complete live payload is available.",
+    )
 
     return {
         "generatedAtUtc": generated_at_utc,
@@ -1707,6 +1902,7 @@ def build_operations_dashboard_metrics(
         "searchQuality": search_quality,
         "regionalReadiness": readiness,
         "canonicalCompleteness": canonical_report,
+        "pipelineHealth": pipeline_health,
         "coverageGaps": coverage_gaps,
         "topUnmatchedModels": linkage_report.get("topRemainingUnmatchedModels", []),
         "topUnmatchedRetailers": linkage_report.get("topUnmatchedRetailers", []),
