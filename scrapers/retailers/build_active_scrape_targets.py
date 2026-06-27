@@ -38,8 +38,10 @@ MANUFACTURER_OR_BRAND_TYPES = {
 }
 
 EXCLUDED_RETAILERS = {
-    "js industries",
-    "ocean & earth store",
+    "js industries": "excluded_retailer",
+    "ocean & earth store": "excluded_retailer",
+    "red herring surf": "board_collective_shell_duplicate",
+    "saltwater wine port macquarie": "board_collective_shell_duplicate",
 }
 
 
@@ -209,7 +211,7 @@ def get_exclusion_reason(record, overrides):
     name = retailer_name(record).lower()
 
     if name in EXCLUDED_RETAILERS:
-        return "excluded_retailer"
+        return EXCLUDED_RETAILERS[name]
 
     if is_manufacturer_or_brand(record):
         return "manufacturer_or_brand"

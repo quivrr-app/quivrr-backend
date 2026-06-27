@@ -21,7 +21,7 @@ Evidence used:
 - Live public website inspection
 - Public `robots.txt` and public product/category endpoints where available
 
-Review date: `2026-06-27`
+Review date: `2026-06-28`
 
 ## Qualification Summary
 
@@ -29,8 +29,8 @@ Review date: `2026-06-27`
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Surf Boardroom | `https://surfboardroom.com.au` | WooCommerce / WordPress | Medium: visible Channel Islands and Sharp Eye signals; broader supported-brand coverage not clearly enumerated online | `200+ in-store` claimed, but direct product-level online board catalogue is weak | Weak for live board SKUs; surfboards page is mostly editorial plus custom-order flow | Weak for boards; gift cards are priced, board catalogue pricing is not clearly exposed in the public board landing page | Weak; no strong public board variant surface found in the current online flow | Yes | No clear public board pagination observed | Yes, public site search exists | None for browsing | `robots.txt` allows search crawling, blocks AI training and standard admin/cart paths | Medium | Keep in queue, but do not take first. Real surf retailer, weak public board inventory surface. |
 | Trigger Bros Surfboards | `https://triggerbrothers.com.au` | BigCommerce | Medium: strong surfboard catalogue, but public board page looks heavily weighted to Trigger house boards, customs and softboards; supported-brand overlap needs deeper model-level validation | High: public boards category shows at least `6+` pages, likely `70-100+` board listings | Yes | Yes | Medium: titles include size and board names; enough structure for parsing but not obviously canonical-ready | Yes | Yes | Yes, but `search.php` is disallowed in `robots.txt` | None for browsing | `robots.txt` disallows account/cart/checkout/search and sets `crawl-delay: 10` for many AI bots | Medium | Strong candidate for later AU uplift, but not the best first retailer if we want supported-brand coverage first. |
-| Red Herring Surf | `https://redherringsurf.com.au` | Shopify | High: visible surfboard taxonomy, multi-store surf retail signal, public content references Firewire and other supported-board discussion, plus prior stockist overlap for JS / Pyzel / Firewire | Medium, but public JSON feed is not exposing products. Board taxonomy is visible, exact board count is not currently countable from the simple Shopify feed | Partially. Board categories are public, but `products.json` currently returns an empty array | Category and product pricing are visible in public snippets and public pages | Medium: board categories are clear, but variant extraction likely needs collection HTML or alternate storefront surface | Yes | Not clearly confirmed from the public shell, but the store is category-driven and likely paginated | Yes | None for browsing | Shopify storefront policy allows public HTML, but standard AJAX/catalog shortcuts are limited; `products.json` returns empty | Medium-High | Best first AU implementation candidate. Highest likely supported-brand coverage upside if the public collection path can be recovered safely. |
-| Saltwater Wine | `https://saltwaterwine.com.au` | Shopify | High: same surf retail family as Red Herring, strong supported-brand editorial overlap including JS / Pyzel / Firewire / Channel Islands references | Medium, but exact online board count is not currently countable from the public feed | Partially. Board taxonomy is visible, but `products.json` currently returns an empty array | Public pricing is visible on live pages and snippets | Medium: likely recoverable, but current simple feed path is empty and the storefront is apparel-heavy | Yes | Not clearly confirmed from the public shell | Yes | None for browsing | Shopify storefront policy allows public HTML, but standard AJAX/catalog shortcuts are limited; `products.json` returns empty | Medium-High | Second-best AU implementation candidate, especially if it can reuse the same recovery path as Red Herring. |
+| Red Herring Surf | `https://redherringsurf.com.au` | Shopify storefront shell | High stockist/editorial overlap, but no retailer-distinct online surfboard inventory surface | Not countable from the Red Herring domain. Public shell links through to Board Collective inventory rather than exposing Red Herring-owned products | No retailer-distinct board stock surface found. `products.json` is empty and surfboard search returns `0` results | Board Collective pricing is visible through linked shell content, but not as a Red Herring-owned product feed | Low for distinct retailer extraction. Public shell does not expose a separate variant catalogue | Yes, via Board Collective-linked assets | No retailer-distinct pagination confirmed | Search exists, but surfboard searches return no products on the Red Herring domain | None for browsing | Public HTML repeatedly references `boardcollective.com.au`; only direct product link found resolves to Board Collective gift card | Low for implementation, high for duplication risk | Defer. Treat as a Board Collective storefront shell, not an independent AU retailer inventory source. |
+| Saltwater Wine | `https://saltwaterwine.com.au` | Shopify storefront shell | High stockist/editorial overlap, but no retailer-distinct online surfboard inventory surface | Not countable from the Saltwater domain. Public shell links through to Board Collective inventory rather than exposing Saltwater-owned products | No retailer-distinct board stock surface found. `products.json` is empty and surfboard search returns `0` results | Board Collective pricing is visible through linked shell content, but not as a Saltwater-owned product feed | Low for distinct retailer extraction. Public shell does not expose a separate variant catalogue | Yes, via Board Collective-linked assets | No retailer-distinct pagination confirmed | Search exists, but surfboard searches return no products on the Saltwater domain | None for browsing | Public HTML repeatedly references `boardcollective.com.au`; only direct product link found resolves to Board Collective gift card | Low for implementation, high for duplication risk | Defer. Treat as a Board Collective storefront shell, not an independent AU retailer inventory source. |
 | Goodtime Surfboards | `https://www.goodtime.com.au` | Legacy OpenCart-style stack currently classified as Magento in Quivrr reports | Low-Medium: public category pages are dominated by Goodtime house boards; supported-brand overlap is not strong from the visible board catalogue | Medium-High: visible dozens of public board products and category pagination controls | Yes | Yes | High for raw parsing: titles include dimensions and litres, but the stack is brittle and old | Yes | Yes | Yes | None for browsing | No useful `robots.txt` found; public pages render with visible template warnings and older storefront patterns | High | Valuable raw board source, but not the first AU Gen 3 retailer. Engineering cost is high and supported-brand coverage looks weaker than Red Herring / Saltwater. |
 
 ## Retailer Notes
@@ -78,40 +78,36 @@ Assessment:
 
 - Current Quivrr status: `endpoint_review`
 - Existing governance reason: `No raw products returned from scrape output`
-- Public surf taxonomy is strong:
-  - shortboards
-  - mid lengths
-  - longboards
-  - softboards
-- Multi-store retail signal is strong across Tasmania
+- Public shell references `boardcollective.com.au` extensively across the page source
 - Public Shopify `products.json` returned an empty array in this review
-- Store FAQ and fulfilment copy confirm a shared store-based fulfilment model across Red Herring / Saltwater / Stormriders
+- Public surfboard search returned `0` results
+- Public `/collections/all` produced only one direct product link, and it resolved to:
+  - `https://boardcollective.com.au/products/boardcollective-egift-card`
+- Public surf taxonomy is present in shell navigation, but surf collection pages and product JSON do not expose Red Herring-owned board stock
+- This makes the site useful as a stockist / editorial shell, but not as a retailer-distinct Quivrr inventory source
 
 Assessment:
 
-- High-value AU candidate because:
-  - supported-brand overlap is more likely
-  - online surfboard merchandising is clearly real
-  - solving this path may also unlock Saltwater Wine
-- Best first AU implementation candidate
+- Do not onboard as an independent retailer
+- Current site duplicates Board Collective merchandising and does not expose Red Herring-specific purchasable board inventory
+- Correct handling is to keep Board Collective as the inventory source and defer Red Herring unless a retailer-distinct stock feed appears later
 
 ### Saltwater Wine
 
 - Current Quivrr status: `endpoint_review`
 - Existing governance reason: `No raw products returned from scrape output`
-- Same storefront family and fulfilment network characteristics as Red Herring
-- Public editorial content directly references supported-board use cases and models such as:
-  - JS
-  - Pyzel
-  - Firewire
-  - Channel Islands
+- Public shell references `boardcollective.com.au` extensively across the page source
 - Public Shopify `products.json` returned an empty array in this review
-- Storefront is more apparel-heavy than Red Herring, so surfboard extraction needs stronger filtering
+- Public surfboard search returned `0` results
+- Public `/collections/all` produced only one direct product link, and it resolved to:
+  - `https://boardcollective.com.au/products/boardcollective-egift-card`
+- Storefront remains apparel/editorial heavy and does not expose Saltwater-owned surfboard inventory independently of Board Collective
 
 Assessment:
 
-- Strong second target after Red Herring
-- Very likely to benefit from the same extraction path once Red Herring is proven
+- Do not onboard as an independent retailer
+- Current site duplicates Board Collective merchandising and does not expose Saltwater-specific purchasable board inventory
+- Correct handling is to keep Board Collective as the inventory source and defer Saltwater unless a retailer-distinct stock feed appears later
 
 ### Goodtime Surfboards
 
@@ -141,53 +137,50 @@ Assessment:
 
 | Retailer | Estimated engineering effort | Expected inventory gain | Expected coverage improvement | Platform confidence | Why it belongs here |
 | --- | --- | --- | --- | --- | --- |
-| Red Herring Surf | Medium-High | Medium | High | High | Best supported-brand upside and likely unlock path for another retailer on the same storefront family |
-| Saltwater Wine | Medium-High | Medium | High | High | Shared Shopify family with Red Herring; strong editorial and stockist overlap with supported brands |
+| Trigger Bros Surfboards | Medium | High | Medium | High | Best remaining retailer-distinct ecommerce target with visible live board catalogue, pricing and pagination |
+| Goodtime Surfboards | High | Medium-High | Low-Medium | Medium | Valuable raw board source, but higher engineering effort because the stack is older and noisier |
 
 ### Priority 2
 
 | Retailer | Estimated engineering effort | Expected inventory gain | Expected coverage improvement | Platform confidence | Why it belongs here |
 | --- | --- | --- | --- | --- | --- |
-| Trigger Bros Surfboards | Medium | High | Medium | High | Live online board catalogue is clearly visible and paginated, but supported-brand alignment is less obvious |
-| Goodtime Surfboards | High | Medium-High | Low-Medium | Medium | Public board pages are rich, but stack quality is brittle and supported-brand overlap appears weaker |
+| Surf Boardroom | Medium | Low-Medium | Medium | High | Strong retailer, but current public site looks more like store presence and custom ordering than a scrapeable online board catalogue |
 
 ### Priority 3
 
 | Retailer | Estimated engineering effort | Expected inventory gain | Expected coverage improvement | Platform confidence | Why it belongs here |
 | --- | --- | --- | --- | --- | --- |
-| Surf Boardroom | Medium | Low-Medium | Medium | High | Strong retailer, but current public site looks more like store presence and custom ordering than a scrapeable online board catalogue |
+| Red Herring Surf | Low | None as distinct source | None while shell remains shared | High | Shared-shell merchandising duplicates Board Collective rather than exposing independent retailer inventory |
+| Saltwater Wine | Low | None as distinct source | None while shell remains shared | High | Shared-shell merchandising duplicates Board Collective rather than exposing independent retailer inventory |
 
 ## Recommended First Retailer
 
 Recommended first AU retailer for Gen 3 implementation:
 
-1. `Red Herring Surf`
+1. `Trigger Bros Surfboards`
 
 Why:
 
-- strongest blend of:
-  - supported-brand relevance
-  - clear live surfboard merchandising
-  - public non-auth board taxonomy
-  - likely reusable recovery path for `Saltwater Wine`
+- strongest remaining blend of:
+  - retailer-distinct stock
+  - visible live board merchandising
+  - public pricing and pagination
+  - lower duplication risk than the Board Collective shell retailers
 
 Recommended second retailer:
 
-2. `Saltwater Wine`
+2. `Goodtime Surfboards`
 
 Recommended hold order after that:
 
-3. `Trigger Bros Surfboards`
-4. `Goodtime Surfboards`
-5. `Surf Boardroom`
+3. `Surf Boardroom`
+4. `Red Herring Surf`
+5. `Saltwater Wine`
 
 ## Recommendation Before Scraper Work
 
 Before Phase 3 implementation starts:
 
-- confirm whether Red Herring and Saltwater are best recovered from:
-  - public collection HTML
-  - Shopify storefront alternate JSON surfaces
-  - Shopify MCP / UCP if appropriate for internal ingestion
+- keep Red Herring and Saltwater out of active scraper onboarding unless they expose retailer-distinct board inventory instead of Board Collective shell content
 - confirm supported-brand ratio on Trigger Bros before spending BigCommerce engineering time
 - treat Surf Boardroom as a live-retailer review success but an online-inventory capture risk until product-level boards are proven public
