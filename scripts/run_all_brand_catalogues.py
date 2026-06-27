@@ -94,6 +94,23 @@ class StepExecutionError(RuntimeError):
         self.row = row
 
 
+def classify_failure(row, exc):
+    diagnostic_text = "\n".join(
+        [
+            str(exc),
+            str(row.get("message") or ""),
+            str(row.get("traceback") or ""),
+            "\n".join(str(item) for item in row.get("output_tail", [])),
+        ]
+    ).lower()
+
+    if "catalogue regression guard blocked deactivation" in diagnostic_text:
+        return "degraded", "deactivation_guard_blocked"
+    if "catalogue scrape incomplete" in diagnostic_text or "missingmodels=" in diagnostic_text:
+        return "degraded", "source_incomplete_guard"
+    return "failed", "hard_failure"
+
+
 def run_step(step):
     command_path = Path(step["command"][1])
 
@@ -154,6 +171,7 @@ def main():
     emit_event("catalogue_refresh_started", "brand_catalogue", status="success")
     results = []
     failures = []
+    degraded = []
 
     for step in STEPS:
         try:
@@ -171,7 +189,6 @@ def main():
                 duration_seconds=row["duration_seconds"],
             )
         except Exception as exc:
-            failures.append(step["name"])
             failed_row = getattr(exc, "row", None) or {
                 "brand": step["name"],
                 "command": " ".join(step["command"]),
@@ -184,21 +201,43 @@ def main():
                 "output_tail": [],
             }
             failed_row["traceback"] = traceback.format_exc()
+            outcome, reason = classify_failure(failed_row, exc)
+            failed_row["status"] = outcome
+            failed_row["failure_reason"] = reason
             results.append(failed_row)
-            emit_event(
-                "catalogue_brand_failed",
-                "brand_catalogue",
-                status="failed",
-                brand=step["name"],
-                command=failed_row.get("command"),
-                pipeline_path=failed_row.get("pipeline_path"),
-                exit_code=failed_row.get("return_code"),
-                duration_seconds=failed_row.get("duration_seconds"),
-                error_type=type(exc).__name__,
-                error_message=str(exc),
-                output_tail=failed_row.get("output_tail", []),
-                traceback=failed_row.get("traceback"),
-            )
+            if outcome == "degraded":
+                degraded.append(step["name"])
+                emit_event(
+                    "catalogue_brand_degraded",
+                    "brand_catalogue",
+                    status="degraded",
+                    brand=step["name"],
+                    command=failed_row.get("command"),
+                    pipeline_path=failed_row.get("pipeline_path"),
+                    exit_code=failed_row.get("return_code"),
+                    duration_seconds=failed_row.get("duration_seconds"),
+                    degradation_reason=reason,
+                    error_type=type(exc).__name__,
+                    error_message=str(exc),
+                    output_tail=failed_row.get("output_tail", []),
+                    traceback=failed_row.get("traceback"),
+                )
+            else:
+                failures.append(step["name"])
+                emit_event(
+                    "catalogue_brand_failed",
+                    "brand_catalogue",
+                    status="failed",
+                    brand=step["name"],
+                    command=failed_row.get("command"),
+                    pipeline_path=failed_row.get("pipeline_path"),
+                    exit_code=failed_row.get("return_code"),
+                    duration_seconds=failed_row.get("duration_seconds"),
+                    error_type=type(exc).__name__,
+                    error_message=str(exc),
+                    output_tail=failed_row.get("output_tail", []),
+                    traceback=failed_row.get("traceback"),
+                )
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
@@ -209,10 +248,12 @@ def main():
         json.dumps(
             {
                 "created_at_utc": datetime.now(timezone.utc).isoformat(),
-                "status": "failed" if failures else "succeeded",
+                "status": "failed" if failures else ("succeeded_with_degraded_brands" if degraded else "succeeded"),
                 "total_brands": len(STEPS),
                 "successful_brand_count": len(successful_brands),
+                "degraded_brand_count": len(degraded),
                 "failed_brand_count": len(failures),
+                "degraded_brands": degraded,
                 "failed_brands": failures,
                 "succeeded_brands": successful_brands,
                 "results": results,
@@ -225,6 +266,8 @@ def main():
     print("")
     print(f"Weekly brand catalogue report: {REPORT_PATH}")
     print(f"Completed brands: {len(successful_brands)}/{len(STEPS)}")
+    if degraded:
+        print(f"Degraded brands: {', '.join(degraded)}")
     if failures:
         print(f"Failed brands: {', '.join(failures)}")
     print("")
@@ -237,6 +280,8 @@ def main():
             duration_seconds=duration_seconds,
             total_brand_count=len(STEPS),
             successful_brand_count=len(successful_brands),
+            degraded_brand_count=len(degraded),
+            degraded_brands=degraded,
             failed_brand_count=len(failures),
             failed_brands=failures,
             row_count=len(results),
@@ -249,6 +294,8 @@ def main():
             duration_seconds=duration_seconds,
             total_brand_count=len(STEPS),
             successful_brand_count=len(successful_brands),
+            degraded_brand_count=len(degraded),
+            degraded_brands=degraded,
             failed_brand_count=len(failures),
             failed_brands=failures,
             row_count=len(results),
@@ -257,10 +304,12 @@ def main():
     emit_event(
         "catalogue_refresh_completed",
         "brand_catalogue",
-        status="success",
+        status="degraded" if degraded else "success",
         duration_seconds=duration_seconds,
         total_brand_count=len(STEPS),
         successful_brand_count=len(successful_brands),
+        degraded_brand_count=len(degraded),
+        degraded_brands=degraded,
         row_count=len(results),
     )
     update_job_state(
@@ -271,6 +320,8 @@ def main():
         duration_seconds=duration_seconds,
         total_brand_count=len(STEPS),
         successful_brand_count=len(successful_brands),
+        degraded_brand_count=len(degraded),
+        degraded_brands=degraded,
         row_count=len(results),
     )
 

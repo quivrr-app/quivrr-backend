@@ -128,6 +128,68 @@ class JobContractGuardrailsTests(unittest.TestCase):
         self.assertEqual(us_mfa["contractStatus"], "red")
         self.assertEqual(us_mfa["contractLabel"], "planning_only")
 
+    def test_weekly_catalogue_runner_treats_guarded_failures_as_degraded(self):
+        with TemporaryDirectory() as temp_dir:
+            report_path = Path(temp_dir) / "weekly_brand_catalogue_report.json"
+            steps = [
+                {"name": "Guarded Brand", "command": ["python", "guarded.py"]},
+                {"name": "Healthy Brand", "command": ["python", "healthy.py"]},
+            ]
+            events = []
+
+            def record_event(*args, **kwargs):
+                events.append((args, kwargs))
+
+            degraded_error = run_all_brand_catalogues.StepExecutionError(
+                "Guarded Brand pipeline failed",
+                {
+                    "brand": "Guarded Brand",
+                    "command": "python guarded.py",
+                    "pipeline_path": "guarded.py",
+                    "status": "failed",
+                    "return_code": 1,
+                    "duration_seconds": 2.0,
+                    "output_tail": [
+                        "RuntimeError: Guarded Brand catalogue scrape incomplete. Failures=0 MissingModels=21"
+                    ],
+                },
+            )
+
+            with patch.object(run_all_brand_catalogues, "STEPS", steps), patch.object(
+                run_all_brand_catalogues, "REPORT_PATH", report_path
+            ), patch.object(
+                run_all_brand_catalogues, "emit_event", side_effect=record_event
+            ), patch.object(
+                run_all_brand_catalogues, "update_job_state"
+            ) as update_state, patch.object(
+                run_all_brand_catalogues,
+                "run_step",
+                side_effect=[
+                    degraded_error,
+                    {
+                        "brand": "Healthy Brand",
+                        "status": "succeeded",
+                        "command": "python healthy.py",
+                        "pipeline_path": "healthy.py",
+                        "return_code": 0,
+                        "duration_seconds": 1.0,
+                    },
+                ],
+            ):
+                run_all_brand_catalogues.main()
+
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            self.assertEqual(report["status"], "succeeded_with_degraded_brands")
+            self.assertEqual(report["degraded_brands"], ["Guarded Brand"])
+            degraded_event = next(
+                kwargs
+                for _args, kwargs in events
+                if _args and _args[0] == "catalogue_brand_degraded"
+            )
+            self.assertEqual(degraded_event["degradation_reason"], "source_incomplete_guard")
+            update_state.assert_called_once()
+            self.assertEqual(update_state.call_args.args[3], "success")
+
 
 if __name__ == "__main__":
     unittest.main()
