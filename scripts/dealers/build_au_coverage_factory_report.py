@@ -1,0 +1,698 @@
+import json
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any
+from urllib.parse import urlparse
+
+
+ROOT = Path(__file__).resolve().parents[2]
+DEALER_POLICY = ROOT / "config" / "dealer_source_policy.json"
+RETAILER_MASTER = ROOT / "scrapers" / "retailers" / "retailer_master.json"
+CLASSIFIED_TARGETS = (
+    ROOT / "scrapers" / "retailers" / "retailer_scrape_targets_classified.json"
+)
+EXPANSION_CANDIDATES = (
+    ROOT / "scrapers" / "retailers" / "retailer_expansion_candidates_au.json"
+)
+PLATFORM_DETECTION = (
+    ROOT / "scrapers" / "retailers" / "retailer_platform_detection_report.json"
+)
+OUTPUT_DOC = ROOT / "docs" / "dealers" / "australia-retailer-qualification.md"
+
+
+CLASSIFICATION_ORDER = [
+    "already_running",
+    "ready_shopify",
+    "ready_woocommerce",
+    "ready_bigcommerce",
+    "ready_neto_maropost",
+    "ready_opencart",
+    "ready_custom_high_value",
+    "duplicate_shell",
+    "catalogue_only",
+    "no_online_boards",
+    "shaper_only",
+    "distributor_only",
+    "closed_or_redirected",
+    "manual_review",
+    "blocked",
+    "unsupported",
+]
+
+PLATFORM_PACKS = {
+    "ready_shopify": "Shopify Pack",
+    "ready_woocommerce": "WooCommerce Pack",
+    "ready_bigcommerce": "BigCommerce Pack",
+    "ready_neto_maropost": "Neto / Maropost Pack",
+    "ready_opencart": "OpenCart Pack",
+    "ready_custom_high_value": "Custom High Value Pack",
+    "duplicate_shell": "Duplicate Shells",
+    "manual_review": "Manual Review",
+    "catalogue_only": "Exclude",
+    "no_online_boards": "Exclude",
+    "shaper_only": "Exclude",
+    "distributor_only": "Exclude",
+    "closed_or_redirected": "Exclude",
+    "blocked": "Exclude",
+    "unsupported": "Exclude",
+}
+
+MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
+    "redherringsurf.com.au": {
+        "status": "duplicate_shell",
+        "duplicateOf": "Board Collective",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["JS Industries", "Pyzel", "Firewire"],
+        "boardCategoryUrl": "https://redherringsurf.com.au/collections/all",
+        "productUrlExamples": [
+            "https://boardcollective.com.au/products/boardcollective-egift-card"
+        ],
+        "priceVisible": False,
+        "stockVisible": False,
+        "imagesVisible": True,
+        "paginationPresent": False,
+        "scrapeDifficulty": "low",
+        "priorityScore": 0,
+        "recommendedAction": "Exclude from AU onboarding and keep Board Collective as the inventory source.",
+        "notes": "Board Collective shell. products.json empty, surfboard search returned zero, and the public shell resolves product links to boardcollective.com.au.",
+    },
+    "saltwaterwine.com.au": {
+        "status": "duplicate_shell",
+        "duplicateOf": "Board Collective",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["JS Industries", "Pyzel", "Firewire", "Channel Islands"],
+        "boardCategoryUrl": "https://saltwaterwine.com.au/collections/all",
+        "productUrlExamples": [
+            "https://boardcollective.com.au/products/boardcollective-egift-card"
+        ],
+        "priceVisible": False,
+        "stockVisible": False,
+        "imagesVisible": True,
+        "paginationPresent": False,
+        "scrapeDifficulty": "low",
+        "priorityScore": 0,
+        "recommendedAction": "Exclude from AU onboarding and keep Board Collective as the inventory source.",
+        "notes": "Board Collective shell. products.json empty, surfboard search returned zero, and the public shell resolves product links to boardcollective.com.au.",
+    },
+    "triggerbrothers.com.au": {
+        "status": "ready_bigcommerce",
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 80,
+        "supportedBrandSignals": ["supported multi-brand surf retailer"],
+        "boardCategoryUrl": "https://triggerbrothers.com.au/store/surf/used-surfboards/",
+        "productUrlExamples": [
+            "https://triggerbrothers.com.au/trigger-bros-x-dos-lumberjack-6ft-surfboard/",
+            "https://triggerbrothers.com.au/trigger-bros-hot-dog-stubby-9ft-surfboard-red/",
+        ],
+        "priceVisible": True,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 92,
+        "recommendedAction": "Implement as the BigCommerce reference target and validate in Azure before adding more AU BigCommerce stores.",
+        "notes": "Best current AU next target. Live BigCommerce site with visible board inventory and reusable platform path.",
+    },
+    "surfshopsaustralia.com.au": {
+        "status": "ready_bigcommerce",
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 60,
+        "supportedBrandSignals": ["broad surfboard catalogue"],
+        "boardCategoryUrl": "https://surfshopsaustralia.com.au/surfboards/",
+        "productUrlExamples": [
+            "https://surfshopsaustralia.com.au/surfboards/",
+            "https://surfshopsaustralia.com.au/surfboards/shortboards/",
+        ],
+        "priceVisible": True,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 79,
+        "recommendedAction": "Keep as the second AU BigCommerce pack target once Trigger Bros proves the shared scraper path.",
+        "notes": "BigCommerce surfboard taxonomy is public and broad, making it the strongest shared AU BigCommerce follow-on target.",
+    },
+    "goodtime.com.au": {
+        "status": "ready_custom_high_value",
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 70,
+        "supportedBrandSignals": ["long-running AU surfboard retailer"],
+        "boardCategoryUrl": "https://www.goodtime.com.au",
+        "productUrlExamples": [],
+        "priceVisible": True,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "high",
+        "priorityScore": 83,
+        "recommendedAction": "Treat as a high-value custom follow-up after the BigCommerce pack, not before it.",
+        "notes": "Large retailer signal, but current path is noisy and protected. Better as the next custom target once the coverage factory lands.",
+    },
+    "surfboardroom.com.au": {
+        "status": "ready_woocommerce",
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 200,
+        "supportedBrandSignals": ["Firewire", "Channel Islands"],
+        "boardCategoryUrl": "https://surfboardroom.com.au/surfboards/",
+        "productUrlExamples": [],
+        "priceVisible": False,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": False,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 72,
+        "recommendedAction": "Keep in the WooCommerce pack. Board surface is real, but parser work is still needed.",
+        "notes": "Boards are visible and the WooCommerce path is real, but the current extraction path undershoots and needs parser recovery.",
+    },
+    "fullcirclesurf.com.au": {
+        "status": "no_online_boards",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["JS Industries", "Firewire"],
+        "priceVisible": False,
+        "stockVisible": False,
+        "imagesVisible": False,
+        "paginationPresent": False,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 10,
+        "recommendedAction": "Do not implement until a working surfboard storefront is confirmed.",
+        "notes": "Known retailer, but the current public storefront is broken and not a usable AU inventory source.",
+    },
+    "boardcave.com.au": {
+        "status": "blocked",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["large Australian surfboard marketplace"],
+        "priceVisible": False,
+        "stockVisible": False,
+        "imagesVisible": False,
+        "paginationPresent": False,
+        "scrapeDifficulty": "high",
+        "priorityScore": 35,
+        "recommendedAction": "Keep blocked. Revisit only if Boardcave exposes a safe public inventory path.",
+        "notes": "High-value marketplace signal, but current access is blocked and not safe for AU nightly onboarding.",
+    },
+}
+
+
+def clean(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def normalise_website(url: str) -> str:
+    url = clean(url)
+    if not url:
+        return ""
+    parsed = urlparse(url if "://" in url else f"https://{url}")
+    host = parsed.netloc or parsed.path
+    host = host.lower().replace("www.", "").strip().rstrip("/")
+    return host
+
+
+def slugify(value: str) -> str:
+    return (
+        clean(value)
+        .lower()
+        .replace("&", "and")
+        .replace("'", "")
+        .replace("’", "")
+        .replace("-", "_")
+        .replace("/", "_")
+        .replace(".", "")
+        .replace(" ", "_")
+    )
+
+
+def load_running_index() -> tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
+    by_domain: dict[str, dict[str, Any]] = {}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in load_json(RETAILER_MASTER):
+        domain = normalise_website(row.get("website"))
+        slug = clean(row.get("retailerSlug"))
+        if domain:
+            by_domain[domain] = row
+        if slug:
+            by_slug[slug] = row
+    return by_domain, by_slug
+
+
+def load_detection_index() -> dict[str, dict[str, Any]]:
+    index: dict[str, dict[str, Any]] = {}
+    report = load_json(PLATFORM_DETECTION)
+    for row in report.get("results", []):
+        domain = normalise_website(row.get("website"))
+        if domain:
+            index[domain] = row
+    return index
+
+
+def source_candidates() -> list[dict[str, Any]]:
+    candidates: dict[str, dict[str, Any]] = {}
+
+    for row in load_json(CLASSIFIED_TARGETS):
+        if clean(row.get("country")).lower() != "australia":
+            continue
+        domain = normalise_website(row.get("website"))
+        key = domain or slugify(row.get("primary_name") or row.get("website"))
+        item = candidates.setdefault(
+            key,
+            {
+                "dealerName": clean(row.get("primary_name")) or clean(row.get("website")),
+                "website": clean(row.get("website")),
+                "states": set(),
+                "source_brands": set(),
+                "priority": row.get("priority") or 3,
+                "retailer_types": set(),
+            },
+        )
+        item["dealerName"] = item["dealerName"] or clean(row.get("primary_name"))
+        item["website"] = item["website"] or clean(row.get("website"))
+        item["priority"] = min(item["priority"], row.get("priority") or 3)
+        for state in row.get("states", []) or []:
+            if clean(state):
+                item["states"].add(clean(state))
+        for brand in row.get("source_brands", []) or []:
+            if clean(brand):
+                item["source_brands"].add(clean(brand))
+        for retailer_type in row.get("retailer_types", []) or []:
+            if clean(retailer_type):
+                item["retailer_types"].add(clean(retailer_type))
+
+    for row in load_json(EXPANSION_CANDIDATES):
+        if clean(row.get("country")).lower() != "australia":
+            continue
+        domain = normalise_website(row.get("website"))
+        key = domain or slugify(row.get("primary_name") or row.get("website"))
+        item = candidates.setdefault(
+            key,
+            {
+                "dealerName": clean(row.get("primary_name")) or clean(row.get("website")),
+                "website": clean(row.get("website")),
+                "states": set(),
+                "source_brands": set(),
+                "priority": row.get("priority") or 3,
+                "retailer_types": set(),
+            },
+        )
+        item["dealerName"] = item["dealerName"] or clean(row.get("primary_name"))
+        item["website"] = item["website"] or clean(row.get("website"))
+        item["priority"] = min(item["priority"], row.get("priority") or 3)
+        if clean(row.get("state")):
+            item["states"].add(clean(row.get("state")))
+        if clean(row.get("retailer_type")):
+            item["retailer_types"].add(clean(row.get("retailer_type")))
+
+    return list(candidates.values())
+
+
+def default_status(
+    candidate: dict[str, Any],
+    running: dict[str, Any] | None,
+    detection: dict[str, Any] | None,
+) -> str:
+    if running and running.get("enabled"):
+        return "already_running"
+
+    retailer_types = {value.lower() for value in candidate.get("retailer_types", set())}
+    if "shaper_direct" in retailer_types or "brand_retail" in retailer_types:
+        return "shaper_only"
+    if "distributor" in retailer_types:
+        return "distributor_only"
+
+    governance_reason = clean((running or {}).get("governanceReason")).lower()
+    governance_status = clean((running or {}).get("governanceStatus")).lower()
+    platform = clean((detection or {}).get("detected_platform") or (running or {}).get("platform")).lower()
+    detection_status = clean((detection or {}).get("status")).lower()
+
+    if "domain unavailable" in governance_reason or "domain for sale" in governance_reason:
+        return "closed_or_redirected"
+    if "no online surfboard inventory" in governance_reason:
+        return "no_online_boards"
+    if "distributor" in governance_reason:
+        return "distributor_only"
+    if "shaper" in governance_reason:
+        return "shaper_only"
+    if (
+        "clothing" in governance_reason
+        or "accessory" in governance_reason
+        or "not suitable" in governance_reason
+        or "does not sell hardboard" in governance_reason
+        or "not a surfboard retailer" in governance_reason
+    ):
+        return "unsupported"
+    if governance_status == "stock_status_review":
+        return "manual_review"
+    if detection_status == "blocked":
+        return "blocked"
+    if platform == "shopify":
+        return "ready_shopify"
+    if platform == "woocommerce":
+        return "ready_woocommerce"
+    if platform == "bigcommerce":
+        return "ready_bigcommerce"
+    if platform == "neto_maropost":
+        return "ready_neto_maropost"
+    if platform in {"opencart", "ecwid"}:
+        return "ready_opencart"
+    if platform in {"magento", "squarespace"}:
+        return "ready_custom_high_value"
+    if detection_status in {"failed", "needs_review"} or governance_status in {"endpoint_review", "parser_review"}:
+        return "manual_review"
+    return "unsupported"
+
+
+def default_priority_score(status: str, candidate: dict[str, Any], running: dict[str, Any] | None) -> int:
+    if status == "already_running":
+        return min(99, 40 + int(running.get("availableInventory") or 0) // 80)
+
+    base = {
+        "ready_bigcommerce": 88,
+        "ready_shopify": 70,
+        "ready_woocommerce": 66,
+        "ready_neto_maropost": 63,
+        "ready_opencart": 58,
+        "ready_custom_high_value": 74,
+        "duplicate_shell": 0,
+        "manual_review": 40,
+        "blocked": 15,
+        "catalogue_only": 10,
+        "no_online_boards": 8,
+        "shaper_only": 5,
+        "distributor_only": 5,
+        "closed_or_redirected": 0,
+        "unsupported": 0,
+    }.get(status, 0)
+    return max(0, base - (int(candidate.get("priority") or 3) - 1) * 3)
+
+
+def build_candidate_rows() -> list[dict[str, Any]]:
+    running_by_domain, _ = load_running_index()
+    detection_by_domain = load_detection_index()
+    rows: list[dict[str, Any]] = []
+
+    for candidate in source_candidates():
+        domain = normalise_website(candidate.get("website"))
+        running = running_by_domain.get(domain)
+        detection = detection_by_domain.get(domain)
+        override = MANUAL_OVERRIDES.get(domain, {})
+        status = override.get("status") or default_status(candidate, running, detection)
+        platform = clean(override.get("platform") or (detection or {}).get("detected_platform") or (running or {}).get("platform") or "unknown").lower()
+        if platform == "ecwid":
+            platform = "opencart"
+
+        already_running = bool(running and running.get("enabled"))
+        approx_board_count = override.get("approxBoardProductCount")
+        if approx_board_count is None:
+            if already_running:
+                approx_board_count = int(running.get("availableInventory") or 0)
+            elif running and (running.get("rawProducts") or 0) > 0:
+                approx_board_count = int(running.get("rawProducts") or 0)
+            else:
+                approx_board_count = None
+
+        row = {
+            "dealerName": candidate["dealerName"],
+            "website": candidate["website"],
+            "alreadyRunning": already_running,
+            "duplicateOf": override.get("duplicateOf", ""),
+            "status": status,
+            "platform": platform or "unknown",
+            "onlineBoardInventoryVisible": override.get(
+                "onlineBoardInventoryVisible",
+                already_running
+                or (running and (running.get("verifiedSurfboards") or 0) > 0)
+                or status.startswith("ready_"),
+            ),
+            "approxBoardProductCount": approx_board_count,
+            "supportedBrandSignals": override.get(
+                "supportedBrandSignals",
+                sorted(candidate.get("source_brands", set())),
+            ),
+            "boardCategoryUrl": override.get("boardCategoryUrl", ""),
+            "productUrlExamples": override.get("productUrlExamples", []),
+            "priceVisible": override.get(
+                "priceVisible",
+                already_running or status.startswith("ready_"),
+            ),
+            "stockVisible": override.get(
+                "stockVisible",
+                already_running or status.startswith("ready_"),
+            ),
+            "imagesVisible": override.get(
+                "imagesVisible",
+                already_running or status.startswith("ready_"),
+            ),
+            "paginationPresent": override.get(
+                "paginationPresent",
+                status in {"ready_bigcommerce", "ready_shopify", "ready_woocommerce"},
+            ),
+            "scrapeDifficulty": override.get(
+                "scrapeDifficulty",
+                "medium" if status.startswith("ready_") or status == "manual_review" else "low",
+            ),
+            "priorityScore": override.get(
+                "priorityScore",
+                default_priority_score(status, candidate, running),
+            ),
+            "recommendedAction": override.get(
+                "recommendedAction",
+                {
+                    "already_running": "Keep live and use as AU baseline.",
+                    "ready_shopify": "Candidate for the reusable AU Shopify pack.",
+                    "ready_woocommerce": "Candidate for the reusable AU WooCommerce pack.",
+                    "ready_bigcommerce": "Candidate for the reusable AU BigCommerce pack.",
+                    "ready_neto_maropost": "Candidate for the reusable AU Neto / Maropost pack.",
+                    "ready_opencart": "Candidate for a reusable adapter once the pack is proven.",
+                    "ready_custom_high_value": "Candidate for targeted high-value onboarding after pack work.",
+                    "duplicate_shell": "Exclude from onboarding to avoid duplicate stock coverage.",
+                    "catalogue_only": "Exclude from AU retailer inventory.",
+                    "no_online_boards": "Exclude until a real online board inventory surface exists.",
+                    "shaper_only": "Exclude from retailer inventory and leave to canonical / MFA paths.",
+                    "distributor_only": "Exclude from retailer inventory.",
+                    "closed_or_redirected": "Exclude and re-check only if the domain recovers.",
+                    "manual_review": "Review inventory surface before any implementation work.",
+                    "blocked": "Do not onboard until access can be validated safely.",
+                    "unsupported": "Exclude from AU hardboard onboarding.",
+                }.get(status, "Manual review"),
+            ),
+            "notes": override.get(
+                "notes",
+                clean((running or {}).get("governanceReason"))
+                or clean((detection or {}).get("evidence"))
+                or "Dealer registry candidate.",
+            ),
+        }
+        rows.append(row)
+
+    rows.sort(
+        key=lambda row: (
+            CLASSIFICATION_ORDER.index(row["status"])
+            if row["status"] in CLASSIFICATION_ORDER
+            else 999,
+            -int(row["priorityScore"]),
+            row["dealerName"].lower(),
+        )
+    )
+    return rows
+
+
+def group_pack(status: str) -> str:
+    return PLATFORM_PACKS.get(status, "Manual Review")
+
+
+def render_markdown(rows: list[dict[str, Any]]) -> str:
+    summary = Counter(row["status"] for row in rows)
+    platform_summary = Counter(row["platform"] for row in rows)
+    pack_summary = Counter(group_pack(row["status"]) for row in rows)
+
+    already_running = [row for row in rows if row["status"] == "already_running"]
+    duplicate_shells = [row for row in rows if row["status"] == "duplicate_shell"]
+    manual_review = [row for row in rows if row["status"] == "manual_review"]
+    ready_candidates = [row for row in rows if row["status"].startswith("ready_")]
+    top_candidates = sorted(
+        [
+            row
+            for row in ready_candidates + manual_review
+            if row["status"] != "already_running"
+        ],
+        key=lambda row: (-int(row["priorityScore"]), row["dealerName"].lower()),
+    )[:20]
+    top_custom = sorted(
+        [
+            row
+            for row in rows
+            if row["status"] in {"ready_custom_high_value", "manual_review", "blocked"}
+        ],
+        key=lambda row: (-int(row["priorityScore"]), row["dealerName"].lower()),
+    )[:10]
+
+    recommended_pack = "BigCommerce Pack"
+    recommended_target = "Trigger Bros Surfboards"
+
+    lines = [
+        "# Australia Retailer Qualification",
+        "",
+        "## Scope",
+        "",
+        "Sprint 10 AU Coverage Factory broad triage for Australian dealer and retailer candidates.",
+        "",
+        "This report now covers the wider AU retailer pool rather than a five-retailer shortlist.",
+        "",
+        "## Inputs",
+        "",
+        "- `config/dealer_source_policy.json`",
+        "- `scrapers/retailers/retailer_master.json`",
+        "- `scrapers/retailers/retailer_scrape_targets_classified.json`",
+        "- `scrapers/retailers/retailer_expansion_candidates_au.json`",
+        "- `scrapers/retailers/retailer_platform_detection_report.json`",
+        "- `docs/dealers/global-dealer-network-discovery.md`",
+        "",
+        "Review date: `2026-06-28`",
+        "",
+        "## AU Coverage Factory Summary",
+        "",
+        f"- AU candidates reviewed: `{len(rows)}`",
+        f"- Already running: `{len(already_running)}`",
+        f"- Duplicate shells: `{len(duplicate_shells)}`",
+        f"- Manual review: `{len(manual_review)}`",
+        f"- Recommended next pack: `{recommended_pack}`",
+        f"- Recommended next individual target: `{recommended_target}`",
+        "",
+        "### Classification Summary",
+        "",
+    ]
+
+    for status in CLASSIFICATION_ORDER:
+        if status in summary:
+            lines.append(f"- `{status}`: `{summary[status]}`")
+
+    lines.extend(
+        [
+            "",
+            "### Platform Summary",
+            "",
+        ]
+    )
+    for platform, count in sorted(platform_summary.items()):
+        lines.append(f"- `{platform}`: `{count}`")
+
+    lines.extend(
+        [
+            "",
+            "### Pack Group Summary",
+            "",
+        ]
+    )
+    for pack, count in sorted(pack_summary.items()):
+        lines.append(f"- `{pack}`: `{count}`")
+
+    lines.extend(
+        [
+            "",
+            "## Already Running",
+            "",
+        ]
+    )
+    for row in sorted(already_running, key=lambda item: (-int(item["approxBoardProductCount"] or 0), item["dealerName"].lower())):
+        lines.append(
+            f"- `{row['dealerName']}` | `{row['platform']}` | active rows `{row['approxBoardProductCount'] or 0}`"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Duplicate Shells",
+            "",
+        ]
+    )
+    for row in duplicate_shells:
+        lines.append(
+            f"- `{row['dealerName']}` -> `{row['duplicateOf']}` | {row['notes']}"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Top 20 Implementation Candidates",
+            "",
+            "| Retailer | Status | Platform | Approx board count | Priority score | Why now |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+    for row in top_candidates:
+        lines.append(
+            f"| {row['dealerName']} | `{row['status']}` | `{row['platform']}` | `{row['approxBoardProductCount'] if row['approxBoardProductCount'] is not None else ''}` | `{row['priorityScore']}` | {row['recommendedAction']} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Top 10 Custom / High-Value Candidates",
+            "",
+            "| Retailer | Status | Platform | Priority score | Notes |",
+            "| --- | --- | --- | --- | --- |",
+        ]
+    )
+    for row in top_custom:
+        lines.append(
+            f"| {row['dealerName']} | `{row['status']}` | `{row['platform']}` | `{row['priorityScore']}` | {row['notes']} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Recommendation",
+            "",
+            f"- Next pack: `{recommended_pack}`",
+            "  Why: Trigger Bros and Surf Shops Australia both expose real BigCommerce surfboard surfaces, so one reusable AU BigCommerce uplift should beat more low-value Shopify guessing.",
+            f"- Next individual target: `{recommended_target}`",
+            "  Why: strongest remaining retailer-distinct AU target with visible live board inventory, pricing, imagery and reusable platform signals.",
+            "- Hold `Goodtime Surfboards` as the next high-value custom follow-up.",
+            "- Keep `Surf Boardroom` inside the WooCommerce pack rather than treating it as a standalone custom scraper.",
+            "",
+            "## Full AU Candidate Table",
+            "",
+            "| Dealer | Website | Running | Duplicate of | Status | Platform | Online boards visible | Approx board count | Supported brand signals | Category URL | Example product URLs | Price visible | Stock visible | Images visible | Pagination | Difficulty | Priority score | Recommended action | Notes |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+
+    for row in rows:
+        brand_signals = ", ".join(row["supportedBrandSignals"]) if row["supportedBrandSignals"] else ""
+        product_examples = ", ".join(row["productUrlExamples"][:2]) if row["productUrlExamples"] else ""
+        lines.append(
+            f"| {row['dealerName']} | `{row['website']}` | `{str(row['alreadyRunning']).lower()}` | {row['duplicateOf'] or ''} | `{row['status']}` | `{row['platform']}` | `{str(bool(row['onlineBoardInventoryVisible'])).lower()}` | `{row['approxBoardProductCount'] if row['approxBoardProductCount'] is not None else ''}` | {brand_signals} | {row['boardCategoryUrl'] or ''} | {product_examples} | `{str(bool(row['priceVisible'])).lower()}` | `{str(bool(row['stockVisible'])).lower()}` | `{str(bool(row['imagesVisible'])).lower()}` | `{str(bool(row['paginationPresent'])).lower()}` | `{row['scrapeDifficulty']}` | `{row['priorityScore']}` | {row['recommendedAction']} | {row['notes']} |"
+        )
+
+    return "\n".join(lines) + "\n"
+
+
+def build_report() -> dict[str, Any]:
+    rows = build_candidate_rows()
+    return {
+        "rows": rows,
+        "markdown": render_markdown(rows),
+        "recommendedNextPack": "BigCommerce Pack",
+        "recommendedNextTarget": "Trigger Bros Surfboards",
+    }
+
+
+def main() -> None:
+    report = build_report()
+    OUTPUT_DOC.write_text(report["markdown"], encoding="utf-8")
+    print(f"Saved AU coverage report: {OUTPUT_DOC}")
+    print(f"Candidates reviewed: {len(report['rows'])}")
+    print(f"Recommended next pack: {report['recommendedNextPack']}")
+    print(f"Recommended next target: {report['recommendedNextTarget']}")
+
+
+if __name__ == "__main__":
+    main()

@@ -271,9 +271,9 @@ Recommended next retailer onboarding order from this discovery pass:
 
 ### AU
 
-1. Full Circle Surf
-2. Red Herring Surf
-3. Surfection Mosman alignment review
+1. Trigger Bros Surfboards
+2. Goodtime Surfboards
+3. Surf Boardroom
 
 ### US
 
