@@ -182,15 +182,24 @@ These all have supported-brand stockist signals, but the source data that produc
 
 ### Recommended AU Onboarding Order
 
-Priority 1 should stay focused on retailers that already have clear board inventory and sit on known ecommerce stacks:
+Sprint 10 qualification review is now captured in:
 
-1. Surf Boardroom
-2. Trigger Bros Surfboards
-3. Goodtime Surfboards
-4. Saltwater Wine Port Macquarie
-5. Red Herring Surf
+- [australia-retailer-qualification.md](./australia-retailer-qualification.md)
 
-Priority 2 should cover known retailers where the trading signal is real but the storefront signal is still incomplete:
+Updated AU implementation order should optimize for supported-brand coverage, not just raw board count:
+
+Priority 1 should stay focused on retailers with the best combination of supported-brand upside and recoverable ecommerce structure:
+
+1. Red Herring Surf
+2. Saltwater Wine Port Macquarie
+
+Priority 2 should cover retailers with strong live inventory but lower supported-brand confidence or higher implementation cost:
+
+1. Trigger Bros Surfboards
+2. Goodtime Surfboards
+3. Surf Boardroom
+
+Priority 3 should cover known retailers where the trading signal is real but the storefront signal is still incomplete:
 
 1. Full Circle Surf
 2. Akwa Surf
@@ -198,7 +207,7 @@ Priority 2 should cover known retailers where the trading signal is real but the
 4. Overboard Surf
 5. Willocks Surf
 
-Priority 3 should remain out of implementation until Quivrr finishes the reviewed retailer backlog:
+Priority 4 should remain out of implementation until Quivrr finishes the reviewed retailer backlog:
 
 1. The Surfboard Agency
 2. Gold Coast Longboards
