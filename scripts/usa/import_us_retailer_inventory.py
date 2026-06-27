@@ -4,6 +4,8 @@ import argparse
 import json
 import sys
 from collections import Counter
+from datetime import date, datetime
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 from sqlalchemy import text
@@ -54,6 +56,12 @@ PRIORITY_RETAILERS = [
     "Warm Winds",
 ]
 CONFIRM_TOKEN = "APPLY_US"
+SCHEMA_DECIMAL_QUANTUM = {
+    "price_amount": Decimal("0.01"),
+    "volume": Decimal("0.01"),
+    "confidence": Decimal("0.01"),
+    "estimated_shipping_aud": Decimal("0.01"),
+}
 
 
 def _sql_region(sql: str) -> str:
@@ -69,6 +77,49 @@ def configure_eu_base() -> None:
     eu_import.SQL_OUTPUT_FILE = SQL_OUTPUT_FILE
     eu_import.REGION_CODE = REGION_CODE
     eu_import.PRICE_CURRENCY = PRICE_CURRENCY
+
+
+def quantize_for_sql(value: object, quantum: Decimal) -> float | None:
+    number = eu_import.decimal_or_none(value)
+    if number is None:
+        return None
+    return float(number.quantize(quantum, rounding=ROUND_HALF_UP))
+
+
+def conform_inventory_payload_for_sql(payload: dict) -> dict:
+    # Preserve raw scrape output and only conform DB-bound numeric precision to
+    # the live RetailerInventory schema so pyodbc batch updates do not fail on
+    # mixed decimal scales.
+    conformed = dict(payload)
+    conformed["price_amount"] = quantize_for_sql(
+        payload.get("price_amount"), SCHEMA_DECIMAL_QUANTUM["price_amount"]
+    )
+    conformed["volume"] = quantize_for_sql(
+        payload.get("volume"), SCHEMA_DECIMAL_QUANTUM["volume"]
+    )
+    conformed["confidence"] = quantize_for_sql(
+        payload.get("confidence"), SCHEMA_DECIMAL_QUANTUM["confidence"]
+    )
+    if "estimated_shipping_aud" in conformed:
+        conformed["estimated_shipping_aud"] = quantize_for_sql(
+            payload.get("estimated_shipping_aud"),
+            SCHEMA_DECIMAL_QUANTUM["estimated_shipping_aud"],
+        )
+    return conformed
+
+
+def to_json_safe(value: object) -> object:
+    if isinstance(value, Decimal):
+        return float(value)
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    if isinstance(value, dict):
+        return {key: to_json_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [to_json_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [to_json_safe(item) for item in value]
+    return value
 
 
 def load_us_inventory_rows(conn) -> list[dict]:
@@ -733,8 +784,9 @@ def apply_to_sql(
                 "width": eu_import.clean(row.get("width")),
                 "thickness": eu_import.clean(row.get("thickness")),
                 "volume": eu_import.decimal_or_none(row.get("volumeLitres")),
-                "confidence": eu_import.float_or_none(row.get("parseConfidence")) or 0,
+                "confidence": row.get("parseConfidence") or 0,
             }
+            payload = conform_inventory_payload_for_sql(payload)
             inventory_id = existing_inventory.get(eu_import.inventory_key(payload))
             if inventory_id is None and payload["volume"] is not None:
                 inventory_id = existing_inventory.get(
@@ -798,6 +850,7 @@ def apply_to_sql(
         "insertedInventoryIds": inserted_inventory_ids,
         "updatedRowsBefore": updated_rows_before,
     }
+    rollback_plan = to_json_safe(rollback_plan)
     rollback_output_file.parent.mkdir(parents=True, exist_ok=True)
     rollback_output_file.write_text(
         json.dumps(rollback_plan, indent=2, ensure_ascii=False), encoding="utf-8"
@@ -832,6 +885,7 @@ def apply_to_sql(
         "rollbackPlanFile": str(rollback_output_file),
         "rollbackSqlFile": str(rollback_sql_output_file),
     }
+    apply_report = to_json_safe(apply_report)
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(
         json.dumps(apply_report, indent=2, ensure_ascii=False), encoding="utf-8"
