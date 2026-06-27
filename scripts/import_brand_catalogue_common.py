@@ -32,7 +32,7 @@ def build_connection_string():
         f"PWD={password};"
         "Encrypt=yes;"
         "TrustServerCertificate=no;"
-        "Connection Timeout=30;"
+        "Connection Timeout=60;"
         "ConnectRetryCount=3;"
         "ConnectRetryInterval=5;"
     )

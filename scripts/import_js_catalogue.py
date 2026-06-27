@@ -1,6 +1,7 @@
 ﻿import json
 import os
 import sys
+import time
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import quote_plus
@@ -21,6 +22,8 @@ CATALOGUE_PATH = Path("scrapers/brands/js/output/js_page_catalogue.json")
 LEGACY_OVERRIDE_PATH = Path(
     "scrapers/brands/manual_catalogue_overrides/js_industries_legacy_models.json"
 )
+MAX_SQL_ATTEMPTS = 4
+SQL_RETRY_DELAYS_SECONDS = [0, 5, 10, 20]
 
 
 def build_connection_string():
@@ -38,7 +41,9 @@ def build_connection_string():
         f"PWD={password};"
         "Encrypt=yes;"
         "TrustServerCertificate=no;"
-        "Connection Timeout=30;"
+        "Connection Timeout=60;"
+        "ConnectRetryCount=3;"
+        "ConnectRetryInterval=5;"
     )
 
     return "mssql+pyodbc:///?odbc_connect=" + quote_plus(odbc_string)
@@ -311,19 +316,7 @@ def partition_new_size_rows(existing_rows, incoming_rows):
     return rows_to_insert
 
 
-def main():
-    print("")
-    print("Importing JS page catalogue into SQL...")
-    print("")
-
-    catalogue = load_catalogue()
-    legacy_overrides = load_legacy_overrides()
-    models = build_catalogue_models(catalogue, legacy_overrides)
-
-    print(f"Catalogue rows loaded: {len(catalogue)}")
-    print(f"Legacy model overrides loaded: {len(legacy_overrides)}")
-    print(f"Models prepared: {len(models)}")
-
+def run_import_transaction(models, catalogue, legacy_overrides):
     with engine.begin() as connection:
         print("Syncing existing JS catalogue...")
 
@@ -467,6 +460,54 @@ def main():
         print(f"Batch inserting new sizes: {len(new_size_rows)}")
 
         insert_size_rows(connection, new_size_rows)
+
+    return model_cache, new_size_rows
+
+
+def main():
+    print("")
+    print("Importing JS page catalogue into SQL...")
+    print("")
+
+    catalogue = load_catalogue()
+    legacy_overrides = load_legacy_overrides()
+    models = build_catalogue_models(catalogue, legacy_overrides)
+
+    print(f"Catalogue rows loaded: {len(catalogue)}")
+    print(f"Legacy model overrides loaded: {len(legacy_overrides)}")
+    print(f"Models prepared: {len(models)}")
+
+    last_error = None
+
+    for attempt in range(1, MAX_SQL_ATTEMPTS + 1):
+        delay = SQL_RETRY_DELAYS_SECONDS[attempt - 1]
+
+        if delay:
+            print(f"Waiting {delay} seconds before SQL retry")
+
+        try:
+            if delay:
+                time.sleep(delay)
+
+            print(f"SQL import attempt {attempt} of {MAX_SQL_ATTEMPTS}")
+            model_cache, new_size_rows = run_import_transaction(
+                models,
+                catalogue,
+                legacy_overrides,
+            )
+            break
+        except Exception as exc:
+            last_error = exc
+            print("")
+            print(f"SQL import attempt {attempt} failed")
+            print(str(exc))
+            print("")
+
+            if attempt == MAX_SQL_ATTEMPTS:
+                raise
+
+    if last_error and "model_cache" not in locals():
+        raise last_error
 
     print(f"Models imported: {len(model_cache)}")
     print(f"Rows inserted: {len(new_size_rows)}")
