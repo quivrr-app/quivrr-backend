@@ -1,0 +1,826 @@
+{
+  "generatedForSprint": "sprint8_global_dealer_network",
+  "regions": ["AU", "US", "EU", "ID", "CA", "UK", "JP", "NZ", "BR", "ZA", "MX", "PR", "HI"],
+  "manufacturers": [
+    {
+      "manufacturer": "Channel Islands",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://cisurfboards.com/pages/dealers",
+          "sourceType": "official_dealer_locator",
+          "extractor": "manual_review",
+          "azureValidated": false,
+          "notes": "Official global dealer page reviewed. Page is dynamic and not yet wired into an executable feed."
+        },
+        {
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "extractor": "manual_seed",
+          "azureValidated": true,
+          "notes": "AU regional dealer page reviewed directly in HTML."
+        }
+      ],
+      "manualDealers": [
+        {
+          "dealerName": "Aloha Surf Manly Style",
+          "country": "Australia",
+          "regionCode": "AU",
+          "stateOrProvince": "NSW",
+          "city": "Manly Beach",
+          "website": "https://alohasurfmanly.com",
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Explicitly listed on the CI Australia dealers page."
+        },
+        {
+          "dealerName": "Onboard Store",
+          "country": "Australia",
+          "regionCode": "AU",
+          "stateOrProvince": "NSW",
+          "city": "Byron Bay / Mona Vale",
+          "website": "https://onboardstore.com.au",
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Onboard Mona Vale and Onboard Byron are listed on the CI Australia dealers page."
+        },
+        {
+          "dealerName": "Sanbah Surf Shop",
+          "country": "Australia",
+          "regionCode": "AU",
+          "stateOrProvince": "NSW",
+          "city": "The Junction",
+          "website": "https://sanbah.com",
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Explicitly listed on the CI Australia dealers page."
+        },
+        {
+          "dealerName": "Slimes Newcastle",
+          "country": "Australia",
+          "regionCode": "AU",
+          "stateOrProvince": "NSW",
+          "city": "Newcastle",
+          "website": "https://www.slimesnewcastle.com.au",
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Explicitly listed on the CI Australia dealers page."
+        },
+        {
+          "dealerName": "Surfboard Empire",
+          "country": "Australia",
+          "regionCode": "AU",
+          "stateOrProvince": "NSW / QLD",
+          "city": "Byron Bay / Coolangatta / Kirra / Parrearra / Mermaid Beach",
+          "website": "https://surfboardempire.com.au",
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Multiple Surfboard Empire store locations are listed on the CI Australia dealers page."
+        },
+        {
+          "dealerName": "Surfection Mosman",
+          "country": "Australia",
+          "regionCode": "AU",
+          "stateOrProvince": "NSW",
+          "city": "Mosman",
+          "website": "https://surfectionmosman.com",
+          "sourceUrl": "https://shop-au.cisurfboards.com/pages/dealers-1",
+          "sourceType": "official_regional_dealers_page",
+          "dealerType": "physical_store",
+          "confidence": "medium",
+          "notes": "Explicitly listed on the CI Australia dealers page."
+        }
+      ]
+    },
+    {
+      "manufacturer": "JS Industries",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://jsindustries.com/pages/stockists",
+          "sourceType": "official_stockists_page",
+          "extractor": "storeify_geojson",
+          "feedUrl": "https://sl.storeify.app/js/stores/js-industries-aus.myshopify.com/storeifyapps-storelocator-geojson.js?v=1781149702",
+          "azureValidated": true,
+          "notes": "Official Storeify locator feed exposed from the JS Industries stockists page."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Lost",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://lostsurfboards.net/dealers/",
+          "sourceType": "official_dealer_locator",
+          "extractor": "manual_review",
+          "azureValidated": false,
+          "notes": "Official global dealer page is geo-sensitive and returned 403 locally."
+        },
+        {
+          "sourceUrl": "https://lostsurfboards.net/online-dealers/",
+          "sourceType": "official_online_dealers_page",
+          "extractor": "manual_seed",
+          "azureValidated": false,
+          "notes": "Official online dealers page reviewed via official snippet and prior US egress validation."
+        }
+      ],
+      "manualDealers": [
+        {
+          "dealerName": "Moment Surf Co",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "Honolulu",
+          "website": "https://momentsurfco.com",
+          "sourceUrl": "https://lostsurfboards.net/online-dealers/",
+          "sourceType": "official_online_dealers_page",
+          "dealerType": "online_store",
+          "confidence": "medium",
+          "notes": "Named on the official Lost online dealers page."
+        },
+        {
+          "dealerName": "Hawaiian South Shore",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "Honolulu",
+          "website": "https://www.hawaiiansouthshore.com",
+          "sourceUrl": "https://lostsurfboards.net/online-dealers/",
+          "sourceType": "official_online_dealers_page",
+          "dealerType": "online_store",
+          "confidence": "medium",
+          "notes": "Named on the official Lost online dealers page as HSS."
+        },
+        {
+          "dealerName": "Jack's Surfboards",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Huntington Beach",
+          "website": "https://jackssurfboards.com",
+          "sourceUrl": "https://lostsurfboards.net/online-dealers/",
+          "sourceType": "official_online_dealers_page",
+          "dealerType": "online_store",
+          "confidence": "medium",
+          "notes": "Named on the official Lost online dealers page."
+        },
+        {
+          "dealerName": "K-Coast Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Puerto Rico",
+          "city": "Puerto Rico",
+          "website": null,
+          "sourceUrl": "https://lostsurfboards.net/online-dealers/",
+          "sourceType": "official_online_dealers_page",
+          "dealerType": "unknown",
+          "confidence": "medium",
+          "notes": "Named on the official Lost online dealers page. Website still needs manual confirmation."
+        },
+        {
+          "dealerName": "Red Dog Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "New Smyrna Beach",
+          "website": null,
+          "sourceUrl": "https://lostsurfboards.net/online-dealers/",
+          "sourceType": "official_online_dealers_page",
+          "dealerType": "unknown",
+          "confidence": "medium",
+          "notes": "Named on the official Lost online dealers page. Website still needs manual confirmation."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Firewire",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://aus.firewiresurfboards.com/pages/store-locator",
+          "sourceType": "official_store_locator",
+          "extractor": "stockist_api",
+          "stockistTag": "u21169",
+          "azureValidated": true,
+          "notes": "Official Stockist widget exposed on the Australia store locator page."
+        },
+        {
+          "sourceUrl": "https://www.firewiresurfboards.com/pages/store-locator",
+          "sourceType": "official_store_locator",
+          "extractor": "stockist_api",
+          "stockistTag": "u21175",
+          "azureValidated": true,
+          "notes": "Official Stockist widget exposed on the United States store locator page."
+        },
+        {
+          "sourceUrl": "https://eu.firewiresurfboards.com/pages/store-locator",
+          "sourceType": "official_store_locator",
+          "extractor": "stockist_api",
+          "stockistTag": "u21168",
+          "azureValidated": true,
+          "notes": "Official Stockist widget exposed on the Europe store locator page."
+        },
+        {
+          "sourceUrl": "https://uk.firewiresurfboards.com/pages/prestige-store-locator",
+          "sourceType": "official_store_locator",
+          "extractor": "stockist_api",
+          "stockistTag": "u21167",
+          "azureValidated": true,
+          "notes": "Official Stockist widget exposed on the United Kingdom store locator page."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Haydenshapes",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "extractor": "manual_seed",
+          "azureValidated": true,
+          "notes": "Official retail partners page reviewed directly in HTML."
+        }
+      ],
+      "manualDealers": [
+        {
+          "dealerName": "SurfRide",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Oceanside / Solana Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing includes SurfRide Oceanside and SurfRide Solana."
+        },
+        {
+          "dealerName": "Huntington Surf & Sport",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Huntington Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Jack's Surfboards",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Huntington Beach",
+          "website": "https://jackssurfboards.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "ET Surf",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Hermosa Beach",
+          "website": "https://etsurf.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Hansen Surfboards",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Encinitas",
+          "website": "https://www.hansensurf.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Surfboard Broker",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Carlsbad",
+          "website": "https://surfboardbroker.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing spells the store as Surfboard Brooker."
+        },
+        {
+          "dealerName": "Aqua East Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "Neptune Beach / St. Augustine",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing includes two Aqua East locations."
+        },
+        {
+          "dealerName": "Surf Station",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "St. Augustine",
+          "website": "https://www.surfstationstore.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Reddog Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "New Smyrna Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Nomad Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "Boynton Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "B.C. Surf & Sport",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "Ft. Lauderdale",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Catalyst Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "Cocoa Beach",
+          "website": "https://catalystshop.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing refers to Catalyst Cocoa Beach."
+        },
+        {
+          "dealerName": "Island Water Sports",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Florida",
+          "city": "Deerfield Beach / North Miami Beach",
+          "website": "https://www.islandwatersports.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing includes two Island Water Sports locations."
+        },
+        {
+          "dealerName": "CB Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "North Carolina",
+          "city": "Carolina Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Real Watersports",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "North Carolina",
+          "city": "Waves",
+          "website": "https://www.realwatersports.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Brave New World",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New Jersey",
+          "city": "Point Pleasant Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Saturdays New York",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New York",
+          "city": "New York",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Long Beach Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New York",
+          "city": "Long Beach",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Breakwater Surf Co",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New York",
+          "city": "Arverne",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Lucky Dog Surf Co.",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New Jersey",
+          "city": "Sea Bright",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Heritage Surf & Sport",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New Jersey",
+          "city": "Ocean City / Margate",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing includes Ocean City and Margate stores."
+        },
+        {
+          "dealerName": "Farias Surf Shop",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New Jersey",
+          "city": "Ship Bottom",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Tamba Surf",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "Kauai",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Surf N Sea",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "O'ahu",
+          "website": "https://surfnsea.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Quality Surfboards",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "O'ahu",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Kimo's Surf Hut",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "O'ahu",
+          "website": "https://www.kimossurfhut.com",
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "online_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Hapa Surf and Skate",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "O'ahu",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Hi-Tech Surf Sports",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "Maui",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Miller's Surf and Sport",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "Big Island",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Surf Zone",
+          "country": "Puerto Rico",
+          "regionCode": "PR",
+          "stateOrProvince": "Puerto Rico",
+          "city": "Puerto Rico",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Verde Azul Surf Shop",
+          "country": "Puerto Rico",
+          "regionCode": "PR",
+          "stateOrProvince": "Puerto Rico",
+          "city": "Puerto Rico",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        },
+        {
+          "dealerName": "Proof Lab",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Mill Valley",
+          "website": null,
+          "sourceUrl": "https://www.haydenshapes.com/pages/retail-partners",
+          "sourceType": "official_retail_partners_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official Haydenshapes retail partner listing."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Pyzel",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://pyzelsurf.com.au/pages/store-locator",
+          "sourceType": "official_store_locator",
+          "extractor": "stockist_api",
+          "stockistTag": "u11047",
+          "azureValidated": true,
+          "notes": "Official Stockist widget exposed on the Australia / New Zealand store locator page."
+        },
+        {
+          "sourceUrl": "https://pyzelsurfboards.com/pages/store-locator",
+          "sourceType": "official_store_locator",
+          "extractor": "manual_review",
+          "azureValidated": false,
+          "notes": "Global page reviewed directly; static HQ details are visible but the full dealer list still needs dedicated extraction."
+        }
+      ]
+    },
+    {
+      "manufacturer": "DHD",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://dhdsurf.com/pages/usa",
+          "sourceType": "official_retailers_page",
+          "extractor": "manual_seed",
+          "azureValidated": true,
+          "notes": "Official USA retailers page reviewed directly in HTML."
+        }
+      ],
+      "manualDealers": [
+        {
+          "dealerName": "DHD Surf Hawaii",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "Hawaii",
+          "city": "Waialua",
+          "website": null,
+          "sourceUrl": "https://dhdsurf.com/pages/usa",
+          "sourceType": "official_retailers_page",
+          "dealerType": "showroom",
+          "confidence": "high",
+          "notes": "Official DHD USA retailers page."
+        },
+        {
+          "dealerName": "Rip Curl San Clemente",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "San Clemente",
+          "website": null,
+          "sourceUrl": "https://dhdsurf.com/pages/usa",
+          "sourceType": "official_retailers_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official DHD USA retailers page."
+        },
+        {
+          "dealerName": "Rip Curl Huntington Beach",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "California",
+          "city": "Huntington Beach",
+          "website": null,
+          "sourceUrl": "https://dhdsurf.com/pages/usa",
+          "sourceType": "official_retailers_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official DHD USA retailers page."
+        },
+        {
+          "dealerName": "Summer Sessions",
+          "country": "United States",
+          "regionCode": "US",
+          "stateOrProvince": "New Hampshire",
+          "city": "Rye",
+          "website": null,
+          "sourceUrl": "https://dhdsurf.com/pages/usa",
+          "sourceType": "official_retailers_page",
+          "dealerType": "physical_store",
+          "confidence": "high",
+          "notes": "Official DHD USA retailers page."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Sharp Eye",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://sharpeyesurfboards.com/pages/stockists",
+          "sourceType": "official_stockists_page",
+          "extractor": "storeify_geojson",
+          "feedUrl": "https://sl.storeify.app/js/stores/sharp-eye-surfboards.myshopify.com/storeifyapps-storelocator-geojson.js?v=1765405478",
+          "azureValidated": true,
+          "notes": "Official Storeify locator feed exposed from the Sharp Eye stockists page."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Album",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://albumsurf.com",
+          "sourceType": "brand_site_review",
+          "extractor": "manual_review",
+          "azureValidated": true,
+          "notes": "Official Album site reviewed. No dealer locator or official stockist page surfaced in the current review pass."
+        }
+      ]
+    },
+    {
+      "manufacturer": "Chilli",
+      "priorityTier": 1,
+      "sources": [
+        {
+          "sourceUrl": "https://www.chillisurfboards.com/dealers.php?direct=1&region=usa",
+          "sourceType": "official_dealers_page",
+          "extractor": "manual_review",
+          "azureValidated": true,
+          "notes": "Official dealers page is region aware but not yet exposing a clean extractor in this pass."
+        },
+        {
+          "sourceUrl": "https://www.chillisurfboards.com/contacts.php?direct=1&region=usa",
+          "sourceType": "official_contacts_page",
+          "extractor": "manual_seed",
+          "azureValidated": true,
+          "notes": "Official contacts page reviewed for distributor/showroom references."
+        }
+      ],
+      "manualDealers": [
+        {
+          "dealerName": "Xhapeland",
+          "country": "Portugal",
+          "regionCode": "EU",
+          "stateOrProvince": "Lisbon District",
+          "city": "Cascais",
+          "website": "https://www.xhapeland.com",
+          "sourceUrl": "https://www.chillisurfboards.com/contacts.php?direct=1&region=usa",
+          "sourceType": "official_contacts_page",
+          "dealerType": "distributor",
+          "confidence": "medium",
+          "notes": "Official Chilli contacts page lists Xhapeland as the Europe factory showroom contact."
+        }
+      ]
+    }
+  ]
+}
