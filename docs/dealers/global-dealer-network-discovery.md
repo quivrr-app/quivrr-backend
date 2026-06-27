@@ -113,6 +113,107 @@ Australia is already strong. Sprint 8 should not prioritise large AU onboarding.
 - Red Herring Surf
 - Surfection Mosman alignment review
 
+## Australia Gen 3 Expansion Review
+
+Sprint 9 shifts the AU workstream from broad discovery into reviewed retailer expansion. The dealer registry remains the source of truth, but retailer onboarding should only advance after site review, online stock confirmation, supported-brand confirmation, and platform assessment.
+
+Current AU comparison point:
+
+- Live SQL baseline: `33` active retailers, `11,800` active retailer inventory rows
+- Current AU retailer config: `34` production targets, `8` parser-review targets, `12` endpoint-review targets, `3` business-disabled targets
+- Current AU posture: Quivrr already has strong Tier 1 coverage, but the next uplift should come from known-but-disabled hardboard retailers before any broader stockist long tail
+
+### Existing Coverage Review
+
+AU retailer review outcomes split into six practical groups:
+
+- `Already running`: Surf FX, The Board Lab, Beach Beat Alexandra Headland, Surfection Mosman and the broader current AU production set
+- `Known but disabled`: Full Circle Surf, Red Herring Surf, Goodtime Surfboards, Saltwater Wine Port Macquarie, Trigger Bros Surfboards
+- `Parser review`: Surf Boardroom
+- `Rebranded / merged`: Zak Surfboards now resolves to Melbourne Surfboard Shop, which is already running in Quivrr
+- `Manual review long tail`: Firewire / Pyzel / JS stockist entries with weak or missing website data
+- `Out of scope for AU retailer inventory`: distributor-only, school-only, shaper-only, or accessory-only businesses
+
+### Priority Retailer Review Matrix
+
+Reviewed Sprint 9 AU priority names:
+
+| Retailer | Website | Current coverage | Still operating | Sells surfboards | Online inventory visible | Supported brand signal | Likely platform | Scrape difficulty | Priority | Status | Reason |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Full Circle Surf | `fullcirclesurf.com.au` | Known but disabled | Yes, but primary site currently broken | Yes in brand stockist signals | No reliable live ecommerce view | JS Industries, Firewire stockist overlap | Squarespace (historic) | Medium | P2 | No online stock | Current site returned 404 in review; do not queue scraper work until a working surfboard storefront is confirmed |
+| Red Herring Surf | `redherringsurf.com.au` | Known but disabled | Yes | Yes | Weak direct surfboard visibility | JS Industries, Pyzel stockist overlap | Shopify | Medium | P2 | Needs parser | Live store is active but the visible surf catalogue is mixed and current scrape path returns no usable board rows |
+| Surf FX | `surffx.com.au` | Already running | Yes | Yes | Yes | Current AU production retailer | Shopify | Low | Live | Ready | Already producing surfboard inventory in production |
+| Gold Coast Longboards | `goldcoastlongboards.com.au` | Missing from AU retailer queue | Yes | No hardboard focus | Yes, but for skate / surf-skate only | No supported hardboard signal | Shopify | Low | P3 | Unsupported | Not a hardboard surfboard retailer target for Quivrr AU inventory |
+| Mornington Peninsula Surf | `morningtonpeninsulasurfschool.com.au` | Missing from AU retailer queue | Yes | School / lessons first | Not as a retailer inventory feed | No supported hardboard signal | Custom / brochure site | Medium | P3 | No online stock | Surf school with lessons and bookings, not a usable live retailer inventory source |
+| The Surfboard Agency | `surfboardagency.com` | Missing from AU retailer queue | Yes | Yes, as a distributor | Not consumer retailer inventory | Aloha, McCoy, Rip Curl softboards and distribution portfolio | Shopify | Medium | P3 | Catalogue only | Distributor / logistics partner, not a direct AU retailer inventory target |
+| The Surfboard Collective | No stable current retail site surfaced | Missing from AU retailer queue | Unclear | Historically yes | No current verified store | No current supported-brand retailer signal | Unknown | High | P3 | Closed | Current public signal points to the physical store having closed; do not queue onboarding |
+| The Surfboard Room / Surf Boardroom | `surfboardroom.com.au` | Parser review | Yes | Yes | Yes | Firewire and Channel Islands stockist signal | WooCommerce | Medium | P1 | Needs parser | Boards are visible live, but the current extraction path scraped too little and failed board identification |
+| Urban Surf / URBNSURF | `urbnsurf.com` ecosystem | Missing from AU retailer queue | Yes | On-site shop secondary | No verified hardboard ecommerce path | No supported hardboard retailer signal | Custom | High | P3 | Unsupported | Wave-park / venue business, not a confirmed hardboard retailer feed |
+| Ocean Rhythm | No stable retail storefront surfaced | Missing from AU retailer queue | Yes as a shaping business | Custom / shaper | No structured retailer stock | House-brand / custom signal only | Custom | High | P3 | Catalogue only | Custom shaping signal, not a scalable AU retailer inventory source |
+| Trigger Bros Surfboards | `triggerbrothers.com.au` | Known but disabled | Yes | Yes | Yes | Supported multi-brand surf retailer | BigCommerce | Medium | P1 | Needs parser | Clear live ecommerce presence, but current endpoint review returned zero products and needs platform-specific recovery |
+| The Board Lab | `theboardlab.com.au` | Already running | Yes | Yes | Yes | Current AU production retailer | Shopify | Low | Live | Ready | Already producing strong surfboard inventory in production |
+| Beach Beat | `beachbeat.com.au` | Already running | Yes | Yes | Yes | Current AU production retailer | WooCommerce | Low | Live | Ready | Already producing available hardboard rows in production |
+| Goodtime Surfboards | `goodtime.com.au` | Known but disabled | Yes | Yes | Yes | Long-running AU surfboard retailer | Magento | High | P1 | Needs parser | Surfboard stock is visible, but the site is currently protected and existing scrape output returns no usable rows |
+| Core Surf Australia / Core Surfboards | Social / local business only | Missing from AU retailer queue | Yes as a shaper | Yes | No verified ecommerce inventory | House-brand shaping signal | Custom | High | P3 | Catalogue only | Local shaping / custom-board signal, not a current retailer inventory feed |
+| Saltwater Wine | `saltwaterwine.com.au` | Known but disabled | Yes | Yes | Weak direct surfboard visibility | JS Industries, Firewire, Pyzel stockist overlap | Shopify | Medium | P1 | Needs parser | Official stockist overlap is strong, but the public store presentation is apparel-heavy and current scrape output returned no usable board rows |
+| PSC Surfboards | Social / shaping signal only | Missing from AU retailer queue | Yes as a shaper | Yes | No verified ecommerce inventory | House-brand shaping signal | Custom | High | P3 | Catalogue only | Manufacturer / shaping signal, not a retailer inventory target |
+| Zak Surfboards | `zaksurfboards.com` | Rebranded / already covered | Yes | Yes | Historical site only | Zak / Melbourne Surfboard Shop | WooCommerce legacy -> Shopify current via Melbourne Surfboard Shop | Low | Covered | Rebranded | Site now redirects users to Melbourne Surfboard Shop, which is already covered by Quivrr AU inventory |
+
+### Broader AU Dealer Registry Findings
+
+Beyond the named Sprint 9 shortlist, the AU registry still contains a useful second wave of candidates. The best near-term manual-review names are:
+
+- Akwa Surf
+- Big Surf Australia
+- Extreme Boardriders
+- Overboard Surf
+- Powerhouse Surf Company
+- Three Stories
+- Vidlers
+- Willocks Surf
+- Zink Surf
+
+These all have supported-brand stockist signals, but the source data that produced the dealer registry did not carry enough stable website or ecommerce detail to move them straight into implementation. They should remain `Manual review` until each storefront is checked for:
+
+- live hardboard inventory
+- recoverable board dimensions
+- stable collection or product endpoints
+- clean retailer identity without multi-location duplication
+
+### Recommended AU Onboarding Order
+
+Priority 1 should stay focused on retailers that already have clear board inventory and sit on known ecommerce stacks:
+
+1. Surf Boardroom
+2. Trigger Bros Surfboards
+3. Goodtime Surfboards
+4. Saltwater Wine Port Macquarie
+5. Red Herring Surf
+
+Priority 2 should cover known retailers where the trading signal is real but the storefront signal is still incomplete:
+
+1. Full Circle Surf
+2. Akwa Surf
+3. Extreme Boardriders
+4. Overboard Surf
+5. Willocks Surf
+
+Priority 3 should remain out of implementation until Quivrr finishes the reviewed retailer backlog:
+
+1. The Surfboard Agency
+2. Gold Coast Longboards
+3. Mornington Peninsula Surf
+4. Urban Surf
+5. Ocean Rhythm
+6. PSC Surfboards
+7. Core Surf Australia
+
+Recommended AU rule before moving to US expansion:
+
+- finish recovery of the known disabled AU hardboard retailers first
+- keep distributor, school, shaper, and apparel businesses out of the AU retailer queue
+- only promote long-tail stockist records after website and live-stock checks confirm a real retailer inventory source
+
 ## US Candidates
 
 These appear on official manufacturer dealer sources and also align with Quivrr's existing backlog or disabled retailer list:
