@@ -16,6 +16,7 @@ from utils.structured_logging import ROOT, STATE_DIR, utc_timestamp
 
 EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
 JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
+BOOTSTRAP_SNAPSHOT_PATH = ROOT / "config" / "ops_dashboard_bootstrap.json"
 SERVICE_NAME = "operations_dashboard"
 DASHBOARD_VERSION = "sprint7_final_closeout_v1"
 SUPPORTED_BRAND_SET = {
@@ -287,6 +288,22 @@ def load_source_expectations(path: Path | None = None) -> dict[str, Any]:
 
 def load_job_expectations(path: Path | None = None) -> dict[str, Any]:
     return _json_load(path or JOB_EXPECTATIONS_PATH)
+
+
+def _load_dashboard_snapshot_payload(path: Path | None = None) -> dict[str, Any] | None:
+    snapshot_path = path or BOOTSTRAP_SNAPSHOT_PATH
+    if not snapshot_path.exists():
+        return None
+    try:
+        snapshot = _json_load(snapshot_path)
+    except Exception:
+        return None
+    payload = snapshot.get("payload") if isinstance(snapshot, dict) else None
+    if not isinstance(payload, dict):
+        return None
+    if payload.get("version") != DASHBOARD_VERSION:
+        return None
+    return payload
 
 
 def _job_entry_script_path(entry_script: str | None) -> Path | None:
@@ -568,6 +585,7 @@ def _build_job_health(
 ) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
     job_config = load_job_expectations(job_expectations_path)
     catalogue_metrics = _catalogue_metrics()
+    bootstrap_payload = _load_dashboard_snapshot_payload()
     flat_rows: list[dict[str, Any]] = []
     by_region: dict[str, dict[str, Any]] = {
         region: {
@@ -595,6 +613,16 @@ def _build_job_health(
         state = _load_job_state(str(definition.get("stateFile") or "").strip()) if definition.get("stateFile") else None
         rows_inserted, rows_updated = _job_rows_from_state(state)
         for region in applicable_regions:
+            bootstrap_row = None
+            if bootstrap_payload is not None:
+                bootstrap_row = next(
+                    (
+                        row
+                        for row in bootstrap_payload.get("jobHealth", [])
+                        if row.get("jobName") == definition.get("jobName") and row.get("region") == region
+                    ),
+                    None,
+                )
             latest_success, active_rows_after, source = _job_row_metric(
                 str(definition.get("metricSource") or ""),
                 region,
@@ -616,7 +644,21 @@ def _build_job_health(
                 )
             if str(definition.get("jobType") or "").strip().lower() == "catalogue":
                 status = _catalogue_degraded_status_override(status, state)
+                if (
+                    state is None
+                    and bootstrap_row is not None
+                    and str(bootstrap_row.get("status") or "").strip().lower() in {"yellow", "red"}
+                ):
+                    bootstrap_success = _parse_timestamp(bootstrap_row.get("lastSucceededUtc"))
+                    if latest_success is None or bootstrap_success == latest_success:
+                        status = StatusResult(
+                            str(bootstrap_row.get("status") or "yellow").strip().lower(),
+                            str(bootstrap_row.get("statusLabel") or "degraded").strip().lower(),
+                            str(bootstrap_row.get("statusReason") or status.reason),
+                        )
             last_status_timestamp = _parse_timestamp((state or {}).get("latest_status_timestamp_utc"))
+            degraded_brand_count = int((state or {}).get("degraded_brand_count") or (bootstrap_row or {}).get("degradedBrandCount") or 0)
+            degraded_brands = list((state or {}).get("degraded_brands") or (bootstrap_row or {}).get("degradedBrands") or [])
             row = {
                 "region": region,
                 "jobName": definition.get("jobName"),
@@ -633,8 +675,8 @@ def _build_job_health(
                 "rowsInserted": rows_inserted,
                 "rowsUpdated": rows_updated,
                 "activeRowsAfter": active_rows_after,
-                "degradedBrandCount": int((state or {}).get("degraded_brand_count") or 0),
-                "degradedBrands": list((state or {}).get("degraded_brands") or []),
+                "degradedBrandCount": degraded_brand_count,
+                "degradedBrands": degraded_brands,
                 "source": source,
                 "structuredLogEventName": definition.get("structuredLogEventName"),
                 "azureContainerAppJobName": definition.get("jobName"),

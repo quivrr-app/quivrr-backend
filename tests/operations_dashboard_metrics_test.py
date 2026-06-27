@@ -130,6 +130,53 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(global_canonical["status"], "yellow")
         self.assertIn("Canonical truth preserved", global_canonical["latestIssue"])
 
+    def test_weekly_catalogue_uses_bootstrap_snapshot_when_local_state_missing(self):
+        now = datetime(2026, 6, 27, 4, 0, tzinfo=timezone.utc)
+        bootstrap_payload = {
+            "version": dashboard.DASHBOARD_VERSION,
+            "jobHealth": [
+                {
+                    "region": "AU",
+                    "jobName": "quivrr-weekly-brand-catalogues",
+                    "status": "yellow",
+                    "statusLabel": "degraded",
+                    "statusReason": "Latest weekly canonical run completed with guarded degraded brands (JS Industries, Channel Islands). Canonical truth preserved; review source probes and builder outputs in Azure.",
+                    "lastSucceededUtc": "2026-06-27T01:12:29Z",
+                    "degradedBrandCount": 2,
+                    "degradedBrands": ["JS Industries", "Channel Islands"],
+                }
+            ],
+        }
+
+        with patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-27T01:12:29Z", "modelCount": 540},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
+        ), patch.object(
+            dashboard,
+            "_load_dashboard_snapshot_payload",
+            return_value=bootstrap_payload,
+        ):
+            job_health, _ = dashboard._build_job_health(
+                ["AU", "EU", "ID", "US"],
+                {},
+                {},
+                now=now,
+            )
+
+        weekly_row = next(
+            row for row in job_health
+            if row["jobName"] == "quivrr-weekly-brand-catalogues" and row["region"] == "AU"
+        )
+        self.assertEqual(weekly_row["status"], "yellow")
+        self.assertEqual(weekly_row["statusLabel"], "degraded")
+        self.assertEqual(weekly_row["degradedBrandCount"], 2)
+        self.assertEqual(weekly_row["degradedBrands"], ["JS Industries", "Channel Islands"])
+
     def test_search_health_thresholds(self):
         healthy = classify_search_health(86, 61, 30)
         degraded = classify_search_health(80, 45, 18)
