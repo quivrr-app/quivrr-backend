@@ -93,7 +93,7 @@
       "US": "expected"
     },
     "Lost": {
-      "AU": "dealer_network_only",
+      "AU": "expected",
       "EU": "dealer_network_only",
       "ID": "not_applicable",
       "US": "dealer_network_only"

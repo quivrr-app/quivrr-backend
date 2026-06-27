@@ -199,6 +199,7 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertIn("US", expectations["regions"])
         self.assertIn("Lost", expectations["dealerNetworkOnlyBrands"])
         self.assertIn("Simon Anderson", expectations["australiaOnlyBrands"])
+        self.assertEqual(expectations["mfaBrands"]["Lost"]["AU"], "expected")
         self.assertEqual(expectations["mfaBrands"]["Lost"]["US"], "dealer_network_only")
         self.assertEqual(expectations["mfaBrands"]["Simon Anderson"]["EU"], "not_applicable")
 
