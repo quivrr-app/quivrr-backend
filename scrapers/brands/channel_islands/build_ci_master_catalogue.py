@@ -1,5 +1,6 @@
 ﻿import json
 import re
+import time
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,8 @@ REPORT_FILE = OUTPUT_DIR / "ci_master_catalogue_report.json"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)"
 }
+REQUEST_PAUSE_SECONDS = 0.35
+MAX_REQUEST_ATTEMPTS = 5
 
 CONSTRUCTION_TERMS = [
     "PU",
@@ -58,6 +61,37 @@ def clean_text(value: str | None) -> str:
         return ""
 
     return re.sub(r"\s+", " ", value).strip()
+
+
+def fetch_with_retries(url: str, timeout: int = 30) -> requests.Response:
+    last_error = None
+
+    for attempt in range(1, MAX_REQUEST_ATTEMPTS + 1):
+        if attempt > 1:
+            time.sleep(min(2 ** (attempt - 1), 12))
+
+        try:
+            response = requests.get(
+                url,
+                headers=HEADERS,
+                timeout=timeout,
+            )
+
+            if response.status_code == 429:
+                raise requests.HTTPError(
+                    f"429 Client Error: Too Many Requests for url: {url}",
+                    response=response,
+                )
+
+            response.raise_for_status()
+            time.sleep(REQUEST_PAUSE_SECONDS)
+            return response
+        except Exception as exc:
+            last_error = exc
+            if attempt == MAX_REQUEST_ATTEMPTS:
+                break
+
+    raise last_error
 
 
 def normalise_construction(value: str) -> str | None:
@@ -400,13 +434,10 @@ def fetch_shopify_products() -> list[dict[str, Any]]:
     while True:
         url = f"{BASE_URL}/products.json?limit=250&page={page}"
 
-        response = requests.get(
+        response = fetch_with_retries(
             url,
-            headers=HEADERS,
             timeout=60,
         )
-
-        response.raise_for_status()
 
         page_products = response.json().get("products", [])
 
@@ -523,13 +554,10 @@ def scrape_product(
 ) -> dict[str, Any]:
     url = item["product_url"]
 
-    response = requests.get(
+    response = fetch_with_retries(
         url,
-        headers=HEADERS,
         timeout=30,
     )
-
-    response.raise_for_status()
 
     soup = BeautifulSoup(
         response.text,
