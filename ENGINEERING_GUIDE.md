@@ -93,6 +93,12 @@ venv\Scripts\python.exe scripts/run_all_brand_catalogues.py
 
 This command runs live brand catalogue builders and importers. Only run it when database writes and external brand fetches are intended.
 
+Source policy notes for current Tier 1 canonical brands:
+
+- JS Industries should be validated from the Azure job context, not local only. The maintained builder reads embedded official product payloads from the parent model pages so it can preserve model coverage, descriptions, images, and official URLs even when rendered size tables change.
+- Channel Islands canonical discovery should prefer the official global collections on `cisurfboards.com`, with the AU official site used only as a fallback when the global source omits a valid model page.
+- Do not lower canonical completeness or deactivation guards just to make the weekly dashboard green. Investigate Azure-visible source behaviour first.
+
 For syntax-only validation:
 
 ```powershell
@@ -224,6 +230,8 @@ quivrracrprod.azurecr.io/quivrr-inventory-job:latest
 ```
 
 Container Apps Jobs then run that image with job-specific commands and args.
+
+This matters for weekly canonical fixes: changes to `scrapers/brands/**` do not affect the live Azure Container Apps Jobs until the inventory-job image workflow finishes and a new job execution starts from that refreshed image.
 
 The API process is started by `startup.sh`, which runs `app:app` through Gunicorn with Uvicorn workers.
 

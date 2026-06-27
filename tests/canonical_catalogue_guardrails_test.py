@@ -4,11 +4,12 @@ from unittest.mock import patch
 
 from audits import canonical_catalogue_health
 from scripts.import_brand_catalogue_common import validate_missing_model_deactivation
+from scrapers.brands.channel_islands import build_ci_canonical_model_links
 
 
 class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
     def test_deactivation_guard_blocks_large_unreviewed_model_drop(self):
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(RuntimeError) as raised:
             validate_missing_model_deactivation(
                 brand_name="JS Industries",
                 existing_model_names=[
@@ -23,6 +24,10 @@ class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
                 ],
                 incoming_model_names=["Golden Child", "Monsta"],
             )
+
+        message = str(raised.exception)
+        self.assertIn("blocked deactivation of 6 models", message)
+        self.assertIn("Sample missing models: Big Baron, Black Baron, Bull Run", message)
 
     def test_deactivation_guard_allows_small_reviewable_cleanup(self):
         missing = validate_missing_model_deactivation(
@@ -73,6 +78,14 @@ class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
         self.assertIn("Description = COALESCE(:description, Description)", generic_importer)
         self.assertIn("Description = COALESCE(:description, Description)", ci_importer)
         self.assertIn("Description = COALESCE(:description, Description)", js_importer)
+
+    def test_ci_model_link_builder_rejects_junk_titles_and_template_slugs(self):
+        self.assertFalse(build_ci_canonical_model_links.looks_like_model_title("Comments"))
+        self.assertFalse(build_ci_canonical_model_links.looks_like_model_title("Videos"))
+        self.assertFalse(build_ci_canonical_model_links.looks_like_model_title("{{ product.title }}"))
+        self.assertFalse(build_ci_canonical_model_links.looks_like_model_slug("{{ product.handle }}"))
+        self.assertTrue(build_ci_canonical_model_links.looks_like_model_title("M23"))
+        self.assertTrue(build_ci_canonical_model_links.looks_like_model_slug("m23"))
 
 
 if __name__ == "__main__":

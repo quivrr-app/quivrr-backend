@@ -12,6 +12,16 @@ OUTPUT_FILE = OUTPUT_DIR / "ci_canonical_model_links.json"
 
 TARGETS = [
     {
+        "region": "global",
+        "source": "board-models",
+        "url": "https://cisurfboards.com/collections/board-models",
+    },
+    {
+        "region": "global",
+        "source": "shortboards",
+        "url": "https://cisurfboards.com/collections/shortboards",
+    },
+    {
         "region": "au",
         "source": "board-models",
         "url": "https://shop-au.cisurfboards.com/collections/board-models",
@@ -39,12 +49,48 @@ INVALID_SLUG_PARTS = [
     "twin-pin",
 ]
 
+INVALID_TITLE_VALUES = {
+    "attributes",
+    "comments",
+    "videos",
+    "view",
+}
+
 
 def clean_text(value: str | None) -> str:
     if not value:
         return ""
 
     return " ".join(value.split()).strip()
+
+
+def looks_like_model_title(value: str) -> bool:
+    title = clean_text(value)
+
+    if not title:
+        return False
+
+    lowered = title.lower()
+
+    if lowered in INVALID_TITLE_VALUES:
+        return False
+
+    if "{%" in title or "{{" in title or "}}" in title:
+        return False
+
+    return True
+
+
+def looks_like_model_slug(slug: str) -> bool:
+    cleaned_slug = clean_text(slug)
+
+    if not cleaned_slug:
+        return False
+
+    if "{" in cleaned_slug or "}" in cleaned_slug or "%" in cleaned_slug:
+        return False
+
+    return True
 
 
 def fetch_models(target: dict) -> list:
@@ -75,12 +121,15 @@ def fetch_models(target: dict) -> list:
         if not slug:
             continue
 
+        if not looks_like_model_slug(slug):
+            continue
+
         if any(part in slug for part in INVALID_SLUG_PARTS):
             continue
 
         title = clean_text(link.get_text(" ", strip=True))
 
-        if not title:
+        if not looks_like_model_title(title):
             continue
 
         if href.startswith("/"):
@@ -118,8 +167,10 @@ def main() -> None:
 
                 existing = merged[slug]
 
-                # Prefer the first AU authoritative link found.
-                # Do not replace AU catalogue links with global links.
+                # Prefer global canonical links when available, but keep AU as
+                # a safe fallback if the global catalogue omits a model page.
+                if existing.get("region") != "global" and item.get("region") == "global":
+                    merged[slug] = item
 
         except Exception as exc:
             print(f"FAILED {target['url']}: {exc}")

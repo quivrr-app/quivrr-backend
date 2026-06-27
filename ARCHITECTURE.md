@@ -108,7 +108,13 @@ python scripts/run_all_brand_catalogues.py
 
 It runs brand pipelines such as JS Industries, Channel Islands, Pyzel, DHD, Lost, Rusty, Firewire, Haydenshapes, Sharp Eye, Misfit, Chemistry, Pukas, Simon Anderson, Chilli, Album, and Christenson. Brand-specific builders live under `scrapers/brands/**`; importers and orchestrators live under `scripts/`.
 
-The weekly job writes `scrapers/brands/output/weekly_brand_catalogue_report.json` and then runs the AU manufacturer direct availability pipeline as a post-catalogue step.
+The weekly job writes `scrapers/brands/output/weekly_brand_catalogue_report.json` and does not trigger regional MFA or retailer import paths. Brand failures are guarded independently so one degraded canonical source does not silently weaken or clear another brand's canonical truth.
+
+Current Tier 1 source policy:
+
+- JS Industries canonical uses the official `https://jsindustries.com/products/{model}` parent model pages as the primary source. The builder extracts embedded official product data, official descriptions, and images from the page HTML instead of relying on brittle rendered text blocks.
+- Channel Islands canonical uses the official global `https://cisurfboards.com/collections/board-models` and `https://cisurfboards.com/collections/shortboards` collections as primary discovery, with the official AU site only as a fallback when the global site omits a valid product page.
+- Neither brand may fall back to retailer inventory for canonical truth.
 
 ## Manufacturer Direct Availability
 
@@ -282,6 +288,7 @@ The `Dockerfile` installs Python dependencies, Microsoft ODBC dependencies, Play
 
 - The canonical catalogue is authoritative for brands, models, constructions, and sizes.
 - Global canonical jobs may write `Brands`, `BoardModels`, and `BoardSizes`, including official descriptions, images, and official URLs, but must not write `ManufacturerInventory` or `RetailerInventory`.
+- Canonical guards stay enabled even when a source degrades. `source_incomplete_guard` prevents partial brand scrapes from silently collapsing model coverage, and `deactivation_guard` prevents unsafe mass model retirement without explicit reviewed override.
 - MFA means current manufacturer direct stock and must remain distinct from catalogue definitions.
 - Regional MFA jobs may read canonical tables and write only `ManufacturerInventory`.
 - Retailer inventory is a separate availability source and must not overwrite canonical catalogue meaning.

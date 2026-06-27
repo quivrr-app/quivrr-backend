@@ -1,9 +1,10 @@
-import asyncio
 import json
 import re
+import time
 from pathlib import Path
 
-from playwright.async_api import async_playwright
+import requests
+from bs4 import BeautifulSoup
 
 
 OUTPUT_FILE = Path("scrapers/brands/js/output/js_page_catalogue.json")
@@ -76,6 +77,23 @@ MODEL_BY_SLUG = {
     "raging-bull-easy-rider-1": "Raging Bull Easy Rider",
 }
 
+REQUEST_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-AU,en;q=0.9",
+    "Referer": "https://jsindustries.com/",
+    "Connection": "close",
+}
+
+PARENT_BOARD_TYPES = {
+    "Performance": "shortboard",
+    "Parent Board": "shortboard",
+    "Softboard": "softboard",
+    "Summer": "fish",
+    "X-Series": "step-up",
+    "Youth Series": "grom",
+}
+
 
 def clean(value):
     return re.sub(r"\s+", " ", str(value or "")).strip()
@@ -85,7 +103,7 @@ def model_from_url(url):
     slug = url.rstrip("/").split("/")[-1]
     return MODEL_BY_SLUG.get(
         slug,
-        slug.replace("-", " ").title()
+        slug.replace("-", " ").title(),
     )
 
 
@@ -103,7 +121,7 @@ def normalise_construction(value):
     if upper_value.startswith("HYFI"):
         return "HYFI 3.0"
 
-    if upper_value in ["PU", "PE", "EPS"]:
+    if upper_value in {"PU", "PE", "EPS"}:
         return upper_value
 
     if upper_value == "SOFTBOARD":
@@ -129,246 +147,386 @@ def normalise_fin(value):
     return value
 
 
-def parse_dimensions(text):
-    lines = [
-        clean(line)
-        for line in text.splitlines()
-        if clean(line)
-    ]
+def extract_description(soup):
+    meta = soup.find("meta", attrs={"name": "description"})
 
-    results = []
+    if meta and meta.get("content"):
+        return clean(meta["content"])
 
-    for index, line in enumerate(lines):
-
-        if not re.fullmatch(
-            r"\d{1,2}'\d{1,2}\"",
-            line
-        ):
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            payload = json.loads(script.get_text(strip=True))
+        except Exception:
             continue
 
-        if index + 3 >= len(lines):
-            continue
+        items = payload if isinstance(payload, list) else [payload]
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            description = clean(item.get("description"))
+            if description:
+                return description
 
-        length = line
-        width = lines[index + 1]
-        thickness = lines[index + 2]
-        volume = lines[index + 3]
-
-        volume_match = re.fullmatch(
-            r"(\d{1,3}(?:\.\d+)?)L",
-            volume,
-            re.IGNORECASE
-        )
-
-        if not volume_match:
-            continue
-
-        results.append({
-            "length": length.replace('"', ""),
-            "width": width.replace('"', ""),
-            "thickness": thickness.replace('"', ""),
-            "volume_litres": float(volume_match.group(1)),
-        })
-
-    return results
+    return None
 
 
-async def get_product_variants(page):
-    product = await page.evaluate(
-        """
-        () => {
-            if (
-                window.customerHub &&
-                window.customerHub.activeProduct &&
-                window.customerHub.activeProduct.variants
-            ) {
-                return window.customerHub.activeProduct;
-            }
+def detect_board_category(page_title, description):
+    text = f"{clean(page_title)} {clean(description)}".lower()
 
-            return null;
-        }
-        """
+    if "easy rider" in text or "mid length" in text:
+        return "midlength"
+
+    if "softboard" in text:
+        return "softboard"
+
+    if "youth" in text or "grom" in text:
+        return "grom"
+
+    if "fish" in text:
+        return "fish"
+
+    if "step up" in text:
+        return "step-up"
+
+    return "shortboard"
+
+
+def extract_active_product_object(html):
+    match = re.search(
+        r"window\.customerHub\.activeProduct\s*=\s*(\{.*?\});",
+        html,
+        re.S,
     )
 
-    if not product:
+    if not match:
+        return None
+
+    object_text = match.group(1)
+
+    object_text = re.sub(r"(\w+)\s*:", r'"\1":', object_text)
+    object_text = re.sub(r",(\s*[}\]])", r"\1", object_text)
+
+    try:
+        return json.loads(object_text)
+    except Exception:
+        return None
+
+
+def extract_json_array_after_marker(text, marker):
+    marker_index = text.find(marker)
+
+    if marker_index == -1:
         return []
 
-    rows = []
+    array_start = text.find("[", marker_index)
 
-    for variant in product.get("variants", []):
-        construction = None
-        fin_system = None
+    if array_start == -1:
+        return []
 
-        for option in variant.get("selectedOptions", []):
-            name = clean(option.get("name")).lower()
-            value = clean(option.get("value"))
+    depth = 0
+    in_string = False
+    escaped = False
+    array_end = None
 
-            if name == "construction":
-                construction = normalise_construction(value)
+    for index in range(array_start, len(text)):
+        char = text[index]
 
-            if name == "fin system":
-                fin_system = normalise_fin(value)
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
 
-        if construction:
-            rows.append({
-                "construction": construction,
-                "fin_system": fin_system,
-                "price": variant.get("price"),
-                "available": variant.get("availableForSale"),
-                "variant_id": variant.get("id"),
-                "image_url": variant.get("imageUrl"),
-            })
+        if char == '"':
+            in_string = True
+        elif char == "[":
+            depth += 1
+        elif char == "]":
+            depth -= 1
+            if depth == 0:
+                array_end = index + 1
+                break
 
-    deduped = {}
+    if array_end is None:
+        return []
 
-    for row in rows:
-        key = "|".join([
-            row.get("construction") or "",
-            row.get("fin_system") or "",
-        ])
-
-        deduped[key] = row
-
-    return list(deduped.values())
+    try:
+        return json.loads(text[array_start:array_end])
+    except Exception:
+        return []
 
 
-async def scrape_product(page, url):
+def extract_embedded_products(html):
+    products = extract_json_array_after_marker(html, '"products":[')
+    if products:
+        return [product for product in products if isinstance(product, dict)]
 
-    print(f"Scraping {url}")
+    products = extract_json_array_after_marker(html, "console.log([")
+    return [product for product in products if isinstance(product, dict)]
 
-    await page.goto(
-        url,
-        wait_until="domcontentloaded",
-        timeout=60000
+
+def parse_dimensions_from_title(title):
+    title = clean(title)
+    match = re.search(
+        r"(?P<length>[4-9]'\d{1,2}(?:\"?\s*1\/2)?)\s*[xX]\s*"
+        r"(?P<width>\d{1,2}(?:\s+\d{1,2}\/\d{1,2})?)[\"]?\s*[xX]\s*"
+        r"(?P<thickness>\d(?:\s+\d{1,2}\/\d{1,2})?)[\"]?"
+        r"(?:\s*-\s*(?P<volume>\d{1,3}(?:\.\d+)?)L)?",
+        title,
+        re.IGNORECASE,
     )
 
-    await page.wait_for_timeout(6000)
+    if not match:
+        return {}
 
-    await page.mouse.wheel(0, 2500)
+    length = match.group("length").replace('"', "").replace("1/2", " 1/2")
+    length = clean(length.replace("  1/2", " 1/2"))
 
-    await page.wait_for_timeout(1500)
+    payload = {
+        "length": length,
+        "width": clean(match.group("width")),
+        "thickness": clean(match.group("thickness")),
+        "volume_litres": None,
+    }
 
-    text = await page.locator("body").inner_text()
+    if match.group("volume"):
+        payload["volume_litres"] = float(match.group("volume"))
 
-    model_name = model_from_url(url)
+    return payload
 
-    dimensions = parse_dimensions(text)
-    variants = await get_product_variants(page)
 
-    if not variants:
-        variants = [{
-            "construction": None,
-            "fin_system": None,
-            "price": None,
-            "available": None,
-            "variant_id": None,
-            "image_url": None,
-        }]
+def fetch_product_html(url, max_attempts=4):
+    last_error = None
 
+    for attempt in range(1, max_attempts + 1):
+        try:
+            response = requests.get(
+                url,
+                headers=REQUEST_HEADERS,
+                timeout=60,
+            )
+            response.raise_for_status()
+            return response.text
+        except Exception as exc:
+            last_error = exc
+            if attempt == max_attempts:
+                break
+            time.sleep(min(2 * attempt, 6))
+
+    raise last_error
+
+
+def parse_model_from_board_title(title):
+    text = clean(title)
+    text = re.sub(r"\s+\d'\d{1,2}.*$", "", text)
+    text = re.sub(r"\s+(?:Round|Squash|Swallow|Pin|Bat),?.*$", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s+-\s+ID:.*$", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s+\[T\d+\]$", "", text)
+    return clean(text)
+
+
+def construction_from_title(title):
+    text = clean(title).upper()
+
+    if "CARBOTUNE" in text:
+        return "CarboTune"
+    if "HYFI" in text:
+        return "HYFI 3.0"
+    if "SOFTBOARD" in text:
+        return "Softboard"
+    if re.search(r"\bPU\b", text):
+        return "PU"
+    if re.search(r"\bPE\b", text):
+        return "PE"
+    if re.search(r"\bEPS\b", text):
+        return "EPS"
+    return None
+
+
+def fin_from_title(title):
+    text = clean(title).upper()
+
+    if "FCS" in text:
+        return "FCS II"
+    if "FUTURES" in text:
+        return "Futures"
+    return None
+
+
+def extract_board_rows(products, fallback_model_name):
     rows = []
 
-    for variant in variants:
-        for dimension in dimensions:
-            rows.append({
+    for product in products:
+        handle = clean(product.get("handle"))
+        title = clean(product.get("title"))
+
+        if not handle or not title or not handle.startswith("sb"):
+            continue
+
+        dimensions = parse_dimensions_from_title(title)
+        if not dimensions:
+            continue
+
+        rows.append(
+            {
                 "brand": "JS Industries",
-                "model": model_name,
-                "construction": variant.get("construction"),
-                "fin_system": variant.get("fin_system"),
+                "model": parse_model_from_board_title(title) or fallback_model_name,
+                "construction": construction_from_title(title),
+                "fin_system": fin_from_title(title),
                 "tail_shape": None,
-                "product_url": url,
-                "price": variant.get("price"),
-                "available": variant.get("available"),
-                "variant_id": variant.get("variant_id"),
-                "image_url": variant.get("image_url"),
-                **dimension,
-            })
+                "product_url": f"https://jsindustries.com/products/{handle}",
+                "price": None,
+                "available": True,
+                "variant_id": None,
+                "official_image_url": None,
+                "description": None,
+                "board_category": None,
+                **dimensions,
+            }
+        )
+
+    return rows
+
+
+def build_placeholder_row(url, model_name, active_product, description, board_category):
+    image_url = None
+
+    if active_product:
+        image_url = clean(active_product.get("imageUrl"))
+
+    return {
+        "brand": "JS Industries",
+        "model": model_name,
+        "construction": None,
+        "fin_system": None,
+        "tail_shape": None,
+        "product_url": url,
+        "price": None,
+        "available": None,
+        "variant_id": None,
+        "official_image_url": image_url,
+        "description": description,
+        "board_category": board_category,
+        "length": None,
+        "width": None,
+        "thickness": None,
+        "volume_litres": None,
+    }
+
+
+def scrape_product(url):
+    print(f"Scraping {url}")
+
+    html = fetch_product_html(url)
+    soup = BeautifulSoup(html, "html.parser")
+
+    model_name = model_from_url(url)
+    active_product = extract_active_product_object(html) or {}
+    embedded_products = extract_embedded_products(html)
+    board_rows = extract_board_rows(embedded_products, model_name)
+    description = extract_description(soup)
+    board_category = detect_board_category(
+        active_product.get("name") or model_name,
+        description,
+    )
+
+    placeholder_row = build_placeholder_row(
+        url,
+        model_name,
+        active_product,
+        description,
+        board_category,
+    )
+
+    for row in board_rows:
+        row["official_image_url"] = row["official_image_url"] or placeholder_row["official_image_url"]
+        row["description"] = row["description"] or description
+        row["board_category"] = row["board_category"] or board_category
+
+    rows = [placeholder_row, *board_rows]
 
     print(f"  Model: {model_name}")
-    print(f"  Dimensions: {len(dimensions)}")
-    print(f"  Variant options: {len(variants)}")
+    print(f"  Embedded products: {len(embedded_products)}")
+    print(f"  Size rows: {len(board_rows)}")
     print(f"  Rows: {len(rows)}")
 
     return rows
 
 
-async def main():
+def dedupe_rows(rows):
+    deduped = {}
 
-    OUTPUT_FILE.parent.mkdir(
-        parents=True,
-        exist_ok=True
+    for row in rows:
+        key = "|".join(
+            [
+                row.get("model") or "",
+                row.get("construction") or "",
+                row.get("fin_system") or "",
+                row.get("length") or "",
+                row.get("width") or "",
+                row.get("thickness") or "",
+                str(row.get("volume_litres") or ""),
+                row.get("product_url") or "",
+            ]
+        )
+        deduped[key] = row
+
+    return list(deduped.values())
+
+
+def build_incomplete_error_message(*, failures, expected_models, scraped_models, missing_models):
+    return (
+        "JS Industries catalogue scrape incomplete. "
+        f"Failures={failures} "
+        f"ExpectedModels={expected_models} "
+        f"ActualModels={scraped_models} "
+        f"MissingModels={missing_models}"
     )
+
+
+def main():
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     all_rows = []
     failures = []
 
-    async with async_playwright() as playwright:
-
-        browser = await playwright.chromium.launch(
-            headless=True
-        )
-
-        page = await browser.new_page(
-            viewport={
-                "width": 1600,
-                "height": 1400
-            }
-        )
-
-        for url in PRODUCT_URLS:
-
-            try:
-                rows = await scrape_product(
-                    page,
-                    url
-                )
-
-                all_rows.extend(rows)
-
-            except Exception as error:
-                print(f"Failed {url}: {error}")
-                failures.append({
+    for url in PRODUCT_URLS:
+        try:
+            rows = scrape_product(url)
+            all_rows.extend(rows)
+        except Exception as error:
+            print(f"Failed {url}: {error}")
+            failures.append(
+                {
                     "url": url,
                     "model": model_from_url(url),
                     "error": str(error),
-                })
+                }
+            )
 
-        await browser.close()
-
-    deduped = {}
-
-    for row in all_rows:
-
-        key = "|".join([
-            row.get("model") or "",
-            row.get("construction") or "",
-            row.get("fin_system") or "",
-            row.get("length") or "",
-            row.get("width") or "",
-            row.get("thickness") or "",
-            str(row.get("volume_litres") or ""),
-        ])
-
-        deduped[key] = row
-
-    final_rows = list(deduped.values())
+    final_rows = dedupe_rows(all_rows)
 
     OUTPUT_FILE.write_text(
-        json.dumps(
-            final_rows,
-            indent=2,
-            ensure_ascii=False
-        ),
-        encoding="utf-8"
+        json.dumps(final_rows, indent=2, ensure_ascii=False),
+        encoding="utf-8",
     )
 
     scraped_models = sorted({row.get("model") for row in final_rows if row.get("model")})
     expected_models = sorted(set(MODEL_BY_SLUG.values()))
     missing_models = sorted(set(expected_models) - set(scraped_models))
+    rows_with_sizes = sum(1 for row in final_rows if row.get("length"))
+    model_placeholder_rows = sum(1 for row in final_rows if not row.get("length"))
+
     report = {
         "rows_scraped": len(all_rows),
         "rows_deduped": len(final_rows),
         "expected_model_count": len(expected_models),
         "scraped_model_count": len(scraped_models),
+        "rows_with_sizes": rows_with_sizes,
+        "model_placeholder_rows": model_placeholder_rows,
         "missing_models": missing_models,
         "failures": failures,
         "failure_count": len(failures),
@@ -383,15 +541,21 @@ async def main():
     print("\nJS page catalogue built")
     print(f"Rows scraped: {len(all_rows)}")
     print(f"Rows deduped: {len(final_rows)}")
+    print(f"Rows with sizes: {rows_with_sizes}")
+    print(f"Placeholder rows: {model_placeholder_rows}")
     print(f"Output: {OUTPUT_FILE}")
     print(f"Report: {REPORT_FILE}")
 
     if failures or missing_models:
         raise RuntimeError(
-            "JS Industries catalogue scrape incomplete. "
-            f"Failures={len(failures)} MissingModels={len(missing_models)}"
+            build_incomplete_error_message(
+                failures=len(failures),
+                expected_models=len(expected_models),
+                scraped_models=len(scraped_models),
+                missing_models=len(missing_models),
+            )
         )
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

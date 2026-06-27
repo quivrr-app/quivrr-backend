@@ -1,6 +1,7 @@
 import unittest
 
 from scripts import import_js_catalogue
+from scrapers.brands.js import scrape_js_product_pages
 
 
 class ExistingSizeRow:
@@ -65,6 +66,40 @@ class ImportJsCatalogueTests(unittest.TestCase):
         self.assertEqual(import_js_catalogue.normalise_volume("29.30"), "29.3")
         self.assertEqual(import_js_catalogue.normalise_volume(29.300), "29.3")
         self.assertIsNone(import_js_catalogue.normalise_volume(None))
+
+    def test_js_incomplete_guard_message_includes_expected_and_actual_counts(self):
+        message = scrape_js_product_pages.build_incomplete_error_message(
+            failures=0,
+            expected_models=30,
+            scraped_models=10,
+            missing_models=20,
+        )
+
+        self.assertIn("Failures=0", message)
+        self.assertIn("ExpectedModels=30", message)
+        self.assertIn("ActualModels=10", message)
+        self.assertIn("MissingModels=20", message)
+
+    def test_build_catalogue_models_accepts_placeholder_only_rows_for_model_coverage(self):
+        models = import_js_catalogue.build_catalogue_models(
+            [
+                {
+                    "model": "Golden Child",
+                    "product_url": "https://jsindustries.com/products/golden-child",
+                    "official_image_url": "https://cdn.example/golden-child.jpg",
+                    "description": "Official JS description",
+                    "board_category": "shortboard",
+                    "length": None,
+                }
+            ],
+            [],
+        )
+
+        self.assertEqual(list(models.keys()), ["Golden Child"])
+        self.assertEqual(models["Golden Child"]["product_url"], "https://jsindustries.com/products/golden-child")
+        self.assertEqual(models["Golden Child"]["official_image_url"], "https://cdn.example/golden-child.jpg")
+        self.assertEqual(models["Golden Child"]["description"], "Official JS description")
+        self.assertEqual(models["Golden Child"]["board_category"], "shortboard")
 
 
 if __name__ == "__main__":
