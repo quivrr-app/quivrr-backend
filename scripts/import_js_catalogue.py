@@ -179,9 +179,14 @@ def build_catalogue_size_rows(catalogue, model_cache):
         if not model_name or model_name not in model_cache:
             continue
 
+        length = clean(item.get("length"))
+
+        if not length:
+            continue
+
         size_rows.append({
             "model_id": model_cache[model_name],
-            "length": clean(item.get("length")),
+            "length": length,
             "width": clean(item.get("width")),
             "thickness": clean(item.get("thickness")),
             "volume": item.get("volume_litres"),

@@ -47,6 +47,19 @@ SITEMAPS = [
     },
 ]
 
+PRODUCT_FEED_TARGETS = [
+    {
+        "region": "global",
+        "source": "products-json",
+        "url": "https://cisurfboards.com",
+    },
+    {
+        "region": "au",
+        "source": "products-json",
+        "url": "https://shop-au.cisurfboards.com",
+    },
+]
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)"
 }
@@ -68,6 +81,11 @@ INVALID_TITLE_VALUES = {
     "comments",
     "videos",
     "view",
+}
+
+MODEL_PRODUCT_TYPES = {
+    "legacy surfboard model",
+    "surfboard model",
 }
 
 
@@ -113,6 +131,33 @@ def model_name_from_slug(slug: str) -> str:
         part.upper() if len(part) <= 2 else part.title()
         for part in parts
     )
+
+
+def looks_like_parent_model_product(product: dict) -> bool:
+    product_type = clean_text(product.get("product_type")).lower()
+    title = clean_text(product.get("title"))
+    handle = clean_text(product.get("handle")).lower()
+
+    if product_type in MODEL_PRODUCT_TYPES:
+        return True
+
+    if product_type != "surfboards":
+        return False
+
+    if not handle or not title:
+        return False
+
+    # Stock board handles usually begin with the board length. Parent model pages do not.
+    if handle[0].isdigit():
+        return False
+
+    if title[0].isdigit():
+        return False
+
+    if title.lower().startswith("custom "):
+        return False
+
+    return True
 
 
 def extract_urls_from_xml(xml_text: str) -> list[str]:
@@ -239,6 +284,57 @@ def fetch_sitemap_models(target: dict) -> list[dict]:
     return list(discovered.values())
 
 
+def fetch_product_feed_models(target: dict) -> list[dict]:
+    print(f"Scraping {target['url']}/products.json")
+
+    discovered = {}
+    page = 1
+
+    while True:
+        response = requests.get(
+            f"{target['url']}/products.json?limit=250&page={page}",
+            headers=HEADERS,
+            timeout=30,
+        )
+        response.raise_for_status()
+
+        products = response.json().get("products", [])
+
+        if not products:
+            break
+
+        for product in products:
+            if not looks_like_parent_model_product(product):
+                continue
+
+            handle = clean_text(product.get("handle")).lower()
+            title = clean_text(product.get("title"))
+
+            if not handle or not looks_like_model_slug(handle):
+                continue
+
+            if any(part in handle for part in INVALID_SLUG_PARTS):
+                continue
+
+            if not looks_like_model_title(title):
+                continue
+
+            discovered[handle] = {
+                "slug": handle,
+                "model_name": title,
+                "product_url": f"{target['url']}/products/{handle}",
+                "region": target["region"],
+                "source": target["source"],
+            }
+
+        page += 1
+
+        if page > 20:
+            break
+
+    return list(discovered.values())
+
+
 def merge_model(merged: dict, item: dict) -> None:
     slug = item["slug"]
 
@@ -270,6 +366,10 @@ def main() -> None:
 
     for target in SITEMAPS:
         for item in fetch_sitemap_models(target):
+            merge_model(merged, item)
+
+    for target in PRODUCT_FEED_TARGETS:
+        for item in fetch_product_feed_models(target):
             merge_model(merged, item)
 
     final = sorted(

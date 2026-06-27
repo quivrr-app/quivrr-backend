@@ -101,6 +101,36 @@ class ImportJsCatalogueTests(unittest.TestCase):
         self.assertEqual(models["Golden Child"]["description"], "Official JS description")
         self.assertEqual(models["Golden Child"]["board_category"], "shortboard")
 
+    def test_build_catalogue_size_rows_skips_placeholder_rows_without_dimensions(self):
+        size_rows = import_js_catalogue.build_catalogue_size_rows(
+            [
+                {
+                    "model": "Golden Child",
+                    "length": None,
+                    "width": None,
+                    "thickness": None,
+                    "volume_litres": None,
+                    "construction": None,
+                    "fin_system": None,
+                    "tail_shape": None,
+                },
+                {
+                    "model": "Golden Child",
+                    "length": "5'8",
+                    "width": "19 1/2",
+                    "thickness": "2 7/16",
+                    "volume_litres": 29.3,
+                    "construction": "PU",
+                    "fin_system": "FCS II",
+                    "tail_shape": "Squash",
+                },
+            ],
+            {"Golden Child": 101},
+        )
+
+        self.assertEqual(len(size_rows), 1)
+        self.assertEqual(size_rows[0]["length"], "5'8")
+
 
 if __name__ == "__main__":
     unittest.main()

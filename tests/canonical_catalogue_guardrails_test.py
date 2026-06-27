@@ -87,6 +87,26 @@ class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
         self.assertTrue(build_ci_canonical_model_links.looks_like_model_title("M23"))
         self.assertTrue(build_ci_canonical_model_links.looks_like_model_slug("m23"))
 
+    def test_ci_model_link_builder_detects_parent_model_products_in_shopify_feed(self):
+        self.assertTrue(
+            build_ci_canonical_model_links.looks_like_parent_model_product(
+                {
+                    "product_type": "Legacy Surfboard Model",
+                    "title": "The Gravy",
+                    "handle": "the-gravy",
+                }
+            )
+        )
+        self.assertFalse(
+            build_ci_canonical_model_links.looks_like_parent_model_product(
+                {
+                    "product_type": "Surfboard Stock",
+                    "title": "5'8 Two Happy - Futures",
+                    "handle": "58-two-happy-futures",
+                }
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
