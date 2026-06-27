@@ -79,6 +79,57 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(result.color, "yellow")
         self.assertEqual(result.label, "planned")
 
+    def test_weekly_catalogue_degraded_brands_surface_as_yellow(self):
+        now = datetime(2026, 6, 27, 4, 0, tzinfo=timezone.utc)
+
+        def fake_job_state(job_name: str):
+            if job_name == "weekly_brand_catalogues":
+                return {
+                    "status": "success",
+                    "latest_status_timestamp_utc": "2026-06-27T01:12:29Z",
+                    "latest_success_timestamp_utc": "2026-06-27T01:12:29Z",
+                    "degraded_brand_count": 2,
+                    "degraded_brands": ["JS Industries", "Channel Islands"],
+                }
+            return None
+
+        with patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-27T01:12:29Z", "modelCount": 540},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            side_effect=fake_job_state,
+        ):
+            job_health, _ = dashboard._build_job_health(
+                ["AU", "EU", "ID", "US"],
+                {},
+                {},
+                now=now,
+            )
+
+        weekly_row = next(
+            row for row in job_health
+            if row["jobName"] == "quivrr-weekly-brand-catalogues" and row["region"] == "AU"
+        )
+        self.assertEqual(weekly_row["status"], "yellow")
+        self.assertEqual(weekly_row["statusLabel"], "degraded")
+        self.assertEqual(weekly_row["degradedBrandCount"], 2)
+        self.assertEqual(weekly_row["degradedBrands"], ["JS Industries", "Channel Islands"])
+        self.assertIn("Canonical truth preserved", weekly_row["statusReason"])
+
+        pipeline_health = dashboard._build_pipeline_health(
+            [],
+            job_health,
+            {"summary": {"critical": 0, "warnings": 0}},
+            cache_health_color="green",
+            cache_health_reason="Complete live payload is available.",
+        )
+        global_canonical = next(item for item in pipeline_health if item["key"] == "global_canonical")
+        self.assertEqual(global_canonical["status"], "yellow")
+        self.assertIn("Canonical truth preserved", global_canonical["latestIssue"])
+
     def test_search_health_thresholds(self):
         healthy = classify_search_health(86, 61, 30)
         degraded = classify_search_health(80, 45, 18)

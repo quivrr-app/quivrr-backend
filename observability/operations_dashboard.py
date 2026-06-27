@@ -494,6 +494,31 @@ def _job_rows_from_state(state: dict[str, Any] | None) -> tuple[int | None, int 
     )
 
 
+def _catalogue_degraded_status_override(
+    status: StatusResult,
+    state: dict[str, Any] | None,
+) -> StatusResult:
+    if not state or str(state.get("status") or "").strip().lower() == "failed":
+        return status
+    degraded_count = int(state.get("degraded_brand_count") or 0)
+    if degraded_count <= 0:
+        return status
+
+    degraded_brands = [
+        str(brand).strip()
+        for brand in state.get("degraded_brands", [])
+        if str(brand).strip()
+    ]
+    preview = ", ".join(degraded_brands[:3]) if degraded_brands else f"{degraded_count} guarded brand(s)"
+    if len(degraded_brands) > 3:
+        preview = f"{preview} +{len(degraded_brands) - 3} more"
+    return StatusResult(
+        "yellow",
+        "degraded",
+        f"Latest weekly canonical run completed with guarded degraded brands ({preview}). Canonical truth preserved; review source probes and builder outputs in Azure.",
+    )
+
+
 def _classify_job_health(
     latest_success: datetime | None,
     row_count: int | None,
@@ -589,6 +614,8 @@ def _build_job_health(
                     latest_state=state,
                     now=now,
                 )
+            if str(definition.get("jobType") or "").strip().lower() == "catalogue":
+                status = _catalogue_degraded_status_override(status, state)
             last_status_timestamp = _parse_timestamp((state or {}).get("latest_status_timestamp_utc"))
             row = {
                 "region": region,
@@ -606,6 +633,8 @@ def _build_job_health(
                 "rowsInserted": rows_inserted,
                 "rowsUpdated": rows_updated,
                 "activeRowsAfter": active_rows_after,
+                "degradedBrandCount": int((state or {}).get("degraded_brand_count") or 0),
+                "degradedBrands": list((state or {}).get("degraded_brands") or []),
                 "source": source,
                 "structuredLogEventName": definition.get("structuredLogEventName"),
                 "azureContainerAppJobName": definition.get("jobName"),
@@ -1657,9 +1686,11 @@ def _build_pipeline_health(
             else "No recent global canonical success"
         )
         if catalogue_status == "yellow":
-            catalogue_reason = (
-                f"{catalogue_reason} Canonical truth preserved; review guarded source outputs in Azure."
-            )
+            normalized_reason = str(catalogue_reason or "").lower()
+            if "canonical truth preserved" not in normalized_reason:
+                catalogue_reason = (
+                    f"{catalogue_reason} Canonical truth preserved; review guarded source outputs in Azure."
+                )
 
     mfa_regions = [row for row in region_overview if row.get("mfaStatus") in {"green", "yellow", "red"}]
     retailer_regions = [row for row in region_overview if row.get("retailerStatus") in {"green", "yellow", "red"}]
