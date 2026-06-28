@@ -179,6 +179,85 @@ def infer_source_construction(row: dict) -> str:
     return eu_import.construction_key(row.get("construction")) or ""
 
 
+def _model_match_cache_key(row: dict) -> tuple[object, ...]:
+    return (
+        row.get("brandId"),
+        row.get("brandName"),
+        row.get("rawProductTitle"),
+        row.get("normalisedProductTitle"),
+        row.get("parsedModel"),
+    )
+
+
+def _size_match_cache_key(row: dict) -> tuple[object, ...]:
+    return (
+        row.get("lengthFeetInches"),
+        row.get("width"),
+        row.get("thickness"),
+        row.get("volumeLitres"),
+        row.get("construction"),
+        row.get("rawProductTitle"),
+    )
+
+
+def _build_model_indexes(models_by_brand: dict[int, list[dict]]) -> dict[int, dict[str, dict[str, list[dict]]]]:
+    indexes: dict[int, dict[str, dict[str, list[dict]]]] = {}
+    for brand_id, models in models_by_brand.items():
+        exact: dict[str, list[dict]] = defaultdict(list)
+        tolerant: dict[str, list[dict]] = defaultdict(list)
+        for model in models:
+            model_key = model.get("modelKey") or ""
+            tolerant_key = eu_import.tolerant_model_key(model.get("modelName"))
+            if model_key:
+                exact[model_key].append(model)
+            if tolerant_key:
+                tolerant[tolerant_key].append(model)
+        indexes[brand_id] = {
+            "exact": dict(exact),
+            "tolerant": dict(tolerant),
+        }
+    return indexes
+
+
+def _fast_model_candidate(
+    row: dict,
+    model_indexes: dict[int, dict[str, dict[str, list[dict]]]],
+) -> dict | None:
+    brand_id = row.get("brandId")
+    if brand_id is None:
+        return None
+
+    brand_indexes = model_indexes.get(int(brand_id))
+    if not brand_indexes:
+        return None
+
+    for index_name, score in (("exact", 14000), ("tolerant", 13500)):
+        key = eu_import.tolerant_model_key(row.get("parsedModel"))
+        if not key:
+            continue
+        matches = brand_indexes.get(index_name, {}).get(key) or []
+        if not matches:
+            continue
+
+        candidates = [
+            {
+                "boardModelId": int(model["boardModelId"]),
+                "modelName": model["modelName"],
+                "score": score,
+                "isGeneric": False,
+            }
+            for model in matches
+        ]
+        selected = dict(candidates[0])
+        selected["candidateCount"] = len(candidates)
+        selected["ambiguous"] = len(candidates) > 1
+        selected["ambiguousCandidateCount"] = len(candidates)
+        selected["candidates"] = candidates[:5]
+        return selected
+
+    return None
+
+
 def parse_regions(region_codes: list[str] | None) -> set[str] | None:
     if not region_codes:
         return None
@@ -217,6 +296,7 @@ def compute_supported_linkage_report(
         for brand_models in models_by_brand.values()
         for model in brand_models
     }
+    model_indexes = _build_model_indexes(models_by_brand)
 
     brand_updates = []
     model_updates = []
@@ -229,12 +309,21 @@ def compute_supported_linkage_report(
     manufacturer_metrics: dict[tuple[str, str], Counter] = defaultdict(Counter)
     retailer_model_coverage: dict[str, set[int]] = defaultdict(set)
     global_metrics = Counter()
+    parsed_brand_cache: dict[tuple[object, object], str] = {}
+    parsed_model_cache: dict[tuple[object, object], str] = {}
+    model_candidate_cache: dict[tuple[object, ...], dict | None] = {}
+    size_candidate_cache: dict[tuple[object, ...], dict | None] = {}
+    size_family_cache: dict[tuple[object, ...], bool] = {}
 
     for row in inventory_rows:
-        parsed_brand = eu_import.extract_canonical_brand_name(
-            row.get("rawProductTitle"),
-            row.get("brandName"),
-        )
+        parsed_brand_key = (row.get("rawProductTitle"), row.get("brandName"))
+        parsed_brand = parsed_brand_cache.get(parsed_brand_key)
+        if parsed_brand is None:
+            parsed_brand = eu_import.extract_canonical_brand_name(
+                row.get("rawProductTitle"),
+                row.get("brandName"),
+            )
+            parsed_brand_cache[parsed_brand_key] = parsed_brand
         effective_brand_name = parsed_brand or row.get("brandName")
         if effective_brand_name not in SUPPORTED_BRAND_SET:
             continue
@@ -271,10 +360,14 @@ def compute_supported_linkage_report(
             manufacturer_metrics[manufacturer_key]["linkedSizeRowsBefore"] += 1
             global_metrics["linkedSizeRowsBefore"] += 1
 
-        parsed_model = eu_import.extract_model_hint(
-            row.get("rawProductTitle"),
-            effective_brand_name,
-        )
+        parsed_model_key = (row.get("rawProductTitle"), effective_brand_name)
+        parsed_model = parsed_model_cache.get(parsed_model_key)
+        if parsed_model is None:
+            parsed_model = eu_import.extract_model_hint(
+                row.get("rawProductTitle"),
+                effective_brand_name,
+            )
+            parsed_model_cache[parsed_model_key] = parsed_model
         match_row = {
             **row,
             "brandId": effective_brand_id,
@@ -284,7 +377,19 @@ def compute_supported_linkage_report(
 
         selected_model = None
         if effective_model_id is None and effective_brand_id is not None:
-            selected_model = eu_import.select_model_candidate(match_row, models_by_brand)
+            model_cache_key = (
+                effective_brand_id,
+                effective_brand_name,
+                *_model_match_cache_key(match_row),
+            )
+            if model_cache_key not in model_candidate_cache:
+                fast_candidate = _fast_model_candidate(match_row, model_indexes)
+                model_candidate_cache[model_cache_key] = (
+                    fast_candidate
+                    if fast_candidate is not None
+                    else eu_import.select_model_candidate(match_row, models_by_brand)
+                )
+            selected_model = model_candidate_cache[model_cache_key]
             if selected_model and not selected_model.get("ambiguous"):
                 effective_model_id = selected_model["boardModelId"]
                 model_updates.append(
@@ -301,11 +406,17 @@ def compute_supported_linkage_report(
         size_family_candidate = False
 
         if not projected_size_linked and effective_model_id is not None:
-            selected_size = eu_import.select_size_candidate(
-                match_row,
+            size_cache_key = (
                 effective_model_id,
-                sizes_by_model,
+                *_size_match_cache_key(match_row),
             )
+            if size_cache_key not in size_candidate_cache:
+                size_candidate_cache[size_cache_key] = eu_import.select_size_candidate(
+                    match_row,
+                    effective_model_id,
+                    sizes_by_model,
+                )
+            selected_size = size_candidate_cache[size_cache_key]
             if selected_size:
                 projected_size_linked = True
                 size_updates.append(
@@ -335,12 +446,21 @@ def compute_supported_linkage_report(
             global_metrics["missingModelRowsAfter"] += 1
 
         projected_size_family_linked = False
-        if effective_model_id is not None:
-            size_family_candidate = has_size_family_candidate(
-                match_row,
+        if projected_size_linked:
+            size_family_candidate = True
+            projected_size_family_linked = True
+        elif effective_model_id is not None:
+            size_family_cache_key = (
                 int(effective_model_id),
-                sizes_by_model,
+                *_size_match_cache_key(match_row),
             )
+            if size_family_cache_key not in size_family_cache:
+                size_family_cache[size_family_cache_key] = has_size_family_candidate(
+                    match_row,
+                    int(effective_model_id),
+                    sizes_by_model,
+                )
+            size_family_candidate = size_family_cache[size_family_cache_key]
             projected_size_family_linked = size_family_candidate
         if projected_size_family_linked:
             retailer_metrics[retailer_key]["linkedSizeFamilyRowsAfter"] += 1
