@@ -239,3 +239,5 @@ Ops endpoint notes:
 - Missing or incorrect request key returns `403`.
 - Missing server-side key keeps the endpoint disabled with `503`.
 - The endpoint caches the dashboard payload for five minutes by default through `OPS_DASHBOARD_CACHE_TTL_SECONDS`.
+- authenticated requests no longer trust stale cache as final truth: if the cached payload is stale, the endpoint now attempts a synchronous rebuild and only falls back to stale data when the rebuild itself fails
+- when a synchronous stale-cache rebuild fails, the endpoint emits `ops_dashboard_cache_stale_served` with the rebuild error and starts a background refresh; successful rebuilds emit `ops_dashboard_cache_stale_rebuilt_sync`
