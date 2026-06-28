@@ -32,6 +32,41 @@ EXCLUDED_SLUG_PARTS = [
     "/test-2/",
 ]
 
+ACCESSORY_URL_PATTERNS = [
+    "-fin-set",
+    "-fins-",
+    "-fins/",
+    "/fins-",
+    "/fins/",
+    "-leash",
+    "-legrope",
+    "-traction",
+    "-deck-grip",
+    "-grip-",
+    "-surf-wax",
+    "-wax-",
+    "-board-cover",
+    "-travel-cover",
+    "-day-cover",
+    "-stretch-cover",
+    "-board-bag",
+    "-board-sock",
+    "-tie-down",
+    "-roof-rack",
+    "-wall-rack",
+    "-ding-repair",
+    "-repair-kit",
+    "-sticker",
+    "-poncho",
+    "-towel",
+    "-wetsuit",
+    "-steamer",
+    "-rash-vest",
+    "-rashguard",
+]
+
+REQUEST_DELAY_SECONDS = 0.15
+
 IMAGE_REJECT_TERMS = [
     "leash",
     "legrope",
@@ -980,6 +1015,15 @@ def is_excluded_url(url):
     return any(part in lower_url for part in EXCLUDED_SLUG_PARTS)
 
 
+def is_obvious_accessory_url(url):
+    lower_url = url.lower()
+
+    if "/product/" not in lower_url:
+        return False
+
+    return any(pattern in lower_url for pattern in ACCESSORY_URL_PATTERNS)
+
+
 def row_quality(row):
     score = 0
 
@@ -1256,7 +1300,11 @@ def main():
         output_file = OUTPUT_DIR / "coopers_test_inventory.json"
     else:
         print("Mode: full", flush=True)
-        product_urls = get_product_urls()
+        product_urls = [
+            url
+            for url in get_product_urls()
+            if not is_obvious_accessory_url(url)
+        ]
 
     print(f"Product URLs found: {len(product_urls)}", flush=True)
 
@@ -1268,7 +1316,7 @@ def main():
         items = extract_product_data(url)
         results.extend(items)
 
-        time.sleep(0.5)
+        time.sleep(REQUEST_DELAY_SECONDS)
 
     results = dedupe_rows(results)
 
