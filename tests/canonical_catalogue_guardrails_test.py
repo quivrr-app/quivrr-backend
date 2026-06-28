@@ -4,7 +4,10 @@ from unittest.mock import patch
 
 from audits import canonical_catalogue_health
 from scripts import canonical_catalogue_guardrails as guardrails
-from scripts.import_brand_catalogue_common import validate_missing_model_deactivation
+from scripts.import_brand_catalogue_common import (
+    build_rejected_model_cleanup_targets,
+    validate_missing_model_deactivation,
+)
 from scrapers.brands.channel_islands import build_ci_canonical_model_links
 
 
@@ -37,6 +40,46 @@ class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
             incoming_model_names=["Bom Dia", "Moonstone"],
         )
         self.assertEqual(missing, ["Ledge"])
+
+    def test_rejected_model_cleanup_targets_are_deduplicated_and_keep_source_urls(self):
+        targets = build_rejected_model_cleanup_targets(
+            [
+                {
+                    "brand": "Album",
+                    "title": "Aaron Poritz",
+                    "sourceUrl": "https://albumsurf.com/collections/aaron-poritz",
+                    "reason": "negative_term:vase",
+                },
+                {
+                    "brand": "Album",
+                    "title": "Aaron Poritz",
+                    "sourceUrl": "https://albumsurf.com/collections/aaron-poritz",
+                    "reason": "negative_term:vase",
+                },
+                {
+                    "brand": "Album",
+                    "title": "Gallery Tee",
+                    "sourceUrl": "https://albumsurf.com/products/gallery-tee",
+                    "reason": "negative_term:shirt",
+                },
+            ]
+        )
+
+        self.assertEqual(
+            targets,
+            [
+                {
+                    "model_name": "Aaron Poritz",
+                    "source_url": "https://albumsurf.com/collections/aaron-poritz",
+                    "reason": "negative_term:vase",
+                },
+                {
+                    "model_name": "Gallery Tee",
+                    "source_url": "https://albumsurf.com/products/gallery-tee",
+                    "reason": "negative_term:shirt",
+                },
+            ],
+        )
 
     def test_canonical_summary_includes_official_model_audit_fields(self):
         brand_entry = {"displayName": "Pyzel", "primaryBrandId": 2, "brandIds": [2]}
