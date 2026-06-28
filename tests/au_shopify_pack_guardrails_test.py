@@ -5,6 +5,19 @@ from scripts.tools import build_retailer_governance_audit as governance_audit
 
 
 class AuShopifyPackGuardrailsTests(unittest.TestCase):
+    def test_overboard_surf_uses_board_collection_hint(self):
+        target = active_targets.build_target(
+            {
+                "primary_name": "Overboard Surf",
+                "website": "https://overboardsurf.com.au",
+                "country": "Australia",
+                "platform": "shopify",
+                "priority": 2,
+            },
+            {},
+        )
+        self.assertEqual(target.get("collection_handles"), ["boards"])
+
     def test_board_collective_shell_retailers_are_excluded_from_active_targets(self):
         for retailer_name in (
             "Red Herring Surf",
