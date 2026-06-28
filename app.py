@@ -865,8 +865,6 @@ def _load_ops_dashboard_cache_from_disk_locked():
         return
 
     _ops_dashboard_cache["loaded_from_disk"] = True
-    fallback_payload = None
-    fallback_generated_at = 0.0
     for snapshot_path, loaded_event, failed_event in (
         (
             OPS_DASHBOARD_CACHE_FILE,
@@ -891,9 +889,6 @@ def _load_ops_dashboard_cache_from_disk_locked():
                     snapshotVersion=payload.get("version"),
                     expectedVersion=DASHBOARD_VERSION,
                 )
-                if _ops_dashboard_payload_is_complete(payload) and generated_at > fallback_generated_at:
-                    fallback_payload = payload
-                    fallback_generated_at = generated_at
                 continue
 
             _ops_dashboard_cache["payload"] = payload
@@ -909,15 +904,6 @@ def _load_ops_dashboard_cache_from_disk_locked():
                 cacheFile=str(snapshot_path),
                 error=str(exc),
             )
-    if fallback_payload is not None:
-        _ops_dashboard_cache["payload"] = fallback_payload
-        _ops_dashboard_cache["generated_at"] = fallback_generated_at
-        ops_dashboard_log(
-            "ops_dashboard_legacy_snapshot_loaded",
-            snapshotVersion=fallback_payload.get("version"),
-            expectedVersion=DASHBOARD_VERSION,
-            generatedAt=fallback_generated_at,
-        )
 
 
 def _store_ops_dashboard_cache(payload, generated_at):

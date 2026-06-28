@@ -308,7 +308,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertEqual(response.json()["version"], payload["version"])
         builder.assert_not_called()
 
-    def test_ops_dashboard_serves_complete_legacy_cached_snapshot_when_runtime_cache_missing(self):
+    def test_ops_dashboard_ignores_complete_legacy_cached_snapshot_when_runtime_cache_missing(self):
         self.cache_file.write_text(
             '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "jobContracts": [], "jobContractsByRegion": {"AU": []}, "inventoryCounts": [], "searchQuality": [], "linkQuality": {}, "coverageGaps": [], "canonicalCompleteness": {}, "regionalReadiness": [], "pipelineHealth": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
@@ -328,12 +328,12 @@ class OperationsDashboardApiTests(unittest.TestCase):
             )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["cacheStatus"], "hit")
-        self.assertEqual(response.json()["version"], "stale-dashboard-version")
-        self.assertEqual(refresh_starter.call_count, 0)
+        self.assertEqual(response.json()["cacheStatus"], "warming")
+        self.assertTrue(response.json()["warmingUp"])
+        self.assertEqual(refresh_starter.call_count, 1)
         builder.assert_not_called()
 
-    def test_ops_dashboard_serves_complete_legacy_bootstrap_snapshot_when_runtime_cache_missing(self):
+    def test_ops_dashboard_ignores_complete_legacy_bootstrap_snapshot_when_runtime_cache_missing(self):
         self.bootstrap_file.write_text(
             '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": [], "mfaHealth": [], "retailerHealth": [], "retailerHealthByRegion": {"AU": {"summary": {}, "retailers": []}}, "jobHealth": [], "jobHealthByRegion": {"AU": {"summary": {"configuredJobs": 0}, "jobs": []}}, "jobContracts": [], "jobContractsByRegion": {"AU": []}, "inventoryCounts": [], "searchQuality": [], "linkQuality": {}, "coverageGaps": [], "canonicalCompleteness": {}, "regionalReadiness": [], "pipelineHealth": [], "alerts": [], "alertSummary": {"summary": {"critical": 0}}, "regionDetails": {"AU": {}}}}',
             encoding="utf-8",
@@ -353,9 +353,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
             )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["cacheStatus"], "hit")
-        self.assertEqual(response.json()["version"], "stale-dashboard-version")
-        self.assertEqual(refresh_starter.call_count, 0)
+        self.assertEqual(response.json()["cacheStatus"], "warming")
+        self.assertTrue(response.json()["warmingUp"])
+        self.assertEqual(refresh_starter.call_count, 1)
         builder.assert_not_called()
 
     def test_ops_dashboard_still_warms_when_legacy_snapshot_is_incomplete(self):
