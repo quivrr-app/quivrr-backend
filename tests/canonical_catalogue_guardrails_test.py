@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from audits import canonical_catalogue_health
+from scripts import canonical_catalogue_guardrails as guardrails
 from scripts.import_brand_catalogue_common import validate_missing_model_deactivation
 from scrapers.brands.channel_islands import build_ci_canonical_model_links
 
@@ -97,6 +98,153 @@ class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
                 }
             )
         )
+
+    def test_album_aaron_poritz_vase_is_rejected(self):
+        assessment = guardrails.assess_catalogue_candidate(
+            brand="Album",
+            title="Aaron Poritz Vase",
+            source_url="https://albumsurf.com/collections/aaron-poritz-vase",
+            board_category="Art",
+            detected_product_type="Ceramic Vase",
+            description="Album art vase collaboration.",
+        )
+        self.assertFalse(assessment["accepted"])
+        self.assertIn("negative_term", assessment["reason"])
+
+    def test_real_album_surfboard_with_dimensions_passes(self):
+        assessment = guardrails.assess_catalogue_candidate(
+            brand="Album",
+            title="Bom Dia",
+            source_url="https://albumsurf.com/collections/bom-dia",
+            board_category="Surfboard",
+            source_variant_title='5\'6 x 19 1/2 x 2 7/16 29.3L',
+            length="5'6",
+            width="19 1/2",
+            thickness="2 7/16",
+            volume_litres=29.3,
+        )
+        self.assertTrue(assessment["accepted"])
+        self.assertEqual(assessment["reason"], "dimension_signal")
+
+    def test_products_without_surfboard_evidence_are_rejected(self):
+        accepted, rejected = guardrails.filter_catalogue_rows(
+            "Album",
+            [
+                {
+                    "model_name": "Ledge",
+                    "board_category": None,
+                    "official_product_url": "https://albumsurf.com/collections/ledge",
+                    "source_product_title": "Ledge",
+                    "source_variant_title": "Model overview",
+                    "length_feet_inches": None,
+                    "width": None,
+                    "thickness": None,
+                    "volume_litres": None,
+                }
+            ],
+        )
+        self.assertEqual(accepted, [])
+        self.assertEqual(len(rejected), 1)
+        self.assertEqual(rejected[0]["reason"], "missing_surfboard_evidence")
+
+    def test_model_only_album_page_with_surfboard_context_passes(self):
+        accepted, rejected = guardrails.filter_catalogue_rows(
+            "Album",
+            [
+                {
+                    "model_name": "Ledge",
+                    "board_category": None,
+                    "official_product_url": "https://albumsurf.com/collections/ledge-1",
+                    "source_product_title": "Ledge",
+                    "source_variant_title": "Model overview",
+                    "description": "New age step-up with modern rails and paddle power for critical surf.",
+                    "length_feet_inches": None,
+                    "width": None,
+                    "thickness": None,
+                    "volume_litres": None,
+                }
+            ],
+        )
+        self.assertEqual(len(accepted), 1)
+        self.assertEqual(rejected, [])
+
+    def test_model_only_non_surfboard_collaboration_is_rejected(self):
+        accepted, rejected = guardrails.filter_catalogue_rows(
+            "Album",
+            [
+                {
+                    "model_name": "Korua Album",
+                    "board_category": None,
+                    "official_product_url": "https://albumsurf.com/collections/korua-album",
+                    "source_product_title": "Korua Album",
+                    "source_variant_title": "Model overview",
+                    "description": "Pencil // 147 and Cafe Racer // 164 sold out.",
+                    "length_feet_inches": None,
+                    "width": None,
+                    "thickness": None,
+                    "volume_litres": None,
+                }
+            ],
+        )
+        self.assertEqual(accepted, [])
+        self.assertEqual(len(rejected), 1)
+        self.assertEqual(rejected[0]["reason"], "missing_surfboard_evidence")
+
+    def test_supported_brands_keep_valid_dimension_rows(self):
+        accepted, rejected = guardrails.filter_catalogue_rows(
+            "JS Industries",
+            [
+                {
+                    "model_name": "Golden Child",
+                    "board_category": "Shortboard",
+                    "official_product_url": "https://jsindustries.com/products/golden-child",
+                    "source_variant_title": '5\'11 x 18 5/8 x 2 3/8 26.8L',
+                    "length_feet_inches": "5'11",
+                    "width": "18 5/8",
+                    "thickness": "2 3/8",
+                    "volume_litres": 26.8,
+                },
+                {
+                    "model_name": "Happy Twin",
+                    "board_category": "Twin Fin Surfboard",
+                    "official_product_url": "https://pyzelsurfboards.com/products/happy-twin",
+                    "source_variant_title": '5\'8 x 19 1/2 x 2 7/16 28.7L',
+                    "length_feet_inches": "5'8",
+                    "width": "19 1/2",
+                    "thickness": "2 7/16",
+                    "volume_litres": 28.7,
+                },
+            ],
+        )
+        self.assertEqual(len(accepted), 2)
+        self.assertEqual(rejected, [])
+
+    def test_dimensionless_rows_do_not_create_sizes(self):
+        size_rows = [
+            {
+                "model_id": 1,
+                "length": None,
+                "width": None,
+                "thickness": None,
+                "volume": None,
+                "construction": None,
+                "fin_setup": None,
+                "tail_shape": None,
+            },
+            {
+                "model_id": 1,
+                "length": "5'8",
+                "width": "19 1/2",
+                "thickness": "2 7/16",
+                "volume": 29.3,
+                "construction": "PU",
+                "fin_setup": "FCS II",
+                "tail_shape": "Squash",
+            },
+        ]
+        filtered = [row for row in size_rows if row["length"]]
+        self.assertEqual(len(filtered), 1)
+        self.assertEqual(filtered[0]["length"], "5'8")
         self.assertFalse(
             build_ci_canonical_model_links.looks_like_parent_model_product(
                 {

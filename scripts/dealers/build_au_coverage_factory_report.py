@@ -17,6 +17,9 @@ EXPANSION_CANDIDATES = (
 PLATFORM_DETECTION = (
     ROOT / "scrapers" / "retailers" / "retailer_platform_detection_report.json"
 )
+DISCOVERY_REPORT = (
+    ROOT / "scripts" / "dealers" / "output" / "au_retailer_discovery_report.json"
+)
 OUTPUT_DOC = ROOT / "docs" / "dealers" / "australia-retailer-qualification.md"
 
 
@@ -116,23 +119,20 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "notes": "Best current AU next target. Live BigCommerce site with visible board inventory and reusable platform path.",
     },
     "surfshopsaustralia.com.au": {
-        "status": "ready_bigcommerce",
-        "onlineBoardInventoryVisible": True,
-        "approxBoardProductCount": 60,
+        "status": "manual_review",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
         "supportedBrandSignals": ["broad surfboard catalogue"],
-        "boardCategoryUrl": "https://surfshopsaustralia.com.au/surfboards/",
-        "productUrlExamples": [
-            "https://surfshopsaustralia.com.au/surfboards/",
-            "https://surfshopsaustralia.com.au/surfboards/shortboards/",
-        ],
-        "priceVisible": True,
-        "stockVisible": True,
-        "imagesVisible": True,
-        "paginationPresent": True,
+        "boardCategoryUrl": "",
+        "productUrlExamples": [],
+        "priceVisible": False,
+        "stockVisible": False,
+        "imagesVisible": False,
+        "paginationPresent": False,
         "scrapeDifficulty": "medium",
-        "priorityScore": 79,
-        "recommendedAction": "Keep as the second AU BigCommerce pack target once Trigger Bros proves the shared scraper path.",
-        "notes": "BigCommerce surfboard taxonomy is public and broad, making it the strongest shared AU BigCommerce follow-on target.",
+        "priorityScore": 55,
+        "recommendedAction": "Keep in manual review until a clean public AU surfboard surface is reconfirmed.",
+        "notes": "Earlier BigCommerce surfboard hints were not reconfirmed by the discovery engine, so this should not be promoted into the AU BigCommerce pack yet.",
     },
     "goodtime.com.au": {
         "status": "ready_custom_high_value",
@@ -247,6 +247,19 @@ def load_running_index() -> tuple[dict[str, dict[str, Any]], dict[str, dict[str,
 def load_detection_index() -> dict[str, dict[str, Any]]:
     index: dict[str, dict[str, Any]] = {}
     report = load_json(PLATFORM_DETECTION)
+    for row in report.get("results", []):
+        domain = normalise_website(row.get("website"))
+        if domain:
+            index[domain] = row
+    return index
+
+
+def load_discovery_index() -> dict[str, dict[str, Any]]:
+    if not DISCOVERY_REPORT.exists():
+        return {}
+
+    index: dict[str, dict[str, Any]] = {}
+    report = load_json(DISCOVERY_REPORT)
     for row in report.get("results", []):
         domain = normalise_website(row.get("website"))
         if domain:
@@ -393,25 +406,39 @@ def default_priority_score(status: str, candidate: dict[str, Any], running: dict
     return max(0, base - (int(candidate.get("priority") or 3) - 1) * 3)
 
 
-def build_candidate_rows() -> list[dict[str, Any]]:
+def build_candidate_rows(include_discovery: bool = True) -> list[dict[str, Any]]:
     running_by_domain, _ = load_running_index()
     detection_by_domain = load_detection_index()
+    discovery_by_domain = load_discovery_index() if include_discovery else {}
     rows: list[dict[str, Any]] = []
 
     for candidate in source_candidates():
         domain = normalise_website(candidate.get("website"))
         running = running_by_domain.get(domain)
         detection = detection_by_domain.get(domain)
+        discovery = discovery_by_domain.get(domain)
         override = MANUAL_OVERRIDES.get(domain, {})
-        status = override.get("status") or default_status(candidate, running, detection)
-        platform = clean(override.get("platform") or (detection or {}).get("detected_platform") or (running or {}).get("platform") or "unknown").lower()
+        status = (
+            override.get("status")
+            or clean((discovery or {}).get("recommendedStatus"))
+            or default_status(candidate, running, detection)
+        )
+        platform = clean(
+            override.get("platform")
+            or (discovery or {}).get("detectedPlatform")
+            or (detection or {}).get("detected_platform")
+            or (running or {}).get("platform")
+            or "unknown"
+        ).lower()
         if platform == "ecwid":
             platform = "opencart"
 
         already_running = bool(running and running.get("enabled"))
         approx_board_count = override.get("approxBoardProductCount")
         if approx_board_count is None:
-            if already_running:
+            if discovery and discovery.get("approxBoardProductCount") is not None:
+                approx_board_count = int(discovery.get("approxBoardProductCount") or 0)
+            elif already_running:
                 approx_board_count = int(running.get("availableInventory") or 0)
             elif running and (running.get("rawProducts") or 0) > 0:
                 approx_board_count = int(running.get("rawProducts") or 0)
@@ -428,31 +455,46 @@ def build_candidate_rows() -> list[dict[str, Any]]:
             "onlineBoardInventoryVisible": override.get(
                 "onlineBoardInventoryVisible",
                 already_running
+                or bool((discovery or {}).get("approxBoardProductCount"))
                 or (running and (running.get("verifiedSurfboards") or 0) > 0)
                 or status.startswith("ready_"),
             ),
             "approxBoardProductCount": approx_board_count,
             "supportedBrandSignals": override.get(
                 "supportedBrandSignals",
-                sorted(candidate.get("source_brands", set())),
+                (discovery or {}).get("supportedBrandSignals")
+                or sorted(candidate.get("source_brands", set())),
             ),
-            "boardCategoryUrl": override.get("boardCategoryUrl", ""),
-            "productUrlExamples": override.get("productUrlExamples", []),
+            "boardCategoryUrl": override.get(
+                "boardCategoryUrl",
+                ((discovery or {}).get("boardCategoryUrls") or [""])[0],
+            ),
+            "productUrlExamples": override.get(
+                "productUrlExamples",
+                (discovery or {}).get("productUrlExamples", []),
+            ),
             "priceVisible": override.get(
                 "priceVisible",
-                already_running or status.startswith("ready_"),
+                already_running
+                or bool((discovery or {}).get("priceVisible"))
+                or status.startswith("ready_"),
             ),
             "stockVisible": override.get(
                 "stockVisible",
-                already_running or status.startswith("ready_"),
+                already_running
+                or bool((discovery or {}).get("stockVisible"))
+                or status.startswith("ready_"),
             ),
             "imagesVisible": override.get(
                 "imagesVisible",
-                already_running or status.startswith("ready_"),
+                already_running
+                or bool((discovery or {}).get("imagesVisible"))
+                or status.startswith("ready_"),
             ),
             "paginationPresent": override.get(
                 "paginationPresent",
-                status in {"ready_bigcommerce", "ready_shopify", "ready_woocommerce"},
+                bool((discovery or {}).get("paginationDetected"))
+                or status in {"ready_bigcommerce", "ready_shopify", "ready_woocommerce"},
             ),
             "scrapeDifficulty": override.get(
                 "scrapeDifficulty",
@@ -460,10 +502,12 @@ def build_candidate_rows() -> list[dict[str, Any]]:
             ),
             "priorityScore": override.get(
                 "priorityScore",
-                default_priority_score(status, candidate, running),
+                int((discovery or {}).get("priorityScore") or default_priority_score(status, candidate, running)),
             ),
             "recommendedAction": override.get(
                 "recommendedAction",
+                clean((discovery or {}).get("recommendedAction"))
+                or
                 {
                     "already_running": "Keep live and use as AU baseline.",
                     "ready_shopify": "Candidate for the reusable AU Shopify pack.",
@@ -485,6 +529,10 @@ def build_candidate_rows() -> list[dict[str, Any]]:
             ),
             "notes": override.get(
                 "notes",
+                clean((discovery or {}).get("manualReviewReason"))
+                or clean((discovery or {}).get("notes"))
+                or clean((discovery or {}).get("evidence"))
+                or
                 clean((running or {}).get("governanceReason"))
                 or clean((detection or {}).get("evidence"))
                 or "Dealer registry candidate.",
@@ -508,10 +556,13 @@ def group_pack(status: str) -> str:
     return PLATFORM_PACKS.get(status, "Manual Review")
 
 
-def render_markdown(rows: list[dict[str, Any]]) -> str:
+def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] | None = None) -> str:
     summary = Counter(row["status"] for row in rows)
     platform_summary = Counter(row["platform"] for row in rows)
     pack_summary = Counter(group_pack(row["status"]) for row in rows)
+    baseline_manual_review = None
+    if base_rows is not None:
+        baseline_manual_review = sum(1 for row in base_rows if row["status"] == "manual_review")
 
     already_running = [row for row in rows if row["status"] == "already_running"]
     duplicate_shells = [row for row in rows if row["status"] == "duplicate_shell"]
@@ -563,6 +614,8 @@ def render_markdown(rows: list[dict[str, Any]]) -> str:
         f"- Already running: `{len(already_running)}`",
         f"- Duplicate shells: `{len(duplicate_shells)}`",
         f"- Manual review: `{len(manual_review)}`",
+        f"- Manual review before discovery: `{baseline_manual_review if baseline_manual_review is not None else len(manual_review)}`",
+        f"- AU candidates re-analysed by discovery engine: `{sum(1 for row in rows if row['status'] in {'manual_review', 'ready_shopify', 'ready_woocommerce', 'ready_bigcommerce', 'ready_neto_maropost', 'ready_opencart', 'ready_custom_high_value', 'blocked'})}`",
         f"- Recommended next pack: `{recommended_pack}`",
         f"- Recommended next individual target: `{recommended_target}`",
         "",
@@ -652,9 +705,10 @@ def render_markdown(rows: list[dict[str, Any]]) -> str:
             "## Recommendation",
             "",
             f"- Next pack: `{recommended_pack}`",
-            "  Why: Trigger Bros and Surf Shops Australia both expose real BigCommerce surfboard surfaces, so one reusable AU BigCommerce uplift should beat more low-value Shopify guessing.",
+            "  Why: Trigger Bros remains the one clean, discovery-confirmed AU BigCommerce surfboard surface, so it is still the strongest reusable reference path.",
             f"- Next individual target: `{recommended_target}`",
             "  Why: strongest remaining retailer-distinct AU target with visible live board inventory, pricing, imagery and reusable platform signals.",
+            "- Keep `Surf Shops Australia` in manual review until a fresh AU board surface is reconfirmed.",
             "- Hold `Goodtime Surfboards` as the next high-value custom follow-up.",
             "- Keep `Surf Boardroom` inside the WooCommerce pack rather than treating it as a standalone custom scraper.",
             "",
@@ -676,12 +730,15 @@ def render_markdown(rows: list[dict[str, Any]]) -> str:
 
 
 def build_report() -> dict[str, Any]:
-    rows = build_candidate_rows()
+    base_rows = build_candidate_rows(include_discovery=False)
+    rows = build_candidate_rows(include_discovery=True)
     return {
         "rows": rows,
-        "markdown": render_markdown(rows),
+        "markdown": render_markdown(rows, base_rows=base_rows),
         "recommendedNextPack": "BigCommerce Pack",
         "recommendedNextTarget": "Trigger Bros Surfboards",
+        "manualReviewBefore": sum(1 for row in base_rows if row["status"] == "manual_review"),
+        "manualReviewAfter": sum(1 for row in rows if row["status"] == "manual_review"),
     }
 
 
@@ -690,6 +747,8 @@ def main() -> None:
     OUTPUT_DOC.write_text(report["markdown"], encoding="utf-8")
     print(f"Saved AU coverage report: {OUTPUT_DOC}")
     print(f"Candidates reviewed: {len(report['rows'])}")
+    print(f"Manual review before: {report['manualReviewBefore']}")
+    print(f"Manual review after: {report['manualReviewAfter']}")
     print(f"Recommended next pack: {report['recommendedNextPack']}")
     print(f"Recommended next target: {report['recommendedNextTarget']}")
 

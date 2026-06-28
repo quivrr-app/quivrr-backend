@@ -42,6 +42,20 @@ EXCLUDED_RETAILERS = {
     "ocean & earth store": "excluded_retailer",
     "red herring surf": "board_collective_shell_duplicate",
     "saltwater wine port macquarie": "board_collective_shell_duplicate",
+    "surf shops australia": "awaiting_bigcommerce_revalidation",
+}
+
+MANUAL_TARGET_METADATA = {
+    "https://triggerbrothers.com.au": {
+        "category_urls": [
+            "https://triggerbrothers.com.au/surf/boards/",
+            "https://triggerbrothers.com.au/store/surf/used-surfboards/",
+        ]
+    }
+}
+
+APPROVED_NEW_TARGETS = {
+    "https://triggerbrothers.com.au",
 }
 
 
@@ -181,6 +195,23 @@ def load_detection_overrides():
     return overrides
 
 
+def load_existing_targets():
+    if not OUTPUT_FILE.exists():
+        return []
+
+    try:
+        payload = json.loads(
+            OUTPUT_FILE.read_text(encoding="utf-8")
+        )
+    except json.JSONDecodeError:
+        return []
+
+    if isinstance(payload, list):
+        return payload
+
+    return []
+
+
 def get_detection_override(record, overrides):
     website = normalise_website(record.get("website"))
 
@@ -235,8 +266,7 @@ def get_exclusion_reason(record, overrides):
 def build_target(record, overrides):
     website = normalise_website(record.get("website"))
     platform = get_platform(record, overrides)
-
-    return {
+    target = {
         "primary_name": retailer_name(record),
         "website": website,
         "website_key": website,
@@ -247,6 +277,89 @@ def build_target(record, overrides):
         "locations": [],
         "source": "retailer_detection_pipeline",
     }
+    target.update(MANUAL_TARGET_METADATA.get(website, {}))
+    return target
+
+
+def merge_target_metadata(existing_target, generated_target):
+    merged = dict(existing_target)
+    merged.update(generated_target)
+
+    existing_locations = existing_target.get("locations")
+    generated_locations = generated_target.get("locations")
+
+    if isinstance(existing_locations, list) and isinstance(generated_locations, list):
+        merged["locations"] = generated_locations
+
+    website = normalise_website(
+        merged.get("website") or merged.get("website_key")
+    )
+    merged.update(MANUAL_TARGET_METADATA.get(website, {}))
+    return merged
+
+
+def should_preserve_existing_target(target, grouped, overrides):
+    website = normalise_website(
+        target.get("website") or target.get("website_key")
+    )
+
+    if not website or website in grouped:
+        return False
+
+    status = clean(target.get("status")).lower()
+
+    if status and status != "active":
+        return False
+
+    reason = get_exclusion_reason(
+        {
+            "primary_name": target.get("primary_name"),
+            "website": website,
+            "country": target.get("country"),
+            "platform": target.get("platform"),
+            "hardboards": True,
+        },
+        overrides,
+    )
+
+    return not reason
+
+
+def merge_existing_targets(grouped, existing_targets, overrides):
+    preserved = []
+
+    for existing_target in existing_targets:
+        website = normalise_website(
+            existing_target.get("website") or existing_target.get("website_key")
+        )
+
+        if not website:
+            continue
+
+        if website in grouped:
+            grouped[website] = merge_target_metadata(
+                existing_target,
+                grouped[website],
+            )
+            continue
+
+        if should_preserve_existing_target(existing_target, grouped, overrides):
+            preserved_target = dict(existing_target)
+            preserved_target.update(MANUAL_TARGET_METADATA.get(website, {}))
+            grouped[website] = preserved_target
+            preserved.append(website)
+
+    return preserved
+
+
+def should_activate_target(website, existing_target_websites):
+    if not existing_target_websites:
+        return True
+
+    return (
+        website in existing_target_websites
+        or website in APPROVED_NEW_TARGETS
+    )
 
 
 def build_location(record):
@@ -266,6 +379,16 @@ def build_location(record):
 def main():
     retailers = load_retailers()
     detection_overrides = load_detection_overrides()
+    existing_targets = load_existing_targets()
+    existing_target_websites = {
+        normalise_website(
+            target.get("website") or target.get("website_key")
+        )
+        for target in existing_targets
+        if normalise_website(
+            target.get("website") or target.get("website_key")
+        )
+    }
 
     grouped = {}
     excluded = []
@@ -303,6 +426,19 @@ def main():
             record.get("website")
         )
 
+        if not should_activate_target(
+            website_key,
+            existing_target_websites,
+        ):
+            reasons["awaiting_manual_onboarding"] += 1
+            excluded.append({
+                "name": retailer_name(record),
+                "website": website_key,
+                "platform": platform,
+                "reason": "awaiting_manual_onboarding",
+            })
+            continue
+
         if website_key not in grouped:
             grouped[website_key] = build_target(
                 record,
@@ -317,6 +453,12 @@ def main():
             grouped[website_key].get("priority", 3),
             record.get("priority", 3),
         )
+
+    preserved_targets = merge_existing_targets(
+        grouped,
+        existing_targets,
+        detection_overrides,
+    )
 
     targets = sorted(
         grouped.values(),
@@ -344,6 +486,8 @@ def main():
                 "excluded_records": len(excluded),
                 "platforms_seen": dict(platforms),
                 "exclusion_reasons": dict(reasons),
+                "preserved_existing_targets": len(preserved_targets),
+                "preserved_existing_target_websites": preserved_targets,
                 "excluded": excluded,
                 "active": targets,
             },
@@ -360,6 +504,7 @@ def main():
     print(f"Retailer records loaded: {len(retailers)}")
     print(f"Unique active retailer targets: {len(targets)}")
     print(f"Excluded records: {len(excluded)}")
+    print(f"Preserved existing targets: {len(preserved_targets)}")
 
     print("")
     print("Supported platforms:")

@@ -9,6 +9,10 @@ from dotenv import load_dotenv
 from sqlalchemy import bindparam, create_engine, event, text
 from sqlalchemy.exc import OperationalError
 
+from scripts.canonical_catalogue_guardrails import (
+    append_rejected_products_audit,
+    filter_catalogue_rows,
+)
 
 load_dotenv()
 
@@ -469,10 +473,14 @@ def import_catalogue(brand_name, catalogue_path):
     print(f"Input: {catalogue_path}")
     print("")
 
-    catalogue = load_catalogue(catalogue_path)
+    raw_catalogue = load_catalogue(catalogue_path)
+    catalogue, rejected_rows = filter_catalogue_rows(brand_name, raw_catalogue)
+    append_rejected_products_audit(rejected_rows)
     models = build_models(catalogue)
 
-    print(f"Catalogue rows loaded: {len(catalogue)}")
+    print(f"Catalogue rows loaded: {len(raw_catalogue)}")
+    print(f"Catalogue rows accepted: {len(catalogue)}")
+    print(f"Catalogue rows rejected: {len(rejected_rows)}")
     print(f"Models prepared: {len(models)}")
 
     last_error = None

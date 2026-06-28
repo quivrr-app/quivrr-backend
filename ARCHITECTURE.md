@@ -110,6 +110,13 @@ It runs brand pipelines such as JS Industries, Channel Islands, Pyzel, DHD, Lost
 
 The weekly job writes `scrapers/brands/output/weekly_brand_catalogue_report.json` and does not trigger regional MFA or retailer import paths. Brand failures are guarded independently so one degraded canonical source does not silently weaken or clear another brand's canonical truth.
 
+Canonical importer guardrails are now a hard contract:
+
+- non-surfboard products must be rejected before they can create or mutate `BoardModels` or `BoardSizes`
+- positive surfboard evidence must come from dimensions, recognised board-size structure, or official surfboard context
+- uncertain products fail closed into the local `scripts/output/canonical_rejected_products.json` engineering audit instead of entering canonical
+- builder-side partial scrapes must preserve existing descriptions, images, and official URLs rather than weakening canonical truth
+
 Current Tier 1 source policy:
 
 - JS Industries canonical uses the official `https://jsindustries.com/products/{model}` parent model pages as the primary source. The builder extracts embedded official product data, official descriptions, and images from the page HTML instead of relying on brittle rendered text blocks.
@@ -155,6 +162,11 @@ python scripts/run_nightly_inventory_refresh.py
 The AU pipeline detects retailer platforms, builds active scrape targets, runs platform-specific scrapers, filters likely surfboards, normalizes data, matches JS inventory to catalogue records, builds grouped inventory indexes, builds retailer quality reports, and imports retailer inventory.
 
 Supported runtime scraper families include Shopify, WooCommerce, BigCommerce, Magento, Neto/Maropost, Squarespace, Wix, Ecwid, and specific retailer integrations such as Coopers Board Store.
+
+Australia's BigCommerce path now has a reviewed reference target:
+
+- `Trigger Bros Surfboards` uses explicit AU board-category URLs and paginated BigCommerce card discovery, then hydrates each product from the live detail page to retain price, image, availability, and board dimensions where present
+- `Surf Shops Australia` remains intentionally out of the active AU target set until a clean public hardboard surface is reconfirmed
 
 The active EU retailer set is 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver. EU discovery and import remain isolated from AU and ID paths.
 

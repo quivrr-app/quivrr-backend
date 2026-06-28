@@ -18,7 +18,7 @@ EXPECTATIONS_PATH = ROOT / "config" / "region_source_expectations.json"
 JOB_EXPECTATIONS_PATH = ROOT / "config" / "azure_container_jobs.json"
 BOOTSTRAP_SNAPSHOT_PATH = ROOT / "config" / "ops_dashboard_bootstrap.json"
 SERVICE_NAME = "operations_dashboard"
-DASHBOARD_VERSION = "sprint7_final_closeout_v1"
+DASHBOARD_VERSION = "sprint12_guardrails_au_bigcommerce_ops_truth_v1"
 SUPPORTED_BRAND_SET = {
     "Album",
     "Channel Islands",
@@ -511,6 +511,19 @@ def _job_rows_from_state(state: dict[str, Any] | None) -> tuple[int | None, int 
     )
 
 
+def _state_or_bootstrap_value(
+    state: dict[str, Any] | None,
+    bootstrap_row: dict[str, Any] | None,
+    state_key: str,
+    bootstrap_key: str,
+) -> Any:
+    if state is not None and state_key in state:
+        return state.get(state_key)
+    if bootstrap_row is not None:
+        return bootstrap_row.get(bootstrap_key)
+    return None
+
+
 def _catalogue_degraded_status_override(
     status: StatusResult,
     state: dict[str, Any] | None,
@@ -614,6 +627,7 @@ def _build_job_health(
         rows_inserted, rows_updated = _job_rows_from_state(state)
         for region in applicable_regions:
             bootstrap_row = None
+            bootstrap_catalogue_is_current = False
             if bootstrap_payload is not None:
                 bootstrap_row = next(
                     (
@@ -650,15 +664,34 @@ def _build_job_health(
                     and str(bootstrap_row.get("status") or "").strip().lower() in {"yellow", "red"}
                 ):
                     bootstrap_success = _parse_timestamp(bootstrap_row.get("lastSucceededUtc"))
-                    if latest_success is None or bootstrap_success == latest_success:
+                    bootstrap_catalogue_is_current = latest_success is None or (
+                        bootstrap_success is not None and latest_success is not None and bootstrap_success >= latest_success
+                    )
+                    if bootstrap_catalogue_is_current:
                         status = StatusResult(
                             str(bootstrap_row.get("status") or "yellow").strip().lower(),
                             str(bootstrap_row.get("statusLabel") or "degraded").strip().lower(),
                             str(bootstrap_row.get("statusReason") or status.reason),
                         )
             last_status_timestamp = _parse_timestamp((state or {}).get("latest_status_timestamp_utc"))
-            degraded_brand_count = int((state or {}).get("degraded_brand_count") or (bootstrap_row or {}).get("degradedBrandCount") or 0)
-            degraded_brands = list((state or {}).get("degraded_brands") or (bootstrap_row or {}).get("degradedBrands") or [])
+            degraded_brand_count = int(
+                _state_or_bootstrap_value(
+                    state,
+                    bootstrap_row if bootstrap_catalogue_is_current else None,
+                    "degraded_brand_count",
+                    "degradedBrandCount",
+                )
+                or 0
+            )
+            degraded_brands = list(
+                _state_or_bootstrap_value(
+                    state,
+                    bootstrap_row if bootstrap_catalogue_is_current else None,
+                    "degraded_brands",
+                    "degradedBrands",
+                )
+                or []
+            )
             row = {
                 "region": region,
                 "jobName": definition.get("jobName"),

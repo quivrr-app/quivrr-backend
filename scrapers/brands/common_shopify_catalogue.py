@@ -8,6 +8,10 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from scripts.canonical_catalogue_guardrails import (
+    append_rejected_products_audit,
+    filter_catalogue_rows,
+)
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; QuivrrBot/1.0; +https://quivrr.app)",
@@ -297,12 +301,19 @@ def build_catalogue(brand_name, base_url, output_file):
                     "official_image_url": image_url,
                     "source": base_url,
                     "source_product_title": title,
+                    "source_product_type": product_type,
                     "source_product_id": product.get("id"),
                     "source_variant_id": variant.get("id"),
                     "source_variant_title": variant_title,
+                    "guardrail_context": product_context,
                     "scraped_at_utc": datetime.now(timezone.utc).isoformat(),
                     "is_active": True,
                 })
+
+    rows, rejected_rows = filter_catalogue_rows(brand_name, rows, extra_context_field="guardrail_context")
+    append_rejected_products_audit(rejected_rows)
+    for row in rows:
+        row.pop("guardrail_context", None)
 
     output_path = Path(output_file)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -316,6 +327,7 @@ def build_catalogue(brand_name, base_url, output_file):
                 "base_url": base_url,
                 "products_seen": len(products),
                 "catalogue_rows": len(rows),
+                "rejected_rows": len(rejected_rows),
                 "output_file": str(output_path),
                 "created_at_utc": datetime.now(timezone.utc).isoformat(),
             },
@@ -326,6 +338,7 @@ def build_catalogue(brand_name, base_url, output_file):
 
     print(f"Products seen: {len(products)}")
     print(f"Catalogue rows: {len(rows)}")
+    print(f"Rejected rows: {len(rejected_rows)}")
     print(f"Output: {output_path}")
     print(f"Report: {report_path}")
     print("")

@@ -128,7 +128,8 @@ Current AU comparison point:
 AU retailer review outcomes split into six practical groups:
 
 - `Already running`: Surf FX, The Board Lab, Beach Beat Alexandra Headland, Surfection Mosman and the broader current AU production set
-- `Known but disabled`: Full Circle Surf, Red Herring Surf, Goodtime Surfboards, Saltwater Wine Port Macquarie, Trigger Bros Surfboards
+- `Known but disabled`: Full Circle Surf, Red Herring Surf, Goodtime Surfboards, Saltwater Wine Port Macquarie
+- `Validated next BigCommerce target`: Trigger Bros Surfboards
 - `Parser review`: Surf Boardroom
 - `Rebranded / merged`: Zak Surfboards now resolves to Melbourne Surfboard Shop, which is already running in Quivrr
 - `Manual review long tail`: Firewire / Pyzel / JS stockist entries with weak or missing website data
@@ -150,7 +151,7 @@ Reviewed Sprint 9 AU priority names:
 | The Surfboard Room / Surf Boardroom | `surfboardroom.com.au` | Parser review | Yes | Yes | Yes | Firewire and Channel Islands stockist signal | WooCommerce | Medium | P1 | Needs parser | Boards are visible live, but the current extraction path scraped too little and failed board identification |
 | Urban Surf / URBNSURF | `urbnsurf.com` ecosystem | Missing from AU retailer queue | Yes | On-site shop secondary | No verified hardboard ecommerce path | No supported hardboard retailer signal | Custom | High | P3 | Unsupported | Wave-park / venue business, not a confirmed hardboard retailer feed |
 | Ocean Rhythm | No stable retail storefront surfaced | Missing from AU retailer queue | Yes as a shaping business | Custom / shaper | No structured retailer stock | House-brand / custom signal only | Custom | High | P3 | Catalogue only | Custom shaping signal, not a scalable AU retailer inventory source |
-| Trigger Bros Surfboards | `triggerbrothers.com.au` | Known but disabled | Yes | Yes | Yes | Supported multi-brand surf retailer | BigCommerce | Medium | P1 | Needs parser | Clear live ecommerce presence, but current endpoint review returned zero products and needs platform-specific recovery |
+| Trigger Bros Surfboards | `triggerbrothers.com.au` | Validated next target | Yes | Yes | Yes | Supported multi-brand surf retailer | BigCommerce | Medium | P1 | Ready BigCommerce | Live category pagination and product pages were recovered through a reusable BigCommerce path; local validation surfaced 68 raw rows with 66 surviving surfboard filtering |
 | The Board Lab | `theboardlab.com.au` | Already running | Yes | Yes | Yes | Current AU production retailer | Shopify | Low | Live | Ready | Already producing strong surfboard inventory in production |
 | Beach Beat | `beachbeat.com.au` | Already running | Yes | Yes | Yes | Current AU production retailer | WooCommerce | Low | Live | Ready | Already producing available hardboard rows in production |
 | Goodtime Surfboards | `goodtime.com.au` | Known but disabled | Yes | Yes | Yes | Long-running AU surfboard retailer | Magento | High | P1 | Needs parser | Surfboard stock is visible, but the site is currently protected and existing scrape output returns no usable rows |

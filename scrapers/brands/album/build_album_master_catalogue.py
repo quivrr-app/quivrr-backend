@@ -1,10 +1,20 @@
 ﻿import json
 import re
+import sys
 from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
+
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.canonical_catalogue_guardrails import (
+    append_rejected_products_audit,
+    filter_catalogue_rows,
+)
 
 
 BRAND = "Album"
@@ -35,8 +45,8 @@ def parse_dimension_line(line):
 
     pattern = (
         r"(?P<length>\d+'\s*\d{1,2}\"?)\s*x\s*"
-        r"(?P<width>\d+(?:\.\d+)?\"?)\s*x\s*"
-        r"(?P<thickness>\d+(?:\.\d+)?\"?)"
+        r"(?P<width>\d+(?:\s+\d+/\d+|(?:\.\d+)?)\"?)\s*x\s*"
+        r"(?P<thickness>\d+(?:\s+\d+/\d+|(?:\.\d+)?)\"?)"
     )
 
     match = re.search(pattern, line)
@@ -52,12 +62,21 @@ def parse_dimension_line(line):
 
 
 def parse_volume(line):
-    match = re.search(r"(?P<volume>\d+(?:\.\d+)?)\s*liters?", line, flags=re.IGNORECASE)
+    match = re.search(r"(?P<volume>\d+(?:\.\d+)?)\s*(?:l|liters?|litres?)\b", line, flags=re.IGNORECASE)
 
     if not match:
         return None
 
     return float(match.group("volume"))
+
+
+SIZE_BLOCK_RE = re.compile(
+    r"(?P<length>\d+'\s*\d{1,2})\"?\s*x\s*"
+    r"(?P<width>\d+(?:\.\d+|\s+\d+/\d+)?)\"?\s*x\s*"
+    r"(?P<thickness>\d+(?:\.\d+|\s+\d+/\d+)?)\"?"
+    r"(?:\s*[\(/-]?\s*(?P<volume>\d+(?:\.\d+)?)\s*(?:l|liters?|litres?)\)?)?",
+    flags=re.IGNORECASE,
+)
 
 
 def discover_candidate_pages():
@@ -134,71 +153,107 @@ def discover_candidate_pages():
     return sorted(canonicalised.values())
 
 
-def extract_model_page(url):
-    response = requests.get(url, headers=HEADERS, timeout=(10, 30))
-    response.raise_for_status()
+def normalise_model_name(value):
+    value = clean(value)
+    value = re.sub(r"\s+[–-]\s+Album Surf$", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+Album Surf$", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+Model$", "", value, flags=re.IGNORECASE)
+    aliases = {
+        "D'Boa": "D'boa",
+        "Vb Secret Menu": "VBSM",
+    }
+    return aliases.get(clean(value), clean(value))
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    text = soup.get_text("\n", strip=True)
 
-    if "stock dimensions" not in text.lower():
-        return []
+def extract_model_name(soup, url):
+    slug_name = model_name_from_url(url)
+    title = normalise_model_name(soup.title.get_text(" ", strip=True) if soup.title else "")
+    if slug_name and title and title.lower().startswith(slug_name.lower()):
+        return slug_name
+    if title and title != "404 Not Found":
+        return title
 
-    lines = [clean(line) for line in text.splitlines() if clean(line)]
+    for selector in ["h1", ".product__title", ".product-single__title"]:
+        node = soup.select_one(selector)
+        if node:
+            value = normalise_model_name(node.get_text(" ", strip=True))
+            if slug_name and value and value.lower().startswith(slug_name.lower()):
+                return slug_name
+            if value:
+                return value
 
-    model_name = None
+    return slug_name
 
-    for line in lines:
-        if "Stock Dimensions" in line:
-            model_name = clean(line.replace("Stock Dimensions", ""))
-            break
 
-    if not model_name:
-        title = soup.title.get_text(" ", strip=True) if soup.title else ""
-        model_name = clean(title.replace("– Album Surf", "").replace("Album Surf", ""))
-
+def extract_size_rows(model_name, url, source_text, description_text, meta_description):
     rows = []
+    seen = set()
+    context_snippet = clean(" ".join(part for part in [meta_description, description_text] if part))[:1500]
 
-    for idx, line in enumerate(lines):
-        dim = parse_dimension_line(line)
-
-        if not dim:
-            continue
-
-        volume = None
-
-        for lookahead in lines[idx:idx + 4]:
-            volume = parse_volume(lookahead)
-
-            if volume is not None:
-                break
-
+    for match in SIZE_BLOCK_RE.finditer(source_text):
+        volume = match.group("volume")
         if volume is None:
+            trailing_text = source_text[match.end():match.end() + 32]
+            volume = parse_volume(trailing_text)
+        else:
+            volume = float(volume)
+
+        dimension_block = {
+            "length": clean(match.group("length")),
+            "width": clean(match.group("width")),
+            "thickness": clean(match.group("thickness")),
+        }
+
+        key = (
+            dimension_block["length"],
+            dimension_block["width"],
+            dimension_block["thickness"],
+            volume,
+        )
+        if key in seen:
             continue
+        seen.add(key)
 
         rows.append({
             "brand": BRAND,
             "model_name": model_name,
             "model_family": model_name,
             "board_category": "Surfboard",
-            "description": None,
+            "description": description_text or meta_description or None,
             "official_product_url": url,
             "official_image_url": None,
             "recommended_wave_range": None,
             "recommended_surfer_weight": None,
-            "length_feet_inches": dim["length"],
-            "width": dim["width"],
-            "thickness": dim["thickness"],
+            "length_feet_inches": dimension_block["length"],
+            "width": dimension_block["width"],
+            "thickness": dimension_block["thickness"],
             "volume_litres": volume,
             "construction": "Standard",
             "fin_setup": None,
             "tail_shape": None,
             "source_product_title": model_name,
-            "source_variant_title": f"{dim['length']} x {dim['width']} x {dim['thickness']} / {volume}L",
+            "source_variant_title": f"{dimension_block['length']} x {dimension_block['width']} x {dimension_block['thickness']} / {volume}L" if volume is not None else f"{dimension_block['length']} x {dimension_block['width']} x {dimension_block['thickness']}",
             "source": url,
+            "guardrail_context": context_snippet,
         })
 
     return rows
+
+
+def extract_model_page(url):
+    response = requests.get(url, headers=HEADERS, timeout=(10, 30))
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    meta_description = clean((soup.select_one('meta[name="description"]') or {}).get("content", ""))
+    description_nodes = soup.select(".rte")
+    description_text = clean(" ".join(node.get_text(" ", strip=True) for node in description_nodes[:3]))
+    main_node = soup.select_one("main")
+    main_text = clean(main_node.get_text("\n", strip=True) if main_node else soup.get_text("\n", strip=True))
+    text = main_text
+
+    model_name = extract_model_name(soup, url)
+    return extract_size_rows(model_name, url, text, description_text, meta_description)
 
 
 def model_name_from_url(url):
@@ -217,13 +272,13 @@ def model_name_from_url(url):
     return aliases.get(name, name)
 
 
-def build_model_only_row(model_name, url):
+def build_model_only_row(model_name, url, guardrail_context=None):
     return {
         "brand": BRAND,
         "model_name": model_name,
         "model_family": model_name,
-        "board_category": "Surfboard",
-        "description": None,
+        "board_category": None,
+        "description": clean(guardrail_context) or None,
         "official_product_url": url,
         "official_image_url": None,
         "recommended_wave_range": None,
@@ -238,7 +293,18 @@ def build_model_only_row(model_name, url):
         "source_product_title": model_name,
         "source_variant_title": "Model overview",
         "source": url,
+        "source_product_type": None,
+        "guardrail_context": clean(guardrail_context),
     }
+
+
+def extract_model_only_context(response_text):
+    soup = BeautifulSoup(response_text, "html.parser")
+    meta_description = clean((soup.select_one('meta[name="description"]') or {}).get("content", ""))
+    description_nodes = soup.select(".rte")
+    description_text = clean(" ".join(node.get_text(" ", strip=True) for node in description_nodes[:3]))
+    product_blocks = clean(" ".join(node.get_text(" ", strip=True) for node in soup.select(".product-block")[:6]))
+    return clean(" ".join(part for part in [meta_description, description_text, product_blocks] if part))[:1500]
 
 
 def main():
@@ -254,7 +320,9 @@ def main():
             if not rows:
                 model_name = model_name_from_url(url)
                 if model_name:
-                    rows = [build_model_only_row(model_name, url)]
+                    response = requests.get(url, headers=HEADERS, timeout=(10, 30))
+                    response.raise_for_status()
+                    rows = [build_model_only_row(model_name, url, extract_model_only_context(response.text))]
 
             page_results.append({
                 "url": url,
@@ -292,7 +360,11 @@ def main():
         seen.add(key)
         deduped.append(row)
 
-    deduped.sort(key=lambda row: (row["model_name"], row["volume_litres"]))
+    deduped, rejected_rows = filter_catalogue_rows(BRAND, deduped, extra_context_field="guardrail_context")
+    append_rejected_products_audit(rejected_rows)
+    for row in deduped:
+        row.pop("guardrail_context", None)
+    deduped.sort(key=lambda row: (row["model_name"], row["volume_litres"] or 0))
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
@@ -305,6 +377,7 @@ def main():
         "brand": BRAND,
         "candidate_pages": len(candidate_urls),
         "catalogue_rows": len(deduped),
+        "rejected_rows": len(rejected_rows),
         "models_with_rows": len(set(row["model_name"] for row in deduped)),
         "page_results": page_results,
         "failures": failures,

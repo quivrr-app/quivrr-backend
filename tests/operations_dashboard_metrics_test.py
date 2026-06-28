@@ -177,6 +177,105 @@ class OperationsDashboardMetricsTests(unittest.TestCase):
         self.assertEqual(weekly_row["degradedBrandCount"], 2)
         self.assertEqual(weekly_row["degradedBrands"], ["JS Industries", "Channel Islands"])
 
+    def test_weekly_catalogue_new_success_clears_stale_bootstrap_degraded_brands(self):
+        now = datetime(2026, 6, 27, 12, 30, tzinfo=timezone.utc)
+        bootstrap_payload = {
+            "version": dashboard.DASHBOARD_VERSION,
+            "jobHealth": [
+                {
+                    "region": "AU",
+                    "jobName": "quivrr-weekly-brand-catalogues",
+                    "status": "yellow",
+                    "statusLabel": "degraded",
+                    "statusReason": "Older degraded run",
+                    "lastSucceededUtc": "2026-06-27T01:12:29Z",
+                    "degradedBrandCount": 2,
+                    "degradedBrands": ["JS Industries", "Channel Islands"],
+                }
+            ],
+        }
+        state = {
+            "status": "success",
+            "latest_status_timestamp_utc": "2026-06-27T11:59:35Z",
+            "latest_success_timestamp_utc": "2026-06-27T11:59:35Z",
+            "degraded_brand_count": 0,
+            "degraded_brands": [],
+        }
+
+        with patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-27T11:59:35Z", "modelCount": 540},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=state,
+        ), patch.object(
+            dashboard,
+            "_load_dashboard_snapshot_payload",
+            return_value=bootstrap_payload,
+        ):
+            job_health, _ = dashboard._build_job_health(
+                ["AU", "EU", "ID", "US"],
+                {},
+                {},
+                now=now,
+            )
+
+        weekly_row = next(
+            row for row in job_health
+            if row["jobName"] == "quivrr-weekly-brand-catalogues" and row["region"] == "AU"
+        )
+        self.assertEqual(weekly_row["status"], "green")
+        self.assertEqual(weekly_row["degradedBrandCount"], 0)
+        self.assertEqual(weekly_row["degradedBrands"], [])
+
+    def test_older_bootstrap_degraded_row_does_not_override_newer_healthy_catalogue_metrics(self):
+        now = datetime(2026, 6, 27, 12, 30, tzinfo=timezone.utc)
+        bootstrap_payload = {
+            "version": dashboard.DASHBOARD_VERSION,
+            "jobHealth": [
+                {
+                    "region": "AU",
+                    "jobName": "quivrr-weekly-brand-catalogues",
+                    "status": "yellow",
+                    "statusLabel": "degraded",
+                    "statusReason": "Older degraded run",
+                    "lastSucceededUtc": "2026-06-27T01:12:29Z",
+                    "degradedBrandCount": 2,
+                    "degradedBrands": ["JS Industries", "Channel Islands"],
+                }
+            ],
+        }
+
+        with patch.object(
+            dashboard,
+            "_catalogue_metrics",
+            return_value={"latestSuccessUtc": "2026-06-27T11:59:35Z", "modelCount": 540},
+        ), patch.object(
+            dashboard,
+            "_load_job_state",
+            return_value=None,
+        ), patch.object(
+            dashboard,
+            "_load_dashboard_snapshot_payload",
+            return_value=bootstrap_payload,
+        ):
+            job_health, _ = dashboard._build_job_health(
+                ["AU", "EU", "ID", "US"],
+                {},
+                {},
+                now=now,
+            )
+
+        weekly_row = next(
+            row for row in job_health
+            if row["jobName"] == "quivrr-weekly-brand-catalogues" and row["region"] == "AU"
+        )
+        self.assertEqual(weekly_row["status"], "green")
+        self.assertEqual(weekly_row["degradedBrandCount"], 0)
+        self.assertEqual(weekly_row["degradedBrands"], [])
+
     def test_search_health_thresholds(self):
         healthy = classify_search_health(86, 61, 30)
         degraded = classify_search_health(80, 45, 18)

@@ -18,6 +18,7 @@ HEADERS = {
 }
 
 MAX_PRODUCT_URLS = 1200
+MAX_CATEGORY_PAGES = 12
 REQUEST_TIMEOUT = 30
 
 
@@ -184,6 +185,8 @@ def extract_product_from_page(url, retailer, html):
                 "sku": clean(product.get("sku")),
                 "product_url": clean(offer.get("url")) or url,
                 "images": extract_images(product),
+                "description": clean(product.get("description")),
+                "product_type": clean(product.get("category")),
             })
 
         return extracted
@@ -224,6 +227,14 @@ def extract_product_from_page(url, retailer, html):
 
         price = extract_price_from_text(price_text)
 
+    description = ""
+    description_nodes = soup.select(".productView-description")
+    if description_nodes:
+        description = clean(" ".join(node.get_text(" ", strip=True) for node in description_nodes[:2]))
+
+    page_text = soup.get_text(" ", strip=True)
+    unavailable = bool(re.search(r"(out of stock|sold out|unavailable)", page_text, re.IGNORECASE))
+
     return [{
         "retailer": retailer["primary_name"],
         "website": retailer["website"],
@@ -237,11 +248,73 @@ def extract_product_from_page(url, retailer, html):
         "variant_title": "",
         "price": clean(price),
         "compare_at_price": "",
-        "available": True,
+        "available": not unavailable,
         "sku": "",
         "product_url": url,
         "images": image_urls,
+        "description": description,
+        "product_type": "",
     }]
+
+
+def category_page_url(url, page):
+    if page <= 1:
+        return url
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}page={page}"
+
+
+def extract_card_product_links(html, source_url):
+    soup = BeautifulSoup(html, "html.parser")
+    links = []
+    seen = set()
+
+    for anchor in soup.select(".card-title a, .card-figure a"):
+        href = clean(anchor.get("href"))
+        if not href:
+            continue
+        product_url = urljoin(source_url, href)
+        key = product_url.rstrip("/").lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        links.append(product_url)
+
+    return links
+
+
+def category_urls_to_product_urls(retailer):
+    product_urls = []
+    seen = set()
+
+    for category_url in retailer.get("category_urls", []):
+        for page in range(1, MAX_CATEGORY_PAGES + 1):
+            page_target = category_page_url(category_url, page)
+            response = requests.get(
+                page_target,
+                timeout=REQUEST_TIMEOUT,
+                headers=HEADERS,
+            )
+            if response.status_code != 200:
+                break
+
+            page_links = extract_card_product_links(response.text, page_target)
+            new_links = [
+                link for link in page_links
+                if link.rstrip("/").lower() not in seen
+            ]
+
+            if not new_links:
+                break
+
+            for link in new_links:
+                seen.add(link.rstrip("/").lower())
+                product_urls.append(link)
+
+            if len(product_urls) >= MAX_PRODUCT_URLS:
+                return product_urls[:MAX_PRODUCT_URLS]
+
+    return product_urls[:MAX_PRODUCT_URLS]
 
 
 def sitemap_urls(base):
@@ -293,7 +366,10 @@ def sitemap_urls(base):
 
 def scrape_bigcommerce(retailer):
     base = retailer["website"].rstrip("/")
-    product_urls = sitemap_urls(base)
+    product_urls = category_urls_to_product_urls(retailer)
+
+    if not product_urls:
+        product_urls = sitemap_urls(base)
 
     print(f"Scraping: {retailer['primary_name']}")
     print(f"  Product URLs found: {len(product_urls)}")

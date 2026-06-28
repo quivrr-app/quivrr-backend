@@ -16,7 +16,7 @@ OUTPUT_FILE = Path("scrapers/products/output/normalised_surfboards.json")
 
 
 DIMENSION_PATTERN = re.compile(
-    r"(?P<length>\d['’]\d{1,2})"
+    r"(?P<length>\d{1,2}['’]\d{0,2})"
     r'(?:["”]?)\s*(?:x\s*)?'
     r"(?P<width>\d{1,2}(?:\.\d+)?(?:\s+\d{1,2}\/\d{1,2})?)"
     r'(?:["”]?)\s*(?:x\s*)?'
@@ -25,7 +25,7 @@ DIMENSION_PATTERN = re.compile(
 )
 
 LITRE_PATTERN = re.compile(
-    r"(\d{2}(?:\.\d+)?)\s?l",
+    r"\b(\d{2,3}(?:\.\d+)?)\s?(?:l|lt|ltr|litre|litres)\b",
     re.IGNORECASE,
 )
 
@@ -60,6 +60,9 @@ def clean_dimension_value(value):
         .replace("′", "'")
     )
 
+    if re.fullmatch(r"\d{1,2}'", value):
+        value = f"{value}0"
+
     value = value.replace('"', "").strip()
     value = re.sub(r"\s+", " ", value)
 
@@ -90,7 +93,7 @@ def is_valid_length(value):
     if not value:
         return False
 
-    match = re.fullmatch(r"[4-9]'[0-9]{1,2}", value)
+    match = re.fullmatch(r"(?:[4-9]|1[0-2])'[0-9]{1,2}", value)
 
     if not match:
         return False
@@ -270,8 +273,9 @@ def main():
             )
         )
         vendor = clean_text(item.get("vendor"))
+        description = clean_text(item.get("description"))
 
-        combined = f"{vendor} {title} {variant}".strip()
+        combined = f"{vendor} {title} {variant} {description}".strip()
 
         parsed = parse_board(combined)
 

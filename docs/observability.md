@@ -94,6 +94,12 @@ Status model:
 
 The framework prefers latest-state and freshness logic over historical failure counts, which keeps alert noise down when an old failure has already been superseded by a later success.
 
+Weekly canonical truth rules:
+
+- the latest successful Azure weekly-catalogue execution wins over older degraded history
+- stale bootstrap snapshots may warm the dashboard shell, but they must not revive old degraded brand warnings after a newer healthy run exists
+- if current telemetry is missing, the dashboard should fall back to `telemetry_pending` grey rather than showing a false degraded weekly-canonical state
+
 ## Quivrr Operations Centre
 
 Sprint 6 adds a first-pass operator dashboard path for Quivrr:
@@ -212,6 +218,12 @@ Sprint 7 Gen 3 standardisation additions:
   - `missingConstructionRowsAfter`
   - `ambiguousBoardSizeRowsAfter`
 - `scripts/run_supported_inventory_linkage_backfill.py --regions AU ID` can be used to isolate AU/ID retrofit work without mutating other regions
+
+Canonical guardrail additions:
+
+- the shared canonical import path now audits rejected non-surfboard products into `scripts/output/canonical_rejected_products.json`
+- products such as pottery, vases, art prints, apparel, fins, wax, and gift cards must fail closed unless the source also provides strong surfboard evidence
+- this protects the Operations Centre canonical health view from false model inflation caused by non-board catalogue contamination
 
 Current expectation notes:
 
