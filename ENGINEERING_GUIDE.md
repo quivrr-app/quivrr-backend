@@ -201,7 +201,9 @@ All of these touch SQL, and the report path may send email. Use with care.
 
 ## Regional Rollout Procedure
 
-AU, EU, and ID are active runtime regions. `RegionCode` is mandatory on regional inventory and availability rows. Invalid or missing values must fail closed; they must never silently fall back to AU.
+AU, EU, ID, and US are active runtime regions. `RegionCode` is mandatory on regional inventory and availability rows. Invalid or missing values must fail closed; they must never silently fall back to AU.
+
+Australia is now the Gen 3 reference implementation. New region rollout should reuse the Australian dealer-registry, discovery-engine, qualification, platform-pack, Azure validation, Operations Centre, and search-validation workflow before inventing new region-specific process.
 
 For any region work:
 
@@ -216,6 +218,8 @@ For any region work:
 For Indonesia specifically, verify IDR pricing, `PriceAmount`, `PriceCurrency`, and `RegionCode = 'ID'`. Do not assume AU `PriceAud` behavior.
 
 For EU specifically, verify EUR pricing where a price exists, `RegionCode = 'EU'`, regional manufacturer and retailer URLs, and no AU fallback. Exact dimension matching may equate fractional and decimal inches and decimal-comma or decimal-point litres within bounded tolerances.
+
+For US specifically, verify `RegionCode = 'US'`, region-specific retailer and MFA URLs, guarded apply confirmation flags, and the live nightly jobs `quivrr-us-mfr-availability` then `quivrr-nightly-us-inventory`. Do not apply SQL from local tooling unless the task explicitly calls for a guarded production import.
 
 The legacy AU retailer importer previously caused a Sev 1 incident by deleting all `RetailerInventory` rows and inserting AU rows without `RegionCode`. The supported AU importer must delete only `WHERE RegionCode = 'AU'` and every insert must explicitly set `RegionCode = 'AU'`. Keep the region guardrail tests in the validation suite.
 
@@ -243,9 +247,13 @@ The WebJob folder `App_Data/jobs/triggered/au-inventory-refresh/` still exists. 
 | --- | --- | --- |
 | `quivrr-nightly-au-inventory` | `python scripts/run_nightly_inventory_refresh.py` | AU retailer inventory refresh. |
 | `quivrr-nightly-eu-inventory` | `python scripts/europe/run_eu_retailer_inventory_refresh.py apply` | EU retailer inventory refresh at `30 19 * * *`. |
+| `quivrr-nightly-id-inventory` | `python scrapers/retailers/indonesia/import_indonesia_retailer_inventory.py` | ID retailer inventory refresh. |
+| `quivrr-nightly-us-inventory` | `python scripts/usa/run_us_retailer_inventory_refresh.py apply` | US retailer inventory refresh at `30 21 * * *`. |
 | `quivrr-weekly-brand-catalogues` | `python scripts/run_all_brand_catalogues.py` | Weekly canonical catalogue refresh. |
 | `quivrr-mfr-availability` | `python scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py` | AU manufacturer direct availability refresh. |
 | `quivrr-eu-mfr-availability` | `python scripts/manufacturer_availability/run_eu_manufacturer_availability_pipeline.py apply` | EU manufacturer direct availability refresh at `30 20 * * *`. |
+| `quivrr-id-mfr-availability` | `python scripts/manufacturer_availability/run_id_manufacturer_availability_pipeline.py` | ID manufacturer direct availability refresh. |
+| `quivrr-us-mfr-availability` | `python scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py apply --confirm-apply-us-mfa APPLY_US_MFA` | US manufacturer direct availability refresh at `0 21 * * *`. |
 | `quivrr-market-intelligence` | `python run_market_intelligence_job.py` | Inventory snapshot, delta calculation, and report email. |
 
 ## Azure Resource Map
@@ -267,9 +275,13 @@ Backend, jobs, AI, email, and monitoring resources:
 - `quivrr-jobs-env`
 - `quivrr-nightly-au-inventory`
 - `quivrr-nightly-eu-inventory`
+- `quivrr-nightly-id-inventory`
+- `quivrr-nightly-us-inventory`
 - `quivrr-weekly-brand-catalogues`
 - `quivrr-mfr-availability`
 - `quivrr-eu-mfr-availability`
+- `quivrr-id-mfr-availability`
+- `quivrr-us-mfr-availability`
 - `quivrr-market-intelligence`
 - `workspace-quivrrproductionrgUkqI`
 - `quivrr-communication`

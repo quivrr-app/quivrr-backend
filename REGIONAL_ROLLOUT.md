@@ -40,15 +40,30 @@ A region should only move stages after data quality, operational ownership, and 
 
 ## AU Current State
 
-AU is the mature production region.
+AU is the mature production region and now the Gen 3 reference implementation.
 
 - `RegionCode = AU`.
 - Main retailer refresh runs through `scripts/run_nightly_inventory_refresh.py`.
 - AU manufacturer direct availability runs through `scripts/manufacturer_availability/run_au_manufacturer_availability_pipeline.py`.
 - AU catalogue and availability jobs are represented in Azure Container Apps Jobs.
-- Existing AU retailer source, platform detection, active targets, and import behavior are the reference implementation for future regions.
+- Existing AU retailer source, dealer registry flow, discovery engine, platform detection, qualification process, platform packs, active targets, import behavior, Azure validation, Operations Centre checks, and search validation are the reference implementation for future regions.
 
-AU assumptions must not be copied into other regions without validation.
+AU assumptions must not be copied into other regions blindly, but the AU rollout workflow should now be copied first and then adapted only where region-specific evidence requires it.
+
+## Standard Coverage Workflow
+
+Future regional coverage work should move every retailer through the same sequence:
+
+1. Dealer Registry
+2. Discovery Engine
+3. Platform Detection
+4. Qualification
+5. Platform Pack
+6. Azure Validation
+7. Operations Centre
+8. Search
+
+This is now the standard Quivrr coverage process. Regions should not bypass it with direct one-off scraper onboarding unless a task explicitly documents why.
 
 ## ID Current State
 

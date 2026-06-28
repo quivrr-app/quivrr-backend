@@ -4,7 +4,7 @@
 
 Quivrr now emits single-line JSON structured logs to stdout for scheduled jobs and platform reporting workflows. Azure Log Analytics can ingest these events without adding new infrastructure or increasing platform sprawl.
 
-Europe remains the Gen 3 reference runtime. AU and ID continue to operate independently, with region included on every regional event.
+Australia is now the Gen 3 reference implementation for regional rollout and operations expectations. Europe, Indonesia, and the United States remain region-isolated runtimes, with region included on every regional event.
 
 ## Event Taxonomy
 
@@ -241,3 +241,6 @@ Ops endpoint notes:
 - The endpoint caches the dashboard payload for five minutes by default through `OPS_DASHBOARD_CACHE_TTL_SECONDS`.
 - authenticated requests no longer trust stale cache as final truth: if the cached payload is stale, the endpoint now attempts a synchronous rebuild and only falls back to stale data when the rebuild itself fails
 - when a synchronous stale-cache rebuild fails, the endpoint emits `ops_dashboard_cache_stale_served` with the rebuild error and starts a background refresh; successful rebuilds emit `ops_dashboard_cache_stale_rebuilt_sync`
+- The internal portal page is `https://quivrr.app/operations/` after frontend deployment.
+- The portal stores the provided key in browser `localStorage` for convenience and lets the operator clear it from the page.
+
