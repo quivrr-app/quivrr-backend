@@ -4,7 +4,7 @@
 
 Quivrr now emits single-line JSON structured logs to stdout for scheduled jobs and platform reporting workflows. Azure Log Analytics can ingest these events without adding new infrastructure or increasing platform sprawl.
 
-Europe remains the Gen 3 reference runtime. AU and ID continue to operate independently, with region included on every regional event.
+Australia is now the Gen 3 reference implementation for regional rollout and operations expectations. Europe, Indonesia, and the United States remain region-isolated runtimes, with region included on every regional event.
 
 ## Event Taxonomy
 
@@ -137,3 +137,5 @@ Ops endpoint notes:
 - Missing or incorrect request key returns `403`.
 - Missing server-side key keeps the endpoint disabled with `503`.
 - The endpoint caches the dashboard payload for five minutes by default through `OPS_DASHBOARD_CACHE_TTL_SECONDS`.
+- The internal portal page is `https://quivrr.app/operations/` after frontend deployment.
+- The portal stores the provided key in browser `localStorage` for convenience and lets the operator clear it from the page.

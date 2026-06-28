@@ -16,7 +16,7 @@ Quivrr currently spans frontend, backend, data, scheduled jobs, AI, email, and m
 | Surf frontend | Azure Static Web Apps | `quivrr-surf-frontend` | Surf/Bodhi-oriented frontend experience. |
 | Backend API | Azure App Service | `quivrr-backend-api`, `app.py`, `startup.sh` | Read-oriented catalogue and inventory API. |
 | Data tier | Azure SQL | `quivrr-sql-prod`, `quivrr-db-prod` | System of record for catalogue, MFA, retailer inventory, and market intelligence tables. |
-| Scheduled jobs | Azure Container Apps Jobs | AU and EU retailer/MFA jobs, weekly catalogue, and market intelligence jobs | Scheduled ingestion and reporting workloads. |
+| Scheduled jobs | Azure Container Apps Jobs | AU, EU, and US retailer/MFA jobs, ID MFA, weekly catalogue, and market intelligence jobs | Scheduled ingestion and reporting workloads. |
 | Container image | Azure Container Registry | `quivrracrprod.azurecr.io/quivrr-inventory-job:latest` | Shared image for scheduled job workloads. |
 | AI board guide | Azure App Service + Azure OpenAI | `quivrr-board-guide-api`, `quivrr-board-guide-openai` | Separate Bodhi board guide service. |
 | Email | Azure Communication Services | `quivrr-communication`, `quivrr-email` | Market intelligence report email delivery. |
@@ -46,7 +46,7 @@ Operational health combines:
 - region leakage checks
 - Board Guide API dependency checks
 
-Europe remains the Gen 3 reference architecture for dashboards, alert rules, and future monitoring rollout patterns.
+Australia is now the Gen 3 reference implementation for regional coverage, dashboard expectations, platform packs, and future monitoring rollout patterns. Europe remains the first non-AU Gen 3 rollout and continues to inform cross-region validation, but new rollout process work should anchor to the Australia path first.
 
 ## Azure Resource Map
 
@@ -67,9 +67,13 @@ The platform is split across two resource groups.
 - `quivrr-jobs-env` - Container Apps managed environment.
 - `quivrr-nightly-au-inventory` - scheduled AU retailer inventory job.
 - `quivrr-nightly-eu-inventory` - scheduled EU retailer inventory job.
+- `quivrr-nightly-id-inventory` - scheduled ID retailer inventory job.
+- `quivrr-nightly-us-inventory` - scheduled US retailer inventory job.
 - `quivrr-weekly-brand-catalogues` - scheduled weekly catalogue job.
 - `quivrr-mfr-availability` - scheduled AU manufacturer direct availability job.
 - `quivrr-eu-mfr-availability` - scheduled EU manufacturer direct availability job.
+- `quivrr-id-mfr-availability` - scheduled ID manufacturer direct availability job.
+- `quivrr-us-mfr-availability` - scheduled US manufacturer direct availability job.
 - `quivrr-market-intelligence` - scheduled market intelligence job.
 - `workspace-quivrrproductionrgUkqI` - Log Analytics workspace.
 - `quivrr-communication` - Azure Communication Services resource.
@@ -166,7 +170,7 @@ The AU pipeline detects retailer platforms, builds active scrape targets, runs p
 
 Supported runtime scraper families include Shopify, WooCommerce, BigCommerce, Magento, Neto/Maropost, Squarespace, Wix, Ecwid, and specific retailer integrations such as Coopers Board Store.
 
-The active EU retailer set is 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver. EU discovery and import remain isolated from AU and ID paths.
+The active EU retailer set is 58 Surf, Pukas Surf Shop, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, and Tablas Surf Shop. EU discovery and import remain isolated from AU, ID, and US paths.
 
 Exact retailer matching accepts equivalent dimensions, including fractional and decimal inch representations, decimal-comma or decimal-point litres, and bounded width, thickness, and volume comparisons. For 58 Surf, discovery fetches product-detail attributes and retains width, thickness, volume, construction, and fin information through normalization and import. An exact result can therefore pass through equivalent dimensions even when `BoardSizeId` remains `NULL` because duplicate equivalent canonical sizes make deterministic size linking ambiguous.
 
@@ -189,7 +193,7 @@ The search API still preserves `otherModelMatches` in the response contract, but
 
 `RegionCode` is mandatory for regional inventory and availability. AU, EU, ID, and US are active runtime regions. Search and imports must never coerce an invalid, missing, or unsupported region to AU.
 
-AU is the mature production region. Existing retailer master data, active scrape targets, and nightly inventory jobs are AU-oriented unless a file explicitly says otherwise.
+AU is the mature production region and now the Gen 3 reference implementation. Existing retailer master data, active scrape targets, dealer registry flow, qualification process, platform-pack usage, and nightly inventory jobs should be treated as the reference path for future region rollout unless a file explicitly says otherwise.
 
 ID is active in code but less mature operationally. `app.py` contains Indonesia-specific matching behavior for `regionCode=ID`, including relaxed construction, length, and volume constraints in retailer search. Indonesia inventory uses `RegionCode = 'ID'`, `Country = 'Indonesia'`, `PriceCurrency = 'IDR'`, and `PriceAmount` for native currency amounts.
 
@@ -199,10 +203,10 @@ Regional counts must be protected independently. Importers and scheduled jobs fa
 
 Validated production baseline as of June 2026:
 
-| Table | AU | EU | ID | NULL |
-| --- | ---: | ---: | ---: | ---: |
-| `RetailerInventory` | 11,746 | 9,105 | 1,998 | 0 |
-| `ManufacturerInventory` | 6,498 | 2,736 | 185 | 0 |
+| Table | AU | EU | ID | US | NULL |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `RetailerInventory` | 11,746 | 9,105 | 1,998 | 7,812 | 0 |
+| `ManufacturerInventory` | 6,498 | 2,736 | 185 | 4,647 | 0 |
 
 These are operational reference counts, not hard-coded application expectations. Any import must print before/after counts and explain expected movement.
 

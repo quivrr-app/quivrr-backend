@@ -10,7 +10,7 @@
       "displayName": "Europe",
       "retailerRuntime": "gen3_regional",
       "mfaRuntime": "regional_live",
-      "notes": "Europe is the Gen 3 reference architecture."
+      "notes": "Europe is a live Gen 3 regional runtime, but Australia is now the reference implementation for rollout process and coverage operations."
     },
     "ID": {
       "displayName": "Indonesia",

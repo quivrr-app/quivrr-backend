@@ -23,7 +23,7 @@ Positive:
 
 - No new platform services required
 - Region-aware monitoring is explicit
-- Europe can remain the Gen 3 reference architecture
+- Australia is now the Gen 3 reference implementation for rollout and dashboard expectations
 - Alert noise is reduced by latest-state and freshness logic
 
 Trade-offs:
