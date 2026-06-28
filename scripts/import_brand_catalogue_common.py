@@ -9,10 +9,16 @@ from dotenv import load_dotenv
 from sqlalchemy import bindparam, create_engine, event, text
 from sqlalchemy.exc import OperationalError
 
-from scripts.canonical_catalogue_guardrails import (
-    append_rejected_products_audit,
-    filter_catalogue_rows,
-)
+try:
+    from scripts.canonical_catalogue_guardrails import (
+        append_rejected_products_audit,
+        filter_catalogue_rows,
+    )
+except ModuleNotFoundError:
+    from canonical_catalogue_guardrails import (
+        append_rejected_products_audit,
+        filter_catalogue_rows,
+    )
 
 load_dotenv()
 

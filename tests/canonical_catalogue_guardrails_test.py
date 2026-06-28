@@ -80,6 +80,11 @@ class CanonicalCatalogueGuardrailsTests(unittest.TestCase):
         self.assertIn("Description = COALESCE(:description, Description)", ci_importer)
         self.assertIn("Description = COALESCE(:description, Description)", js_importer)
 
+    def test_generic_importer_supports_script_directory_runtime_imports(self):
+        generic_importer = Path("scripts/import_brand_catalogue_common.py").read_text(encoding="utf-8")
+        self.assertIn("except ModuleNotFoundError", generic_importer)
+        self.assertIn("from canonical_catalogue_guardrails import (", generic_importer)
+
     def test_ci_model_link_builder_rejects_junk_titles_and_template_slugs(self):
         self.assertFalse(build_ci_canonical_model_links.looks_like_model_title("Comments"))
         self.assertFalse(build_ci_canonical_model_links.looks_like_model_title("Videos"))
