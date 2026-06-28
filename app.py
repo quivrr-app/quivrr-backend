@@ -120,7 +120,7 @@ OPS_DASHBOARD_REFRESH_LOCK_TIMEOUT_SECONDS = env_int(
 )
 OPS_DASHBOARD_ALLOW_SYNC_BUILD = env_bool(
     "OPS_DASHBOARD_ALLOW_SYNC_BUILD",
-    False,
+    True,
 )
 OPS_DASHBOARD_PREWARM_ON_STARTUP = env_bool(
     "OPS_DASHBOARD_PREWARM_ON_STARTUP",
@@ -997,7 +997,7 @@ def get_cached_ops_dashboard_response():
             cached_response["cacheStatus"] = "stale"
             return cached_response
 
-    if not OPS_DASHBOARD_ALLOW_SYNC_BUILD:
+    if not OPS_DASHBOARD_ALLOW_SYNC_BUILD and _ops_dashboard_cache.get("payload") is not None:
         with _ops_dashboard_cache_lock:
             started_refresh = _start_ops_dashboard_refresh_locked()
         return build_ops_dashboard_warming_response("warming", started_refresh)

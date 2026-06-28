@@ -151,14 +151,42 @@ class OperationsDashboardApiTests(unittest.TestCase):
         self.assertEqual(second_response.json()["cacheStatus"], "hit")
         self.assertEqual(builder.call_count, 1)
 
-    def test_ops_dashboard_cold_miss_returns_warming_payload_without_sync_build(self):
+    def test_ops_dashboard_cold_miss_builds_sync_payload_even_when_async_only_is_disabled(self):
+        metrics = {
+            "generatedAtUtc": "2026-06-26T00:00:00Z",
+            "version": backend_app.DASHBOARD_VERSION,
+            "regions": ["AU", "EU", "ID", "US"],
+            "regionOverview": [],
+            "mfaHealth": [],
+            "retailerHealth": [],
+            "retailerHealthByRegion": {},
+            "jobHealth": [],
+            "jobHealthByRegion": {},
+            "jobContracts": [],
+            "jobContractsByRegion": {},
+            "inventoryCounts": [],
+            "searchQuality": [],
+            "linkQuality": {},
+            "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
+            "alerts": [],
+            "alertSummary": {"summary": {"critical": 0}},
+            "regionDetails": {},
+        }
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
+            backend_app,
+            "OPS_DASHBOARD_ALLOW_SYNC_BUILD",
+            False,
+        ), patch.object(
             backend_app,
             "_start_ops_dashboard_refresh_locked",
             return_value=True,
         ) as refresh_starter, patch.object(
             backend_app,
             "build_operations_dashboard_metrics",
+            return_value=metrics,
         ) as builder:
             response = self.client.get(
                 "/api/ops/dashboard",
@@ -167,11 +195,10 @@ class OperationsDashboardApiTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         body = response.json()
-        self.assertEqual(body["cacheStatus"], "warming")
-        self.assertTrue(body["warmingUp"])
+        self.assertEqual(body["cacheStatus"], "miss")
         self.assertEqual(body["regions"], ["AU", "EU", "ID", "US"])
-        self.assertEqual(refresh_starter.call_count, 1)
-        builder.assert_not_called()
+        self.assertEqual(refresh_starter.call_count, 0)
+        self.assertEqual(builder.call_count, 1)
 
     def test_ops_dashboard_serves_stale_cache_while_refreshing(self):
         payload = {
@@ -328,10 +355,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
             )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["cacheStatus"], "warming")
-        self.assertTrue(response.json()["warmingUp"])
-        self.assertEqual(refresh_starter.call_count, 1)
-        builder.assert_not_called()
+        self.assertEqual(response.json()["cacheStatus"], "miss")
+        self.assertEqual(refresh_starter.call_count, 0)
+        self.assertEqual(builder.call_count, 1)
 
     def test_ops_dashboard_ignores_complete_legacy_bootstrap_snapshot_when_runtime_cache_missing(self):
         self.bootstrap_file.write_text(
@@ -353,17 +379,39 @@ class OperationsDashboardApiTests(unittest.TestCase):
             )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["cacheStatus"], "warming")
-        self.assertTrue(response.json()["warmingUp"])
-        self.assertEqual(refresh_starter.call_count, 1)
-        builder.assert_not_called()
+        self.assertEqual(response.json()["cacheStatus"], "miss")
+        self.assertEqual(refresh_starter.call_count, 0)
+        self.assertEqual(builder.call_count, 1)
 
-    def test_ops_dashboard_still_warms_when_legacy_snapshot_is_incomplete(self):
+    def test_ops_dashboard_rebuilds_sync_when_legacy_snapshot_is_incomplete(self):
         self.bootstrap_file.write_text(
             '{"generated_at": ' + str(time.time()) + ', "payload": {"generatedAtUtc": "2026-06-26T00:00:00Z", "version": "stale-dashboard-version", "regions": ["AU"], "regionOverview": []}}',
             encoding="utf-8",
         )
 
+        metrics = {
+            "generatedAtUtc": "2026-06-26T00:00:00Z",
+            "version": backend_app.DASHBOARD_VERSION,
+            "regions": ["AU", "EU", "ID", "US"],
+            "regionOverview": [],
+            "mfaHealth": [],
+            "retailerHealth": [],
+            "retailerHealthByRegion": {},
+            "jobHealth": [],
+            "jobHealthByRegion": {},
+            "jobContracts": [],
+            "jobContractsByRegion": {},
+            "inventoryCounts": [],
+            "searchQuality": [],
+            "linkQuality": {},
+            "coverageGaps": [],
+            "canonicalCompleteness": {},
+            "regionalReadiness": [],
+            "pipelineHealth": [],
+            "alerts": [],
+            "alertSummary": {"summary": {"critical": 0}},
+            "regionDetails": {},
+        }
         with patch.object(backend_app, "OPS_DASHBOARD_API_KEY", "secret-key"), patch.object(
             backend_app,
             "_start_ops_dashboard_refresh_locked",
@@ -371,6 +419,7 @@ class OperationsDashboardApiTests(unittest.TestCase):
         ) as refresh_starter, patch.object(
             backend_app,
             "build_operations_dashboard_metrics",
+            return_value=metrics,
         ) as builder:
             response = self.client.get(
                 "/api/ops/dashboard",
@@ -378,10 +427,9 @@ class OperationsDashboardApiTests(unittest.TestCase):
             )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["cacheStatus"], "warming")
-        self.assertTrue(response.json()["warmingUp"])
-        self.assertEqual(refresh_starter.call_count, 1)
-        builder.assert_not_called()
+        self.assertEqual(response.json()["cacheStatus"], "miss")
+        self.assertEqual(refresh_starter.call_count, 0)
+        self.assertEqual(builder.call_count, 1)
 
 
 if __name__ == "__main__":
