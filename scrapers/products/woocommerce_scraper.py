@@ -47,6 +47,44 @@ SURFBOARD_CATEGORY_HINTS = [
     "softboard",
     "midlength",
     "mid length",
+    "fish",
+    "mini mal",
+    "malibu",
+    "beginner surfboards",
+]
+
+SURFBOARD_CATEGORY_EXCLUDE_HINTS = [
+    "accessories",
+    "accessory",
+    "bag",
+    "bags",
+    "fins",
+    "leash",
+    "leg rope",
+    "leg-rope",
+    "legrope",
+    "grip",
+    "wax",
+    "rack",
+    "repair",
+    "wetsuit",
+    "rash vest",
+    "rash-vest",
+    "rashguard",
+    "bodyboard",
+    "skimboard",
+    "sup ",
+    "sup-",
+    "stand up paddle",
+    "paddle board",
+    "paddleboards",
+    "snorkel",
+    "swim",
+    "skateboard",
+    "skate",
+    "gift card",
+    "gift-card",
+    "surf gear",
 ]
 
 SURFBOARD_TITLE_HINTS = [
@@ -250,6 +288,95 @@ def product_looks_like_surfboard(product):
         return True
 
     return False
+
+
+def category_looks_like_surfboard(category):
+    text = " ".join(
+        [
+            str(category.get("name") or ""),
+            str(category.get("slug") or ""),
+            str(category.get("description") or ""),
+        ]
+    ).lower()
+
+    if any(term in text for term in SURFBOARD_CATEGORY_EXCLUDE_HINTS):
+        return False
+
+    return any(term in text for term in SURFBOARD_CATEGORY_HINTS)
+
+
+def expand_board_category_ids(categories):
+    if not isinstance(categories, list):
+        return []
+
+    categories_by_id = {}
+    children_by_parent = {}
+
+    for category in categories:
+        if not isinstance(category, dict):
+            continue
+
+        category_id = category.get("id")
+
+        try:
+            category_id = int(category_id)
+        except (TypeError, ValueError):
+            continue
+
+        parent_id = category.get("parent")
+
+        try:
+            parent_id = int(parent_id or 0)
+        except (TypeError, ValueError):
+            parent_id = 0
+
+        category_copy = dict(category)
+        category_copy["id"] = category_id
+        category_copy["parent"] = parent_id
+        categories_by_id[category_id] = category_copy
+        children_by_parent.setdefault(parent_id, []).append(category_id)
+
+    board_ids = {
+        category_id
+        for category_id, category in categories_by_id.items()
+        if category_looks_like_surfboard(category)
+    }
+
+    queue = list(board_ids)
+
+    while queue:
+        parent_id = queue.pop(0)
+        for child_id in children_by_parent.get(parent_id, []):
+            if child_id in board_ids:
+                continue
+            board_ids.add(child_id)
+            queue.append(child_id)
+
+    return sorted(board_ids)
+
+
+def fetch_board_category_ids(base_url):
+    url = f"{base_url.rstrip('/')}/wp-json/wc/store/products/categories"
+
+    try:
+        response = requests.get(
+            url,
+            timeout=30,
+            headers=HEADERS,
+            verify=False,
+        )
+    except Exception:
+        return []
+
+    if response.status_code != 200:
+        return []
+
+    try:
+        categories = response.json()
+    except Exception:
+        return []
+
+    return expand_board_category_ids(categories)
 
 
 def format_size_token(value):
@@ -482,17 +609,31 @@ def extract_products(products, retailer):
 
 def scrape_woocommerce(retailer):
     base = retailer["website"].rstrip("/")
+    board_category_ids = fetch_board_category_ids(base)
+    category_query = ""
+
+    if board_category_ids:
+        category_query = "&category=" + ",".join(
+            str(category_id)
+            for category_id in board_category_ids
+        )
 
     page = 1
     all_products = []
 
     print(f"Scraping: {retailer['primary_name']}")
+    if board_category_ids:
+        print(
+            "  Category filter ids: "
+            + ",".join(str(category_id) for category_id in board_category_ids)
+        )
 
     while True:
         url = (
             f"{base}/wp-json/wc/store/products"
             f"?page={page}"
             f"&per_page={PER_PAGE}"
+            f"{category_query}"
         )
 
         try:
