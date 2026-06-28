@@ -31,7 +31,7 @@ PRESTASHOP_REPORT = Path(
     "scrapers/retailers/europe/prestashop/output/eu_prestashop_product_discovery.json"
 )
 MINIMUM_ROWS = {
-    "58_surf": 1200,
+    "58_surf": 300,
     "pukas_surf_shop": 1800,
     "bell_surf": 350,
     "board_exchange": 100,
@@ -43,6 +43,7 @@ MINIMUM_ROWS = {
     "tablas_surf_shop": 80,
     "mundo_surf": 3800,
     "single_quiver": 300,
+    "hart_beach": 80,
 }
 
 

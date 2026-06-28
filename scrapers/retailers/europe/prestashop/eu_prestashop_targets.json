@@ -12,8 +12,9 @@
     "enabled": true,
     "productUrlRegex": "\\.html$",
     "expandAvailableSizes": true,
+    "requestTimeoutSeconds": 90,
     "priceCurrency": "EUR",
-    "notes": "Wave 1 PrestaShop target. JSON-LD ItemList exposes product names and URLs."
+    "notes": "Wave 1 PrestaShop target. JSON-LD ItemList exposes product names and URLs. Uses an elevated category timeout because the source is slow but valid."
   },
   {
     "retailerSlug": "single_quiver",

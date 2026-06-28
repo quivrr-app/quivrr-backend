@@ -1,0 +1,18 @@
+[
+  {
+    "retailerSlug": "reddog_surf_shop",
+    "retailerName": "Reddog Surf Shop",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.reddogsurfshop.com",
+    "categoryUrls": [
+      "https://www.reddogsurfshop.com/surfboard-inventory",
+      "https://www.reddogsurfshop.com/surfboard-inventory?page=2",
+      "https://www.reddogsurfshop.com/board-sale"
+    ],
+    "platform": "custom_wix_board_inventory",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "High-value US custom target. Public board inventory pages expose live product-page URLs and JSON-LD product data with brand, price, availability, and dimensions."
+  }
+]

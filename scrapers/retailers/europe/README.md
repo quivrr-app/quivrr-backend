@@ -10,9 +10,9 @@ EU means the mainland European Union fulfilment market. Country values such as P
 
 ## Current State
 
-This folder is a scaffold for EU retailer onboarding and discovery only. There are no live EU retailer scrapers, SQL imports, Azure jobs, or production activation paths enabled from this folder.
+This folder is an active EU regional rollout workspace with live retailer discovery, guarded SQL import paths, and production Azure jobs.
 
-Do not move AU runtime files into this structure. AU remains the production reference implementation, but EU must be validated separately for retailer relevance, shipping, tax, duty, currency, and data quality.
+EU remains region-scoped and must still be validated separately for retailer relevance, shipping, tax, duty, currency, and data quality, but it is no longer just a scaffold. AU remains the production reference implementation for rollout process.
 
 ## Top 20 Targets
 
@@ -33,13 +33,13 @@ Do not move AU runtime files into this structure. AU remains the production refe
 | Glisshop | France | Wave 2 | https://www.glisshop.com/ |
 | Flysurf | France | Wave 2 | https://www.flysurf.com/ |
 | Surfshop.fr | France | Wave 2 | https://www.surfshop.fr/ |
-| Hart Beach | Netherlands | Wave 1 | https://www.hartbeach.nl/ |
+| Hart Beach | Netherlands | Wave 1 | https://hartbeach.nl/collections/surfboards |
 | Warehouse One | Germany | Wave 2 | https://www.warehouse-one.de/ |
 | SantoLoco | Germany | Wave 2 | https://www.santoloco.com/ |
 | Surf Pirates | Germany | Wave 2 | https://www.surfpirates.de/en/surfbords |
 | Blue Tomato | EU / Austria / Germany fulfilment | Wave 2 | https://www.blue-tomato.com/ |
 
-The source register is `eu_retailer_targets.json`. Every target is disabled with `enabled: false` until reviewed and explicitly activated.
+The source register is `eu_retailer_targets.json`. Retailers remain disabled until reviewed and explicitly activated, but multiple Wave 1 targets are already live in the current EU runtime.
 
 ## Discovery Tooling
 

@@ -101,13 +101,14 @@ def discover_target(target: dict, max_pages: int) -> dict:
     products = []
     rejected = 0
     fetches = []
+    timeout_seconds = int(target.get("requestTimeoutSeconds") or 18)
 
     for category_url in target.get("categoryUrls", []):
         page = 1
         seen_urls = set()
         while max_pages <= 0 or page <= max_pages:
             source_url = page_url(category_url, page)
-            response = fetch_text(source_url)
+            response = fetch_text(source_url, timeout_seconds=timeout_seconds, retries=1)
             fetches.append({
                 "url": source_url,
                 "status": response.status,

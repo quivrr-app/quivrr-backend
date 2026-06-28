@@ -17,6 +17,11 @@ from scrapers.retailers.usa.bigcommerce.discover_us_bigcommerce_products import 
     OUTPUT_FILE as BIGCOMMERCE_OUTPUT,
     discover_target as discover_bigcommerce_target,
 )
+from scrapers.retailers.usa.custom.discover_us_custom_products import (  # noqa: E402
+    INPUT_FILE as CUSTOM_INPUT,
+    OUTPUT_FILE as CUSTOM_OUTPUT,
+    discover_target as discover_custom_target,
+)
 from scrapers.retailers.usa.magento.discover_us_magento_products import (  # noqa: E402
     INPUT_FILE as MAGENTO_INPUT,
     OUTPUT_FILE as MAGENTO_OUTPUT,
@@ -162,6 +167,15 @@ def main() -> None:
             input_file=MAGENTO_INPUT,
             output_file=MAGENTO_OUTPUT,
             discover=discover_magento_target,
+            target_slugs=None,
+            max_pages=0,
+            require_enabled=True,
+        ),
+        run_platform(
+            name="Custom/high-value",
+            input_file=CUSTOM_INPUT,
+            output_file=CUSTOM_OUTPUT,
+            discover=discover_custom_target,
             target_slugs=None,
             max_pages=0,
             require_enabled=True,

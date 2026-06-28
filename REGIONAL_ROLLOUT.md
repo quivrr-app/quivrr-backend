@@ -85,7 +85,7 @@ EU is an active mainland European Union fulfilment market.
 - Initial market focus: Portugal, Spain, and France.
 - UK is explicitly excluded.
 - EU retailer discovery and normalization live under `scrapers/retailers/europe/`.
-- The active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, and Single Quiver.
+- The active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, Tablas Surf Shop, and Hart Beach.
 - EU MFA supports JS Industries, Pyzel, Firewire, Haydenshapes, Rusty, Sharp Eye, and DHD.
 - EU retailer and MFA importers are region-scoped, repeatable, and protect AU and ID counts.
 - `quivrr-nightly-eu-inventory` runs at `30 19 * * *`.
@@ -99,10 +99,10 @@ Exact matching normalizes fractional and decimal inches, decimal-comma and decim
 
 Validated June 2026 counts:
 
-| Table | AU | EU | ID | NULL |
-| --- | ---: | ---: | ---: | ---: |
-| `RetailerInventory` | 11,746 | 9,105 | 1,998 | 0 |
-| `ManufacturerInventory` | 6,498 | 2,736 | 185 | 0 |
+| Table | AU | EU | ID | US | NULL |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `RetailerInventory` | 11,746 | 9,105 | 1,998 | 7,812 | 0 |
+| `ManufacturerInventory` | 6,498 | 2,736 | 185 | 4,647 | 0 |
 
 ## UK Planned State
 
@@ -118,7 +118,7 @@ No UK live scraper, importer, search behavior, or Azure production job is active
 
 ## US Current State
 
-US is now a guarded rollout region following the EU Gen 3 structure.
+US is active in Production Beta and follows the Gen 3 regional runtime.
 
 - `RegionCode = US`.
 - Frontend regional route exists at `/united-states`.
@@ -126,11 +126,13 @@ US is now a guarded rollout region following the EU Gen 3 structure.
 - US Shopify discovery is now config-driven from `scrapers/retailers/usa/shopify/us_shopify_targets.json` rather than a hardcoded allowlist in the runner.
 - US BigCommerce discovery is now wired through `scrapers/retailers/usa/bigcommerce/` and currently validates Catalyst Surf Shop safely.
 - US Magento or category-html discovery is now wired through `scrapers/retailers/usa/magento/` and currently validates Warm Winds safely.
+- US custom/high-value discovery is now wired through `scrapers/retailers/usa/custom/` for reviewed board-inventory paths.
 - US WooCommerce discovery now supports category and Store API paths, but no WooCommerce retailer has yet been promoted from backlog.
-- The current production-ready dry-run retailer set is Surf Station, Jack's Surfboards, Real Watersports, Cleanline Surf, Hawaiian South Shore, Bird's Surf Shed, Island Water Sports, Surf N Sea, Kimo's Surf Hut, Moment Surf Co, Degree 33 Surfboards, Surfboard Broker, Infinity Surfboards, Walden Surfboards, Stewart Surfboards, Bing Surfboards, Robert August Surf Company, Dark Arts Surf, Catalyst Surf Shop, and Warm Winds.
+- The current production-ready dry-run retailer set is Surf Station, Jack's Surfboards, Real Watersports, Cleanline Surf, Hawaiian South Shore, Bird's Surf Shed, Island Water Sports, Surf N Sea, Kimo's Surf Hut, Moment Surf Co, Degree 33 Surfboards, Surfboard Broker, Infinity Surfboards, Walden Surfboards, Stewart Surfboards, Bing Surfboards, Robert August Surf Company, Dark Arts Surf, Catalyst Surf Shop, Warm Winds, and Reddog Surf Shop.
 - Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets because the existing Shopify path does not yet recover safe surfboard inventory from their exposed feeds.
-- US MFA remains planning-first. `scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py` validates the rollout plan and writes a non-live readiness report, but no US manufacturer SQL importer is active yet.
-- No USA Azure Container Apps Jobs exist yet. Job creation should remain manual and follow the reviewed command plan.
+- US retailer inventory is live in Production Beta through `scripts/usa/run_us_retailer_inventory_refresh.py` and Azure Container Apps Job `quivrr-nightly-us-inventory`.
+- US manufacturer direct availability is live in Production Beta through `scripts/manufacturer_availability/run_us_manufacturer_availability_pipeline.py` and Azure Container Apps Job `quivrr-us-mfr-availability`.
+- US guarded apply and rollout review notes still matter for future expansion, but the core US retailer inventory job and US MFA job now exist and are active runtime paths.
 
 ## Rollout Checklist
 

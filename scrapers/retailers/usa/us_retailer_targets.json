@@ -298,5 +298,17 @@
     "enabled": true,
     "platform": "magento",
     "notes": "Promoted after validating the surfboards category through a dedicated US Magento/html adapter."
+  },
+  {
+    "retailerSlug": "reddog_surf_shop",
+    "retailerName": "Reddog Surf Shop",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.reddogsurfshop.com",
+    "surfboardCategoryUrl": "https://www.reddogsurfshop.com/surfboard-inventory",
+    "priority": 26,
+    "enabled": true,
+    "platform": "custom_wix_board_inventory",
+    "notes": "Promoted after validating the public board-inventory and board-sale pages. Product detail pages expose JSON-LD brand, price, availability, and dimension data for a high-value supported-brand US custom path."
   }
 ]

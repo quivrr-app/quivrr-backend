@@ -38,6 +38,7 @@ MINIMUM_ROWS = {
     "dark_arts_surf": 1,
     "catalyst_surf_shop": 1,
     "warm_winds": 1,
+    "reddog_surf_shop": 20,
 }
 
 
@@ -126,10 +127,10 @@ def main() -> None:
     emit_event("inventory_refresh_started", "retailer_inventory", region=REGION_CODE, status="success")
 
     if not args.skip_discovery:
-        command = [sys.executable, "scrapers/retailers/usa/run_us_retailer_discovery.py", "--dry-run"]
+        command = [sys.executable, "scrapers/retailers/usa/run_us_retailer_discovery.py"]
         completed = subprocess.run(command, cwd=ROOT)
         if completed.returncode != 0:
-            raise RuntimeError(f"US retailer discovery dry-run failed with exit code {completed.returncode}")
+            raise RuntimeError(f"US retailer discovery failed with exit code {completed.returncode}")
 
     if not input_path.exists():
         print("Dry run complete: US target metadata passed; no existing normalised input to inspect.")

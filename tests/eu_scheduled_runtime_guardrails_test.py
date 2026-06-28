@@ -39,6 +39,7 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
                 "pop_up_surf_shop",
                 "noordzee_boardstore",
                 "gsi_europe",
+                "hart_beach",
             }.issubset(module.SHOPIFY_TARGETS)
         )
 
@@ -53,6 +54,7 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
             "pop_up_surf_shop",
             "noordzee_boardstore",
             "gsi_europe",
+            "hart_beach",
         ]:
             with self.subTest(slug=slug):
                 self.assertEqual(by_slug[slug]["regionCode"], "EU")

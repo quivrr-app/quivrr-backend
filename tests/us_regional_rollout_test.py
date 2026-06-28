@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -11,7 +12,9 @@ from scripts.manufacturer_availability import run_us_manufacturer_availability_p
 from scripts.usa import import_us_retailer_inventory as us_importer
 from scripts.usa import run_us_retailer_inventory_refresh as retailer_runner
 from scrapers.retailers.usa.bigcommerce import discover_us_bigcommerce_products as bigcommerce_discovery
+from scrapers.retailers.usa.custom import discover_us_custom_products as custom_discovery
 from scrapers.retailers.usa.magento import discover_us_magento_products as magento_discovery
+from scrapers.retailers.usa import normalise_us_retailer_inventory as us_normaliser
 from scrapers.retailers.usa.shopify import discover_us_shopify_products as shopify_discovery
 from scrapers.retailers.usa.woocommerce import discover_us_woocommerce_products as woocommerce_discovery
 
@@ -42,6 +45,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
     }
     EXPECTED_ENABLED_BIGCOMMERCE = {"catalyst_surf_shop"}
     EXPECTED_ENABLED_MAGENTO = {"warm_winds"}
+    EXPECTED_ENABLED_CUSTOM = {"reddog_surf_shop"}
 
     def test_retailer_runner_rejects_non_us_region(self):
         with patch.dict(os.environ, {"QUIVRR_REGION_CODE": "EU"}):
@@ -63,7 +67,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        self.assertEqual(len(targets), 25)
+        self.assertEqual(len(targets), 26)
         for target in targets:
             with self.subTest(slug=target["retailerSlug"]):
                 self.assertEqual(target["regionCode"], "US")
@@ -91,7 +95,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 ROOT / "scrapers/retailers/usa/us_retailer_candidate_backlog.json"
             ).read_text(encoding="utf-8")
         )
-        self.assertEqual(len(targets), 45)
+        self.assertEqual(len(targets), 44)
         self.assertEqual(
             len({target["retailerSlug"] for target in targets}),
             len(targets),
@@ -153,6 +157,22 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 self.assertEqual(target["regionCode"], "US")
                 self.assertEqual(target["platform"], "magento")
 
+    def test_us_custom_targets_are_region_scoped(self):
+        targets = custom_discovery.load_targets()
+        enabled = {target["retailerSlug"] for target in targets if target["enabled"] is True}
+        self.assertEqual(enabled, self.EXPECTED_ENABLED_CUSTOM)
+        for target in targets:
+            with self.subTest(slug=target["retailerSlug"]):
+                self.assertEqual(target["regionCode"], "US")
+                self.assertEqual(target["platform"], "custom_wix_board_inventory")
+
+    def test_us_normaliser_reads_custom_output(self):
+        discovery_files = {str(path).replace("\\", "/") for path in us_normaliser.DISCOVERY_FILES}
+        self.assertIn(
+            "scrapers/retailers/usa/custom/output/us_custom_product_discovery.json",
+            discovery_files,
+        )
+
     def test_us_woocommerce_targets_are_region_scoped(self):
         targets = woocommerce_discovery.load_targets()
         self.assertEqual(len(targets), 3)
@@ -172,6 +192,39 @@ class UsRegionalRolloutTests(unittest.TestCase):
         self.assertIn("hansen_surfboards", disabled)
         self.assertIn("encinitas_surfboards", disabled)
         self.assertIn("et_surf", disabled)
+
+    def test_us_discovery_runner_executes_real_discovery_when_not_skipped(self):
+        with patch.object(retailer_runner, "emit_event"), patch.object(
+            retailer_runner, "update_job_state"
+        ), patch.object(retailer_runner, "assert_region_scope"), patch(
+            "scripts.usa.run_us_retailer_inventory_refresh.subprocess.run"
+        ) as subprocess_run, patch.object(
+            retailer_runner,
+            "load_and_validate_rows",
+            return_value=([], {}),
+        ), patch.object(
+            retailer_runner,
+            "build_summary",
+            return_value={
+                "regionCode": "US",
+                "retailerCount": 0,
+                "totalNormalisedRows": 0,
+                "importableRows": 0,
+                "rejectedRows": 0,
+                "rowsWithDimensions": 0,
+                "rowsWithPrice": 0,
+                "rowsWithImage": 0,
+                "rowsByRetailer": {},
+            },
+        ), patch(
+            "sys.argv",
+            ["run_us_retailer_inventory_refresh.py"],
+        ):
+            subprocess_run.return_value.returncode = 0
+            retailer_runner.main()
+        command = subprocess_run.call_args.args[0]
+        self.assertEqual(command[:2], [sys.executable, "scrapers/retailers/usa/run_us_retailer_discovery.py"])
+        self.assertNotIn("--dry-run", command)
 
     def test_us_retailer_apply_mode_requires_confirmation(self):
         with patch.object(retailer_runner, "emit_event"), patch.object(

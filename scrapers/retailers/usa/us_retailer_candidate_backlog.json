@@ -11,17 +11,6 @@
     "notes": "Homepage markers indicate Magento, but no existing US Magento adapter is wired into the regional runner."
   },
   {
-    "retailerSlug": "reddog_surf_shop",
-    "retailerName": "Reddog Surf Shop",
-    "regionCode": "US",
-    "websiteCandidate": "https://www.reddogsurfshop.com",
-    "detectedPlatform": "magento",
-    "platformDetectionStatus": "needs_review",
-    "workingFeed": "",
-    "runnable": false,
-    "notes": "Magento storefront markers detected. Requires a dedicated US-only Magento discovery path before activation."
-  },
-  {
     "retailerSlug": "nomad_surf_shop",
     "retailerName": "Nomad Surf Shop",
     "regionCode": "US",

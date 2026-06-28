@@ -12,6 +12,7 @@ DISCOVERY_FILES = [
     Path("scrapers/retailers/usa/shopify/output/us_shopify_product_discovery.json"),
     Path("scrapers/retailers/usa/bigcommerce/output/us_bigcommerce_product_discovery.json"),
     Path("scrapers/retailers/usa/magento/output/us_magento_product_discovery.json"),
+    Path("scrapers/retailers/usa/custom/output/us_custom_product_discovery.json"),
     Path("scrapers/retailers/usa/woocommerce/output/us_woocommerce_product_discovery.json"),
 ]
 OUTPUT_FILE = Path("scrapers/retailers/usa/output/us_normalised_inventory.json")

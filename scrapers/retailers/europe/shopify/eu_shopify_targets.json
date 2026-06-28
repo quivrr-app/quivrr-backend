@@ -105,9 +105,9 @@
     "website": "https://hartbeach.nl",
     "collectionUrl": "https://hartbeach.nl/collections/surfboards",
     "platform": "shopify",
-    "enabled": false,
+    "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+    "notes": "Promoted after validating the EU Shopify collection feed. The collection exposes importable surfboard rows with supported-brand overlap including Pukas, Channel Islands, and Haydenshapes."
   },
   {
     "retailerSlug": "deeply",

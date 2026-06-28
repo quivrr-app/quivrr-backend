@@ -19,9 +19,9 @@
     "website": "https://www.mundo-surf.com",
     "surfboardCategoryUrl": "https://www.mundo-surf.com/en/45-surfboards",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "prestashop",
+    "notes": "Wave 1 PrestaShop target. Live in the EU regional runner with an elevated category timeout because the source is slow but valid."
   },
   {
     "retailerSlug": "single_quiver",
@@ -31,9 +31,9 @@
     "website": "https://www.singlequiver.com",
     "surfboardCategoryUrl": "https://www.singlequiver.com/en/surfboards/",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "prestashop",
+    "notes": "Wave 1 PrestaShop target with strong supported-brand overlap. Live in the EU regional runner."
   },
   {
     "retailerSlug": "surf_boss",
@@ -247,9 +247,9 @@
     "website": "https://www.hartbeach.nl",
     "surfboardCategoryUrl": "https://www.hartbeach.nl/",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted through the existing EU Shopify pack after validating live surfboard collection yield and supported-brand overlap."
   },
   {
     "retailerSlug": "warehouse_one",

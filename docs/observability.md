@@ -38,8 +38,8 @@ Protected fields:
 
 Structured logs are emitted by:
 
-- AU, EU, and ID retailer inventory refresh entrypoints
-- AU, EU, and ID MFA refresh entrypoints
+- AU, EU, ID, and US retailer inventory refresh entrypoints
+- AU, EU, ID, and US MFA refresh entrypoints
 - Weekly catalogue orchestration
 - Market intelligence daily pipeline
 - Inventory link health reporting

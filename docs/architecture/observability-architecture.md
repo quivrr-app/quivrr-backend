@@ -27,7 +27,7 @@ This Markdown source is the production-safe architecture update for the next com
 ## Dashboard Architecture
 
 - Azure Workbook queries consume the structured event taxonomy.
-- Region-level health tiles should always separate `AU`, `EU`, and `ID`.
+- Region-level health tiles should always separate `AU`, `EU`, `ID`, and `US`.
 - Australia is now the Gen 3 reference implementation for new dashboard and rollout development. Europe remains the first non-AU Gen 3 validation region.
 
 ## Reporting Architecture

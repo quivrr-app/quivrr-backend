@@ -173,7 +173,7 @@ Australia's BigCommerce path now has a reviewed reference target:
 - `Trigger Bros Surfboards` uses explicit AU board-category URLs and paginated BigCommerce card discovery, then hydrates each product from the live detail page to retain price, image, availability, and board dimensions where present
 - `Surf Shops Australia` remains intentionally out of the active AU target set until a clean public hardboard surface is reconfirmed
 
-The active EU retailer set is 58 Surf, Pukas Surf Shop, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, and Tablas Surf Shop. EU discovery and import remain isolated from AU, ID, and US paths.
+The active EU retailer set is 58 Surf, Pukas Surf Shop, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, Tablas Surf Shop, and Hart Beach. EU discovery and import remain isolated from AU, ID, and US paths.
 
 Exact retailer matching accepts equivalent dimensions, including fractional and decimal inch representations, decimal-comma or decimal-point litres, and bounded width, thickness, and volume comparisons. For 58 Surf, discovery fetches product-detail attributes and retains width, thickness, volume, construction, and fin information through normalization and import. An exact result can therefore pass through equivalent dimensions even when `BoardSizeId` remains `NULL` because duplicate equivalent canonical sizes make deterministic size linking ambiguous.
 
@@ -251,7 +251,7 @@ Market intelligence should read from normalized catalogue and inventory tables. 
 
 Bodhi, the board guide API, lives in the separate `quivrr-board-guide-api` service. The surf frontend calls `https://quivrr-board-guide-api.azurewebsites.net/api/board-guide/chat`.
 
-Bodhi is deployed on `quivrr.surf`, integrates with Azure OpenAI through `quivrr-board-guide-openai`, and uses region-aware live inventory recommendations plus deterministic rider-fit volume guidance. It reads manufacturer descriptions and generated board intelligence but does not run backend scrapers or imports.
+Bodhi is deployed on `quivrr.surf`, integrates with Azure OpenAI through `quivrr-board-guide-openai`, and is designed to use region-aware live inventory recommendations plus deterministic rider-fit volume guidance as the integration matures. It reads manufacturer descriptions and generated board intelligence but does not run backend scrapers or imports.
 
 The intelligence flow is:
 

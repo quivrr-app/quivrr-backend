@@ -32,12 +32,13 @@ The current production-ready dry-run set is limited to retailers that fit an exi
 - Dark Arts Surf
 - Catalyst Surf Shop
 - Warm Winds
+- Reddog Surf Shop
 
 Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets. Their storefronts are reachable, but the existing Shopify adapter does not yet recover safe surfboard rows from their exposed feeds.
 
 WooCommerce, blocked, or opaque retailers remain documented in the target registry but disabled until a reviewed regional adapter path is available.
 
-There is no production US SQL importer or deployment step enabled from this scaffold.
+The US stack now supports guarded apply and live production-beta execution once validation is complete.
 
 ## Rollout Summary
 
@@ -63,6 +64,7 @@ Implemented runnable retailers:
 - Dark Arts Surf
 - Catalyst Surf Shop
 - Warm Winds
+- Reddog Surf Shop
 
 Reviewed but still disabled in the master target registry:
 
@@ -77,9 +79,9 @@ Reviewed but still disabled in the master target registry:
 
 Backlog candidates captured in `scrapers/retailers/usa/us_retailer_candidate_backlog.json`:
 
-- 45 USA retailer candidates remain in backlog and are region-scoped to `US`.
-- Remaining backlog platform split: 12 `shopify`, 3 `woocommerce`, 11 `magento`, 19 `unknown`.
-- Remaining backlog detection status split: 22 `needs_review`, 11 `opaque`, 13 `blocked`.
+- 44 USA retailer candidates remain in backlog and are region-scoped to `US`.
+- Remaining backlog platform split: 12 `shopify`, 3 `woocommerce`, 10 `magento`, 19 `unknown`.
+- Remaining backlog detection status split: 21 `needs_review`, 11 `opaque`, 13 `blocked`.
 - These backlog entries are intentionally non-runnable until an existing adapter is validated end-to-end or a small isolated US-only adapter is reviewed.
 
 Skipped for this pass:
@@ -99,6 +101,7 @@ Expected row uplift from this pass:
 - Shopify: config-driven and live for 18 runnable retailers.
 - BigCommerce: reusable US adapter now wired into the runner; Catalyst Surf Shop is promoted and validated.
 - Magento or category-html: reusable US adapter now wired into the runner; Warm Winds is promoted and validated.
+- Custom/high-value: reusable US custom runner now supports Reddog Surf Shop through its public board-inventory pages and per-product JSON-LD detail data.
 - WooCommerce: reusable US adapter now supports category and Store API paths, but no backlog retailer was safe to promote in this pass.
 
 ## Implemented Retailer Paths
@@ -109,6 +112,8 @@ Expected row uplift from this pass:
   `scrapers/retailers/usa/bigcommerce/us_bigcommerce_targets.json`
 - Magento discovery:
   `scrapers/retailers/usa/magento/us_magento_targets.json`
+- Custom/high-value discovery:
+  `scrapers/retailers/usa/custom/us_custom_targets.json`
 - WooCommerce discovery scaffold:
   `scrapers/retailers/usa/woocommerce/us_woocommerce_targets.json`
 - Master target registry:
