@@ -216,6 +216,33 @@ def validate_missing_model_deactivation(
     return missing
 
 
+def build_rejected_model_cleanup_targets(rejected_rows):
+    targets = []
+    seen = set()
+
+    for row in rejected_rows or []:
+        model_name = clean(row.get("title"))
+        source_url = clean(row.get("sourceUrl"))
+        reason = clean(row.get("reason"))
+
+        if not model_name and not source_url:
+            continue
+
+        key = (model_name.lower(), source_url.lower(), reason.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        targets.append(
+            {
+                "model_name": model_name or None,
+                "source_url": source_url or None,
+                "reason": reason or None,
+            }
+        )
+
+    return targets
+
+
 def build_size_rows(catalogue, model_cache):
     rows = []
 
@@ -302,7 +329,7 @@ def partition_new_size_rows(existing_rows, incoming_rows):
     return rows_to_insert
 
 
-def run_import_transaction(brand_name, catalogue, models):
+def run_import_transaction(brand_name, catalogue, models, rejected_rows=None):
     with engine.begin() as connection:
         brand_id = get_or_create_brand(connection, brand_name)
 
@@ -414,6 +441,47 @@ def run_import_transaction(brand_name, catalogue, models):
                     "model_names": missing_model_names,
                 },
             )
+            deleted_orphan_models = connection.execute(
+                text("""
+                    DELETE bm
+                    FROM dbo.BoardModels bm
+                    LEFT JOIN dbo.BoardSizes bs
+                        ON bs.BoardModelId = bm.BoardModelId
+                    WHERE bm.BrandId = :brand_id
+                      AND bm.IsActive = 0
+                      AND bs.BoardSizeId IS NULL
+                      AND bm.ModelName IN :model_names;
+                """).bindparams(bindparam("model_names", expanding=True)),
+                {
+                    "brand_id": brand_id,
+                    "model_names": missing_model_names,
+                },
+            ).rowcount or 0
+        else:
+            deleted_orphan_models = 0
+
+        cleanup_targets = build_rejected_model_cleanup_targets(rejected_rows)
+        for target in cleanup_targets:
+            deleted_orphan_models += connection.execute(
+                text("""
+                    DELETE bm
+                    FROM dbo.BoardModels bm
+                    LEFT JOIN dbo.BoardSizes bs
+                        ON bs.BoardModelId = bm.BoardModelId
+                    WHERE bm.BrandId = :brand_id
+                      AND bm.IsActive = 0
+                      AND bs.BoardSizeId IS NULL
+                      AND (
+                          (:model_name IS NOT NULL AND bm.ModelName = :model_name)
+                          OR (:source_url IS NOT NULL AND bm.OfficialProductUrl = :source_url)
+                      );
+                """),
+                {
+                    "brand_id": brand_id,
+                    "model_name": target["model_name"],
+                    "source_url": target["source_url"],
+                },
+            ).rowcount or 0
 
         size_rows = build_size_rows(catalogue, model_cache)
         existing_sizes = connection.execute(
@@ -470,7 +538,7 @@ def run_import_transaction(brand_name, catalogue, models):
                 new_size_rows,
             )
 
-    return model_cache, new_size_rows
+    return model_cache, new_size_rows, deleted_orphan_models
 
 
 def import_catalogue(brand_name, catalogue_path):
@@ -501,14 +569,16 @@ def import_catalogue(brand_name, catalogue_path):
         try:
             print(f"SQL import attempt {attempt} of {MAX_SQL_ATTEMPTS}")
 
-            model_cache, size_rows = run_import_transaction(
+            model_cache, size_rows, deleted_orphan_models = run_import_transaction(
                 brand_name,
                 catalogue,
                 models,
+                rejected_rows=rejected_rows,
             )
 
             print(f"Models imported: {len(model_cache)}")
             print(f"Rows inserted: {len(size_rows)}")
+            print(f"Rejected orphan models deleted: {deleted_orphan_models}")
             print("Import complete")
             print("")
             return
