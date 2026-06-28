@@ -922,6 +922,12 @@ def _store_ops_dashboard_cache(payload, generated_at):
         )
 
 
+def _build_and_store_ops_dashboard_response(cache_status: str):
+    payload = build_ops_dashboard_response(cache_status)
+    _store_ops_dashboard_cache(payload, time.time())
+    return payload
+
+
 def _refresh_ops_dashboard_cache_worker():
     try:
         payload = build_ops_dashboard_response("refresh")
@@ -987,23 +993,36 @@ def get_cached_ops_dashboard_response():
             cached_response["cacheStatus"] = "hit"
             return cached_response
         if cached_payload is not None:
-            started_refresh = _start_ops_dashboard_refresh_locked()
+            stale_response = dict(cached_payload)
+        else:
+            stale_response = None
+
+    if stale_response is not None:
+        try:
+            payload = _build_and_store_ops_dashboard_response("refresh")
+            ops_dashboard_log(
+                "ops_dashboard_cache_stale_rebuilt_sync",
+                cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
+            )
+            return payload
+        except Exception as exc:
+            with _ops_dashboard_cache_lock:
+                started_refresh = _start_ops_dashboard_refresh_locked()
             ops_dashboard_log(
                 "ops_dashboard_cache_stale_served",
                 cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
                 refreshStarted=started_refresh,
+                error=str(exc),
             )
-            cached_response = dict(cached_payload)
-            cached_response["cacheStatus"] = "stale"
-            return cached_response
+            stale_response["cacheStatus"] = "stale"
+            return stale_response
 
     if not OPS_DASHBOARD_ALLOW_SYNC_BUILD and _ops_dashboard_cache.get("payload") is not None:
         with _ops_dashboard_cache_lock:
             started_refresh = _start_ops_dashboard_refresh_locked()
         return build_ops_dashboard_warming_response("warming", started_refresh)
 
-    payload = build_ops_dashboard_response("miss")
-    _store_ops_dashboard_cache(payload, now_seconds)
+    payload = _build_and_store_ops_dashboard_response("miss")
     ops_dashboard_log(
         "ops_dashboard_cache_miss",
         cacheTtlSeconds=OPS_DASHBOARD_CACHE_TTL_SECONDS,
