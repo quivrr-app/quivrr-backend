@@ -11,10 +11,9 @@ Review date: `2026-06-28`
 ## Current EU Runtime
 
 - `RegionCode = EU`
-- Current validated EU runnable retailer set: `13`
-- Current validated EU normalised rows: `8,430`
-- Current validated EU importable raw rows: `7,967`
-- Sprint 14 addition in this slice: `Hart Beach`
+- Current validated EU runnable retailer set: `14`
+- Current validated EU active retailer inventory rows: `12,200`
+- Production-validated onboarding additions so far: `Hart Beach`, `HawaiiSurf`
 - Sprint 14 local validation also fixed the slow but valid `Mundo Surf` category timeout path and aligned the master registry with the active PrestaShop runtime for `Mundo Surf` and `Single Quiver`
 
 ### Current Runnable Retailers
@@ -32,6 +31,7 @@ Review date: `2026-06-28`
 | Board Exchange | Shopify | Portugal | 122 |
 | Hart Beach | Shopify | Netherlands | 107 |
 | Pop Up Surf Shop | Shopify | Netherlands | 88 |
+| HawaiiSurf | Shopify | France | 47 |
 | Tablas Surf Shop | Custom Magento cards | Spain | 86 |
 | GSI Europe | Shopify | EU | 14 |
 
@@ -52,11 +52,10 @@ Review date: `2026-06-28`
 - `GSI Europe`
 - `Tablas Surf Shop`
 - `Hart Beach`
+- `HawaiiSurf`
 
 ### Ready Shopify
 
-- `HawaiiSurf`
-  Why: Shopify markers already detected, strong France / EU board-retail signal, and likely meaningful supported-brand overlap.
 - `Guincho Wind Factory`
   Why: Shopify collection path already identified; Portugal source with real surfboard orientation.
 - `SantoLoco`
@@ -96,23 +95,23 @@ Review date: `2026-06-28`
 
 These are ranked by likely supported-board uplift, not just implementation ease.
 
-1. `HawaiiSurf`
-   Why now: likely the best remaining France candidate on an existing Shopify path.
-2. `Surf Pirates`
+1. `Surf Pirates`
    Why now: adds Germany using a prepared custom structured path and broadens the regional retailer mix.
-3. `Guincho Wind Factory`
+2. `Guincho Wind Factory`
    Why now: Portugal source on a reusable Shopify path with likely low engineering cost.
-4. `SantoLoco`
+3. `SantoLoco`
    Why now: Shopify path plus Germany coverage gain.
-5. `Warehouse One`
+4. `Warehouse One`
    Why now: high commercial value if a clean surfboard slice can be isolated, but only after review confirms it is not too noisy.
+5. `Full & Cas`
+   Why now: real surf retailer signal with upside if a stable board-only path can be isolated.
 
 ## Sprint 14 Recommendation
 
 - Keep the EU runtime centred on the existing proven pack mix: Shopify, PrestaShop, WooCommerce, Magento/html, and small custom paths.
 - Treat `Hart Beach` as the first Sprint 14 EU onboarding outcome for production validation.
 - Do not spend more time on new EU frameworks until the next highest-value retailer can fit an existing pack.
-- The best next EU activation candidate is `HawaiiSurf` if the current Shopify signal validates cleanly end to end.
+- `HawaiiSurf` has now completed the same production path successfully and should be treated as a proven EU Shopify onboarding outcome.
 
 ## Risks
 

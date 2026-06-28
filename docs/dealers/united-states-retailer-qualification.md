@@ -11,10 +11,11 @@ Review date: `2026-06-28`
 ## Current US Runtime
 
 - `RegionCode = US`
-- Current validated US runnable retailer set: `21`
-- Current validated US normalised rows: `7,948`
-- Current validated US importable raw rows: `7,838`
-- Sprint 14 addition in this slice: `Reddog Surf Shop`
+- Current validated US runnable retailer set: `22`
+- Current validated US active retailer inventory rows: `8,076`
+- Current validated US importer output rows in the latest safe pass: `8,019`
+- Current validated US importable raw rows in the latest safe pass: `7,908`
+- Production-validated onboarding additions so far: `Reddog Surf Shop`, `Cinnamon Rainbows`
 
 ### Current Runnable Retailers
 
@@ -29,18 +30,19 @@ Review date: `2026-06-28`
 | Surf Station | Shopify | 223 |
 | Bird's Surf Shed | Shopify | 213 |
 | Jack's Surfboards | Shopify | 200 |
+| Surfboard Broker | Shopify | 192 |
 | Warm Winds | Magento/html | 172 |
 | Island Water Sports | Shopify | 162 |
-| Surfboard Broker | Shopify | 138 |
-| Hawaiian South Shore | Shopify | 116 |
-| Infinity Surfboards | Shopify | 109 |
-| Walden Surfboards | Shopify | 63 |
+| Hawaiian South Shore | Shopify | 124 |
+| Infinity Surfboards | Shopify | 98 |
+| Cinnamon Rainbows | Custom Squarespace used inventory | 57 |
+| Walden Surfboards | Shopify | 55 |
 | Reddog Surf Shop | Custom Wix + JSON-LD | 39 |
 | Robert August Surf Company | Shopify | 39 |
 | Moment Surf Co | Shopify | 21 |
 | Surf N Sea | Shopify | 20 |
-| Kimo's Surf Hut | Shopify | 13 |
 | Dark Arts Surf | Shopify | 12 |
+| Kimo's Surf Hut | Shopify | 10 |
 
 ## Coverage Factory Classification
 
@@ -59,8 +61,6 @@ Review date: `2026-06-28`
   Why: reachable Shopify storefront and high-value surfboard brand, but the current exposed feeds still do not yield safe board rows.
 - `Encinitas Surfboards`
   Why: board-room path is real and valuable, but still needs a clean surfboard-only extraction surface.
-- `Cinnamon Rainbows`
-  Why: known surfboard retailer, but the current lightweight validation did not yet recover a safe importable set.
 
 ### Ready Magento
 
@@ -116,7 +116,7 @@ These are ranked by likely supported-board uplift, not by which one is easiest t
 ## Sprint 15 Wave 1 Addition
 
 - `Cinnamon Rainbows`
-  Why promoted: public Squarespace used-board pages expose direct product URLs plus JSON-LD price, availability, image, and exact dimensions. That makes it a high-value US custom path with real searchable used-board upside and low ambiguity.
+  Why promoted: public Squarespace used-board pages expose direct product URLs plus JSON-LD price, availability, image, and exact dimensions. The production-validated import added `57` active US rows with `28` linked models and `13` linked sizes on first live run.
 
 ## Sprint 14 Recommendation
 
