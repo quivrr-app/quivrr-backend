@@ -70,6 +70,7 @@ SURFBOARD_CATEGORY_TERMS = [
 SURFBOARD_BRANDS = [
     "js",
     "js industries",
+    "al merrick",
     "channel islands",
     "ci surfboards",
     "lost",
@@ -108,6 +109,14 @@ SURFBOARD_BRANDS = [
     "superbrand",
     "stacey",
     "dhdsurf",
+]
+
+USED_BOARD_TERMS = [
+    "second",
+    "second hand",
+    "used",
+    "pre loved",
+    "pre-loved",
 ]
 
 BOARD_CONSTRUCTIONS = [
@@ -412,6 +421,10 @@ def has_board_url_hint(item):
     return bool(URL_BOARD_HINT_PATTERN.search(url))
 
 
+def has_used_board_hint(text):
+    return contains_phrase(text, USED_BOARD_TERMS)
+
+
 def get_numeric_price(item):
     raw_price = item.get("price")
 
@@ -509,6 +522,7 @@ def score_item(item):
     construction = has_construction(text)
     fin_system = has_fin_system(text)
     url_hint = has_board_url_hint(item)
+    used_board_hint = has_used_board_hint(text)
 
     if has_full_dimensions:
         result["confidence"] += 4
@@ -606,6 +620,24 @@ def score_item(item):
         )
     )
 
+    used_board_listing = (
+        used_board_hint
+        and price is not None
+        and price >= 400
+        and (brand or board_type or category_board_signal)
+        and (
+            has_length
+            or has_decimal_length
+            or has_compact_length
+            or has_full_dimensions
+            or has_structured_dimensions
+        )
+    )
+
+    if used_board_listing:
+        result["confidence"] += 2
+        result["reasons"].append("used_board_listing")
+
     result["is_surfboard"] = (
         result["confidence"] >= 6
         and (
@@ -614,6 +646,7 @@ def score_item(item):
             or strong_board_type
             or strong_category
             or structured_variant_board
+            or used_board_listing
         )
     )
 
