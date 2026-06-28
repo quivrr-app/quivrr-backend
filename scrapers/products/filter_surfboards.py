@@ -225,6 +225,31 @@ HARD_EXCLUDE_TERMS = [
     "ding all",
 ]
 
+SERVICE_EXCLUDE_TERMS = [
+    "board hire",
+    "hire board",
+    "hire boards",
+    "surfboard hire",
+    "board rental",
+    "rental board",
+    "rental boards",
+    "surfboard rental",
+    "surf lesson",
+    "surf lessons",
+    "lesson package",
+    "lesson packages",
+    "repair service",
+    "repair services",
+    "board repair",
+    "board repairs",
+    "surf trip",
+    "surf trips",
+    "trip package",
+    "trip packages",
+    "board storage",
+    "storage locker",
+]
+
 FIN_ACCESSORY_TERMS = [
     "fins",
     "fin set",
@@ -399,6 +424,16 @@ def has_fin_accessory_exclusion(item):
     return False
 
 
+def has_service_exclusion(item):
+    title = title_blob(item)
+    categories = category_blob(item)
+
+    return contains_phrase(title, SERVICE_EXCLUDE_TERMS) or contains_phrase(
+        categories,
+        SERVICE_EXCLUDE_TERMS,
+    )
+
+
 def has_board_type(text):
     return contains_phrase(text, SURFBOARD_BOARD_TYPES)
 
@@ -498,6 +533,10 @@ def score_item(item):
 
     if has_fin_accessory_exclusion(item):
         result["reject_reason"] = "fin_accessory_not_board"
+        return result
+
+    if has_service_exclusion(item):
+        result["reject_reason"] = "service_or_rental_listing"
         return result
 
     price_ok, price_reason = has_realistic_price(item)

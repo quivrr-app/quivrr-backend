@@ -66,6 +66,26 @@ class AuShopifyPackGuardrailsTests(unittest.TestCase):
                 self.assertEqual(status, "business_disabled")
                 self.assertIn("Board Collective storefront shell", reason)
 
+    def test_parked_low_value_au_retailers_are_excluded_from_active_targets(self):
+        for retailer_name in (
+            "Goodtime Surfboards",
+            "Surf Boardroom",
+            "Underground Surf",
+            "Overboard Surf",
+            "Full Circle Surf",
+        ):
+            with self.subTest(retailer_name=retailer_name):
+                reason = active_targets.get_exclusion_reason(
+                    {
+                        "primary_name": retailer_name,
+                        "country": "Australia",
+                        "platform": "shopify",
+                        "hardboards": True,
+                    },
+                    {},
+                )
+                self.assertEqual(reason, "parked_low_value_au_candidate")
+
 
 if __name__ == "__main__":
     unittest.main()

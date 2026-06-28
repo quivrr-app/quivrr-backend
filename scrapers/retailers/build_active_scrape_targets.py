@@ -43,6 +43,11 @@ EXCLUDED_RETAILERS = {
     "red herring surf": "board_collective_shell_duplicate",
     "saltwater wine port macquarie": "board_collective_shell_duplicate",
     "surf shops australia": "awaiting_bigcommerce_revalidation",
+    "goodtime surfboards": "parked_low_value_au_candidate",
+    "surf boardroom": "parked_low_value_au_candidate",
+    "underground surf": "parked_low_value_au_candidate",
+    "overboard surf": "parked_low_value_au_candidate",
+    "full circle surf": "parked_low_value_au_candidate",
 }
 
 MANUAL_TARGET_METADATA = {

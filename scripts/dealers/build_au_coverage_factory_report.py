@@ -25,6 +25,8 @@ OUTPUT_DOC = ROOT / "docs" / "dealers" / "australia-retailer-qualification.md"
 
 CLASSIFICATION_ORDER = [
     "already_running",
+    "parked_live",
+    "parked_manual",
     "ready_shopify",
     "ready_woocommerce",
     "ready_bigcommerce",
@@ -43,6 +45,8 @@ CLASSIFICATION_ORDER = [
 ]
 
 PLATFORM_PACKS = {
+    "parked_live": "Parked",
+    "parked_manual": "Parked",
     "ready_shopify": "Shopify Pack",
     "ready_woocommerce": "WooCommerce Pack",
     "ready_bigcommerce": "BigCommerce Pack",
@@ -100,9 +104,10 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "notes": "Board Collective shell. products.json empty, surfboard search returned zero, and the public shell resolves product links to boardcollective.com.au.",
     },
     "triggerbrothers.com.au": {
-        "status": "ready_bigcommerce",
+        "status": "already_running",
+        "alreadyRunning": True,
         "onlineBoardInventoryVisible": True,
-        "approxBoardProductCount": 80,
+        "approxBoardProductCount": 66,
         "supportedBrandSignals": ["supported multi-brand surf retailer"],
         "boardCategoryUrl": "https://triggerbrothers.com.au/store/surf/used-surfboards/",
         "productUrlExamples": [
@@ -115,8 +120,53 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "paginationPresent": True,
         "scrapeDifficulty": "medium",
         "priorityScore": 92,
-        "recommendedAction": "Implement as the BigCommerce reference target and validate in Azure before adding more AU BigCommerce stores.",
-        "notes": "Best current AU next target. Live BigCommerce site with visible board inventory and reusable platform path.",
+        "recommendedAction": "Keep live in AU and treat as a validated BigCommerce production retailer.",
+        "notes": "Production-validated AU BigCommerce retailer. Keep healthy, keep linked, and do not treat it as backlog work anymore.",
+    },
+    "extremeboardriders.com.au": {
+        "status": "already_running",
+        "alreadyRunning": True,
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 47,
+        "supportedBrandSignals": ["supported multi-brand surf retailer"],
+        "priceVisible": True,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "low",
+        "priorityScore": 78,
+        "recommendedAction": "Keep live in AU and validate it through the standard WooCommerce nightly path.",
+        "notes": "Approved AU closeout retailer. Existing WooCommerce path is already the correct implementation surface.",
+    },
+    "awsmsurf.com": {
+        "status": "parked_live",
+        "alreadyRunning": True,
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 2,
+        "supportedBrandSignals": ["used and second-hand supported-brand boards"],
+        "boardCategoryUrl": "https://www.awsmsurf.com/collections/second-hand-surfboard",
+        "priceVisible": True,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 18,
+        "recommendedAction": "Keep the existing live AU rows, but park further AWSM onboarding work unless a stronger supported-board surface appears.",
+        "notes": "Nathan review: low-value AU source for now. Existing second-hand supported boards may remain live, but this is not an active expansion target.",
+    },
+    "akwasurf.com.au": {
+        "status": "parked_live",
+        "alreadyRunning": True,
+        "onlineBoardInventoryVisible": True,
+        "approxBoardProductCount": 6,
+        "priceVisible": True,
+        "stockVisible": True,
+        "imagesVisible": True,
+        "paginationPresent": False,
+        "scrapeDifficulty": "low",
+        "priorityScore": 14,
+        "recommendedAction": "Leave the existing AU rows in place, but park new Akwa work unless a stronger supported-board surface is verified.",
+        "notes": "Nathan review: no useful AU online stock signal worth active onboarding investment right now.",
     },
     "surfshopsaustralia.com.au": {
         "status": "manual_review",
@@ -135,7 +185,7 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "notes": "Earlier BigCommerce surfboard hints were not reconfirmed by the discovery engine, so this should not be promoted into the AU BigCommerce pack yet.",
     },
     "goodtime.com.au": {
-        "status": "ready_custom_high_value",
+        "status": "parked_manual",
         "onlineBoardInventoryVisible": True,
         "approxBoardProductCount": 70,
         "supportedBrandSignals": ["long-running AU surfboard retailer"],
@@ -146,28 +196,28 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "imagesVisible": True,
         "paginationPresent": True,
         "scrapeDifficulty": "high",
-        "priorityScore": 83,
-        "recommendedAction": "Treat as a high-value custom follow-up after the BigCommerce pack, not before it.",
-        "notes": "Large retailer signal, but current path is noisy and protected. Better as the next custom target once the coverage factory lands.",
+        "priorityScore": 8,
+        "recommendedAction": "Park for now. Nathan review found low supported-manufacturer value relative to AU effort.",
+        "notes": "Manual review closeout: mostly smaller or unsupported local-brand value. Not worth active AU onboarding effort right now.",
     },
     "surfboardroom.com.au": {
-        "status": "ready_woocommerce",
-        "onlineBoardInventoryVisible": True,
-        "approxBoardProductCount": 200,
+        "status": "parked_manual",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
         "supportedBrandSignals": ["Firewire", "Channel Islands"],
         "boardCategoryUrl": "https://surfboardroom.com.au/surfboards/",
         "productUrlExamples": [],
         "priceVisible": False,
-        "stockVisible": True,
+        "stockVisible": False,
         "imagesVisible": True,
         "paginationPresent": False,
         "scrapeDifficulty": "medium",
-        "priorityScore": 72,
-        "recommendedAction": "Keep in the WooCommerce pack. Board surface is real, but parser work is still needed.",
-        "notes": "Boards are visible and the WooCommerce path is real, but the current extraction path undershoots and needs parser recovery.",
+        "priorityScore": 6,
+        "recommendedAction": "Park for now. No useful automated online board listing was confirmed in Nathan's AU review.",
+        "notes": "Manual review closeout: no useful online board listing found for Quivrr search despite earlier WooCommerce signals.",
     },
     "fullcirclesurf.com.au": {
-        "status": "no_online_boards",
+        "status": "parked_manual",
         "onlineBoardInventoryVisible": False,
         "approxBoardProductCount": 0,
         "supportedBrandSignals": ["JS Industries", "Firewire"],
@@ -176,9 +226,9 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "imagesVisible": False,
         "paginationPresent": False,
         "scrapeDifficulty": "medium",
-        "priorityScore": 10,
-        "recommendedAction": "Do not implement until a working surfboard storefront is confirmed.",
-        "notes": "Known retailer, but the current public storefront is broken and not a usable AU inventory source.",
+        "priorityScore": 4,
+        "recommendedAction": "Park for now. Treat as non-viable until a real online surfboard storefront exists.",
+        "notes": "Manual review closeout: effectively Facebook or Instagram presence only, not a usable AU live-stock source.",
     },
     "boardcave.com.au": {
         "status": "blocked",
@@ -193,6 +243,72 @@ MANUAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "priorityScore": 35,
         "recommendedAction": "Keep blocked. Revisit only if Boardcave exposes a safe public inventory path.",
         "notes": "High-value marketplace signal, but current access is blocked and not safe for AU nightly onboarding.",
+    },
+    "overboardsurf.com.au": {
+        "status": "parked_manual",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["JS Industries", "Channel Islands", "Firewire", "Chilli", "DHD"],
+        "boardCategoryUrl": "https://overboardsurf.com.au/collections/boards-7s-surfboards",
+        "productUrlExamples": [],
+        "priceVisible": True,
+        "stockVisible": False,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 5,
+        "recommendedAction": "Park for now. Zero live AU rows is the correct production outcome until supported-brand saleable stock returns.",
+        "notes": "Manual review closeout: sold out for supported-brand board variants. Do not treat the current zero-row state as an engineering failure.",
+    },
+    "undergroundsurf.com.au": {
+        "status": "parked_manual",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["Channel Islands", "JS Industries"],
+        "boardCategoryUrl": "https://www.undergroundsurf.com.au/collections/surfboards-1",
+        "productUrlExamples": [
+            "https://www.undergroundsurf.com.au/collections/surfboard-hire",
+        ],
+        "priceVisible": True,
+        "stockVisible": False,
+        "imagesVisible": True,
+        "paginationPresent": True,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 5,
+        "recommendedAction": "Park for now. The surface is mostly hire or non-sale inventory and should stay out of AU active work.",
+        "notes": "Manual review closeout: useful online sale inventory was not confirmed. Hire and rental content is a recurring false-positive risk.",
+    },
+    "surferschoice.com.au": {
+        "status": "parked_manual",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 2,
+        "supportedBrandSignals": ["Channel Islands", "JS Industries", "DHD", "Haydenshapes"],
+        "boardCategoryUrl": "https://www.surferschoice.com.au/boards.html",
+        "productUrlExamples": [],
+        "priceVisible": True,
+        "stockVisible": False,
+        "imagesVisible": True,
+        "paginationPresent": False,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 4,
+        "recommendedAction": "Park for now. Too few useful boards and no strong add-to-cart flow for Quivrr search quality.",
+        "notes": "Manual review closeout: only a couple of boards and no proper modern retailer flow worth engineering further.",
+    },
+    "soulboardstore.com.au": {
+        "status": "parked_manual",
+        "onlineBoardInventoryVisible": False,
+        "approxBoardProductCount": 0,
+        "supportedBrandSignals": ["JS Industries"],
+        "boardCategoryUrl": "https://www.soulboardstore.com.au/index.html",
+        "productUrlExamples": [],
+        "priceVisible": False,
+        "stockVisible": False,
+        "imagesVisible": True,
+        "paginationPresent": False,
+        "scrapeDifficulty": "medium",
+        "priorityScore": 3,
+        "recommendedAction": "Park for now. Product signals exist, but no useful supported-board inventory was confirmed.",
+        "notes": "Manual review closeout: products exist, but not enough useful Quivrr board stock to justify AU engineering work.",
     },
 }
 
@@ -385,6 +501,10 @@ def default_status(
 def default_priority_score(status: str, candidate: dict[str, Any], running: dict[str, Any] | None) -> int:
     if status == "already_running":
         return min(99, 40 + int(running.get("availableInventory") or 0) // 80)
+    if status == "parked_live":
+        return 18
+    if status == "parked_manual":
+        return 5
 
     base = {
         "ready_bigcommerce": 88,
@@ -433,7 +553,11 @@ def build_candidate_rows(include_discovery: bool = True) -> list[dict[str, Any]]
         if platform == "ecwid":
             platform = "opencart"
 
-        already_running = bool(running and running.get("enabled"))
+        already_running = bool(
+            override.get("alreadyRunning")
+            if "alreadyRunning" in override
+            else (running and running.get("enabled"))
+        )
         approx_board_count = override.get("approxBoardProductCount")
         if approx_board_count is None:
             if discovery and discovery.get("approxBoardProductCount") is not None:
@@ -510,6 +634,8 @@ def build_candidate_rows(include_discovery: bool = True) -> list[dict[str, Any]]
                 or
                 {
                     "already_running": "Keep live and use as AU baseline.",
+                    "parked_live": "Keep existing live rows, but park further AU expansion work.",
+                    "parked_manual": "Park for now based on AU manual review findings.",
                     "ready_shopify": "Candidate for the reusable AU Shopify pack.",
                     "ready_woocommerce": "Candidate for the reusable AU WooCommerce pack.",
                     "ready_bigcommerce": "Candidate for the reusable AU BigCommerce pack.",
@@ -567,6 +693,9 @@ def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] 
     already_running = [row for row in rows if row["status"] == "already_running"]
     duplicate_shells = [row for row in rows if row["status"] == "duplicate_shell"]
     manual_review = [row for row in rows if row["status"] == "manual_review"]
+    parked_rows = [
+        row for row in rows if row["status"] in {"parked_live", "parked_manual"}
+    ]
     ready_candidates = [row for row in rows if row["status"].startswith("ready_")]
     top_candidates = sorted(
         [
@@ -585,8 +714,8 @@ def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] 
         key=lambda row: (-int(row["priorityScore"]), row["dealerName"].lower()),
     )[:10]
 
-    recommended_pack = "BigCommerce Pack"
-    recommended_target = "Trigger Bros Surfboards"
+    recommended_pack = "None"
+    recommended_target = "None"
 
     lines = [
         "# Australia Retailer Qualification",
@@ -608,6 +737,20 @@ def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] 
         "",
         "Review date: `2026-06-28`",
         "",
+        "## Sprint 13 Closeout Position",
+        "",
+        "- `Trigger Bros Surfboards` is live in AU on the reusable BigCommerce path and should now be treated as production validation work, not backlog onboarding.",
+        "- `Extreme Boardriders` is live in AU on the reusable WooCommerce path and is the final approved AU closeout retailer from Nathan's latest review.",
+        "- `AWSM Surf` may keep its existing live second-hand rows, but it is no longer an active AU expansion target.",
+        "- `Overboard Surf` remains correctly parked at zero while supported-brand saleable stock is unavailable.",
+        "- Australia should be parked after Trigger Bros and Extreme are production-validated unless a materially higher-value AU source appears.",
+        "",
+        "## Retailer Inventory Guardrail",
+        "",
+        "- Allowed: new boards, used boards, second-hand boards, ex-demo boards, clearance boards, and demo stock where a physical board is clearly for sale.",
+        "- Rejected: hire boards, rental boards, lessons, repairs, services, trips, storage, and non-board accessories.",
+        "- Shared retailer filters should preserve second-hand surfboards while excluding hire and service listings.",
+        "",
         "## AU Coverage Factory Summary",
         "",
         f"- AU candidates reviewed: `{len(rows)}`",
@@ -618,6 +761,7 @@ def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] 
         f"- AU candidates re-analysed by discovery engine: `{sum(1 for row in rows if row['status'] in {'manual_review', 'ready_shopify', 'ready_woocommerce', 'ready_bigcommerce', 'ready_neto_maropost', 'ready_opencart', 'ready_custom_high_value', 'blocked'})}`",
         f"- Recommended next pack: `{recommended_pack}`",
         f"- Recommended next individual target: `{recommended_target}`",
+        "- Australia recommendation: `Park AU after Trigger Bros and Extreme validation unless a materially higher-value source appears.`",
         "",
         "### Classification Summary",
         "",
@@ -657,6 +801,18 @@ def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] 
     for row in sorted(already_running, key=lambda item: (-int(item["approxBoardProductCount"] or 0), item["dealerName"].lower())):
         lines.append(
             f"- `{row['dealerName']}` | `{row['platform']}` | active rows `{row['approxBoardProductCount'] or 0}`"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Parked / Low Priority",
+            "",
+        ]
+    )
+    for row in parked_rows:
+        lines.append(
+            f"- `{row['dealerName']}` | `{row['status']}` | {row['recommendedAction']}"
         )
 
     lines.extend(
@@ -704,13 +860,12 @@ def render_markdown(rows: list[dict[str, Any]], base_rows: list[dict[str, Any]] 
             "",
             "## Recommendation",
             "",
-            f"- Next pack: `{recommended_pack}`",
-            "  Why: Trigger Bros remains the one clean, discovery-confirmed AU BigCommerce surfboard surface, so it is still the strongest reusable reference path.",
-            f"- Next individual target: `{recommended_target}`",
-            "  Why: strongest remaining retailer-distinct AU target with visible live board inventory, pricing, imagery and reusable platform signals.",
-            "- Keep `Surf Shops Australia` in manual review until a fresh AU board surface is reconfirmed.",
-            "- Hold `Goodtime Surfboards` as the next high-value custom follow-up.",
-            "- Keep `Surf Boardroom` inside the WooCommerce pack rather than treating it as a standalone custom scraper.",
+            "- Australia closeout: `Park AU after Trigger Bros and Extreme validation.`",
+            "  Why: the remaining reviewed shortlist is now low-value, low-signal, sold out, or operationally noisy for Quivrr's supported-manufacturer search quality.",
+            "- Keep `Trigger Bros Surfboards` and `Extreme Boardriders` healthy in production.",
+            "- Keep existing `AWSM Surf` rows if they remain valid, but do not invest further now.",
+            "- Keep `Overboard Surf` parked at zero until supported-brand saleable stock returns.",
+            "- Reopen AU only if a materially higher-value retailer source is discovered.",
             "",
             "## Full AU Candidate Table",
             "",
@@ -735,8 +890,8 @@ def build_report() -> dict[str, Any]:
     return {
         "rows": rows,
         "markdown": render_markdown(rows, base_rows=base_rows),
-        "recommendedNextPack": "BigCommerce Pack",
-        "recommendedNextTarget": "Trigger Bros Surfboards",
+        "recommendedNextPack": "None",
+        "recommendedNextTarget": "None",
         "manualReviewBefore": sum(1 for row in base_rows if row["status"] == "manual_review"),
         "manualReviewAfter": sum(1 for row in rows if row["status"] == "manual_review"),
     }

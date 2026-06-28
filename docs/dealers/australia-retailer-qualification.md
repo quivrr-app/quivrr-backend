@@ -17,64 +17,66 @@ This report now covers the wider AU retailer pool rather than a five-retailer sh
 
 Review date: `2026-06-28`
 
-## Sprint 12 Production Outcome
+## Sprint 13 Closeout Position
 
-- `Trigger Bros Surfboards` is now live in AU through the reusable BigCommerce path.
-  - Azure execution: `quivrr-nightly-au-inventory-60njwj0`
-  - SQL result: `66` active rows, `66` available rows
-- `AWSM Surf` is now live in AU through the reusable Shopify path plus shared used-board filtering.
-  - Azure execution: `quivrr-nightly-au-inventory-60njwj0`
-  - SQL result: `2` active rows, `2` available rows
-- `Overboard Surf` remains intentionally not live.
-  - Current supported-brand board collections resolve, but supported-brand variants were unavailable in the validated production pass.
-  - Outcome: `0` live AU rows is currently correct and should not be treated as a runtime failure.
+- `Trigger Bros Surfboards` is live in AU on the reusable BigCommerce path and should now be treated as production validation work, not backlog onboarding.
+- `Extreme Boardriders` is live in AU on the reusable WooCommerce path and is the final approved AU closeout retailer from Nathan's latest review.
+- `AWSM Surf` may keep its existing live second-hand rows, but it is no longer an active AU expansion target.
+- `Overboard Surf` remains correctly parked at zero while supported-brand saleable stock is unavailable.
+- Australia should be parked after Trigger Bros and Extreme are production-validated unless a materially higher-value AU source appears.
 
-These outcomes mean the report below should now be read as the remaining AU backlog and pack roadmap, not as a statement that Trigger Bros or AWSM still need first implementation.
+## Retailer Inventory Guardrail
+
+- Allowed: new boards, used boards, second-hand boards, ex-demo boards, clearance boards, and demo stock where a physical board is clearly for sale.
+- Rejected: hire boards, rental boards, lessons, repairs, services, trips, storage, and non-board accessories.
+- Shared retailer filters should preserve second-hand surfboards while excluding hire and service listings.
 
 ## AU Coverage Factory Summary
 
 - AU candidates reviewed: `103`
 - Already running: `30`
 - Duplicate shells: `2`
-- Manual review: `46`
-- Manual review before discovery: `46`
-- AU candidates re-analysed by discovery engine: `65`
-- Recommended next pack: `BigCommerce Pack`
-- Recommended next individual target: `Trigger Bros Surfboards`
+- Manual review: `48`
+- Manual review before discovery: `42`
+- AU candidates re-analysed by discovery engine: `57`
+- Recommended next pack: `None`
+- Recommended next individual target: `None`
+- Australia recommendation: `Park AU after Trigger Bros and Extreme validation unless a materially higher-value source appears.`
 
 ### Classification Summary
 
 - `already_running`: `30`
-- `ready_shopify`: `4`
-- `ready_woocommerce`: `1`
-- `ready_bigcommerce`: `1`
-- `ready_custom_high_value`: `9`
+- `parked_live`: `2`
+- `parked_manual`: `7`
+- `ready_shopify`: `1`
+- `ready_custom_high_value`: `5`
 - `duplicate_shell`: `2`
-- `no_online_boards`: `1`
 - `shaper_only`: `2`
-- `manual_review`: `46`
-- `blocked`: `4`
+- `manual_review`: `48`
+- `blocked`: `3`
 - `unsupported`: `3`
 
 ### Platform Summary
 
-- `bigcommerce`: `1`
-- `custom`: `4`
+- `bigcommerce`: `2`
+- `blocked`: `1`
+- `connection_error`: `25`
 - `magento`: `11`
 - `shopify`: `32`
 - `squarespace`: `1`
-- `unknown`: `44`
+- `ssl_error`: `3`
+- `ssl_problem_site`: `1`
+- `unknown`: `17`
 - `woocommerce`: `10`
 
 ### Pack Group Summary
 
-- `BigCommerce Pack`: `1`
-- `Custom High Value Pack`: `9`
+- `Custom High Value Pack`: `5`
 - `Duplicate Shells`: `2`
-- `Exclude`: `10`
-- `Manual Review`: `76`
-- `Shopify Pack`: `4`
-- `WooCommerce Pack`: `1`
+- `Exclude`: `8`
+- `Manual Review`: `78`
+- `Parked`: `9`
+- `Shopify Pack`: `1`
 
 ## Already Running
 
@@ -101,13 +103,25 @@ These outcomes mean the report below should now be read as the remaining AU back
 - `NT Surfboards` | `shopify` | active rows `123`
 - `Anglesea Surf Centre` | `woocommerce` | active rows `97`
 - `Long Reef Surf Co` | `shopify` | active rows `92`
+- `Trigger Bros Surfboards` | `bigcommerce` | active rows `66`
 - `Extreme Boardriders` | `woocommerce` | active rows `47`
 - `Manly Surfboards` | `woocommerce` | active rows `47`
 - `Ocean Addicts` | `woocommerce` | active rows `41`
 - `Surf FX` | `shopify` | active rows `33`
 - `The Surfboard Studio` | `shopify` | active rows `8`
 - `Beach Beat Alexandra Headland` | `woocommerce` | active rows `7`
-- `Akwa Surf` | `shopify` | active rows `6`
+
+## Parked / Low Priority
+
+- `AWSM Surf` | `parked_live` | Keep the existing live AU rows, but park further AWSM onboarding work unless a stronger supported-board surface appears.
+- `Akwa Surf` | `parked_live` | Leave the existing AU rows in place, but park new Akwa work unless a stronger supported-board surface is verified.
+- `Goodtime Surfboards` | `parked_manual` | Park for now. Nathan review found low supported-manufacturer value relative to AU effort.
+- `Surf Boardroom` | `parked_manual` | Park for now. No useful automated online board listing was confirmed in Nathan's AU review.
+- `Overboard Surf` | `parked_manual` | Park for now. Zero live AU rows is the correct production outcome until supported-brand saleable stock returns.
+- `Underground Surf` | `parked_manual` | Park for now. The surface is mostly hire or non-sale inventory and should stay out of AU active work.
+- `Full Circle Surf` | `parked_manual` | Park for now. Treat as non-viable until a real online surfboard storefront exists.
+- `Surfers Choice Surf Shop` | `parked_manual` | Park for now. Too few useful boards and no strong add-to-cart flow for Quivrr search quality.
+- `Soul Boardstore` | `parked_manual` | Park for now. Product signals exist, but no useful supported-board inventory was confirmed.
 
 ## Duplicate Shells
 
@@ -119,56 +133,57 @@ These outcomes mean the report below should now be read as the remaining AU back
 | Retailer | Status | Platform | Approx board count | Priority score | Why now |
 | --- | --- | --- | --- | --- | --- |
 | City Beach | `manual_review` | `magento` | `80` | `96` | Keep in manual review until an AU-local inventory surface is confirmed. |
-| Trigger Bros Surfboards | `ready_bigcommerce` | `bigcommerce` | `80` | `92` | Implement as the BigCommerce reference target and validate in Azure before adding more AU BigCommerce stores. |
-| Overboard Surf | `ready_shopify` | `shopify` | `41` | `85` | Candidate for reusable AU Shopify onboarding. |
-| Goodtime Surfboards | `ready_custom_high_value` | `magento` | `70` | `83` | Treat as a high-value custom follow-up after the BigCommerce pack, not before it. |
-| Surf Boardroom | `ready_woocommerce` | `woocommerce` | `200` | `72` | Keep in the WooCommerce pack. Board surface is real, but parser work is still needed. |
-| AWSM Surf | `ready_shopify` | `shopify` | `29` | `70` | Candidate for reusable AU Shopify onboarding. |
-| Surf Shops Australia | `manual_review` | `unknown` | `0` | `55` | Keep in manual review until a clean public AU surfboard surface is reconfirmed. |
-| Underground Surf | `ready_shopify` | `shopify` | `14` | `46` | Candidate for reusable AU Shopify onboarding. |
+| Surf Shops Australia | `manual_review` | `bigcommerce` | `0` | `55` | Keep in manual review until a clean public AU surfboard surface is reconfirmed. |
 | Bells Beach Surf Shop | `manual_review` | `unknown` | `0` | `40` | No board inventory surface confirmed. Keep in manual review. |
 | Groove Surf | `manual_review` | `unknown` | `0` | `40` | No board inventory surface confirmed. Keep in manual review. |
 | Beach Life Margaret River | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Big Drop Surf | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Big Surf | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
-| Board Store | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Boardriders Coolangatta | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Boardriders Torquay | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Byron Bay Surf Company | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Byron Bay Surfboard Co | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
 | Cordingley's Surf | `manual_review` | `woocommerce` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
-| Corner Surf Shop | `manual_review` | `unknown` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
+| Corner Surf Shop | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
+| Cronulla Surf Design | `manual_review` | `shopify` | `0` | `37` | No board inventory surface confirmed. Keep in manual review. |
+| Drift Surf | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
+| Dripping Wet Surf Co | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
+| Hollow Surf | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
+| Innertube Surf Shop | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
+| Pittwater Surf | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
+| Pittwater Surfboards | `manual_review` | `connection_error` | `` | `37` | Review inventory surface before any implementation work. |
 
 ## Top 10 Custom / High-Value Candidates
 
 | Retailer | Status | Platform | Priority score | Notes |
 | --- | --- | --- | --- | --- |
 | City Beach | `manual_review` | `magento` | `96` | non_au_catalogue_surface |
-| Goodtime Surfboards | `ready_custom_high_value` | `magento` | `83` | Large retailer signal, but current path is noisy and protected. Better as the next custom target once the coverage factory lands. |
-| Surf Shops Australia | `manual_review` | `unknown` | `55` | Earlier BigCommerce surfboard hints were not reconfirmed by the discovery engine, so this should not be promoted into the AU BigCommerce pack yet. |
+| Surf Shops Australia | `manual_review` | `bigcommerce` | `55` | Earlier BigCommerce surfboard hints were not reconfirmed by the discovery engine, so this should not be promoted into the AU BigCommerce pack yet. |
 | Bells Beach Surf Shop | `manual_review` | `unknown` | `40` | no_board_category_or_product_surface |
 | Groove Surf | `manual_review` | `unknown` | `40` | no_board_category_or_product_surface |
 | Beach Life Margaret River | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
 | Big Drop Surf | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
 | Big Surf | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
-| Board Store | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
 | Boardriders Coolangatta | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
+| Boardriders Torquay | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
+| Byron Bay Surf Company | `manual_review` | `unknown` | `37` | no_board_category_or_product_surface |
 
 ## Recommendation
 
-- Next pack: `BigCommerce Pack`
-  Why: Trigger Bros remains the one clean, discovery-confirmed AU BigCommerce surfboard surface, so it is still the strongest reusable reference path.
-- Next individual target: `Trigger Bros Surfboards`
-  Why: strongest remaining retailer-distinct AU target with visible live board inventory, pricing, imagery and reusable platform signals.
-- Keep `Surf Shops Australia` in manual review until a fresh AU board surface is reconfirmed.
-- Hold `Goodtime Surfboards` as the next high-value custom follow-up.
-- Keep `Surf Boardroom` inside the WooCommerce pack rather than treating it as a standalone custom scraper.
+- Australia closeout: `Park AU after Trigger Bros and Extreme validation.`
+  Why: the remaining reviewed shortlist is now low-value, low-signal, sold out, or operationally noisy for Quivrr's supported-manufacturer search quality.
+- Keep `Trigger Bros Surfboards` and `Extreme Boardriders` healthy in production.
+- Keep existing `AWSM Surf` rows if they remain valid, but do not invest further now.
+- Keep `Overboard Surf` parked at zero until supported-brand saleable stock returns.
+- Reopen AU only if a materially higher-value retailer source is discovered.
 
 ## Full AU Candidate Table
 
 | Dealer | Website | Running | Duplicate of | Status | Platform | Online boards visible | Approx board count | Supported brand signals | Category URL | Example product URLs | Price visible | Stock visible | Images visible | Pagination | Difficulty | Priority score | Recommended action | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Surfboard Empire | `https://surfboardempire.com.au` | `true` |  | `already_running` | `shopify` | `true` | `4944` | Channel Islands |  |  | `true` | `true` | `true` | `false` | `low` | `99` | Keep live and use as AU baseline. | Producing available surfboard inventory |
+| Trigger Bros Surfboards | `https://triggerbrothers.com.au` | `true` |  | `already_running` | `bigcommerce` | `true` | `66` | supported multi-brand surf retailer | https://triggerbrothers.com.au/store/surf/used-surfboards/ | https://triggerbrothers.com.au/trigger-bros-x-dos-lumberjack-6ft-surfboard/, https://triggerbrothers.com.au/trigger-bros-hot-dog-stubby-9ft-surfboard-red/ | `true` | `true` | `true` | `true` | `medium` | `92` | Keep live in AU and treat as a validated BigCommerce production retailer. | Production-validated AU BigCommerce retailer. Keep healthy, keep linked, and do not treat it as backlog work anymore. |
+| Extreme Boardriders | `https://extremeboardriders.com.au` | `true` |  | `already_running` | `woocommerce` | `true` | `47` | supported multi-brand surf retailer |  |  | `true` | `true` | `true` | `true` | `low` | `78` | Keep live in AU and validate it through the standard WooCommerce nightly path. | Approved AU closeout retailer. Existing WooCommerce path is already the correct implementation surface. |
 | The Board Lab | `https://theboardlab.com.au` | `true` |  | `already_running` | `shopify` | `true` | `1438` |  |  |  | `true` | `true` | `true` | `false` | `low` | `57` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Wicks Surf | `https://wickssurf.com.au` | `true` |  | `already_running` | `shopify` | `true` | `1420` |  |  |  | `true` | `true` | `true` | `false` | `low` | `57` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Natural Necessity | `https://naturalnecessity.com.au` | `true` |  | `already_running` | `shopify` | `true` | `969` | Channel Islands, Christenson |  |  | `true` | `true` | `true` | `false` | `low` | `52` | Keep live and use as AU baseline. | Producing available surfboard inventory |
@@ -191,83 +206,81 @@ These outcomes mean the report below should now be read as the remaining AU back
 | Long Reef Surf Co | `https://longreefsurf.com.au` | `true` |  | `already_running` | `shopify` | `true` | `92` |  |  |  | `true` | `true` | `true` | `false` | `low` | `41` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Noosa Longboards | `https://noosalongboards.com` | `true` |  | `already_running` | `shopify` | `true` | `150` |  |  |  | `true` | `true` | `true` | `false` | `low` | `41` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | NT Surfboards | `https://ntsurfboards.com` | `true` |  | `already_running` | `shopify` | `true` | `123` | Dark Arts |  |  | `true` | `true` | `true` | `false` | `low` | `41` | Keep live and use as AU baseline. | Producing available surfboard inventory |
-| Akwa Surf | `https://akwasurf.com.au` | `true` |  | `already_running` | `shopify` | `true` | `6` |  |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Beach Beat Alexandra Headland | `https://beachbeat.com.au` | `true` |  | `already_running` | `woocommerce` | `true` | `7` | Channel Islands |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
-| Extreme Boardriders | `https://extremeboardriders.com.au` | `true` |  | `already_running` | `woocommerce` | `true` | `47` |  |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Manly Surfboards | `https://manlysurfboards.com.au` | `true` |  | `already_running` | `woocommerce` | `true` | `47` |  |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Ocean Addicts | `https://oceanaddicts.com.au` | `true` |  | `already_running` | `woocommerce` | `true` | `41` |  |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | Surf FX | `https://surffx.com.au` | `true` |  | `already_running` | `shopify` | `true` | `33` |  |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
 | The Surfboard Studio | `https://www.thesurfboardstudio.com.au` | `true` |  | `already_running` | `shopify` | `true` | `8` |  |  |  | `true` | `true` | `true` | `false` | `low` | `40` | Keep live and use as AU baseline. | Producing available surfboard inventory |
-| Overboard Surf | `https://overboardsurf.com.au` | `false` |  | `ready_shopify` | `shopify` | `true` | `41` | JS Industries, Channel Islands, Firewire, Chilli, DHD | https://overboardsurf.com.au/collections/boards-7s-surfboards | https://overboardsurf.com.au/collections/surf-hardware-surfboard-covers/day-covers, https://overboardsurf.com.au/collections/surf-hardware-surfboard-covers/soft-covers | `true` | `true` | `true` | `true` | `medium` | `85` | Candidate for reusable AU Shopify onboarding. | https://overboardsurf.com.au/products.json?limit=1 |
-| AWSM Surf | `https://awsmsurf.com` | `false` |  | `ready_shopify` | `shopify` | `true` | `29` | Channel Islands, JS Industries, Lost | https://www.awsmsurf.com/collections/second-hand-surfboard | https://www.awsmsurf.com/collections/second-hand-surfboard/products/secondlightsurfboardshapedbyrichardevans68, https://www.awsmsurf.com/cdn/shop/products/9b851f1612b5ebc40d4d14e0e38c7bb61c799d3d_2048x.jpg?v=1547178389 | `true` | `true` | `true` | `true` | `medium` | `70` | Candidate for reusable AU Shopify onboarding. | https://www.awsmsurf.com/products.json?limit=1 |
-| Underground Surf | `https://undergroundsurf.com.au` | `false` |  | `ready_shopify` | `shopify` | `true` | `14` | Channel Islands, JS Industries | https://www.undergroundsurf.com.au/collections/surfboards-1 | https://www.undergroundsurf.com.au/collections/surfboards-1, https://www.undergroundsurf.com.au/collections/surfboard-hire | `true` | `true` | `true` | `true` | `medium` | `46` | Candidate for reusable AU Shopify onboarding. | https://www.undergroundsurf.com.au/products.json?limit=1 |
+| AWSM Surf | `https://awsmsurf.com` | `true` |  | `parked_live` | `shopify` | `true` | `2` | used and second-hand supported-brand boards | https://www.awsmsurf.com/collections/second-hand-surfboard | https://www.awsmsurf.com/collections/second-hand-surfboard/products/secondlightsurfboardshapedbyrichardevans68, https://www.awsmsurf.com/cdn/shop/products/9b851f1612b5ebc40d4d14e0e38c7bb61c799d3d_2048x.jpg?v=1547178389 | `true` | `true` | `true` | `true` | `medium` | `18` | Keep the existing live AU rows, but park further AWSM onboarding work unless a stronger supported-board surface appears. | Nathan review: low-value AU source for now. Existing second-hand supported boards may remain live, but this is not an active expansion target. |
+| Akwa Surf | `https://akwasurf.com.au` | `true` |  | `parked_live` | `shopify` | `true` | `6` |  |  |  | `true` | `true` | `true` | `false` | `low` | `14` | Leave the existing AU rows in place, but park new Akwa work unless a stronger supported-board surface is verified. | Nathan review: no useful AU online stock signal worth active onboarding investment right now. |
+| Goodtime Surfboards | `https://www.goodtime.com.au` | `false` |  | `parked_manual` | `magento` | `true` | `70` | long-running AU surfboard retailer | https://www.goodtime.com.au |  | `true` | `true` | `true` | `true` | `high` | `8` | Park for now. Nathan review found low supported-manufacturer value relative to AU effort. | Manual review closeout: mostly smaller or unsupported local-brand value. Not worth active AU onboarding effort right now. |
+| Surf Boardroom | `https://surfboardroom.com.au` | `false` |  | `parked_manual` | `woocommerce` | `false` | `0` | Firewire, Channel Islands | https://surfboardroom.com.au/surfboards/ |  | `false` | `false` | `true` | `false` | `medium` | `6` | Park for now. No useful automated online board listing was confirmed in Nathan's AU review. | Manual review closeout: no useful online board listing found for Quivrr search despite earlier WooCommerce signals. |
+| Overboard Surf | `https://overboardsurf.com.au` | `false` |  | `parked_manual` | `shopify` | `false` | `0` | JS Industries, Channel Islands, Firewire, Chilli, DHD | https://overboardsurf.com.au/collections/boards-7s-surfboards |  | `true` | `false` | `true` | `true` | `medium` | `5` | Park for now. Zero live AU rows is the correct production outcome until supported-brand saleable stock returns. | Manual review closeout: sold out for supported-brand board variants. Do not treat the current zero-row state as an engineering failure. |
+| Underground Surf | `https://undergroundsurf.com.au` | `false` |  | `parked_manual` | `shopify` | `false` | `0` | Channel Islands, JS Industries | https://www.undergroundsurf.com.au/collections/surfboards-1 | https://www.undergroundsurf.com.au/collections/surfboard-hire | `true` | `false` | `true` | `true` | `medium` | `5` | Park for now. The surface is mostly hire or non-sale inventory and should stay out of AU active work. | Manual review closeout: useful online sale inventory was not confirmed. Hire and rental content is a recurring false-positive risk. |
+| Full Circle Surf | `https://fullcirclesurf.com.au` | `false` |  | `parked_manual` | `squarespace` | `false` | `0` | JS Industries, Firewire |  |  | `false` | `false` | `false` | `false` | `medium` | `4` | Park for now. Treat as non-viable until a real online surfboard storefront exists. | Manual review closeout: effectively Facebook or Instagram presence only, not a usable AU live-stock source. |
+| Surfers Choice Surf Shop | `https://surferschoice.com.au` | `false` |  | `parked_manual` | `unknown` | `false` | `2` | Channel Islands, JS Industries, DHD, Haydenshapes | https://www.surferschoice.com.au/boards.html |  | `true` | `false` | `true` | `false` | `medium` | `4` | Park for now. Too few useful boards and no strong add-to-cart flow for Quivrr search quality. | Manual review closeout: only a couple of boards and no proper modern retailer flow worth engineering further. |
+| Soul Boardstore | `https://www.soulboardstore.com.au` | `false` |  | `parked_manual` | `unknown` | `false` | `0` | JS Industries | https://www.soulboardstore.com.au/index.html |  | `false` | `false` | `true` | `false` | `medium` | `3` | Park for now. Product signals exist, but no useful supported-board inventory was confirmed. | Manual review closeout: products exist, but not enough useful Quivrr board stock to justify AU engineering work. |
 | Surf Dive n Ski | `https://www.sds.com.au` | `false` |  | `ready_shopify` | `shopify` | `true` | `11` | JS Industries | https://www.sds.com.au/collections/boys-boardshorts | https://www.sds.com.au/collections/boys-boardshorts, https://www.sds.com.au/collections/boys-printed-boardshorts | `true` | `true` | `true` | `true` | `medium` | `34` | Candidate for reusable AU Shopify onboarding. | https://www.sds.com.au/products.json?limit=1 |
-| Surf Boardroom | `https://surfboardroom.com.au` | `false` |  | `ready_woocommerce` | `woocommerce` | `true` | `200` | Firewire, Channel Islands | https://surfboardroom.com.au/surfboards/ |  | `false` | `true` | `true` | `false` | `medium` | `72` | Keep in the WooCommerce pack. Board surface is real, but parser work is still needed. | Boards are visible and the WooCommerce path is real, but the current extraction path undershoots and needs parser recovery. |
-| Trigger Bros Surfboards | `https://triggerbrothers.com.au` | `false` |  | `ready_bigcommerce` | `bigcommerce` | `true` | `80` | supported multi-brand surf retailer | https://triggerbrothers.com.au/store/surf/used-surfboards/ | https://triggerbrothers.com.au/trigger-bros-x-dos-lumberjack-6ft-surfboard/, https://triggerbrothers.com.au/trigger-bros-hot-dog-stubby-9ft-surfboard-red/ | `true` | `true` | `true` | `true` | `medium` | `92` | Implement as the BigCommerce reference target and validate in Azure before adding more AU BigCommerce stores. | Best current AU next target. Live BigCommerce site with visible board inventory and reusable platform path. |
-| Goodtime Surfboards | `https://www.goodtime.com.au` | `false` |  | `ready_custom_high_value` | `magento` | `true` | `70` | long-running AU surfboard retailer | https://www.goodtime.com.au |  | `true` | `true` | `true` | `true` | `high` | `83` | Treat as a high-value custom follow-up after the BigCommerce pack, not before it. | Large retailer signal, but current path is noisy and protected. Better as the next custom target once the coverage factory lands. |
-| Surfers Choice Surf Shop | `https://surferschoice.com.au` | `false` |  | `ready_custom_high_value` | `custom` | `true` | `13` | Channel Islands, JS Industries, DHD, Haydenshapes | https://www.surferschoice.com.au/jr-surfboards.html | https://www.surferschoice.com.au/skimboards.html, https://www.surferschoice.com.au/boards.html | `true` | `true` | `true` | `false` | `medium` | `37` | Candidate for a targeted high-value custom implementation after pack work. | Detected custom catalogue-like HTML surface |
 | Manly Surf Guide Surfboard Outlet | `https://manlysurfguide.com.au` | `false` |  | `ready_custom_high_value` | `magento` | `true` | `15` | JS Industries | http://www.manlysurfguide.com.au/shop/soft-surfboards-sale | https://www.manlysurfguide.com.au/shop/soft-surfboards-sale, https://www.manlysurfguide.com.au/shop/soft-surfboards/6ft-soft-surfboard | `true` | `true` | `true` | `false` | `medium` | `34` | Candidate for a targeted high-value custom implementation after pack work. | Detected magento markers in HTML |
 | Island Surfboards | `https://www.islandsurfboards.com.au` | `false` |  | `ready_custom_high_value` | `magento` | `true` | `8` | Channel Islands, JS Industries | https://www.islandsurfboards.com.au/islandperformancecoaching | https://www.islandsurfboards.com.au/surfboards, https://www.islandsurfboards.com.au/surfboards/slop-rocket | `true` | `true` | `true` | `false` | `medium` | `30` | Candidate for a targeted high-value custom implementation after pack work. | Detected magento markers in HTML |
 | Empire Ave | `https://empireave.com` | `false` |  | `ready_custom_high_value` | `magento` | `true` | `3` | JS Industries, DHD, Channel Islands | https://empireave.com/goods-guides/buyers-guides/fish-surfboards-a-guide/ | https://empireave.com/tag/carbotune/, https://empireave.com/interviews/talking-grips-softboards-and-dhd-with-modom/ | `true` | `true` | `true` | `true` | `medium` | `28` | Candidate for a targeted high-value custom implementation after pack work. | Detected magento markers in HTML |
-| World Surfaris Surf Shop | `https://worldsurfaris.com` | `false` |  | `ready_custom_high_value` | `custom` | `true` | `7` | JS Industries | https://worldsurfaris.com/surfboards-rent-hudhuranfushi/ | https://worldsurfaris.com/surfboards-rent-hudhuranfushi/, https://worldsurfaris.com/region/maldives/ | `true` | `true` | `true` | `false` | `medium` | `22` | Candidate for a targeted high-value custom implementation after pack work. | Detected custom catalogue-like HTML surface |
-| Soul Boardstore | `https://www.soulboardstore.com.au` | `false` |  | `ready_custom_high_value` | `custom` | `true` | `1` | JS Industries | https://www.soulboardstore.com.au/index.html | https://www.soulboardstore.com.au/online-shop/contact-us-product-range.html | `true` | `true` | `true` | `false` | `medium` | `16` | Candidate for a targeted high-value custom implementation after pack work. | Detected custom catalogue-like HTML surface |
 | Slimes Boardstore | `https://slimes.com.au` | `false` |  | `ready_custom_high_value` | `magento` | `true` | `3` | Channel Islands, JS Industries | https://www.slimes.com.au/surfboards | https://www.slimes.com.au/surfboards, https://www.slimes.com.au/softboards | `true` | `true` | `true` | `false` | `medium` | `13` | Candidate for a targeted high-value custom implementation after pack work. | Detected magento markers in HTML |
 | Coopers Surf | `https://cooperssurf.com.au` | `false` |  | `ready_custom_high_value` | `magento` | `true` | `3` | JS Industries | https://cooperssurf.com.au/product/outerknown-journey-fish-5-panel-hat/ | https://cooperssurf.com.au/product/outerknown-journey-fish-5-panel-hat/, https://cooperssurf.com.au/product-tag/js-industries-apparel/ | `true` | `true` | `true` | `false` | `medium` | `12` | Candidate for a targeted high-value custom implementation after pack work. | Detected magento markers in HTML |
 | Red Herring Surf | `https://redherringsurf.com.au` | `false` | Board Collective | `duplicate_shell` | `shopify` | `false` | `0` | JS Industries, Pyzel, Firewire | https://redherringsurf.com.au/collections/all | https://boardcollective.com.au/products/boardcollective-egift-card | `false` | `false` | `true` | `false` | `low` | `0` | Exclude from AU onboarding and keep Board Collective as the inventory source. | Board Collective shell. products.json empty, surfboard search returned zero, and the public shell resolves product links to boardcollective.com.au. |
 | Saltwater Wine Port Macquarie | `https://saltwaterwine.com.au` | `false` | Board Collective | `duplicate_shell` | `shopify` | `false` | `0` | JS Industries, Pyzel, Firewire, Channel Islands | https://saltwaterwine.com.au/collections/all | https://boardcollective.com.au/products/boardcollective-egift-card | `false` | `false` | `true` | `false` | `low` | `0` | Exclude from AU onboarding and keep Board Collective as the inventory source. | Board Collective shell. products.json empty, surfboard search returned zero, and the public shell resolves product links to boardcollective.com.au. |
-| Full Circle Surf | `https://fullcirclesurf.com.au` | `false` |  | `no_online_boards` | `squarespace` | `false` | `0` | JS Industries, Firewire |  |  | `false` | `false` | `false` | `false` | `medium` | `10` | Do not implement until a working surfboard storefront is confirmed. | Known retailer, but the current public storefront is broken and not a usable AU inventory source. |
 | JS Industries | `https://jsindustries.com` | `false` |  | `shaper_only` | `shopify` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `low` | `5` | Exclude from retailer inventory and leave to canonical / MFA paths. | https://jsindustries.com/products.json?limit=1 |
 | Ocean & Earth Store | `https://oceanandearth.com.au` | `false` |  | `shaper_only` | `shopify` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `low` | `0` | Exclude from retailer inventory and leave to canonical / MFA paths. | https://oceanandearth.com.au/products.json?limit=1 |
 | City Beach | `https://www.citybeach.com` | `false` |  | `manual_review` | `magento` | `true` | `80` | Channel Islands, JS Industries | https://www.citybeach.com/us/kids/boardsports/ | https://www.citybeach.com/us/kids/, https://www.citybeach.com/us/kids/boardsports/#A | `true` | `false` | `true` | `false` | `medium` | `96` | Keep in manual review until an AU-local inventory surface is confirmed. | non_au_catalogue_surface |
-| Surf Shops Australia | `https://surfshopsaustralia.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` | broad surfboard catalogue |  |  | `false` | `false` | `false` | `false` | `medium` | `55` | Keep in manual review until a clean public AU surfboard surface is reconfirmed. | Earlier BigCommerce surfboard hints were not reconfirmed by the discovery engine, so this should not be promoted into the AU BigCommerce pack yet. |
+| Surf Shops Australia | `https://surfshopsaustralia.com.au` | `false` |  | `manual_review` | `bigcommerce` | `false` | `0` | broad surfboard catalogue |  |  | `false` | `false` | `false` | `false` | `medium` | `55` | Keep in manual review until a clean public AU surfboard surface is reconfirmed. | Earlier BigCommerce surfboard hints were not reconfirmed by the discovery engine, so this should not be promoted into the AU BigCommerce pack yet. |
 | Bells Beach Surf Shop | `https://bellsbeachsurfshop.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `40` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Groove Surf | `https://groovesurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `40` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Beach Life Margaret River | `https://beachlifemargs.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Big Drop Surf | `https://bigdropsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Big Surf | `https://bigsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Board Store | `https://boardstore.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Boardriders Coolangatta | `https://boardriders.co` | `false` |  | `manual_review` | `unknown` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Boardriders Torquay | `https://boardriders.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Byron Bay Surf Company | `https://byronbaysurfcompany.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Byron Bay Surfboard Co | `https://www.byronbaysurfboardco.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
 | Cordingley's Surf | `https://cordingleyssurf.com.au` | `false` |  | `manual_review` | `woocommerce` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Corner Surf Shop | `https://cornersurfshop.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
+| Corner Surf Shop | `https://cornersurfshop.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='cornersurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='cornersurfshop.com.au', port=443): Failed to resolve 'cornersurfshop.com.au' ([Errno 11001] getaddrinfo failed)")) |
 | Cronulla Surf Design | `https://cronullasurfdesign.com.au` | `false` |  | `manual_review` | `shopify` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Drift Surf | `https://www.driftsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Dripping Wet Surf Co | `https://drippingwetsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Hollow Surf | `https://hollowsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Innertube Surf Shop | `https://innertubesurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Pittwater Surf | `https://www.pittwatersurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Pittwater Surfboards | `https://pittwatersurfboards.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Second Surf | `https://secondsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Sessions Surf Shop | `https://sessionssurfshop.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Surfboard Agency | `https://surfboardagency.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
+| Drift Surf | `https://www.driftsurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='www.driftsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.driftsurf.com.au', port=443): Failed to resolve 'www.driftsurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Dripping Wet Surf Co | `https://drippingwetsurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='drippingwetsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='drippingwetsurf.com.au', port=443): Failed to resolve 'drippingwetsurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Hollow Surf | `https://hollowsurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='hollowsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='hollowsurf.com.au', port=443): Failed to resolve 'hollowsurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Innertube Surf Shop | `https://innertubesurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` | Channel Islands |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='innertubesurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='innertubesurf.com.au', port=443): Failed to resolve 'innertubesurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Pittwater Surf | `https://www.pittwatersurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='www.pittwatersurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.pittwatersurf.com.au', port=443): Failed to resolve 'www.pittwatersurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Pittwater Surfboards | `https://pittwatersurfboards.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='pittwatersurfboards.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='pittwatersurfboards.com.au', port=443): Failed to resolve 'pittwatersurfboards.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Second Surf | `https://secondsurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='secondsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='secondsurf.com.au', port=443): Failed to resolve 'secondsurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Sessions Surf Shop | `https://sessionssurfshop.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='sessionssurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='sessionssurfshop.com.au', port=443): Failed to resolve 'sessionssurfshop.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Surfboard Agency | `https://surfboardagency.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='surfboardagency.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='surfboardagency.com.au', port=443): Failed to resolve 'surfboardagency.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Triple Bull Surf and Skate | `https://triplebull.com.au` | `false` |  | `manual_review` | `ssl_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `37` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='triplebull.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)'))) |
 | Yallingup Surf Shop | `https://yallingupsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  | https://yallingupsurf.com.au/collections/surfboards |  | `false` | `false` | `false` | `false` | `medium` | `37` | Board categories found, but product inventory could not be confirmed safely. | board_categories_found_no_products |
-| Action Board Sports | `https://actionboardsports.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Apollo Bay Surf Shop | `https://apollobaysurfshop.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Blue Planet Surf | `https://blueplanetsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
+| Action Board Sports | `https://actionboardsports.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='actionboardsports.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='actionboardsports.com.au', port=443): Failed to resolve 'actionboardsports.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Apollo Bay Surf Shop | `https://apollobaysurfshop.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='apollobaysurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='apollobaysurfshop.com.au', port=443): Failed to resolve 'apollobaysurfshop.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Blue Planet Surf | `https://blueplanetsurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='blueplanetsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='blueplanetsurf.com.au', port=443): Failed to resolve 'blueplanetsurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
 | Board Hub | `https://boardhub.com.au` | `false` |  | `manual_review` | `magento` | `false` | `0` |  | https://boardhub.com.au/surfboards/shortboards |  | `false` | `false` | `false` | `false` | `medium` | `34` | Board categories found, but product inventory could not be confirmed safely. | board_categories_found_no_products |
-| Coogee Surf Co | `https://coogeesurfco.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| CPS Surf | `https://cpssurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Harbour Surfboards | `https://harboursurfboards.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Le Spot Surf Shop | `https://lespotsurfshop.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Maroubra Surf and Skate | `https://maroubrasurfandskate.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
+| Coogee Surf Co | `https://coogeesurfco.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='coogeesurfco.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='coogeesurfco.com.au', port=443): Failed to resolve 'coogeesurfco.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| CPS Surf | `https://cpssurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='cpssurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='cpssurf.com.au', port=443): Failed to resolve 'cpssurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Harbour Surfboards | `https://harboursurfboards.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='harboursurfboards.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='harboursurfboards.com.au', port=443): Failed to resolve 'harboursurfboards.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Le Spot Surf Shop | `https://lespotsurfshop.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='lespotsurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='lespotsurfshop.com.au', port=443): Failed to resolve 'lespotsurfshop.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Maroubra Surf and Skate | `https://maroubrasurfandskate.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='maroubrasurfandskate.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='maroubrasurfandskate.com.au', port=443): Failed to resolve 'maroubrasurfandskate.com.au' ([Errno 11001] getaddrinfo failed)")) |
 | Mid Coast Surf | `https://midcoastsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  | https://midcoastsurf.com.au/collections/surfboards |  | `false` | `false` | `false` | `false` | `medium` | `34` | Board categories found, but product inventory could not be confirmed safely. | board_categories_found_no_products |
-| Murray Smith Surf Warehouse | `https://murraysmithsurfwarehouse.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| North Coast Surf | `https://northcoastsurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Ocean Grove Surf Co | `https://oceangrovesurfco.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| On A Wave Surf Shop | `https://onawavesurfshop.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Prahran Surfboards | `https://prahransurfboards.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Secret Harbour Surf | `https://secretharboursurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Shed Nine | `https://shednine.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Surf Connect | `https://www.surfconnect.com` | `false` |  | `manual_review` | `custom` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Surf Warehouse | `https://surfwarehouse.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Surfection Mosman | `https://www.surfectionmosman.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Yorkes Surf | `https://yorkessurf.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | No board inventory surface confirmed. Keep in manual review. | no_board_category_or_product_surface |
-| Boardcave | `https://www.boardcave.com.au` | `false` |  | `blocked` | `magento` | `false` | `0` | large Australian surfboard marketplace |  |  | `false` | `false` | `false` | `false` | `high` | `35` | Keep blocked. Revisit only if Boardcave exposes a safe public inventory path. | High-value marketplace signal, but current access is blocked and not safe for AU nightly onboarding. |
+| Murray Smith Surf Warehouse | `https://murraysmithsurfwarehouse.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='murraysmithsurfwarehouse.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='murraysmithsurfwarehouse.com.au', port=443): Failed to resolve 'murraysmithsurfwarehouse.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| North Coast Surf | `https://northcoastsurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='northcoastsurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='northcoastsurf.com.au', port=443): Failed to resolve 'northcoastsurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Ocean Grove Surf Co | `https://oceangrovesurfco.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='oceangrovesurfco.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='oceangrovesurfco.com.au', port=443): Failed to resolve 'oceangrovesurfco.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| On A Wave Surf Shop | `https://onawavesurfshop.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='onawavesurfshop.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='onawavesurfshop.com.au', port=443): Failed to resolve 'onawavesurfshop.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Prahran Surfboards | `https://prahransurfboards.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='prahransurfboards.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='prahransurfboards.com.au', port=443): Failed to resolve 'prahransurfboards.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Secret Harbour Surf | `https://secretharboursurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='secretharboursurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='secretharboursurf.com.au', port=443): Failed to resolve 'secretharboursurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Shed Nine | `https://shednine.com.au` | `false` |  | `manual_review` | `ssl_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='shednine.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)'))) |
+| Surf Connect | `https://www.surfconnect.com` | `false` |  | `manual_review` | `unknown` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | Homepage returned 200 |
+| Surf Warehouse | `https://surfwarehouse.com.au` | `false` |  | `manual_review` | `unknown` | `false` | `0` |  | https://surfwarehouse.com.au/collections/surfboards |  | `false` | `false` | `false` | `false` | `medium` | `34` | Board categories found, but product inventory could not be confirmed safely. | board_categories_found_no_products |
+| Surfection Mosman | `https://www.surfectionmosman.com.au` | `false` |  | `manual_review` | `ssl_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='www.surfectionmosman.com.au', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)'))) |
+| Three Stories | `https://www.threestories.com.au` | `false` |  | `manual_review` | `ssl_problem_site` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | SSL verification failed but site loaded with verify=False |
+| World Surfaris Surf Shop | `https://worldsurfaris.com` | `false` |  | `manual_review` | `unknown` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | Homepage returned 200 |
+| Yorkes Surf | `https://yorkessurf.com.au` | `false` |  | `manual_review` | `connection_error` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `medium` | `34` | Review inventory surface before any implementation work. | HTTPSConnectionPool(host='yorkessurf.com.au', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='yorkessurf.com.au', port=443): Failed to resolve 'yorkessurf.com.au' ([Errno 11001] getaddrinfo failed)")) |
+| Boardcave | `https://www.boardcave.com.au` | `false` |  | `blocked` | `blocked` | `false` | `0` | large Australian surfboard marketplace |  |  | `false` | `false` | `false` | `false` | `high` | `35` | Keep blocked. Revisit only if Boardcave exposes a safe public inventory path. | High-value marketplace signal, but current access is blocked and not safe for AU nightly onboarding. |
 | Kirra Surf | `https://kirrasurf.com.au` | `false` |  | `blocked` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `low` | `15` | Keep blocked until the site exposes a safe public inventory surface. | request_blocked |
-| Triple Bull Surf and Skate | `https://triplebull.com.au` | `false` |  | `blocked` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `low` | `12` | Keep blocked until the site exposes a safe public inventory surface. | request_blocked |
-| Three Stories | `https://www.threestories.com.au` | `false` |  | `blocked` | `unknown` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `low` | `9` | Keep blocked until the site exposes a safe public inventory surface. | request_blocked |
+| Board Store | `https://boardstore.com.au` | `false` |  | `blocked` | `magento` | `false` | `0` |  |  |  | `false` | `false` | `false` | `false` | `low` | `12` | Keep blocked until the site exposes a safe public inventory surface. | homepage_http_403 |
 | Beaches Apparel | `https://beachesapparel.com` | `false` |  | `unsupported` | `woocommerce` | `false` | `5` |  |  |  | `false` | `false` | `false` | `false` | `low` | `0` | Exclude from AU hardboard onboarding. | Clothing/apparel store, not suitable for Quivrr hardboard retailer inventory |
 | Ocean and Earth | `https://oceanearthstore.com` | `false` |  | `unsupported` | `magento` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `low` | `0` | Exclude from AU hardboard onboarding. | Brand/accessory store, not suitable for Quivrr hardboard retailer inventory |
 | Rip Curl Australia | `https://www.ripcurl.com/au` | `false` |  | `unsupported` | `magento` | `false` | `` |  |  |  | `false` | `false` | `false` | `false` | `low` | `0` | Exclude from AU hardboard onboarding. | Does not sell hardboard surfboard inventory online for Quivrr search |

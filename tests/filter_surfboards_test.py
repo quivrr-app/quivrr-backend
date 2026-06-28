@@ -39,6 +39,42 @@ class FilterSurfboardsTests(unittest.TestCase):
             "low_confidence_or_missing_board_identity",
         )
 
+    def test_rental_listing_is_rejected_even_when_board_terms_exist(self):
+        item = {
+            "title": "Album Bom Dia Surfboard Hire 5'6",
+            "variant_title": "Daily rental",
+            "vendor": "Album",
+            "product_type": "Surfboards",
+            "price": "85.00",
+            "product_url": "https://example.com/products/album-bom-dia-surfboard-hire-56",
+        }
+
+        result = score_item(item)
+
+        self.assertFalse(result["is_surfboard"])
+        self.assertEqual(
+            result["reject_reason"],
+            "service_or_rental_listing",
+        )
+
+    def test_service_listing_is_rejected_even_when_supported_brand_exists(self):
+        item = {
+            "title": "Channel Islands Board Repair Service",
+            "variant_title": "Default Title",
+            "vendor": "Channel Islands",
+            "product_type": "Surfboards",
+            "price": "450.00",
+            "product_url": "https://example.com/products/channel-islands-board-repair-service",
+        }
+
+        result = score_item(item)
+
+        self.assertFalse(result["is_surfboard"])
+        self.assertEqual(
+            result["reject_reason"],
+            "service_or_rental_listing",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
