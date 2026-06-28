@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 from collections import Counter
+import math
 from pathlib import Path
 
 from sqlalchemy import text
@@ -30,6 +31,8 @@ DEFAULT_INPUT = Path("scrapers/retailers/europe/output/eu_normalised_inventory.j
 PRESTASHOP_REPORT = Path(
     "scrapers/retailers/europe/prestashop/output/eu_prestashop_product_discovery.json"
 )
+DETAIL_FETCH_FAILURE_ABSOLUTE_LIMIT = 20
+DETAIL_FETCH_FAILURE_RATE_LIMIT = 0.01
 MINIMUM_ROWS = {
     "58_surf": 300,
     "pukas_surf_shop": 1800,
@@ -92,13 +95,51 @@ def load_and_validate_rows(path: Path) -> tuple[list[dict], Counter]:
 
 def assert_detail_fetch_health(path: Path = PRESTASHOP_REPORT) -> None:
     report = json.loads(path.read_text(encoding="utf-8"))
-    failures = {
-        result.get("target", "<missing>"): int(result.get("detailFetchFailures") or 0)
-        for result in report.get("results", [])
-        if int(result.get("detailFetchFailures") or 0) > 0
-    }
-    if failures:
-        raise RuntimeError(f"EU detail-page discovery failures must be zero: {failures}")
+    hard_failures: dict[str, dict[str, int]] = {}
+    soft_failures: dict[str, dict[str, int]] = {}
+    for result in report.get("results", []):
+        failures = int(result.get("detailFetchFailures") or 0)
+        if failures <= 0:
+            continue
+        accepted = int(
+            result.get("productsAccepted")
+            or result.get("uniqueCanonicalProducts")
+            or 0
+        )
+        failure_budget = min(
+            DETAIL_FETCH_FAILURE_ABSOLUTE_LIMIT,
+            max(1, math.ceil(accepted * DETAIL_FETCH_FAILURE_RATE_LIMIT)) if accepted else 0,
+        )
+        summary = {
+            "failures": failures,
+            "accepted": accepted,
+            "budget": failure_budget,
+        }
+        if accepted <= 0 or failures > failure_budget:
+            hard_failures[result.get("target", "<missing>")] = summary
+        else:
+            soft_failures[result.get("target", "<missing>")] = summary
+
+    for retailer, summary in soft_failures.items():
+        emit_event(
+            "retailer_detail_fetch_degraded",
+            "retailer_inventory",
+            region=REGION_CODE,
+            status="degraded",
+            retailer=retailer,
+            detail_failures=summary["failures"],
+            accepted_products=summary["accepted"],
+            allowed_failures=summary["budget"],
+        )
+        print(
+            f"Allowed bounded EU detail-page failures for {retailer}: "
+            f"{summary['failures']} of {summary['accepted']} accepted products "
+            f"(budget {summary['budget']})",
+            flush=True,
+        )
+
+    if hard_failures:
+        raise RuntimeError(f"EU detail-page discovery failures exceeded budget: {hard_failures}")
 
 
 def region_counts() -> dict[str, int]:

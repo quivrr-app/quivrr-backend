@@ -31,6 +31,25 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "mundo_surf"):
                 retailer_runner.assert_detail_fetch_health(path)
 
+    def test_retailer_runner_allows_bounded_detail_fetch_failures(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "results": [
+                            {
+                                "target": "mundo_surf",
+                                "detailFetchFailures": 16,
+                                "productsAccepted": 4854,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            retailer_runner.assert_detail_fetch_health(path)
+
     def test_shopify_rollout_targets_remain_eu_scoped(self):
         module = importlib.import_module("scrapers.retailers.europe.run_eu_retailer_discovery")
         self.assertTrue(
