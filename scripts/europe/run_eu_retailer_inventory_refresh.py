@@ -47,6 +47,7 @@ MINIMUM_ROWS = {
     "mundo_surf": 3800,
     "single_quiver": 300,
     "hart_beach": 80,
+    "hawaiisurf": 30,
 }
 
 

@@ -45,7 +45,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
     }
     EXPECTED_ENABLED_BIGCOMMERCE = {"catalyst_surf_shop"}
     EXPECTED_ENABLED_MAGENTO = {"warm_winds"}
-    EXPECTED_ENABLED_CUSTOM = {"reddog_surf_shop"}
+    EXPECTED_ENABLED_CUSTOM = {"reddog_surf_shop", "cinnamon_rainbows"}
 
     def test_retailer_runner_rejects_non_us_region(self):
         with patch.dict(os.environ, {"QUIVRR_REGION_CODE": "EU"}):
@@ -67,7 +67,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        self.assertEqual(len(targets), 26)
+        self.assertEqual(len(targets), 27)
         for target in targets:
             with self.subTest(slug=target["retailerSlug"]):
                 self.assertEqual(target["regionCode"], "US")
@@ -95,7 +95,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 ROOT / "scrapers/retailers/usa/us_retailer_candidate_backlog.json"
             ).read_text(encoding="utf-8")
         )
-        self.assertEqual(len(targets), 44)
+        self.assertEqual(len(targets), 43)
         self.assertEqual(
             len({target["retailerSlug"] for target in targets}),
             len(targets),
@@ -164,7 +164,10 @@ class UsRegionalRolloutTests(unittest.TestCase):
         for target in targets:
             with self.subTest(slug=target["retailerSlug"]):
                 self.assertEqual(target["regionCode"], "US")
-                self.assertEqual(target["platform"], "custom_wix_board_inventory")
+                self.assertIn(
+                    target["platform"],
+                    {"custom_wix_board_inventory", "custom_squarespace_used_inventory"},
+                )
 
     def test_us_normaliser_reads_custom_output(self):
         discovery_files = {str(path).replace("\\", "/") for path in us_normaliser.DISCOVERY_FILES}
@@ -325,6 +328,20 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 "volumeLitres": 28.4,
                 "importableRaw": False,
             },
+            {
+                "retailerSlug": "cinnamon_rainbows",
+                "retailerName": "Cinnamon Rainbows",
+                "regionCode": "US",
+                "rawProductTitle": "Used Roberts Black Diamond 5'6",
+                "productUrl": "https://example.com/cinnamon/roberts-black-diamond-56",
+                "productImageUrl": "https://example.com/cinnamon.jpg",
+                "priceAmount": "399.00",
+                "priceCurrency": "USD",
+                "stockStatus": "in_stock",
+                "lengthFeetInches": "5'6",
+                "volumeLitres": 24.6,
+                "importableRaw": True,
+            },
         ]
         with tempfile.TemporaryDirectory() as temp_dir:
             input_path = Path(temp_dir) / "us_normalised_inventory.json"
@@ -338,9 +355,10 @@ class UsRegionalRolloutTests(unittest.TestCase):
                     "warm_winds": 1,
                     "moment_surf_co": 1,
                     "dark_arts_surf": 1,
-                    "birds_surf_shed": 1,
-                },
-                clear=True,
+                "birds_surf_shed": 1,
+                "cinnamon_rainbows": 1,
+            },
+            clear=True,
             ), patch.object(retailer_runner, "emit_event"), patch.object(
                 retailer_runner, "update_job_state"
             ) as update_job_state, patch.object(

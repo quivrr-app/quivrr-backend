@@ -93,9 +93,9 @@
     "website": "https://www.hawaiisurf.com",
     "collectionUrl": "https://www.hawaiisurf.com/en/collections/shortboards",
     "platform": "shopify",
-    "enabled": false,
+    "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+    "notes": "Promoted after validating the visible shortboards collection and collection products.json feed. The source exposes importable surfboard rows with supported-brand overlap and recoverable dimensions."
   },
   {
     "retailerSlug": "hart_beach",

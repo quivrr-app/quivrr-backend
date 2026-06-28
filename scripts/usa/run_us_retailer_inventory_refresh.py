@@ -39,6 +39,7 @@ MINIMUM_ROWS = {
     "catalyst_surf_shop": 1,
     "warm_winds": 1,
     "reddog_surf_shop": 20,
+    "cinnamon_rainbows": 40,
 }
 
 

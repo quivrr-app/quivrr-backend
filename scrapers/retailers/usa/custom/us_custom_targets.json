@@ -11,8 +11,24 @@
       "https://www.reddogsurfshop.com/board-sale"
     ],
     "platform": "custom_wix_board_inventory",
+    "discoveryType": "wix_product_page",
     "enabled": true,
     "priceCurrency": "USD",
     "notes": "High-value US custom target. Public board inventory pages expose live product-page URLs and JSON-LD product data with brand, price, availability, and dimensions."
+  },
+  {
+    "retailerSlug": "cinnamon_rainbows",
+    "retailerName": "Cinnamon Rainbows",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.cinnamonrainbows.com",
+    "categoryUrls": [
+      "https://www.cinnamonrainbows.com/used-surfboards"
+    ],
+    "platform": "custom_squarespace_used_inventory",
+    "discoveryType": "squarespace_product_page",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "High-value US custom target. Public Squarespace used-surfboards pages expose direct product pages with JSON-LD price, availability, image, and dimensions."
   }
 ]

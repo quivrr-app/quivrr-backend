@@ -199,9 +199,9 @@
     "website": "https://www.hawaiisurf.com",
     "surfboardCategoryUrl": "https://www.hawaiisurf.com/",
     "priority": "Wave 1",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted through the existing EU Shopify pack after validating the shortboards collection feed and supported-brand surfboard overlap."
   },
   {
     "retailerSlug": "glisshop",

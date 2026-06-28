@@ -46,12 +46,12 @@ Review date: `2026-06-28`
 
 ### Already Running
 
-- `21` retailers are already runnable in the US regional stack.
+- `22` retailers are already runnable in the US regional stack.
 - Platform split of current runnable set:
   - `18` Shopify
   - `1` BigCommerce
   - `1` Magento/html
-  - `1` custom high-value path
+  - `2` custom high-value paths
 
 ### Ready Shopify Follow-Up
 
@@ -112,6 +112,11 @@ These are ranked by likely supported-board uplift, not by which one is easiest t
    Why now: real surf retailer signal plus Magento detection; likely better supported-board yield than generic broad-sports shops.
 5. `Breakwater Surf Co`
    Why now: another meaningful Magento retailer candidate that could expand the reusable US pack if the board surface validates.
+
+## Sprint 15 Wave 1 Addition
+
+- `Cinnamon Rainbows`
+  Why promoted: public Squarespace used-board pages expose direct product URLs plus JSON-LD price, availability, image, and exact dimensions. That makes it a high-value US custom path with real searchable used-board upside and low ambiguity.
 
 ## Sprint 14 Recommendation
 

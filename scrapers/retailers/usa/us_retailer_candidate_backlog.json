@@ -308,17 +308,6 @@
     "notes": "Homepage was reachable, but lightweight inspection did not expose a supported structured feed or clear commerce markers."
   },
   {
-    "retailerSlug": "cinnamon_rainbows",
-    "retailerName": "Cinnamon Rainbows",
-    "regionCode": "US",
-    "websiteCandidate": "https://cinnamonrainbows.com",
-    "detectedPlatform": "magento",
-    "platformDetectionStatus": "needs_review",
-    "workingFeed": "",
-    "runnable": false,
-    "notes": "Magento storefront markers detected. No safe US Magento adapter exists in the regional stack yet."
-  },
-  {
     "retailerSlug": "katin_surf_shop",
     "retailerName": "Katin Surf Shop",
     "regionCode": "US",

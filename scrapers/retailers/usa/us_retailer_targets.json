@@ -310,5 +310,17 @@
     "enabled": true,
     "platform": "custom_wix_board_inventory",
     "notes": "Promoted after validating the public board-inventory and board-sale pages. Product detail pages expose JSON-LD brand, price, availability, and dimension data for a high-value supported-brand US custom path."
+  },
+  {
+    "retailerSlug": "cinnamon_rainbows",
+    "retailerName": "Cinnamon Rainbows",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.cinnamonrainbows.com",
+    "surfboardCategoryUrl": "https://www.cinnamonrainbows.com/used-surfboards",
+    "priority": 27,
+    "enabled": true,
+    "platform": "custom_squarespace_used_inventory",
+    "notes": "Promoted after validating the public Squarespace used-surfboards catalogue. Product detail pages expose JSON-LD price, availability, images, and exact dimensions for high-value supported used-board inventory."
   }
 ]

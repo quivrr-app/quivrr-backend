@@ -51,6 +51,7 @@ SHOPIFY_TARGETS = {
     "noordzee_boardstore",
     "gsi_europe",
     "hart_beach",
+    "hawaiisurf",
 }
 PRESTASHOP_TARGETS = {"mundo_surf", "single_quiver"}
 CUSTOM_TARGETS = {"surf_corner", "tablas_surf_shop"}
@@ -69,6 +70,7 @@ ROLLOUT_TARGETS = {
     "surf_corner",
     "tablas_surf_shop",
     "hart_beach",
+    "hawaiisurf",
 }
 PRIORITY_TARGETS = {"58_surf", "pukas_surf_shop", *ROLLOUT_TARGETS}
 
