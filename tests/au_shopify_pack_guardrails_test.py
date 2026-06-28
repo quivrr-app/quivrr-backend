@@ -5,6 +5,19 @@ from scripts.tools import build_retailer_governance_audit as governance_audit
 
 
 class AuShopifyPackGuardrailsTests(unittest.TestCase):
+    def test_awsm_surf_uses_second_hand_board_collection_hint(self):
+        target = active_targets.build_target(
+            {
+                "primary_name": "AWSM Surf",
+                "website": "https://awsmsurf.com",
+                "country": "Australia",
+                "platform": "shopify",
+                "priority": 1,
+            },
+            {},
+        )
+        self.assertEqual(target.get("collection_handles"), ["second-hand-surfboard"])
+
     def test_overboard_surf_uses_board_collection_hint(self):
         target = active_targets.build_target(
             {

@@ -52,6 +52,11 @@ MANUAL_TARGET_METADATA = {
             "https://triggerbrothers.com.au/store/surf/used-surfboards/",
         ]
     },
+    "https://awsmsurf.com": {
+        "collection_handles": [
+            "second-hand-surfboard",
+        ],
+    },
     "https://overboardsurf.com.au": {
         "collection_handles": [
             "boards",
