@@ -268,12 +268,12 @@
     "retailerName": "SantoLoco",
     "regionCode": "EU",
     "country": "Germany",
-    "website": "https://www.santoloco.com",
-    "surfboardCategoryUrl": "https://www.santoloco.com/",
+    "website": "https://santoloco.com",
+    "surfboardCategoryUrl": "https://santoloco.com/collections/surfboards",
     "priority": "Wave 2",
-    "enabled": false,
-    "platform": "unknown",
-    "notes": "EU retailer target. Discovery only; no live scraper or import enabled."
+    "enabled": true,
+    "platform": "shopify",
+    "notes": "Promoted after validating the surfboards Shopify collection. The collection exposes clean supported-brand surfboard rows with recoverable dimensions and low noise."
   },
   {
     "retailerSlug": "surf_pirates",

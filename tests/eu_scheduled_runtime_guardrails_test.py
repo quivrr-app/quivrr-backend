@@ -58,6 +58,7 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
                 "pop_up_surf_shop",
                 "noordzee_boardstore",
                 "gsi_europe",
+                "santoloco",
                 "hart_beach",
                 "hawaiisurf",
             }.issubset(module.SHOPIFY_TARGETS)
@@ -74,6 +75,7 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
             "pop_up_surf_shop",
             "noordzee_boardstore",
             "gsi_europe",
+            "santoloco",
             "hart_beach",
             "hawaiisurf",
         ]:

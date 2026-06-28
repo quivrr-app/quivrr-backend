@@ -50,6 +50,7 @@ SHOPIFY_TARGETS = {
     "pop_up_surf_shop",
     "noordzee_boardstore",
     "gsi_europe",
+    "santoloco",
     "hart_beach",
     "hawaiisurf",
 }
@@ -65,6 +66,7 @@ ROLLOUT_TARGETS = {
     "mundo_surf",
     "noordzee_boardstore",
     "pop_up_surf_shop",
+    "santoloco",
     "single_quiver",
     "surf_boss",
     "surf_corner",

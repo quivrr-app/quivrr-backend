@@ -129,8 +129,8 @@
     "website": "https://santoloco.com",
     "collectionUrl": "https://santoloco.com/collections/surfboards",
     "platform": "shopify",
-    "enabled": false,
+    "enabled": true,
     "priceCurrency": "EUR",
-    "notes": "Discovery detected Shopify markers. Collection URL is a best-effort Shopify surfboard collection candidate and must be verified before activation."
+    "notes": "Promoted after validating the surfboards Shopify collection. The collection exposes clean supported-brand surfboard rows with recoverable dimensions and low noise."
   }
 ]
