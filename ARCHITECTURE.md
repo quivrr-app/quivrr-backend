@@ -116,6 +116,7 @@ Canonical importer guardrails are now a hard contract:
 - positive surfboard evidence must come from dimensions, recognised board-size structure, or official surfboard context
 - uncertain products fail closed into the local `scripts/output/canonical_rejected_products.json` engineering audit instead of entering canonical
 - builder-side partial scrapes must preserve existing descriptions, images, and official URLs rather than weakening canonical truth
+- when a guarded product was previously imported as a model-only orphan, the shared importer now removes inactive `BoardModels` that have no remaining `BoardSizes` and no accepted incoming model row, instead of leaving stale non-surfboard shells behind in canonical
 
 Current Tier 1 source policy:
 

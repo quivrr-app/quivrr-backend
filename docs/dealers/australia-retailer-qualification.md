@@ -17,6 +17,20 @@ This report now covers the wider AU retailer pool rather than a five-retailer sh
 
 Review date: `2026-06-28`
 
+## Sprint 12 Production Outcome
+
+- `Trigger Bros Surfboards` is now live in AU through the reusable BigCommerce path.
+  - Azure execution: `quivrr-nightly-au-inventory-60njwj0`
+  - SQL result: `66` active rows, `66` available rows
+- `AWSM Surf` is now live in AU through the reusable Shopify path plus shared used-board filtering.
+  - Azure execution: `quivrr-nightly-au-inventory-60njwj0`
+  - SQL result: `2` active rows, `2` available rows
+- `Overboard Surf` remains intentionally not live.
+  - Current supported-brand board collections resolve, but supported-brand variants were unavailable in the validated production pass.
+  - Outcome: `0` live AU rows is currently correct and should not be treated as a runtime failure.
+
+These outcomes mean the report below should now be read as the remaining AU backlog and pack roadmap, not as a statement that Trigger Bros or AWSM still need first implementation.
+
 ## AU Coverage Factory Summary
 
 - AU candidates reviewed: `103`
