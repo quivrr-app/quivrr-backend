@@ -1217,6 +1217,81 @@ def parse_preferred_brands(value):
     ]
 
 
+def profile_has_value(value) -> bool:
+    if value in (None, ""):
+        return False
+    if isinstance(value, list):
+        return bool(value)
+    return True
+
+
+def profile_useful_field_count(user: dict | None, profile: dict | None) -> int:
+    user = user or {}
+    profile = profile or {}
+    values = {
+        "height": profile.get("HeightCm"),
+        "weight": profile.get("WeightKg"),
+        "ability": profile.get("Ability"),
+        "usual_volume": profile.get("CurrentVolumeLitres"),
+        "preferred_volume_range": (
+            profile.get("PreferredVolumeMinLitres"),
+            profile.get("PreferredVolumeMaxLitres"),
+        ),
+        "home_region": user.get("HomeRegion"),
+        "home_break": profile.get("HomeBreak"),
+        "home_country": profile.get("HomeCountry"),
+        "wave_type": profile.get("WaveType"),
+        "wave_size": profile.get("WaveSize"),
+        "surf_frequency": profile.get("SurfFrequency"),
+        "preferred_brands": parse_preferred_brands(profile.get("PreferredBrands")),
+        "current_board": profile.get("CurrentBoard"),
+        "surfing_goal": profile.get("SurfingGoal"),
+    }
+    count = 0
+    for key, value in values.items():
+        if key == "preferred_volume_range":
+            if any(item not in (None, "") for item in value):
+                count += 1
+            continue
+        if profile_has_value(value):
+            count += 1
+    return count
+
+
+def profile_strength(user: dict | None, profile: dict | None) -> str:
+    user = user or {}
+    profile = profile or {}
+    strong_profile = all(
+        [
+            profile_has_value(profile.get("HeightCm")),
+            profile_has_value(profile.get("WeightKg")),
+            profile_has_value(profile.get("Ability")),
+            any(
+                item not in (None, "")
+                for item in (
+                    profile.get("CurrentVolumeLitres"),
+                    profile.get("PreferredVolumeMinLitres"),
+                    profile.get("PreferredVolumeMaxLitres"),
+                )
+            ),
+            profile_has_value(profile.get("WaveType")),
+            any(
+                profile_has_value(item)
+                for item in (
+                    user.get("HomeRegion"),
+                    profile.get("HomeCountry"),
+                    profile.get("HomeBreak"),
+                )
+            ),
+        ]
+    )
+    if strong_profile:
+        return "strong"
+    if profile_useful_field_count(user, profile) >= 3:
+        return "partial"
+    return "none"
+
+
 def fetch_identity_bundle(connection, user_id: str) -> dict:
     user_row = row_to_dict(connection.execute(
         text("""
@@ -1251,6 +1326,8 @@ def fetch_identity_bundle(connection, user_id: str) -> dict:
                 WaveSize,
                 SurfFrequency,
                 PreferredBrands,
+                CurrentBoard,
+                SurfingGoal,
                 HomeBreak,
                 HomeCountry,
                 UpdatedUtc
@@ -1416,24 +1493,8 @@ def ensure_identity_user(identity_user: dict) -> dict:
         ) from exc
 
 
-def profile_is_complete(profile: dict | None) -> bool:
-    if not profile:
-        return False
-    fields = (
-        "HeightCm",
-        "WeightKg",
-        "Ability",
-        "CurrentVolumeLitres",
-        "PreferredVolumeMinLitres",
-        "PreferredVolumeMaxLitres",
-        "WaveType",
-        "WaveSize",
-        "SurfFrequency",
-        "PreferredBrands",
-        "HomeBreak",
-        "HomeCountry",
-    )
-    return any(profile.get(field) not in (None, "") for field in fields)
+def profile_is_complete(user: dict | None, profile: dict | None) -> bool:
+    return profile_strength(user, profile) != "none"
 
 
 def format_board_summary(brand_name, model_name, construction, length, volume_litres):
@@ -1722,11 +1783,15 @@ def serialise_identity_bundle(bundle: dict) -> dict:
     user = bundle.get("user") or {}
     profile = bundle.get("profile")
     consent = bundle.get("consent")
+    useful_field_count = profile_useful_field_count(user, profile)
+    completion_strength = profile_strength(user, profile)
 
     return {
         "authenticated": True,
         "isNewUser": bool(bundle.get("isNewUser")),
-        "profileComplete": profile_is_complete(profile),
+        "profileComplete": profile_is_complete(user, profile),
+        "profileStrength": completion_strength,
+        "profileUsefulFieldCount": useful_field_count,
         "user": {
             "userId": str(user.get("UserId")) if user.get("UserId") is not None else None,
             "entraObjectId": user.get("EntraObjectId"),
@@ -1748,6 +1813,8 @@ def serialise_identity_bundle(bundle: dict) -> dict:
             "waveSize": profile.get("WaveSize") if profile else None,
             "surfFrequency": profile.get("SurfFrequency") if profile else None,
             "preferredBrands": parse_preferred_brands(profile.get("PreferredBrands")) if profile else [],
+            "currentBoard": profile.get("CurrentBoard") if profile else None,
+            "surfingGoal": profile.get("SurfingGoal") if profile else None,
             "homeBreak": profile.get("HomeBreak") if profile else None,
             "homeCountry": profile.get("HomeCountry") if profile else None,
             "updatedUtc": str(profile.get("UpdatedUtc")) if profile and profile.get("UpdatedUtc") is not None else None,
@@ -1808,21 +1875,41 @@ def put_my_quivrr_profile(
     bundle = resolve_persisted_identity_bundle(authorization)
     user_id = bundle["user"]["UserId"]
     payload = payload or {}
+    clear_fields = {
+        field
+        for field in payload.get("clearFields", [])
+        if isinstance(field, str)
+    }
+    current_user = bundle.get("user") or {}
+    current_profile = bundle.get("profile") or {}
+
+    def resolved_value(api_field, current_value, normaliser):
+        if api_field in clear_fields:
+            return None
+        if api_field not in payload:
+            return current_value
+        raw_value = payload.get(api_field)
+        if raw_value in (None, ""):
+            return current_value
+        return normaliser(raw_value)
+
     updates = {
-        "display_name": normalise_optional_text(payload.get("displayName"), 256),
-        "home_region": normalise_optional_text(payload.get("homeRegion"), 16),
-        "height_cm": normalise_optional_int(payload.get("heightCm")),
-        "weight_kg": normalise_optional_int(payload.get("weightKg")),
-        "ability": normalise_optional_text(payload.get("ability"), 64),
-        "current_volume_litres": normalise_optional_float(payload.get("currentVolumeLitres")),
-        "preferred_volume_min_litres": normalise_optional_float(payload.get("preferredVolumeMinLitres")),
-        "preferred_volume_max_litres": normalise_optional_float(payload.get("preferredVolumeMaxLitres")),
-        "wave_type": normalise_optional_text(payload.get("waveType"), 128),
-        "wave_size": normalise_optional_text(payload.get("waveSize"), 128),
-        "surf_frequency": normalise_optional_text(payload.get("surfFrequency"), 128),
-        "preferred_brands": preferred_brands_payload(payload.get("preferredBrands")),
-        "home_break": normalise_optional_text(payload.get("homeBreak"), 256),
-        "home_country": normalise_optional_text(payload.get("homeCountry"), 128),
+        "display_name": resolved_value("displayName", current_user.get("DisplayName"), lambda value: normalise_optional_text(value, 256)),
+        "home_region": resolved_value("homeRegion", current_user.get("HomeRegion"), lambda value: normalise_optional_text(value, 16)),
+        "height_cm": resolved_value("heightCm", current_profile.get("HeightCm"), normalise_optional_int),
+        "weight_kg": resolved_value("weightKg", current_profile.get("WeightKg"), normalise_optional_int),
+        "ability": resolved_value("ability", current_profile.get("Ability"), lambda value: normalise_optional_text(value, 64)),
+        "current_volume_litres": resolved_value("currentVolumeLitres", current_profile.get("CurrentVolumeLitres"), normalise_optional_float),
+        "preferred_volume_min_litres": resolved_value("preferredVolumeMinLitres", current_profile.get("PreferredVolumeMinLitres"), normalise_optional_float),
+        "preferred_volume_max_litres": resolved_value("preferredVolumeMaxLitres", current_profile.get("PreferredVolumeMaxLitres"), normalise_optional_float),
+        "wave_type": resolved_value("waveType", current_profile.get("WaveType"), lambda value: normalise_optional_text(value, 128)),
+        "wave_size": resolved_value("waveSize", current_profile.get("WaveSize"), lambda value: normalise_optional_text(value, 128)),
+        "surf_frequency": resolved_value("surfFrequency", current_profile.get("SurfFrequency"), lambda value: normalise_optional_text(value, 128)),
+        "preferred_brands": resolved_value("preferredBrands", current_profile.get("PreferredBrands"), preferred_brands_payload),
+        "current_board": resolved_value("currentBoard", current_profile.get("CurrentBoard"), lambda value: normalise_optional_text(value, 256)),
+        "surfing_goal": resolved_value("surfingGoal", current_profile.get("SurfingGoal"), lambda value: normalise_optional_text(value, 128)),
+        "home_break": resolved_value("homeBreak", current_profile.get("HomeBreak"), lambda value: normalise_optional_text(value, 256)),
+        "home_country": resolved_value("homeCountry", current_profile.get("HomeCountry"), lambda value: normalise_optional_text(value, 128)),
     }
 
     try:
@@ -1851,6 +1938,8 @@ def put_my_quivrr_profile(
                         WaveSize = :wave_size,
                         SurfFrequency = :surf_frequency,
                         PreferredBrands = :preferred_brands,
+                        CurrentBoard = :current_board,
+                        SurfingGoal = :surfing_goal,
                         HomeBreak = :home_break,
                         HomeCountry = :home_country,
                         UpdatedUtc = SYSUTCDATETIME()
@@ -1863,10 +1952,27 @@ def put_my_quivrr_profile(
                 user_id=str(user_id),
                 event_type="ProfileUpdated",
                 region_code=updates["home_region"],
-                payload={"updatedFields": sorted(payload.keys())},
+                payload={"updatedFields": sorted(key for key in payload.keys() if key != "clearFields"), "clearFields": sorted(clear_fields)},
             )
             updated_bundle = fetch_identity_bundle(connection, str(user_id))
             updated_bundle["isNewUser"] = False
+            updated_strength = profile_strength(updated_bundle.get("user"), updated_bundle.get("profile"))
+            if updated_strength == "partial":
+                write_user_event(
+                    connection,
+                    user_id=str(user_id),
+                    event_type="ProfileCompletedPartial",
+                    region_code=updated_bundle.get("user", {}).get("HomeRegion"),
+                    payload={"usefulFieldCount": profile_useful_field_count(updated_bundle.get("user"), updated_bundle.get("profile"))},
+                )
+            elif updated_strength == "strong":
+                write_user_event(
+                    connection,
+                    user_id=str(user_id),
+                    event_type="ProfileCompletedStrong",
+                    region_code=updated_bundle.get("user", {}).get("HomeRegion"),
+                    payload={"usefulFieldCount": profile_useful_field_count(updated_bundle.get("user"), updated_bundle.get("profile"))},
+                )
     except (OperationalError, DBAPIError) as exc:
         raise HTTPException(
             status_code=503,

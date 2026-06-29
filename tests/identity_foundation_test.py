@@ -82,6 +82,8 @@ class IdentityFoundationTests(unittest.TestCase):
         self.assertTrue(body["authenticated"])
         self.assertTrue(body["isNewUser"])
         self.assertFalse(body["profileComplete"])
+        self.assertEqual(body["profileStrength"], "none")
+        self.assertEqual(body["profileUsefulFieldCount"], 1)
         self.assertEqual(body["user"]["entraObjectId"], "entra-1")
         self.assertEqual(body["consent"]["consentVersion"], "my-quivrr-consent-v1")
 
@@ -114,6 +116,8 @@ class IdentityFoundationTests(unittest.TestCase):
                 "WaveSize": None,
                 "SurfFrequency": None,
                 "PreferredBrands": '["Album"]',
+                "CurrentBoard": "5'8 daily driver",
+                "SurfingGoal": "More speed",
                 "HomeBreak": "Manly",
                 "HomeCountry": "Australia",
                 "UpdatedUtc": None,
@@ -141,6 +145,8 @@ class IdentityFoundationTests(unittest.TestCase):
                     "preferredVolumeMaxLitres": 32,
                     "waveType": "Beach break",
                     "preferredBrands": ["Album"],
+                    "currentBoard": "5'8 daily driver",
+                    "surfingGoal": "More speed",
                     "homeBreak": "Manly",
                     "homeCountry": "Australia",
                 },
@@ -150,9 +156,75 @@ class IdentityFoundationTests(unittest.TestCase):
         body = response.json()
         self.assertEqual(body["status"], "saved")
         self.assertTrue(body["profileComplete"])
+        self.assertEqual(body["profileStrength"], "strong")
         self.assertEqual(body["profile"]["heightCm"], 180)
         self.assertEqual(body["profile"]["preferredBrands"], ["Album"])
+        self.assertEqual(body["profile"]["currentBoard"], "5'8 daily driver")
         self.assertGreaterEqual(fake_connection.execute.call_count, 3)
+
+    def test_profile_update_preserves_omitted_values_and_allows_explicit_clears(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {
+                "UserId": "user-1",
+                "EntraObjectId": "entra-1",
+                "Email": "surfer@example.com",
+                "DisplayName": "Test Surfer",
+                "IdentityProvider": "entra_external_id",
+                "HomeRegion": "AU",
+                "CreatedUtc": None,
+                "LastLoginUtc": None,
+            },
+            "profile": {
+                "HeightCm": 180,
+                "WeightKg": 78,
+                "Ability": "Intermediate",
+                "CurrentVolumeLitres": 30.0,
+                "PreferredVolumeMinLitres": 28.0,
+                "PreferredVolumeMaxLitres": 32.0,
+                "WaveType": "Beach break",
+                "WaveSize": "2 to 3 ft",
+                "SurfFrequency": "Weekly",
+                "PreferredBrands": '["Album","Pyzel"]',
+                "CurrentBoard": "Twin",
+                "SurfingGoal": "More speed",
+                "HomeBreak": "Manly",
+                "HomeCountry": "Australia",
+                "UpdatedUtc": None,
+            },
+            "consent": {},
+        }
+        updated_bundle = {
+            **bundle,
+            "profile": {
+                **bundle["profile"],
+                "CurrentBoard": None,
+                "SurfingGoal": "More hold",
+            },
+        }
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle), patch.object(
+            backend_app.engine, "begin", return_value=fake_context
+        ), patch.object(backend_app, "fetch_identity_bundle", return_value=updated_bundle):
+            response = self.client.put(
+                "/api/my-quivrr/profile",
+                headers={"Authorization": "Bearer token"},
+                json={
+                    "surfingGoal": "More hold",
+                    "clearFields": ["currentBoard"],
+                },
+            )
+
+        self.assertEqual(response.status_code, 200)
+        params = fake_connection.execute.call_args_list[1].args[1]
+        self.assertEqual(params["height_cm"], 180)
+        self.assertEqual(params["preferred_brands"], '["Album","Pyzel"]')
+        self.assertIsNone(params["current_board"])
+        self.assertEqual(params["surfing_goal"], "More hold")
 
     def test_logout_is_stateless_client_session_acknowledgement(self):
         response = self.client.post("/api/logout")
@@ -399,6 +471,29 @@ class IdentityFoundationTests(unittest.TestCase):
         self.assertEqual(body["currentBoardCount"], 1)
         self.assertEqual(body["recentActivity"][0]["eventType"], "BoardViewed")
 
+    def test_profile_completion_strength_distinguishes_partial_and_strong(self):
+        partial_strength = backend_app.profile_strength(
+            {"HomeRegion": None},
+            {
+                "Ability": "Progressing",
+                "WaveType": "Beach break",
+                "SurfFrequency": "Weekly",
+            },
+        )
+        strong_strength = backend_app.profile_strength(
+            {"HomeRegion": "AU"},
+            {
+                "HeightCm": 180,
+                "WeightKg": 78,
+                "Ability": "Intermediate",
+                "CurrentVolumeLitres": 30.0,
+                "WaveType": "Beach break",
+            },
+        )
+
+        self.assertEqual(partial_strength, "partial")
+        self.assertEqual(strong_strength, "strong")
+
     def test_jwt_validator_module_exports_expected_functions(self):
         self.assertTrue(callable(entra_external_id.get_jwks))
         self.assertTrue(callable(entra_external_id.validate_access_token))
@@ -423,6 +518,11 @@ class IdentityFoundationTests(unittest.TestCase):
         quiver_script = Path("sql/identity/002_create_my_quivrr_quiver.sql")
         self.assertTrue(quiver_script.exists())
         self.assertIn("dbo.UserQuiver", quiver_script.read_text(encoding="utf-8"))
+        profile_extension_script = Path("sql/identity/003_extend_my_quivrr_profiles_onboarding.sql")
+        self.assertTrue(profile_extension_script.exists())
+        extension_text = profile_extension_script.read_text(encoding="utf-8")
+        self.assertIn("CurrentBoard", extension_text)
+        self.assertIn("SurfingGoal", extension_text)
 
 
 if __name__ == "__main__":
