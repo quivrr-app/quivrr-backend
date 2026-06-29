@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock, Thread
 from urllib.parse import quote_plus
+from uuid import uuid4
 
 from dotenv import load_dotenv
 from fastapi import Body, FastAPI, Header, HTTPException
