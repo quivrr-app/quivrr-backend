@@ -12,11 +12,10 @@ Review date: `2026-06-28`
 
 - `RegionCode = US`
 - Current validated US runnable retailer set: `23`
-- Current validated US active retailer inventory rows: `8,076` before the HSS promotion slice
+- Current validated US active retailer inventory rows: `8,496`
 - Current validated US importer output rows in the latest safe pass: `8,401`
 - Current validated US importable raw rows in the latest safe pass: `8,291`
-- Production-validated onboarding additions so far: `Reddog Surf Shop`, `Cinnamon Rainbows`
-- Current promotion slice: `Huntington Surf & Sport`
+- Production-validated onboarding additions so far: `Reddog Surf Shop`, `Cinnamon Rainbows`, `Huntington Surf & Sport`
 
 ### Current Runnable Retailers
 
@@ -63,7 +62,7 @@ Review date: `2026-06-28`
 | --- | --- | --- | --- | ---: | --- | --- | --- | --- | --- | ---: | --- |
 | Catalyst Surf Shop | Already live | BigCommerce | `/webstore/surfboards/` plus surfboard brand categories | 2,389 runnable rows in latest safe pass | Strong | Visible | Strong dimensions, volume where available | Existing US BigCommerce pack | Already complete | 95 | Keep live, no further onboarding work needed in this sprint |
 | Jack's Surfboards | Already live | Shopify | `/collections/surfboards` and `/collections/surf-shortboards` | 200 runnable rows in latest safe pass | Strong | Visible | Strong dimensions, volume where available | Existing US Shopify pack | Already complete | 88 | Keep live, no further onboarding work needed in this sprint |
-| Huntington Surf & Sport | Promoted in this slice | Custom Shopify stocklist JSON | Public stocklist page backed by `boards.json` | 422 raw stocklist rows, 418 accepted/importable rows | Firewire, Lost, Channel Islands, Sharp Eye, Rusty, Haydenshapes, JS Industries all present | Visible | Lengths are present on 418 importable rows; volume is generally absent | Small US-only custom path using the existing custom runner | Low-to-medium | 91 | Promote through the US custom runner and validate through Azure, SQL and production search |
+| Huntington Surf & Sport | Live after production validation | Custom Shopify stocklist JSON | Public stocklist page backed by `boards.json` | 422 raw stocklist rows, 418 accepted/importable rows | Firewire, Lost, Channel Islands, Sharp Eye, Rusty, Haydenshapes, JS Industries all present | Visible | Lengths are present on 418 importable rows; volume is generally absent | Small US-only custom path using the existing custom runner | Low-to-medium | 91 | Keep live and treat it as the current reference custom stocklist path |
 
 ### Ready Shopify Follow-Up
 
@@ -131,7 +130,7 @@ These are ranked by likely supported-board uplift, not by which one is easiest t
 ## Sprint 15 Phase 3 Promotion
 
 - `Huntington Surf & Sport`
-  Why promoted: the public HSS stocklist page exposes a dedicated `boards.json` asset with current board rows containing shaper, model, length, price, store, and condition fields. Lightweight Shopify feed inspection was misleading, but the stocklist JSON path is stable, board-specific, low-noise, and fits a small US-only custom adapter safely. The validated local pass recovered `418` importable rows from `422` raw stocklist rows.
+  Why promoted: the public HSS stocklist page exposes a dedicated `boards.json` asset with current board rows containing shaper, model, length, price, store, and condition fields. Lightweight Shopify feed inspection was misleading, but the stocklist JSON path is stable, board-specific, low-noise, and fits a small US-only custom adapter safely. The validated local pass recovered `418` importable rows from `422` raw stocklist rows, and the live Azure refresh produced `418` active US retailer rows with `228` linked models and `61` linked sizes.
 
 ## Sprint 14 Recommendation
 
@@ -142,7 +141,7 @@ These are ranked by likely supported-board uplift, not by which one is easiest t
 
 ## Updated Recommendation
 
-- Treat `Huntington Surf & Sport` as the current highest-value safe US promotion because it adds meaningful board volume without requiring a new broad scraper framework.
+- Treat `Huntington Surf & Sport` as a completed high-value US promotion and use it as the reference pattern for future stocklist-style custom retailer sources.
 - Keep `Hansen Surfboards` and `Encinitas Surfboards` as high-value follow-ups, but continue to avoid force-fitting them into the runner until a board-specific path is proven.
 - After HSS, return to the next best Magento promotion candidate rather than widening custom logic further.
 

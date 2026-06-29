@@ -21,7 +21,7 @@ Production-backed retailer and MFA counts below come from live SQL on `2026-06-2
 | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | AU | Production, Gen 3 reference | 36 | 12,287 | 6,706 | 2026-06-28 17:00:42 | 2026-06-28 17:03:58 | Strongest live region. AU expansion is parked; next AU work should be linkage uplift for Trigger Bros and Extreme rather than more retailer onboarding. |
 | EU | Production, Gen 3 | 15 | 12,332 | 2,716 | 2026-06-28 23:56:46 | 2026-06-28 20:32:15 | Sprint 15 Wave 2 added SantoLoco. EU coverage is broader and operationally stable, with one more live retailer and `+132` active rows after the production-validated refresh. |
-| US | Production Beta, Gen 3 | 22 | 8,076 | 4,676 | 2026-06-28 22:29:56 | 2026-06-28 21:01:59 | Sprint 15 Wave 1 added Cinnamon Rainbows. US runtime remains job-backed and production validated, with one more live retailer and `+57` active rows after the production refresh. |
+| US | Production Beta, Gen 3 | 23 | 8,496 | 4,676 | 2026-06-29 03:34:28 | 2026-06-28 21:01:59 | Sprint 15 Phase 3 added Huntington Surf & Sport. US runtime remains job-backed and production validated, with one more live retailer and `+420` active rows after the production refresh. |
 | ID | Production, coverage-limited | 6 | 2,064 | 177 | 2026-06-28 20:31:45 | 2026-06-28 21:15:28 | Region is live and healthy, but retailer breadth is still limited. Indonesia needs dealer-source discovery before another serious onboarding wave is attempted. |
 
 ## 3. Platform Distribution
@@ -50,7 +50,7 @@ These counts are a mix of current active target registries and coverage-factory 
 | --- | --- | --- | --- | --- | --- | --- |
 | AU | 36 live retailers in production | None | No new AU onboarding recommended in this sprint | AU long tail remains reviewed but intentionally de-prioritised | AU is parked for coverage expansion; Trigger Bros and Extreme are live and should now be treated as linkage-quality work, not new onboarding | Trigger Bros linkage uplift, Extreme linkage uplift, AWSM governance check, Overboard parked-at-zero review, broader AU linkage uplift only if reopened |
 | EU | 15 runnable retailers | Hart Beach, HawaiiSurf, SantoLoco | Surf Pirates, Guincho Wind Factory | Warehouse One, Full & Cas, Ericeira Surf & Skate, Blue Tomato | Surfshop Deutschland blocked; Deeply, Glisshop and Flysurf remain low-value or unsupported for this pass | Surf Pirates, Guincho Wind Factory, Warehouse One, Full & Cas, Ericeira Surf & Skate |
-| US | 22 runnable retailers | Reddog Surf Shop, Cinnamon Rainbows | Hansen Surfboards, Encinitas Surfboards, Aqua East Surf Shop, Farias Surf Shop, Breakwater Surf Co | Nomad Surf Shop, Quality Surfboards Hawaii, Aloha Board Shop, Miller's Surf and Sport, CB Surf Shop | Ron Jon, Tamba Surf, Hi-Tech Surf Sports, K-Coast, Verde Azul, Hapa, Brave New World remain blocked | Hansen Surfboards, Encinitas Surfboards, Aqua East Surf Shop, Farias Surf Shop, Breakwater Surf Co |
+| US | 23 runnable retailers | Reddog Surf Shop, Cinnamon Rainbows, Huntington Surf & Sport | Hansen Surfboards, Encinitas Surfboards, Aqua East Surf Shop, Farias Surf Shop, Breakwater Surf Co | Nomad Surf Shop, Quality Surfboards Hawaii, Aloha Board Shop, Miller's Surf and Sport, CB Surf Shop | Ron Jon, Tamba Surf, Hi-Tech Surf Sports, K-Coast, Verde Azul, Hapa, Brave New World remain blocked | Hansen Surfboards, Encinitas Surfboards, Aqua East Surf Shop, Farias Surf Shop, Breakwater Surf Co |
 | ID | 6 live retailers | None | None confirmed in Sprint 14 | Fresh dealer-registry and qualification pass required before new onboarding | Coverage-limited; no current pack-ready follow-up source is confirmed | Start with retailer-source discovery rather than implementation |
 
 ## 5. Sprint 14 Additions
@@ -62,6 +62,7 @@ These counts are a mix of current active target registries and coverage-factory 
 | EU | SantoLoco | Shopify | 132 | `quivrr-nightly-eu-inventory` | Succeeded | Live and production validated in Sprint 15 Wave 2. |
 | US | Reddog Surf Shop | Custom Wix / structured product pages | 39 | `quivrr-nightly-us-inventory` | Succeeded | Live and production validated. |
 | US | Cinnamon Rainbows | Custom Squarespace used inventory | 57 | `quivrr-nightly-us-inventory` | Succeeded | Live and production validated in Sprint 15 Wave 1. |
+| US | Huntington Surf & Sport | Custom Shopify stocklist JSON | 418 | `quivrr-nightly-us-inventory` | Succeeded | Live and production validated in Sprint 15 Phase 3. |
 
 ## 6. Search And Operations Validation
 

@@ -33,6 +33,8 @@ The current production-ready dry-run set is limited to retailers that fit an exi
 - Catalyst Surf Shop
 - Warm Winds
 - Reddog Surf Shop
+- Cinnamon Rainbows
+- Huntington Surf & Sport
 
 Hansen Surfboards and Encinitas Surfboards remain documented follow-up targets. Their storefronts are reachable, but the existing Shopify adapter does not yet recover safe surfboard rows from their exposed feeds.
 
@@ -65,6 +67,8 @@ Implemented runnable retailers:
 - Catalyst Surf Shop
 - Warm Winds
 - Reddog Surf Shop
+- Cinnamon Rainbows
+- Huntington Surf & Sport
 
 Reviewed but still disabled in the master target registry:
 
@@ -75,13 +79,12 @@ Reviewed but still disabled in the master target registry:
 - Froghouse Surf Shop: no stable supported commerce feed exposed during lightweight inspection.
 - Heritage Surf & Sport: WooCommerce Store API is reachable, but lightweight validation did not recover a safe surfboard-only row set.
 - 808 Boards: WooCommerce markers were detected, but no safe surfboard inventory path was confirmed.
-- Cinnamon Rainbows: category pages are reachable, but lightweight validation did not recover a safe importable surfboard set.
 
 Backlog candidates captured in `scrapers/retailers/usa/us_retailer_candidate_backlog.json`:
 
-- 44 USA retailer candidates remain in backlog and are region-scoped to `US`.
-- Remaining backlog platform split: 12 `shopify`, 3 `woocommerce`, 10 `magento`, 19 `unknown`.
-- Remaining backlog detection status split: 21 `needs_review`, 11 `opaque`, 13 `blocked`.
+- 42 USA retailer candidates remain in backlog and are region-scoped to `US`.
+- Remaining backlog platform split: 11 `shopify`, 2 `woocommerce`, 9 `magento`, 20 `unknown`.
+- Remaining backlog detection status split: 18 `needs_review`, 11 `opaque`, 13 `blocked`.
 - These backlog entries are intentionally non-runnable until an existing adapter is validated end-to-end or a small isolated US-only adapter is reviewed.
 
 Skipped for this pass:
@@ -93,15 +96,15 @@ Skipped for this pass:
 Expected row uplift from this pass:
 
 - Dry-run baseline before this pass: 5,226 importable rows across 18 runnable retailers.
-- Current validated dry-run result: 7,812 importable rows across 20 runnable retailers.
-- Net uplift from this pass: +2,586 importable rows.
+- Current validated dry-run result: 8,291 importable rows across 23 runnable retailers.
+- Net uplift from this pass: +3,065 importable rows.
 
 ## Platform Status
 
 - Shopify: config-driven and live for 18 runnable retailers.
 - BigCommerce: reusable US adapter now wired into the runner; Catalyst Surf Shop is promoted and validated.
 - Magento or category-html: reusable US adapter now wired into the runner; Warm Winds is promoted and validated.
-- Custom/high-value: reusable US custom runner now supports Reddog Surf Shop through its public board-inventory pages and per-product JSON-LD detail data.
+- Custom/high-value: reusable US custom runner now supports Reddog Surf Shop through its public board-inventory pages, Cinnamon Rainbows through Squarespace used-board pages, and Huntington Surf & Sport through its public surfboard stocklist JSON asset.
 - WooCommerce: reusable US adapter now supports category and Store API paths, but no backlog retailer was safe to promote in this pass.
 
 ## Implemented Retailer Paths
