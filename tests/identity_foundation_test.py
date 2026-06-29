@@ -3,7 +3,7 @@ import os
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
@@ -51,6 +51,185 @@ class IdentityFoundationTests(unittest.TestCase):
             response = self.client.get("/api/me", headers={"Authorization": "Bearer bad-token"})
 
         self.assertEqual(response.status_code, 401)
+
+    def test_me_returns_persisted_identity_bundle(self):
+        bundle = {
+            "isNewUser": True,
+            "user": {
+                "UserId": "user-1",
+                "EntraObjectId": "entra-1",
+                "Email": "surfer@example.com",
+                "DisplayName": "Test Surfer",
+                "IdentityProvider": "google.com",
+                "HomeRegion": "AU",
+                "CreatedUtc": "2026-01-01T00:00:00",
+                "LastLoginUtc": "2026-01-02T00:00:00",
+            },
+            "profile": {"Ability": None, "PreferredBrands": None, "UpdatedUtc": "2026-01-02T00:00:00"},
+            "consent": {
+                "ConsentVersion": "my-quivrr-consent-v1",
+                "MarketingConsent": False,
+                "AnalyticsConsent": False,
+                "ProductNotificationConsent": False,
+            },
+        }
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle):
+            response = self.client.get("/api/me", headers={"Authorization": "Bearer token"})
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertTrue(body["authenticated"])
+        self.assertTrue(body["isNewUser"])
+        self.assertFalse(body["profileComplete"])
+        self.assertEqual(body["user"]["entraObjectId"], "entra-1")
+        self.assertEqual(body["consent"]["consentVersion"], "my-quivrr-consent-v1")
+
+    def test_profile_update_persists_optional_fields(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {
+                "UserId": "user-1",
+                "EntraObjectId": "entra-1",
+                "Email": "surfer@example.com",
+                "DisplayName": "Test Surfer",
+                "IdentityProvider": "entra_external_id",
+                "HomeRegion": None,
+                "CreatedUtc": None,
+                "LastLoginUtc": None,
+            },
+            "profile": {},
+            "consent": {},
+        }
+        updated_bundle = {
+            **bundle,
+            "profile": {
+                "HeightCm": 180,
+                "WeightKg": 78,
+                "Ability": "Intermediate",
+                "CurrentVolumeLitres": 30.0,
+                "PreferredVolumeMinLitres": 28.0,
+                "PreferredVolumeMaxLitres": 32.0,
+                "WaveType": "Beach break",
+                "WaveSize": None,
+                "SurfFrequency": None,
+                "PreferredBrands": '["Album"]',
+                "HomeBreak": "Manly",
+                "HomeCountry": "Australia",
+                "UpdatedUtc": None,
+            },
+        }
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle), patch.object(
+            backend_app.engine, "begin", return_value=fake_context
+        ), patch.object(backend_app, "fetch_identity_bundle", return_value=updated_bundle):
+            response = self.client.put(
+                "/api/my-quivrr/profile",
+                headers={"Authorization": "Bearer token"},
+                json={
+                    "displayName": "Test Surfer",
+                    "homeRegion": "AU",
+                    "heightCm": "180",
+                    "weightKg": 78,
+                    "ability": "Intermediate",
+                    "currentVolumeLitres": "30",
+                    "preferredVolumeMinLitres": 28,
+                    "preferredVolumeMaxLitres": 32,
+                    "waveType": "Beach break",
+                    "preferredBrands": ["Album"],
+                    "homeBreak": "Manly",
+                    "homeCountry": "Australia",
+                },
+            )
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["status"], "saved")
+        self.assertTrue(body["profileComplete"])
+        self.assertEqual(body["profile"]["heightCm"], 180)
+        self.assertEqual(body["profile"]["preferredBrands"], '["Album"]')
+        self.assertGreaterEqual(fake_connection.execute.call_count, 2)
+
+    def test_logout_is_stateless_client_session_acknowledgement(self):
+        response = self.client.post("/api/logout")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "ok")
+
+    def test_identity_user_creation_uses_entra_object_id_and_default_consent(self):
+        class FakeRow:
+            def __init__(self, mapping):
+                self._mapping = mapping
+
+        class FakeResult:
+            def __init__(self, row=None):
+                self.row = row
+
+            def fetchone(self):
+                return self.row
+
+        fake_connection = MagicMock()
+        fake_connection.execute.side_effect = [
+            FakeResult(None),
+            FakeResult(),
+            FakeResult(),
+            FakeResult(),
+            FakeResult(FakeRow({
+                "UserId": "user-1",
+                "EntraObjectId": "entra-1",
+                "Email": "surfer@example.com",
+                "DisplayName": "Test Surfer",
+                "IdentityProvider": "microsoft",
+                "HomeRegion": None,
+                "CreatedUtc": None,
+                "LastLoginUtc": None,
+                "IsActive": True,
+            })),
+            FakeResult(FakeRow({"UserId": "user-1", "UpdatedUtc": None})),
+            FakeResult(FakeRow({
+                "ConsentVersion": "my-quivrr-consent-v1",
+                "MarketingConsent": False,
+                "AnalyticsConsent": False,
+                "ProductNotificationConsent": False,
+                "ConsentCapturedUtc": None,
+                "ConsentSource": "automatic_first_login_default",
+            })),
+        ]
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app.engine, "begin", return_value=fake_context):
+            bundle = backend_app.ensure_identity_user({
+                "entraObjectId": "entra-1",
+                "email": "surfer@example.com",
+                "displayName": "Test Surfer",
+                "identityProvider": "microsoft",
+            })
+
+        self.assertTrue(bundle["isNewUser"])
+        self.assertEqual(bundle["user"]["EntraObjectId"], "entra-1")
+        executed_sql = "\n".join(str(call.args[0]) for call in fake_connection.execute.call_args_list)
+        self.assertIn("INSERT INTO dbo.Users", executed_sql)
+        self.assertIn("INSERT INTO dbo.UserConsents", executed_sql)
+
+    def test_token_claims_normalise_email_and_provider(self):
+        with patch.object(entra_external_id, "validate_access_token", return_value={
+            "oid": "entra-1",
+            "sub": "subject-1",
+            "emails": ["surfer@example.com"],
+            "name": "Test Surfer",
+            "idp": "google.com",
+        }):
+            user = entra_external_id.get_current_user_optional("Bearer token")
+
+        self.assertEqual(user["entraObjectId"], "entra-1")
+        self.assertEqual(user["email"], "surfer@example.com")
+        self.assertEqual(user["identityProvider"], "google.com")
 
     def test_events_endpoint_accepts_anonymous_payload(self):
         response = self.client.post(
