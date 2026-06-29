@@ -7,11 +7,19 @@ from urllib.parse import quote_plus
 from uuid import uuid4
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import Body, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import bindparam, create_engine, text
 from sqlalchemy.exc import DBAPIError, OperationalError
 
+from auth.entra_external_id import (
+    AuthConfigurationError,
+    AuthValidationError,
+    get_current_user_optional,
+    is_configured as entra_auth_is_configured,
+    missing_config_keys as entra_missing_config_keys,
+    require_current_user,
+)
 from observability.operations_dashboard import DASHBOARD_VERSION, build_operations_dashboard_metrics
 from utils.dimensions import dimensions_from_title
 from utils.retailer_matching import classify_retailer_close, classify_retailer_exact
@@ -653,6 +661,163 @@ def get_ops_dashboard(
         regionCount=len(response.get("regions", [])),
     )
     return response
+
+
+def identity_config_response() -> dict:
+    return {
+        "service": "my-quivrr-identity",
+        "provider": "microsoft_entra_external_id",
+        "configured": entra_auth_is_configured(),
+        "missingConfig": entra_missing_config_keys(),
+    }
+
+
+def resolve_required_identity_user(authorization: str | None) -> dict:
+    if not entra_auth_is_configured():
+        raise HTTPException(
+            status_code=503,
+            detail={
+                **identity_config_response(),
+                "message": "Entra External ID is not configured for authenticated APIs.",
+            },
+        )
+
+    try:
+        return require_current_user(authorization)
+    except AuthConfigurationError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                **identity_config_response(),
+                "message": str(exc),
+            },
+        ) from exc
+    except AuthValidationError as exc:
+        raise HTTPException(status_code=401, detail=str(exc)) from exc
+
+
+def resolve_optional_identity_user(authorization: str | None) -> dict | None:
+    if not authorization:
+        return None
+
+    try:
+        return get_current_user_optional(authorization)
+    except (AuthConfigurationError, AuthValidationError):
+        return None
+
+
+@app.get("/api/me")
+def get_me(authorization: str | None = Header(default=None)):
+    user = resolve_required_identity_user(authorization)
+    return {
+        "authenticated": True,
+        "user": {
+            "entraObjectId": user.get("entraObjectId"),
+            "email": user.get("email"),
+            "displayName": user.get("displayName"),
+            "identityProvider": user.get("identityProvider"),
+        },
+        "identity": identity_config_response(),
+    }
+
+
+@app.get("/api/my-quivrr/profile")
+def get_my_quivrr_profile(authorization: str | None = Header(default=None)):
+    user = resolve_required_identity_user(authorization)
+    return {
+        "status": "not_implemented",
+        "message": "My Quivrr profile persistence will be implemented after Entra External ID is configured.",
+        "user": {
+            "entraObjectId": user.get("entraObjectId"),
+            "email": user.get("email"),
+        },
+        "profile": None,
+    }
+
+
+@app.put("/api/my-quivrr/profile")
+def put_my_quivrr_profile(
+    payload: dict | None = Body(default=None),
+    authorization: str | None = Header(default=None),
+):
+    user = resolve_required_identity_user(authorization)
+    payload = payload or {}
+    return {
+        "status": "accepted_not_persisted",
+        "message": "Profile payload shape accepted. Persistence is scheduled for the next identity implementation slice.",
+        "user": {
+            "entraObjectId": user.get("entraObjectId"),
+            "email": user.get("email"),
+        },
+        "receivedFields": sorted(payload.keys()),
+    }
+
+
+@app.get("/api/my-quivrr/saved-boards")
+def get_saved_boards(authorization: str | None = Header(default=None)):
+    resolve_required_identity_user(authorization)
+    return {
+        "status": "not_implemented",
+        "savedBoards": [],
+    }
+
+
+@app.post("/api/my-quivrr/saved-boards")
+def post_saved_board(
+    payload: dict | None = Body(default=None),
+    authorization: str | None = Header(default=None),
+):
+    resolve_required_identity_user(authorization)
+    payload = payload or {}
+    return {
+        "status": "accepted_not_persisted",
+        "receivedFields": sorted(payload.keys()),
+    }
+
+
+@app.get("/api/my-quivrr/watchlist")
+def get_watchlist(authorization: str | None = Header(default=None)):
+    resolve_required_identity_user(authorization)
+    return {
+        "status": "not_implemented",
+        "watchlist": [],
+    }
+
+
+@app.post("/api/my-quivrr/watchlist")
+def post_watchlist_item(
+    payload: dict | None = Body(default=None),
+    authorization: str | None = Header(default=None),
+):
+    resolve_required_identity_user(authorization)
+    payload = payload or {}
+    return {
+        "status": "accepted_not_persisted",
+        "receivedFields": sorted(payload.keys()),
+    }
+
+
+@app.post("/api/events")
+def post_user_event(
+    payload: dict | None = Body(default=None),
+    authorization: str | None = Header(default=None),
+):
+    payload = payload or {}
+    user = resolve_optional_identity_user(authorization)
+    anonymous_session_id = payload.get("anonymousSessionId") or payload.get("AnonymousSessionId")
+
+    if not user and not anonymous_session_id:
+        raise HTTPException(
+            status_code=422,
+            detail="AnonymousSessionId is required when no authenticated user is supplied.",
+        )
+
+    return {
+        "status": "accepted_not_persisted",
+        "authenticated": user is not None,
+        "anonymousSessionId": anonymous_session_id,
+        "eventType": payload.get("eventType") or payload.get("EventType"),
+    }
 
 
 @app.get("/api/brands")
