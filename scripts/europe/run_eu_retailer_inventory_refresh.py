@@ -49,6 +49,7 @@ MINIMUM_ROWS = {
     "hart_beach": 80,
     "hawaiisurf": 30,
     "santoloco": 100,
+    "surf_pirates": 40,
 }
 
 

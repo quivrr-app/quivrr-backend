@@ -22,6 +22,7 @@ from scrapers.retailers.europe.common.discovery_utils import (  # noqa: E402
     product_rows_from_daisuke_cards,
     product_rows_from_json_ld,
     product_rows_from_links,
+    product_rows_from_structured_thumbnail_cards,
     parse_price,
     strip_tags,
 )
@@ -161,10 +162,12 @@ def discover_target(target: dict, max_pages: int, confirm_blocked: bool = False)
                 rows = product_rows_from_daisuke_cards(response.text, source_url)
             elif target.get("platform") == "custom_magento_cards":
                 rows = product_rows_from_magento_cards(response.text, source_url)
+            elif target.get("platform") == "custom_structured":
+                rows = product_rows_from_structured_thumbnail_cards(response.text, source_url)
             else:
                 rows = product_rows_from_json_ld(response.text, source_url)
             markers = target.get("productPathMarkers") or ["/en/surfboards/", "/en/"]
-            if target.get("platform") != "custom_magento_cards":
+            if target.get("platform") not in {"custom_magento_cards", "custom_structured"}:
                 rows.extend(product_rows_from_links(response.text, source_url, markers))
             accepted, rejected_count = decorate_rows(rows, target, source_url)
             new_urls = {

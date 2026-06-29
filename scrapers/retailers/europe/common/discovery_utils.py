@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import re
 from html import unescape
-from urllib.parse import urldefrag, urljoin
+from urllib.parse import urldefrag, urljoin, urlsplit, urlunsplit
+
+from bs4 import BeautifulSoup
 
 
 BOARD_TERMS = [
@@ -447,6 +449,64 @@ def product_rows_from_daisuke_cards(html: str, source_url: str) -> list[dict]:
             "sourceSnippet": strip_tags(card)[:1000],
             "sourceUrl": source_url,
         })
+    return dedupe_rows(rows)
+
+
+def clean_product_url(url: str, source_url: str) -> str:
+    absolute = urljoin(source_url, clean(url))
+    split = urlsplit(absolute)
+    return urlunsplit((split.scheme, split.netloc, split.path, "", ""))
+
+
+def product_rows_from_structured_thumbnail_cards(html: str, source_url: str) -> list[dict]:
+    """Parse JTL-style gallery cards with explicit product anchors and pricing."""
+    soup = BeautifulSoup(html, "html.parser")
+    rows = []
+
+    for card in soup.select("div.p-c.thumbnail"):
+        title_link = card.select_one("a.title.block")
+        image_link = card.select_one("a.img-w.block")
+        if not title_link or not title_link.get("href"):
+            continue
+
+        title = clean(title_link.get_text(" ", strip=True))
+        if not title:
+            continue
+
+        image_el = card.select_one("a.img-w.block img")
+        price_meta = card.select_one('meta[itemprop="price"]')
+        stock_el = card.select_one("div.signal_image")
+        brand_el = card.select_one(".subline a, .brand a, .manufacturer a")
+
+        stock_text = lower(stock_el.get_text(" ", strip=True)) if stock_el else ""
+        if (
+            "available in store" in stock_text
+            or "avaliable in store" in stock_text
+            or "available online" in stock_text
+            or "online available" in stock_text
+        ):
+            is_available = True
+        elif "out of stock" in stock_text:
+            is_available = False
+        else:
+            is_available = None
+
+        rows.append(
+            {
+                "productTitle": title,
+                "productUrl": clean_product_url(title_link.get("href"), source_url),
+                "productImageUrl": clean_product_url(image_el.get("src"), source_url) if image_el and image_el.get("src") else "",
+                "brand": clean(brand_el.get_text(" ", strip=True)) if brand_el else "",
+                "vendor": clean(brand_el.get_text(" ", strip=True)) if brand_el else "",
+                "priceAmount": clean(price_meta.get("content")) if price_meta else parse_price(card.get_text(" ", strip=True)),
+                "isAvailable": is_available,
+                "stockStatus": "in_stock" if is_available is True else "out_of_stock" if is_available is False else "",
+                "sku": "",
+                "sourceSnippet": strip_tags(str(card))[:1000],
+                "sourceUrl": source_url,
+            }
+        )
+
     return dedupe_rows(rows)
 
 

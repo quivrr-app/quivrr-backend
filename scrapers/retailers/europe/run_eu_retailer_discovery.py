@@ -55,7 +55,7 @@ SHOPIFY_TARGETS = {
     "hawaiisurf",
 }
 PRESTASHOP_TARGETS = {"mundo_surf", "single_quiver"}
-CUSTOM_TARGETS = {"surf_corner", "tablas_surf_shop"}
+CUSTOM_TARGETS = {"surf_corner", "tablas_surf_shop", "surf_pirates"}
 WOOCOMMERCE_TARGETS = {"surf_boss"}
 
 REGION_CODE = "EU"
@@ -70,6 +70,7 @@ ROLLOUT_TARGETS = {
     "single_quiver",
     "surf_boss",
     "surf_corner",
+    "surf_pirates",
     "tablas_surf_shop",
     "hart_beach",
     "hawaiisurf",

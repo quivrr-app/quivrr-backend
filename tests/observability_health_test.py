@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import unittest
+from unittest.mock import patch
 
 from observability.health import _region_health_row, _status_from_freshness, link_quality
 
@@ -37,7 +38,8 @@ class ObservabilityHealthTests(unittest.TestCase):
             "brandCoverage": 6,
             "latestCheckedUtc": datetime.now(timezone.utc),
         }
-        row = _region_health_row("EU", retailer, manufacturer)
+        with patch("observability.health._load_job_state", return_value=None):
+            row = _region_health_row("EU", retailer, manufacturer)
         self.assertEqual(row["status"], "Healthy")
         self.assertEqual(row["retailerModelLinkRate"], 0.9)
         self.assertEqual(row["manufacturerSizeLinkRate"], 0.8)

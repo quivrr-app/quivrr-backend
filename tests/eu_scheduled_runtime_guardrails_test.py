@@ -86,6 +86,7 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
     def test_custom_rollout_targets_remain_eu_scoped(self):
         module = importlib.import_module("scrapers.retailers.europe.run_eu_retailer_discovery")
         self.assertIn("tablas_surf_shop", module.CUSTOM_TARGETS)
+        self.assertIn("surf_pirates", module.CUSTOM_TARGETS)
 
         targets = json.loads(
             (ROOT / "scrapers/retailers/europe/custom/eu_custom_targets.json").read_text(
@@ -95,6 +96,8 @@ class EuScheduledRuntimeGuardrailTests(unittest.TestCase):
         by_slug = {target["retailerSlug"]: target for target in targets}
         self.assertEqual(by_slug["tablas_surf_shop"]["regionCode"], "EU")
         self.assertTrue(by_slug["tablas_surf_shop"]["enabled"])
+        self.assertEqual(by_slug["surf_pirates"]["regionCode"], "EU")
+        self.assertTrue(by_slug["surf_pirates"]["enabled"])
 
     def test_mfa_runner_rejects_non_eu_region(self):
         with patch.dict(os.environ, {"QUIVRR_REGION_CODE": "ID"}):
