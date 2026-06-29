@@ -2,7 +2,7 @@
 
 ## Purpose
 
-My Quivrr uses Microsoft Entra External ID as the customer identity provider. Quivrr keeps anonymous search public and adds a separate authenticated API surface for saved boards, watchlists, profile data, consent, events and future personalised recommendations.
+My Quivrr uses Microsoft Entra External ID as the customer identity provider. Quivrr keeps anonymous search public and adds a separate authenticated API surface for current user identity, optional profile data, consent, events and future personalised recommendations.
 
 ## Identity Provider
 
@@ -32,11 +32,15 @@ Authenticated APIs are separate under `/api/me`, `/api/my-quivrr/*` and `/api/ev
 
 `auth/entra_external_id.py` owns Entra configuration loading, JWKS retrieval, token validation hooks and current-user helpers.
 
-The API exposes protected placeholders:
+The API exposes protected Sprint 16.2 endpoints:
 
 - `GET /api/me`
 - `GET /api/my-quivrr/profile`
 - `PUT /api/my-quivrr/profile`
+- `POST /api/logout`
+
+The following endpoints remain placeholders and must not be surfaced as product features until their own sprint:
+
 - `GET /api/my-quivrr/saved-boards`
 - `POST /api/my-quivrr/saved-boards`
 - `GET /api/my-quivrr/watchlist`
@@ -72,12 +76,12 @@ Recommendation inputs and outputs belong in `dbo.RecommendationHistory`. Bodhi s
 
 ## Frontend Integration Points
 
-`quivrr.app` and `quivrr.surf` should eventually:
+`quivrr.app` and `quivrr.surf`:
 
-- Load Entra External ID client configuration from deployment config, not source.
+- Load Entra External ID client configuration from public deployment config, not secrets.
 - Send access tokens only to `/api/me` and `/api/my-quivrr/*`.
 - Keep public search calls token-free unless there is a specific analytics reason later.
 - Use `POST /api/events` with `anonymousSessionId` before sign-in.
 - Prompt for marketing, analytics and product notification consent explicitly.
 
-No frontend OAuth wiring is part of Sprint 16.1.
+Sprint 16.2 uses browser authorization-code-with-PKCE. Tokens are held in browser session storage so refreshes keep the current session active without committing tokens to long-term storage. Cross-site continuity relies on the Entra browser session when moving between `quivrr.surf` and `quivrr.app`.

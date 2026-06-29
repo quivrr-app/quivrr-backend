@@ -1,6 +1,7 @@
 import os
 import time
 from functools import lru_cache
+from urllib.parse import urlparse
 
 import requests
 
@@ -68,6 +69,20 @@ def get_jwks() -> dict:
     return response.json()
 
 
+@lru_cache(maxsize=1)
+def get_jwk_client():
+    config = _require_config()
+
+    try:
+        import jwt
+    except ImportError as exc:
+        raise AuthConfigurationError(
+            "PyJWT is required before live Entra token validation is enabled."
+        ) from exc
+
+    return jwt.PyJWKClient(config["jwks_url"])
+
+
 def _bearer_token(authorization: str | None) -> str | None:
     if not authorization:
         return None
@@ -90,7 +105,7 @@ def validate_access_token(token: str) -> dict:
         ) from exc
 
     try:
-        jwk_client = jwt.PyJWKClient(config["jwks_url"])
+        jwk_client = get_jwk_client()
         signing_key = jwk_client.get_signing_key_from_jwt(token)
         claims = jwt.decode(
             token,
@@ -100,10 +115,33 @@ def validate_access_token(token: str) -> dict:
             issuer=config["issuer"],
             options={"require": ["exp", "aud", "iss", "sub"]},
         )
-    except Exception as exc:
+    except jwt.PyJWTError as exc:
         raise AuthValidationError("Access token validation failed.") from exc
+    except Exception as exc:
+        raise AuthValidationError("Access token signing key validation failed.") from exc
 
     return claims
+
+
+def _claim_email(claims: dict) -> str | None:
+    emails = claims.get("emails")
+    if isinstance(emails, list) and emails:
+        return emails[0]
+    return claims.get("email") or claims.get("preferred_username") or claims.get("upn")
+
+
+def _identity_provider(claims: dict) -> str:
+    provider = claims.get("idp") or claims.get("identityProvider") or claims.get("tfp") or claims.get("acr")
+    if provider:
+        return str(provider)[:64]
+
+    issuer = claims.get("iss")
+    if issuer:
+        hostname = urlparse(str(issuer)).hostname
+        if hostname:
+            return hostname[:64]
+
+    return "entra_external_id"
 
 
 def get_current_user_optional(authorization: str | None = None) -> dict | None:
@@ -112,12 +150,16 @@ def get_current_user_optional(authorization: str | None = None) -> dict | None:
         return None
 
     claims = validate_access_token(token)
+    entra_object_id = claims.get("oid") or claims.get("sub")
+    if not entra_object_id:
+        raise AuthValidationError("Access token does not contain an Entra object identifier.")
+
     return {
-        "entraObjectId": claims.get("oid") or claims.get("sub"),
+        "entraObjectId": entra_object_id,
         "subject": claims.get("sub"),
-        "email": claims.get("emails", [None])[0] if isinstance(claims.get("emails"), list) else claims.get("email"),
-        "displayName": claims.get("name"),
-        "identityProvider": claims.get("idp") or claims.get("tfp") or "entra_external_id",
+        "email": _claim_email(claims),
+        "displayName": claims.get("name") or claims.get("given_name"),
+        "identityProvider": _identity_provider(claims),
         "claims": claims,
         "validatedAtUnix": int(time.time()),
     }

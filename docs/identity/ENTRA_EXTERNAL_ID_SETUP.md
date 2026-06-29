@@ -29,19 +29,36 @@ The current backend reads these variables at runtime. Protected endpoints return
 
 Production placeholders:
 
-- `https://quivrr.app/auth/callback`
-- `https://quivrr.app/australia/auth/callback`
-- `https://quivrr.app/europe/auth/callback`
-- `https://quivrr.app/united-states/auth/callback`
-- `https://quivrr.app/indonesia/auth/callback`
-- `https://quivrr.surf/auth/callback`
+- `https://quivrr.app/australia/`
+- `https://quivrr.app/europe/`
+- `https://quivrr.app/united-states/`
+- `https://quivrr.app/indonesia/`
+- `https://quivrr.surf/`
 
 Local development placeholders:
 
-- `http://localhost:4280/auth/callback`
-- `http://localhost:5173/auth/callback`
+- `http://localhost:4280/`
+- `http://localhost:5173/`
 
-Final frontend routing should decide the exact callback paths before live OAuth is enabled.
+The current static frontends use same-page callbacks. Entra redirects back to the page that initiated sign-in, the browser exchanges the authorization code with PKCE, then calls `GET /api/me`.
+
+## Frontend Public Configuration
+
+The browser configuration is public SPA metadata and must not include secrets. Configure it before loading `my-quivrr.js`:
+
+```html
+<script>
+  window.QUIVRR_AUTH_CONFIG = {
+    clientId: "PUBLIC-SPA-CLIENT-ID",
+    authority: "https://TENANT.ciamlogin.com/TENANT.onmicrosoft.com",
+    scopes: ["openid", "profile", "email", "api://QUIVRR-API-APP-ID/access_as_user"],
+    apiBaseUrl: "https://quivrr-backend-api.azurewebsites.net",
+    postLogoutRedirectUri: "https://quivrr.app/"
+  };
+</script>
+```
+
+If `clientId` or `authority` is missing, the My Quivrr modal remains visible but sign-in reports that Entra frontend configuration is pending.
 
 ## SQL Migration Order
 
@@ -62,12 +79,26 @@ The validation path uses:
 - JWKS URL
 - RS256 signing keys
 
-`PyJWT` must be available in the runtime before live Entra validation is enabled. Sprint 16.1 keeps OAuth wiring disabled until configuration and deployment steps are reviewed.
+`PyJWT[crypto]` must be available in the runtime. The backend validates issuer, audience, signature, expiry and required claims before creating or updating a Quivrr user record.
+
+## Runtime Flow
+
+1. User clicks My Quivrr.
+2. Static frontend starts Microsoft Entra External ID authorization-code-with-PKCE flow.
+3. Entra handles Email, Google, Microsoft and Apple-ready provider selection according to tenant configuration.
+4. Frontend receives the code on the same page and exchanges it for tokens.
+5. Frontend calls `GET /api/me` with `Authorization: Bearer <access token>`.
+6. Backend validates the JWT and looks up `dbo.Users.EntraObjectId`.
+7. Existing users get `LastLoginUtc` and `IdentityProvider` updated.
+8. New users are inserted into `dbo.Users`, `dbo.UserProfiles` and `dbo.UserConsents`.
+9. Profile fields remain optional and can be saved later through `PUT /api/my-quivrr/profile`.
 
 ## Operational Notes
 
 - Public search must continue to work when Entra config is absent.
 - Protected APIs must fail clearly when Entra config is absent.
 - Access tokens must not be logged.
+- Static frontend sessions use browser session storage for the token so refreshes keep the current tab signed in without long-term token storage.
+- Cross-site continuity between `quivrr.surf` and `quivrr.app` is provided by the Entra browser session. Each site still obtains its own token through the same configured Entra app flow.
 - No password storage exists in Quivrr.
 - Customer identity must remain in Entra External ID, with Quivrr storing only profile and product interaction data needed for the product experience.

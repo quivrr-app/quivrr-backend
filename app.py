@@ -1148,33 +1148,336 @@ def resolve_optional_identity_user(authorization: str | None) -> dict | None:
         return None
 
 
-@app.get("/api/me")
-def get_me(authorization: str | None = Header(default=None)):
-    user = resolve_required_identity_user(authorization)
+def row_to_dict(row) -> dict | None:
+    if row is None:
+        return None
+    if hasattr(row, "_mapping"):
+        return dict(row._mapping)
+    return dict(row)
+
+
+def normalise_optional_text(value, max_length: int | None = None):
+    if value is None:
+        return None
+    text_value = str(value).strip()
+    if not text_value:
+        return None
+    if max_length is not None:
+        return text_value[:max_length]
+    return text_value
+
+
+def normalise_optional_int(value):
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def normalise_optional_float(value):
+    if value in (None, ""):
+        return None
+    try:
+        return round(float(value), 2)
+    except (TypeError, ValueError):
+        return None
+
+
+def preferred_brands_payload(value):
+    if value in (None, ""):
+        return None
+    if isinstance(value, list):
+        brands = [
+            normalise_optional_text(item, 128)
+            for item in value
+            if normalise_optional_text(item, 128)
+        ]
+        return json.dumps(brands)
+    return normalise_optional_text(value)
+
+
+def fetch_identity_bundle(connection, user_id: str) -> dict:
+    user_row = row_to_dict(connection.execute(
+        text("""
+            SELECT
+                UserId,
+                EntraObjectId,
+                Email,
+                DisplayName,
+                IdentityProvider,
+                HomeRegion,
+                CreatedUtc,
+                LastLoginUtc,
+                IsActive
+            FROM dbo.Users
+            WHERE UserId = :user_id
+        """),
+        {"user_id": user_id},
+    ).fetchone())
+
+    profile_row = row_to_dict(connection.execute(
+        text("""
+            SELECT
+                UserProfileId,
+                UserId,
+                HeightCm,
+                WeightKg,
+                Ability,
+                CurrentVolumeLitres,
+                PreferredVolumeMinLitres,
+                PreferredVolumeMaxLitres,
+                WaveType,
+                WaveSize,
+                SurfFrequency,
+                PreferredBrands,
+                HomeBreak,
+                HomeCountry,
+                UpdatedUtc
+            FROM dbo.UserProfiles
+            WHERE UserId = :user_id
+        """),
+        {"user_id": user_id},
+    ).fetchone())
+
+    consent_row = row_to_dict(connection.execute(
+        text("""
+            SELECT TOP 1
+                ConsentVersion,
+                MarketingConsent,
+                AnalyticsConsent,
+                ProductNotificationConsent,
+                ConsentCapturedUtc,
+                ConsentSource
+            FROM dbo.UserConsents
+            WHERE UserId = :user_id
+            ORDER BY ConsentCapturedUtc DESC
+        """),
+        {"user_id": user_id},
+    ).fetchone())
+
+    return {
+        "user": user_row,
+        "profile": profile_row,
+        "consent": consent_row,
+    }
+
+
+def ensure_identity_user(identity_user: dict) -> dict:
+    entra_object_id = normalise_optional_text(identity_user.get("entraObjectId"), 128)
+    if not entra_object_id:
+        raise AuthValidationError("Access token does not contain an Entra object identifier.")
+
+    email = normalise_optional_text(identity_user.get("email"), 320)
+    display_name = normalise_optional_text(identity_user.get("displayName"), 256)
+    identity_provider = normalise_optional_text(identity_user.get("identityProvider"), 64) or "entra_external_id"
+
+    try:
+        with engine.begin() as connection:
+            existing = row_to_dict(connection.execute(
+                text("""
+                    SELECT UserId
+                    FROM dbo.Users
+                    WHERE EntraObjectId = :entra_object_id
+                """),
+                {"entra_object_id": entra_object_id},
+            ).fetchone())
+
+            is_new_user = existing is None
+            if is_new_user:
+                user_id = str(uuid4())
+                connection.execute(
+                    text("""
+                        INSERT INTO dbo.Users (
+                            UserId,
+                            EntraObjectId,
+                            Email,
+                            DisplayName,
+                            IdentityProvider,
+                            LastLoginUtc,
+                            IsActive
+                        )
+                        VALUES (
+                            :user_id,
+                            :entra_object_id,
+                            :email,
+                            :display_name,
+                            :identity_provider,
+                            SYSUTCDATETIME(),
+                            1
+                        )
+                    """),
+                    {
+                        "user_id": user_id,
+                        "entra_object_id": entra_object_id,
+                        "email": email,
+                        "display_name": display_name,
+                        "identity_provider": identity_provider,
+                    },
+                )
+            else:
+                user_id = str(existing["UserId"])
+                connection.execute(
+                    text("""
+                        UPDATE dbo.Users
+                        SET
+                            Email = COALESCE(:email, Email),
+                            DisplayName = COALESCE(:display_name, DisplayName),
+                            IdentityProvider = :identity_provider,
+                            LastLoginUtc = SYSUTCDATETIME(),
+                            IsActive = 1
+                        WHERE UserId = :user_id
+                    """),
+                    {
+                        "user_id": user_id,
+                        "email": email,
+                        "display_name": display_name,
+                        "identity_provider": identity_provider,
+                    },
+                )
+
+            connection.execute(
+                text("""
+                    IF NOT EXISTS (
+                        SELECT 1 FROM dbo.UserProfiles WHERE UserId = :user_id
+                    )
+                    BEGIN
+                        INSERT INTO dbo.UserProfiles (UserProfileId, UserId)
+                        VALUES (:profile_id, :user_id)
+                    END
+                """),
+                {"user_id": user_id, "profile_id": str(uuid4())},
+            )
+
+            connection.execute(
+                text("""
+                    IF NOT EXISTS (
+                        SELECT 1
+                        FROM dbo.UserConsents
+                        WHERE UserId = :user_id
+                          AND ConsentVersion = :consent_version
+                    )
+                    BEGIN
+                        INSERT INTO dbo.UserConsents (
+                            UserConsentId,
+                            UserId,
+                            ConsentVersion,
+                            MarketingConsent,
+                            AnalyticsConsent,
+                            ProductNotificationConsent,
+                            ConsentSource
+                        )
+                        VALUES (
+                            :consent_id,
+                            :user_id,
+                            :consent_version,
+                            0,
+                            0,
+                            0,
+                            :consent_source
+                        )
+                    END
+                """),
+                {
+                    "consent_id": str(uuid4()),
+                    "user_id": user_id,
+                    "consent_version": "my-quivrr-consent-v1",
+                    "consent_source": "automatic_first_login_default",
+                },
+            )
+
+            bundle = fetch_identity_bundle(connection, user_id)
+            bundle["isNewUser"] = is_new_user
+            return bundle
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="My Quivrr identity storage is temporarily unavailable.",
+        ) from exc
+
+
+def profile_is_complete(profile: dict | None) -> bool:
+    if not profile:
+        return False
+    fields = (
+        "HeightCm",
+        "WeightKg",
+        "Ability",
+        "CurrentVolumeLitres",
+        "PreferredVolumeMinLitres",
+        "PreferredVolumeMaxLitres",
+        "WaveType",
+        "WaveSize",
+        "SurfFrequency",
+        "PreferredBrands",
+        "HomeBreak",
+        "HomeCountry",
+    )
+    return any(profile.get(field) not in (None, "") for field in fields)
+
+
+def serialise_identity_bundle(bundle: dict) -> dict:
+    user = bundle.get("user") or {}
+    profile = bundle.get("profile")
+    consent = bundle.get("consent")
+
     return {
         "authenticated": True,
+        "isNewUser": bool(bundle.get("isNewUser")),
+        "profileComplete": profile_is_complete(profile),
         "user": {
-            "entraObjectId": user.get("entraObjectId"),
-            "email": user.get("email"),
-            "displayName": user.get("displayName"),
-            "identityProvider": user.get("identityProvider"),
+            "userId": str(user.get("UserId")) if user.get("UserId") is not None else None,
+            "entraObjectId": user.get("EntraObjectId"),
+            "email": user.get("Email"),
+            "displayName": user.get("DisplayName"),
+            "identityProvider": user.get("IdentityProvider"),
+            "homeRegion": user.get("HomeRegion"),
+            "createdUtc": str(user.get("CreatedUtc")) if user.get("CreatedUtc") is not None else None,
+            "lastLoginUtc": str(user.get("LastLoginUtc")) if user.get("LastLoginUtc") is not None else None,
         },
+        "profile": {
+            "heightCm": profile.get("HeightCm") if profile else None,
+            "weightKg": profile.get("WeightKg") if profile else None,
+            "ability": profile.get("Ability") if profile else None,
+            "currentVolumeLitres": float(profile.get("CurrentVolumeLitres")) if profile and profile.get("CurrentVolumeLitres") is not None else None,
+            "preferredVolumeMinLitres": float(profile.get("PreferredVolumeMinLitres")) if profile and profile.get("PreferredVolumeMinLitres") is not None else None,
+            "preferredVolumeMaxLitres": float(profile.get("PreferredVolumeMaxLitres")) if profile and profile.get("PreferredVolumeMaxLitres") is not None else None,
+            "waveType": profile.get("WaveType") if profile else None,
+            "waveSize": profile.get("WaveSize") if profile else None,
+            "surfFrequency": profile.get("SurfFrequency") if profile else None,
+            "preferredBrands": profile.get("PreferredBrands") if profile else None,
+            "homeBreak": profile.get("HomeBreak") if profile else None,
+            "homeCountry": profile.get("HomeCountry") if profile else None,
+            "updatedUtc": str(profile.get("UpdatedUtc")) if profile and profile.get("UpdatedUtc") is not None else None,
+        },
+        "consent": {
+            "consentVersion": consent.get("ConsentVersion") if consent else None,
+            "marketingConsent": bool(consent.get("MarketingConsent")) if consent else False,
+            "analyticsConsent": bool(consent.get("AnalyticsConsent")) if consent else False,
+            "productNotificationConsent": bool(consent.get("ProductNotificationConsent")) if consent else False,
+        },
+    }
+
+
+def resolve_persisted_identity_bundle(authorization: str | None) -> dict:
+    user = resolve_required_identity_user(authorization)
+    return ensure_identity_user(user)
+
+
+@app.get("/api/me")
+def get_me(authorization: str | None = Header(default=None)):
+    bundle = resolve_persisted_identity_bundle(authorization)
+    return {
+        **serialise_identity_bundle(bundle),
         "identity": identity_config_response(),
     }
 
 
 @app.get("/api/my-quivrr/profile")
 def get_my_quivrr_profile(authorization: str | None = Header(default=None)):
-    user = resolve_required_identity_user(authorization)
-    return {
-        "status": "not_implemented",
-        "message": "My Quivrr profile persistence will be implemented after Entra External ID is configured.",
-        "user": {
-            "entraObjectId": user.get("entraObjectId"),
-            "email": user.get("email"),
-        },
-        "profile": None,
-    }
+    bundle = resolve_persisted_identity_bundle(authorization)
+    return serialise_identity_bundle(bundle)
 
 
 @app.put("/api/my-quivrr/profile")
@@ -1182,16 +1485,78 @@ def put_my_quivrr_profile(
     payload: dict | None = Body(default=None),
     authorization: str | None = Header(default=None),
 ):
-    user = resolve_required_identity_user(authorization)
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = bundle["user"]["UserId"]
     payload = payload or {}
+    updates = {
+        "display_name": normalise_optional_text(payload.get("displayName"), 256),
+        "home_region": normalise_optional_text(payload.get("homeRegion"), 16),
+        "height_cm": normalise_optional_int(payload.get("heightCm")),
+        "weight_kg": normalise_optional_int(payload.get("weightKg")),
+        "ability": normalise_optional_text(payload.get("ability"), 64),
+        "current_volume_litres": normalise_optional_float(payload.get("currentVolumeLitres")),
+        "preferred_volume_min_litres": normalise_optional_float(payload.get("preferredVolumeMinLitres")),
+        "preferred_volume_max_litres": normalise_optional_float(payload.get("preferredVolumeMaxLitres")),
+        "wave_type": normalise_optional_text(payload.get("waveType"), 128),
+        "wave_size": normalise_optional_text(payload.get("waveSize"), 128),
+        "surf_frequency": normalise_optional_text(payload.get("surfFrequency"), 128),
+        "preferred_brands": preferred_brands_payload(payload.get("preferredBrands")),
+        "home_break": normalise_optional_text(payload.get("homeBreak"), 256),
+        "home_country": normalise_optional_text(payload.get("homeCountry"), 128),
+    }
+
+    try:
+        with engine.begin() as connection:
+            connection.execute(
+                text("""
+                    UPDATE dbo.Users
+                    SET
+                        DisplayName = COALESCE(:display_name, DisplayName),
+                        HomeRegion = COALESCE(:home_region, HomeRegion)
+                    WHERE UserId = :user_id
+                """),
+                {"user_id": user_id, **updates},
+            )
+            connection.execute(
+                text("""
+                    UPDATE dbo.UserProfiles
+                    SET
+                        HeightCm = :height_cm,
+                        WeightKg = :weight_kg,
+                        Ability = :ability,
+                        CurrentVolumeLitres = :current_volume_litres,
+                        PreferredVolumeMinLitres = :preferred_volume_min_litres,
+                        PreferredVolumeMaxLitres = :preferred_volume_max_litres,
+                        WaveType = :wave_type,
+                        WaveSize = :wave_size,
+                        SurfFrequency = :surf_frequency,
+                        PreferredBrands = :preferred_brands,
+                        HomeBreak = :home_break,
+                        HomeCountry = :home_country,
+                        UpdatedUtc = SYSUTCDATETIME()
+                    WHERE UserId = :user_id
+                """),
+                {"user_id": user_id, **updates},
+            )
+            updated_bundle = fetch_identity_bundle(connection, str(user_id))
+            updated_bundle["isNewUser"] = False
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="My Quivrr profile storage is temporarily unavailable.",
+        ) from exc
+
     return {
-        "status": "accepted_not_persisted",
-        "message": "Profile payload shape accepted. Persistence is scheduled for the next identity implementation slice.",
-        "user": {
-            "entraObjectId": user.get("entraObjectId"),
-            "email": user.get("email"),
-        },
-        "receivedFields": sorted(payload.keys()),
+        "status": "saved",
+        **serialise_identity_bundle(updated_bundle),
+    }
+
+
+@app.post("/api/logout")
+def post_logout():
+    return {
+        "status": "ok",
+        "message": "Client session cleared. Entra External ID owns the browser identity session.",
     }
 
 

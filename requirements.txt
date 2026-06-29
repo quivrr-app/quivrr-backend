@@ -16,3 +16,4 @@ opencv-python-headless
 pillow
 numpy
 azure-communication-email
+PyJWT[crypto]

@@ -11,20 +11,20 @@ Sprint 16.1 establishes the identity foundation only:
 - SQL migration scripts for user-owned data.
 - Documentation for Azure setup, consent and frontend integration.
 
-Live OAuth is not enabled in this sprint.
+Live OAuth was not enabled in Sprint 16.1.
 
-## Sprint 16.2 Proposed Scope
+## Sprint 16.2 Scope
 
-1. Add `PyJWT` to the backend runtime if it is not already present in production.
+1. Add `PyJWT[crypto]` to the backend runtime.
 2. Configure Entra External ID in Azure App Service settings.
 3. Apply `sql/identity/001_create_my_quivrr_identity_tables.sql` after review.
 4. Implement user upsert on successful token validation.
 5. Implement profile read/write persistence.
-6. Implement saved board persistence.
-7. Implement watchlist persistence.
-8. Persist anonymous and authenticated events.
-9. Add frontend sign-in shell wiring for `quivrr.app`.
-10. Keep public search anonymous.
+6. Add frontend sign-in shell wiring for `quivrr.app`.
+7. Add frontend sign-in shell wiring for `quivrr.surf`.
+8. Keep public search anonymous.
+
+Sprint 16.2 deliberately does not implement saved boards, watchlists, alerts or notifications.
 
 ## Frontend Integration Sequence
 
@@ -36,12 +36,11 @@ Recommended order:
 2. Add sign-in and sign-out actions to the existing My Quivrr shell.
 3. Call `GET /api/me` after sign-in.
 4. Add profile form read/write using `/api/my-quivrr/profile`.
-5. Add save-board actions from search result cards.
-6. Add watchlist actions from unavailable boards and fallback suggestions.
-7. Send anonymous `POST /api/events` before sign-in.
-8. Attach authenticated event context after sign-in.
+5. Keep saved boards, watchlists and alerts out of scope until the next product sprint.
+6. Send anonymous `POST /api/events` before sign-in when analytics is approved.
+7. Attach authenticated event context after sign-in when analytics is approved.
 
-`quivrr.surf` can keep the current My Quivrr entry point and later link into the same Entra sign-in flow.
+`quivrr.surf` uses the same My Quivrr sign-in client as `quivrr.app`. The shared Entra browser session provides cross-site continuity; each static site still obtains its own token before calling the API.
 
 ## Consent Model
 
