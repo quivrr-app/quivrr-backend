@@ -173,7 +173,7 @@ Australia's BigCommerce path now has a reviewed reference target:
 - `Trigger Bros Surfboards` uses explicit AU board-category URLs and paginated BigCommerce card discovery, then hydrates each product from the live detail page to retain price, image, availability, and board dimensions where present
 - `Surf Shops Australia` remains intentionally out of the active AU target set until a clean public hardboard surface is reconfirmed
 
-The active EU retailer set is 58 Surf, Pukas Surf Shop, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, Tablas Surf Shop, and Hart Beach. EU discovery and import remain isolated from AU, ID, and US paths.
+The active EU retailer set is 58 Surf, Pukas Surf Shop, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, Tablas Surf Shop, Hart Beach, HawaiiSurf, and SantoLoco. EU discovery and import remain isolated from AU, ID, and US paths.
 
 Exact retailer matching accepts equivalent dimensions, including fractional and decimal inch representations, decimal-comma or decimal-point litres, and bounded width, thickness, and volume comparisons. For 58 Surf, discovery fetches product-detail attributes and retains width, thickness, volume, construction, and fin information through normalization and import. An exact result can therefore pass through equivalent dimensions even when `BoardSizeId` remains `NULL` because duplicate equivalent canonical sizes make deterministic size linking ambiguous.
 

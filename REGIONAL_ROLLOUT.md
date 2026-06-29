@@ -85,7 +85,7 @@ EU is an active mainland European Union fulfilment market.
 - Initial market focus: Portugal, Spain, and France.
 - UK is explicitly excluded.
 - EU retailer discovery and normalization live under `scrapers/retailers/europe/`.
-- The active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, Tablas Surf Shop, and Hart Beach.
+- The active EU retailers are 58 Surf, Pukas, Mundo Surf, Bell Surf, Surf Boss, Surf Corner, Single Quiver, Board Exchange, Pop Up Surf Shop, Noordzee Boardstore, GSI Europe, Tablas Surf Shop, Hart Beach, HawaiiSurf, and SantoLoco.
 - EU MFA supports JS Industries, Pyzel, Firewire, Haydenshapes, Rusty, Sharp Eye, and DHD.
 - EU retailer and MFA importers are region-scoped, repeatable, and protect AU and ID counts.
 - `quivrr-nightly-eu-inventory` runs at `30 19 * * *`.
@@ -101,8 +101,8 @@ Validated June 2026 counts:
 
 | Table | AU | EU | ID | US | NULL |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `RetailerInventory` | 11,746 | 9,105 | 1,998 | 7,812 | 0 |
-| `ManufacturerInventory` | 6,498 | 2,736 | 185 | 4,647 | 0 |
+| `RetailerInventory` | 12,287 | 12,332 | 2,064 | 8,076 | 0 |
+| `ManufacturerInventory` | 6,706 | 2,716 | 177 | 4,676 | 0 |
 
 ## UK Planned State
 
