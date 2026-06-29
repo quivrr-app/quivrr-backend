@@ -11,11 +11,12 @@ Review date: `2026-06-28`
 ## Current US Runtime
 
 - `RegionCode = US`
-- Current validated US runnable retailer set: `22`
-- Current validated US active retailer inventory rows: `8,076`
-- Current validated US importer output rows in the latest safe pass: `8,019`
-- Current validated US importable raw rows in the latest safe pass: `7,908`
+- Current validated US runnable retailer set: `23`
+- Current validated US active retailer inventory rows: `8,076` before the HSS promotion slice
+- Current validated US importer output rows in the latest safe pass: `8,401`
+- Current validated US importable raw rows in the latest safe pass: `8,291`
 - Production-validated onboarding additions so far: `Reddog Surf Shop`, `Cinnamon Rainbows`
+- Current promotion slice: `Huntington Surf & Sport`
 
 ### Current Runnable Retailers
 
@@ -43,17 +44,26 @@ Review date: `2026-06-28`
 | Surf N Sea | Shopify | 20 |
 | Dark Arts Surf | Shopify | 12 |
 | Kimo's Surf Hut | Shopify | 10 |
+| Huntington Surf & Sport | Custom Shopify stocklist JSON | 418 |
 
 ## Coverage Factory Classification
 
 ### Already Running
 
-- `22` retailers are already runnable in the US regional stack.
+- `23` retailers are already runnable in the US regional stack.
 - Platform split of current runnable set:
   - `18` Shopify
   - `1` BigCommerce
   - `1` Magento/html
-  - `2` custom high-value paths
+  - `3` custom high-value paths
+
+### Immediate Priority Injection Review
+
+| Retailer | Production state | Platform | Board-only surface | Estimated board inventory | Supported overlap | Price / stock visibility | Dimensions / volume | Pack compatibility | Engineering effort | Priority score | Recommended path |
+| --- | --- | --- | --- | ---: | --- | --- | --- | --- | --- | ---: | --- |
+| Catalyst Surf Shop | Already live | BigCommerce | `/webstore/surfboards/` plus surfboard brand categories | 2,389 runnable rows in latest safe pass | Strong | Visible | Strong dimensions, volume where available | Existing US BigCommerce pack | Already complete | 95 | Keep live, no further onboarding work needed in this sprint |
+| Jack's Surfboards | Already live | Shopify | `/collections/surfboards` and `/collections/surf-shortboards` | 200 runnable rows in latest safe pass | Strong | Visible | Strong dimensions, volume where available | Existing US Shopify pack | Already complete | 88 | Keep live, no further onboarding work needed in this sprint |
+| Huntington Surf & Sport | Promoted in this slice | Custom Shopify stocklist JSON | Public stocklist page backed by `boards.json` | 422 raw stocklist rows, 418 accepted/importable rows | Firewire, Lost, Channel Islands, Sharp Eye, Rusty, Haydenshapes, JS Industries all present | Visible | Lengths are present on 418 importable rows; volume is generally absent | Small US-only custom path using the existing custom runner | Low-to-medium | 91 | Promote through the US custom runner and validate through Azure, SQL and production search |
 
 ### Ready Shopify Follow-Up
 
@@ -118,12 +128,23 @@ These are ranked by likely supported-board uplift, not by which one is easiest t
 - `Cinnamon Rainbows`
   Why promoted: public Squarespace used-board pages expose direct product URLs plus JSON-LD price, availability, image, and exact dimensions. The production-validated import added `57` active US rows with `28` linked models and `13` linked sizes on first live run.
 
+## Sprint 15 Phase 3 Promotion
+
+- `Huntington Surf & Sport`
+  Why promoted: the public HSS stocklist page exposes a dedicated `boards.json` asset with current board rows containing shaper, model, length, price, store, and condition fields. Lightweight Shopify feed inspection was misleading, but the stocklist JSON path is stable, board-specific, low-noise, and fits a small US-only custom adapter safely. The validated local pass recovered `418` importable rows from `422` raw stocklist rows.
+
 ## Sprint 14 Recommendation
 
 - Treat `Reddog Surf Shop` as the first Sprint 14 US onboarding outcome for production validation.
 - Keep the US strategy focused on the next highest-value retailer per existing pack instead of widening platform scope.
 - Prioritise one more strong Magento promotion before building any new custom stack.
 - Keep `Hansen Surfboards` and `Encinitas Surfboards` under active review because they are high-value, but do not force them live until a clean board-only path is proven.
+
+## Updated Recommendation
+
+- Treat `Huntington Surf & Sport` as the current highest-value safe US promotion because it adds meaningful board volume without requiring a new broad scraper framework.
+- Keep `Hansen Surfboards` and `Encinitas Surfboards` as high-value follow-ups, but continue to avoid force-fitting them into the runner until a board-specific path is proven.
+- After HSS, return to the next best Magento promotion candidate rather than widening custom logic further.
 
 ## Risks
 

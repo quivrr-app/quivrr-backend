@@ -30,5 +30,23 @@
     "enabled": true,
     "priceCurrency": "USD",
     "notes": "High-value US custom target. Public Squarespace used-surfboards pages expose direct product pages with JSON-LD price, availability, image, and dimensions."
+  },
+  {
+    "retailerSlug": "huntington_surf_and_sport",
+    "retailerName": "Huntington Surf & Sport",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.hsssurf.com",
+    "categoryUrls": [
+      "https://www.hsssurf.com/pages/fullstocklist",
+      "https://www.hsssurf.com/pages/surfboard-stock-list"
+    ],
+    "stocklistUrl": "https://www.hsssurf.com/pages/surfboard-stock-list",
+    "jsonUrl": "https://www.hsssurf.com/cdn/shop/t/19/assets/boards.json?v=80829331169860367791782561607",
+    "platform": "custom_shopify_stocklist_json",
+    "discoveryType": "hss_stocklist_json",
+    "enabled": true,
+    "priceCurrency": "USD",
+    "notes": "High-value US custom target. The public surfboard stock list loads a dedicated boards.json asset with shaper, model, length, price, store and condition fields for current stock."
   }
 ]

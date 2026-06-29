@@ -264,17 +264,6 @@
     "notes": "Naming variant of Reddog Surf Shop. Magento storefront markers detected, but no safe US Magento adapter exists yet."
   },
   {
-    "retailerSlug": "huntington_surf_and_sport",
-    "retailerName": "Huntington Surf & Sport",
-    "regionCode": "US",
-    "websiteCandidate": "https://www.hsssurf.com",
-    "detectedPlatform": "shopify",
-    "platformDetectionStatus": "needs_review",
-    "workingFeed": "shopify_collection",
-    "runnable": false,
-    "notes": "Surfboards collection URL was found, but US validation returned zero products from the exposed collection feed, so there is no safe surfboard inventory path to promote yet."
-  },
-  {
     "retailerSlug": "mitchs_surf_shop",
     "retailerName": "Mitch's Surf Shop",
     "regionCode": "US",

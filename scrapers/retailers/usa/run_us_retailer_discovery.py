@@ -56,6 +56,7 @@ PRIORITY_TARGETS = {
     "encinitas_surfboards",
     "birds_surf_shed",
     "froghouse_surf_shop",
+    "huntington_surf_and_sport",
 }
 
 

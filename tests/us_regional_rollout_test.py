@@ -45,7 +45,11 @@ class UsRegionalRolloutTests(unittest.TestCase):
     }
     EXPECTED_ENABLED_BIGCOMMERCE = {"catalyst_surf_shop"}
     EXPECTED_ENABLED_MAGENTO = {"warm_winds"}
-    EXPECTED_ENABLED_CUSTOM = {"reddog_surf_shop", "cinnamon_rainbows"}
+    EXPECTED_ENABLED_CUSTOM = {
+        "reddog_surf_shop",
+        "cinnamon_rainbows",
+        "huntington_surf_and_sport",
+    }
 
     def test_retailer_runner_rejects_non_us_region(self):
         with patch.dict(os.environ, {"QUIVRR_REGION_CODE": "EU"}):
@@ -67,7 +71,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        self.assertEqual(len(targets), 27)
+        self.assertEqual(len(targets), 28)
         for target in targets:
             with self.subTest(slug=target["retailerSlug"]):
                 self.assertEqual(target["regionCode"], "US")
@@ -95,7 +99,7 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 ROOT / "scrapers/retailers/usa/us_retailer_candidate_backlog.json"
             ).read_text(encoding="utf-8")
         )
-        self.assertEqual(len(targets), 43)
+        self.assertEqual(len(targets), 42)
         self.assertEqual(
             len({target["retailerSlug"] for target in targets}),
             len(targets),
@@ -166,8 +170,49 @@ class UsRegionalRolloutTests(unittest.TestCase):
                 self.assertEqual(target["regionCode"], "US")
                 self.assertIn(
                     target["platform"],
-                    {"custom_wix_board_inventory", "custom_squarespace_used_inventory"},
+                    {
+                        "custom_wix_board_inventory",
+                        "custom_squarespace_used_inventory",
+                        "custom_shopify_stocklist_json",
+                    },
                 )
+
+    def test_hss_stocklist_json_rows_normalise_into_importable_products(self):
+        target = {
+            "retailerSlug": "huntington_surf_and_sport",
+            "retailerName": "Huntington Surf & Sport",
+            "regionCode": "US",
+            "country": "United States",
+            "platform": "custom_shopify_stocklist_json",
+            "stocklistUrl": "https://www.hsssurf.com/pages/surfboard-stock-list",
+            "jsonUrl": "https://www.hsssurf.com/cdn/shop/t/19/assets/boards.json",
+            "priceCurrency": "USD",
+        }
+        payload = {
+            "boards": [
+                {
+                    "id": "rp-1",
+                    "upc": "1001",
+                    "shaper": "Firewire",
+                    "model": "Seaside",
+                    "length": "5'6\"",
+                    "volume": None,
+                    "fin_system": "FCS II",
+                    "store": "PCH",
+                    "price": 995.0,
+                    "condition": "new",
+                    "first_seen": "2026-06-25",
+                }
+            ]
+        }
+        rows = custom_discovery.parse_hss_stocklist_rows(payload, target)
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertEqual(row["retailerSlug"], "huntington_surf_and_sport")
+        self.assertEqual(row["productUrl"], "https://www.hsssurf.com/pages/surfboard-stock-list?board=rp-1")
+        self.assertEqual(row["brand"], "Firewire")
+        self.assertEqual(row["lengthFeetInches"], "5'6")
+        self.assertEqual(row["priceCurrency"], "USD")
 
     def test_us_normaliser_reads_custom_output(self):
         discovery_files = {str(path).replace("\\", "/") for path in us_normaliser.DISCOVERY_FILES}

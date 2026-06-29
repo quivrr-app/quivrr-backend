@@ -40,6 +40,7 @@ MINIMUM_ROWS = {
     "warm_winds": 1,
     "reddog_surf_shop": 20,
     "cinnamon_rainbows": 40,
+    "huntington_surf_and_sport": 100,
 }
 
 

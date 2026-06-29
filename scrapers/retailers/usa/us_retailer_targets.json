@@ -322,5 +322,17 @@
     "enabled": true,
     "platform": "custom_squarespace_used_inventory",
     "notes": "Promoted after validating the public Squarespace used-surfboards catalogue. Product detail pages expose JSON-LD price, availability, images, and exact dimensions for high-value supported used-board inventory."
+  },
+  {
+    "retailerSlug": "huntington_surf_and_sport",
+    "retailerName": "Huntington Surf & Sport",
+    "regionCode": "US",
+    "country": "United States",
+    "website": "https://www.hsssurf.com",
+    "surfboardCategoryUrl": "https://www.hsssurf.com/pages/surfboard-stock-list",
+    "priority": 28,
+    "enabled": true,
+    "platform": "custom_shopify_stocklist_json",
+    "notes": "Promoted after validating the public HSS surfboard stock list. The page exposes a dedicated boards.json asset with current stock rows containing shaper, model, length, price, store and condition data, making it a safe small US-only custom path."
   }
 ]

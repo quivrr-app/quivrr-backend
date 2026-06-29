@@ -88,6 +88,39 @@ def fetch_html(url: str) -> dict:
     }
 
 
+def fetch_json(url: str) -> dict:
+    errors = []
+    for attempt in range(1, FETCH_ATTEMPTS + 1):
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=TIMEOUT_SECONDS)
+            if response.status_code == 200:
+                return {
+                    "ok": True,
+                    "httpStatus": response.status_code,
+                    "finalUrl": response.url,
+                    "payload": response.json(),
+                    "error": "",
+                    "attempts": attempt,
+                    "responseBytes": len(response.content),
+                }
+            errors.append(f"attempt {attempt}: HTTP {response.status_code}")
+            if response.status_code not in {408, 429, 500, 502, 503, 504}:
+                break
+        except (requests.RequestException, ValueError) as error:
+            errors.append(f"attempt {attempt}: {type(error).__name__}: {error}")
+        if attempt < FETCH_ATTEMPTS:
+            time.sleep(attempt * 1.5)
+    return {
+        "ok": False,
+        "httpStatus": None,
+        "finalUrl": url,
+        "payload": {},
+        "error": "; ".join(errors),
+        "attempts": FETCH_ATTEMPTS,
+        "responseBytes": 0,
+    }
+
+
 def parse_listing_handles(html: str) -> list[str]:
     return sorted(set(PRODUCT_LINK_RE.findall(html)))
 
@@ -125,6 +158,82 @@ def parse_signal_volume(text: str) -> float | None:
     if not match:
         return None
     return float(match.group("volume").replace(",", "."))
+
+
+def parse_hss_stocklist_rows(payload: dict, target: dict) -> list[dict]:
+    boards = payload.get("boards")
+    if not isinstance(boards, list):
+        return []
+
+    stocklist_url = clean(target.get("stocklistUrl"))
+    source_url = clean(target.get("jsonUrl")) or stocklist_url
+    accepted = []
+    for board in boards:
+        if not isinstance(board, dict):
+            continue
+
+        shaper = clean(board.get("shaper"))
+        model = clean(board.get("model"))
+        length = clean(board.get("length"))
+        price = board.get("price")
+        if not shaper or not model or not length or price in (None, ""):
+            continue
+
+        board_id = clean(board.get("id") or board.get("upc"))
+        normalised_length = parse_signal_length(length) or length.replace('"', "")
+        title = f"{shaper} {model} {normalised_length}".strip()
+        source_snippet = clean(
+            " ".join(
+                [
+                    "HSS surfboard stock list",
+                    shaper,
+                    model,
+                    normalised_length,
+                    clean(board.get("store")),
+                    clean(board.get("condition") or "new"),
+                    clean(board.get("fin_system")),
+                ]
+            )
+        )
+        row = {
+            "retailerSlug": target["retailerSlug"],
+            "retailerName": target["retailerName"],
+            "regionCode": REGION_CODE,
+            "country": target["country"],
+            "platform": target["platform"],
+            "sourceUrl": source_url,
+            "productTitle": title,
+            "productUrl": f"{stocklist_url}?board={board_id}" if board_id else stocklist_url,
+            "productImageUrl": "",
+            "vendor": shaper,
+            "brand": shaper,
+            "priceAmount": price,
+            "priceCurrency": target.get("priceCurrency", "USD"),
+            "availability": True,
+            "isAvailable": True,
+            "stockStatus": "in_stock",
+            "sku": clean(board.get("upc") or board.get("id")),
+            "sourceSnippet": source_snippet[:1000],
+            "parseConfidence": 7,
+            "discoveryStatus": "accepted",
+            "filterReasons": ["stocklist_json"],
+            "lengthFeetInches": normalised_length,
+            "volumeLitres": board.get("volume"),
+            "construction": "",
+            "finSetup": clean(board.get("fin_system")),
+        }
+        normalised = normalise_row(row)
+        if normalised.get("importableRaw"):
+            accepted.append(
+                {
+                    **row,
+                    "brand": normalised.get("brandName") or shaper,
+                    "model": normalised.get("modelName") or model,
+                    "lengthFeetInches": normalised.get("lengthFeetInches"),
+                    "volumeLitres": normalised.get("volumeLitres"),
+                }
+            )
+    return dedupe_rows(accepted)
 
 
 def parse_product_json_ld(html: str, product_url: str, target: dict) -> dict | None:
@@ -307,9 +416,46 @@ def discover_target(target: dict, _max_pages: int) -> dict:
             f"US custom discovery requires RegionCode 'US', got {target.get('regionCode')!r}."
         )
 
+    discovery_type = clean(target.get("discoveryType")) or "wix_product_page"
+    if discovery_type == "hss_stocklist_json":
+        json_url = clean(target.get("jsonUrl"))
+        response = fetch_json(json_url)
+        fetches = [
+            {
+                "url": json_url,
+                "status": "ok" if response["ok"] else "http_error",
+                "httpStatus": response["httpStatus"],
+                "finalUrl": response["finalUrl"],
+                "reason": response["error"],
+                "responseBytes": response["responseBytes"],
+                "attempts": response["attempts"],
+            }
+        ]
+        products = parse_hss_stocklist_rows(response["payload"], target) if response["ok"] else []
+        return {
+            "target": target["retailerSlug"],
+            "pagesCrawled": 1 if response["ok"] else 0,
+            "rawCategoryRows": len(response["payload"].get("boards", []))
+            if response["ok"] and isinstance(response["payload"], dict)
+            else 0,
+            "uniqueCanonicalProducts": len(products),
+            "paginationMethod": "Configured HSS stocklist JSON asset with per-board rows exposed by the public stocklist page",
+            "productsAccepted": len(products),
+            "productsRejected": max(
+                (
+                    len(response["payload"].get("boards", []))
+                    if response["ok"] and isinstance(response["payload"], dict)
+                    else 0
+                )
+                - len(products),
+                0,
+            ),
+            "fetches": fetches,
+            "products": products,
+        }
+
     listing_fetches = []
     product_urls: list[str] = []
-    discovery_type = clean(target.get("discoveryType")) or "wix_product_page"
     for url in target.get("categoryUrls", []):
         response = fetch_html(url)
         listing_fetches.append(
@@ -360,6 +506,9 @@ def discover_target(target: dict, _max_pages: int) -> dict:
         "rawCategoryRows": len(product_urls),
         "uniqueCanonicalProducts": len(products),
         "paginationMethod": (
+            "Configured public HSS stocklist JSON feed"
+            if discovery_type == "hss_stocklist_json"
+            else
             "Configured Squarespace product-list pages with per-product JSON-LD detail fetch"
             if discovery_type == "squarespace_product_page"
             else "Configured Wix board inventory pages with per-product JSON-LD detail fetch"
