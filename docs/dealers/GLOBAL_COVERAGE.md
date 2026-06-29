@@ -20,7 +20,7 @@ Production-backed retailer and MFA counts below come from live SQL on `2026-06-2
 | Region | Status | Live Retailers | Active Retailer Inventory Rows | MFA Rows | Latest Retailer Refresh (UTC) | Latest MFA Refresh (UTC) | Current Readiness / Notes |
 | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | AU | Production, Gen 3 reference | 36 | 12,287 | 6,706 | 2026-06-28 17:00:42 | 2026-06-28 17:03:58 | Strongest live region. AU expansion is parked; next AU work should be linkage uplift for Trigger Bros and Extreme rather than more retailer onboarding. |
-| EU | Production, Gen 3 | 15 | 12,332 | 2,716 | 2026-06-28 23:56:46 | 2026-06-28 20:32:15 | Sprint 15 Wave 2 added SantoLoco. EU coverage is broader and operationally stable, with one more live retailer and `+132` active rows after the production-validated refresh. |
+| EU | Production, Gen 3 | 16 | 12,407 | 2,716 | 2026-06-29 05:51:46 | 2026-06-28 20:32:15 | Sprint 15 Phase 4 added Surf Pirates. EU coverage is broader and operationally stable, with one more live retailer and `+75` active rows after the production-validated refresh. |
 | US | Production Beta, Gen 3 | 23 | 8,496 | 4,676 | 2026-06-29 03:34:28 | 2026-06-28 21:01:59 | Sprint 15 Phase 3 added Huntington Surf & Sport. US runtime remains job-backed and production validated, with one more live retailer and `+420` active rows after the production refresh. |
 | ID | Production, coverage-limited | 6 | 2,064 | 177 | 2026-06-28 20:31:45 | 2026-06-28 21:15:28 | Region is live and healthy, but retailer breadth is still limited. Indonesia needs dealer-source discovery before another serious onboarding wave is attempted. |
 
@@ -41,7 +41,7 @@ These counts are a mix of current active target registries and coverage-factory 
 | Magento | 4 | 1 | 1 | 0 | EU Magento currently means `58 Surf`; US Magento currently means `Warm Winds`. |
 | PrestaShop | 0 | 2 | 0 | 0 | EU currently uses `Mundo Surf` and `Single Quiver`. |
 | Neto / Maropost | 2 | 0 | 0 | 0 | AU only in the current reviewed pool. |
-| Custom | 0 | 2 | 2 | 6 | EU custom = Surf Corner + Tablas. US custom = Reddog + Cinnamon Rainbows. ID runtime is six legacy retailer-specific builders. |
+| Custom | 0 | 3 | 2 | 6 | EU custom = Surf Corner + Tablas + Surf Pirates. US custom = Reddog + Cinnamon Rainbows. ID runtime is six legacy retailer-specific builders. |
 | Unknown / Manual Review | 5 | 12 | 2 | 0 | Counts represent unresolved or non-promoted registry entries, not live runtime. |
 
 ## 4. Retailer Pipeline By Region
@@ -49,7 +49,7 @@ These counts are a mix of current active target registries and coverage-factory 
 | Region | Already Running | New In Sprint 14 | Qualified / Ready | Manual Review | Parked / Blocked | Next Best Candidates |
 | --- | --- | --- | --- | --- | --- | --- |
 | AU | 36 live retailers in production | None | No new AU onboarding recommended in this sprint | AU long tail remains reviewed but intentionally de-prioritised | AU is parked for coverage expansion; Trigger Bros and Extreme are live and should now be treated as linkage-quality work, not new onboarding | Trigger Bros linkage uplift, Extreme linkage uplift, AWSM governance check, Overboard parked-at-zero review, broader AU linkage uplift only if reopened |
-| EU | 15 runnable retailers | Hart Beach, HawaiiSurf, SantoLoco | Surf Pirates, Guincho Wind Factory | Warehouse One, Full & Cas, Ericeira Surf & Skate, Blue Tomato | Surfshop Deutschland blocked; Deeply, Glisshop and Flysurf remain low-value or unsupported for this pass | Surf Pirates, Guincho Wind Factory, Warehouse One, Full & Cas, Ericeira Surf & Skate |
+| EU | 16 runnable retailers | Hart Beach, HawaiiSurf, SantoLoco, Surf Pirates | Guincho Wind Factory | Warehouse One, Full & Cas, Ericeira Surf & Skate, Blue Tomato | Surfshop Deutschland blocked; Deeply, Glisshop and Flysurf remain low-value or unsupported for this pass | Guincho Wind Factory, Warehouse One, Full & Cas, Ericeira Surf & Skate, Blue Tomato |
 | US | 23 runnable retailers | Reddog Surf Shop, Cinnamon Rainbows, Huntington Surf & Sport | Hansen Surfboards, Encinitas Surfboards, Aqua East Surf Shop, Farias Surf Shop, Breakwater Surf Co | Nomad Surf Shop, Quality Surfboards Hawaii, Aloha Board Shop, Miller's Surf and Sport, CB Surf Shop | Ron Jon, Tamba Surf, Hi-Tech Surf Sports, K-Coast, Verde Azul, Hapa, Brave New World remain blocked | Hansen Surfboards, Encinitas Surfboards, Aqua East Surf Shop, Farias Surf Shop, Breakwater Surf Co |
 | ID | 6 live retailers | None | None confirmed in Sprint 14 | Fresh dealer-registry and qualification pass required before new onboarding | Coverage-limited; no current pack-ready follow-up source is confirmed | Start with retailer-source discovery rather than implementation |
 
@@ -60,6 +60,7 @@ These counts are a mix of current active target registries and coverage-factory 
 | EU | Hart Beach | Shopify | 107 | `quivrr-nightly-eu-inventory` | Succeeded | Live and production validated. |
 | EU | HawaiiSurf | Shopify | 47 | `quivrr-nightly-eu-inventory` | Succeeded | Live and production validated in Sprint 15 Wave 1. |
 | EU | SantoLoco | Shopify | 132 | `quivrr-nightly-eu-inventory` | Succeeded | Live and production validated in Sprint 15 Wave 2. |
+| EU | Surf Pirates | Custom structured thumbnail cards | 75 | `quivrr-nightly-eu-inventory` | Succeeded | Live and production validated in Sprint 15 Phase 4 after a clean retry of the EU Azure refresh. |
 | US | Reddog Surf Shop | Custom Wix / structured product pages | 39 | `quivrr-nightly-us-inventory` | Succeeded | Live and production validated. |
 | US | Cinnamon Rainbows | Custom Squarespace used inventory | 57 | `quivrr-nightly-us-inventory` | Succeeded | Live and production validated in Sprint 15 Wave 1. |
 | US | Huntington Surf & Sport | Custom Shopify stocklist JSON | 418 | `quivrr-nightly-us-inventory` | Succeeded | Live and production validated in Sprint 15 Phase 3. |
@@ -75,6 +76,7 @@ Production validation completed in the Sprint 14 closeout window:
   - `search_timeout_fix_v2_thin_fallback_v1_broader_brand_fallback_exact_gate_sprint6_1_legacy_brand_rows`
 - Latest validated search smoke from this closeout:
   - EU `boardSizeId=179264` returned close matches successfully.
+  - EU `boardSizeId=188720` returned close matches successfully and included `Surf Pirates`.
   - US `boardSizeId=179264` returned manufacturer-direct inventory successfully.
   - US `boardSizeId=188217` returned thin fallback safely when no exact or close results were available.
 
@@ -119,11 +121,11 @@ Ranked by expected supported-board yield, platform readiness, engineering comple
 
 | Rank | Retailer | Platform / Path | Why Next |
 | --- | --- | --- | --- |
-| 1 | Surf Pirates | Custom high-value | Germany is still under-covered and this remains the strongest prepared non-Shopify EU candidate. |
-| 2 | Guincho Wind Factory | Shopify signal | Portugal source with likely low engineering cost and good board relevance. |
-| 3 | Warehouse One | Manual review | Large upside if a clean surfboard slice can be isolated without introducing noise. |
-| 4 | Full & Cas | Manual review | Real surf-retailer signal with upside if a stable board-only path can be isolated. |
-| 5 | Ericeira Surf & Skate | Manual review | Credible surf-first retailer with geographic value if a safe board-only path can be isolated. |
+| 1 | Guincho Wind Factory | Shopify signal | Portugal source with likely low engineering cost and good board relevance. |
+| 2 | Warehouse One | Manual review | Large upside if a clean surfboard slice can be isolated without introducing noise. |
+| 3 | Full & Cas | Manual review | Real surf-retailer signal with upside if a stable board-only path can be isolated. |
+| 4 | Ericeira Surf & Skate | Manual review | Credible surf-first retailer with geographic value if a safe board-only path can be isolated. |
+| 5 | Blue Tomato | Manual review | Large retailer surface with upside only if a genuinely clean surfboard slice can be isolated. |
 
 ### United States
 
@@ -174,6 +176,7 @@ The practical interpretation of that ranking today is:
 
 - Operations Centre authenticated payload health should continue to be monitored.
 - US and EU newly added retailers should have linkage quality reviewed after their next scheduled runs.
+- Surf Pirates is live with meaningful inventory, but canonical size linkage remains `0` on the first production pass and should be improved through the existing EU linkage workflow rather than by loosening search.
 - AU Trigger Bros and Extreme have scrape health, but still need linkage uplift attention.
 - Indonesia remains coverage-limited.
 - The retailer partnership page form endpoint still relies on `mailto:` and should eventually move to a backend or ACS-backed path.

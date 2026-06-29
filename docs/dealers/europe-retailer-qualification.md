@@ -6,14 +6,14 @@ Sprint 14 Europe Coverage Factory using the Australia Gen 3 process:
 
 Dealer Registry -> Discovery Engine -> Platform Detection -> Qualification -> Platform Pack -> Azure Validation -> Operations Centre -> Search
 
-Review date: `2026-06-28`
+Review date: `2026-06-29`
 
 ## Current EU Runtime
 
 - `RegionCode = EU`
-- Current validated EU runnable retailer set: `15`
-- Current validated EU active retailer inventory rows: `12,332`
-- Production-validated onboarding additions so far: `Hart Beach`, `HawaiiSurf`, `SantoLoco`
+- Current validated EU runnable retailer set: `16`
+- Current validated EU active retailer inventory rows: `12,407`
+- Production-validated onboarding additions so far: `Hart Beach`, `HawaiiSurf`, `SantoLoco`, `Surf Pirates`
 - Sprint 14 local validation also fixed the slow but valid `Mundo Surf` category timeout path and aligned the master registry with the active PrestaShop runtime for `Mundo Surf` and `Single Quiver`
 
 ### Current Runnable Retailers
@@ -33,6 +33,7 @@ Review date: `2026-06-28`
 | Pop Up Surf Shop | Shopify | Netherlands | 88 |
 | SantoLoco | Shopify | Germany | 132 |
 | HawaiiSurf | Shopify | France | 47 |
+| Surf Pirates | Custom structured thumbnail cards | Germany | 75 |
 | Tablas Surf Shop | Custom Magento cards | Spain | 86 |
 | GSI Europe | Shopify | EU | 14 |
 
@@ -55,16 +56,12 @@ Review date: `2026-06-28`
 - `Hart Beach`
 - `HawaiiSurf`
 - `SantoLoco`
+- `Surf Pirates`
 
 ### Ready Shopify
 
 - `Guincho Wind Factory`
   Why: Shopify collection path already identified; Portugal source with real surfboard orientation.
-
-### Ready Custom High Value
-
-- `Surf Pirates`
-  Why: Germany is under-covered relative to Spain and Portugal, and Surf Pirates already has structured category targets prepared for a custom path.
 
 ### Manual Review
 
@@ -95,16 +92,16 @@ Review date: `2026-06-28`
 
 These are ranked by likely supported-board uplift, not just implementation ease.
 
-1. `Surf Pirates`
-   Why now: adds Germany using a prepared custom structured path and broadens the regional retailer mix.
-2. `Guincho Wind Factory`
+1. `Guincho Wind Factory`
    Why now: Portugal source on a reusable Shopify path with likely low engineering cost.
-3. `Warehouse One`
+2. `Warehouse One`
    Why now: high commercial value if a clean surfboard slice can be isolated, but only after review confirms it is not too noisy.
-4. `Full & Cas`
+3. `Full & Cas`
    Why now: real surf retailer signal with upside if a stable board-only path can be isolated.
-5. `Ericeira Surf & Skate`
+4. `Ericeira Surf & Skate`
    Why now: still requires review, but remains one of the more credible surf-first non-live EU sources.
+5. `Blue Tomato`
+   Why now: only worth it if a genuinely clean supported-board slice can be isolated from the broader boardsports surface.
 
 ## Sprint 14 Recommendation
 
@@ -113,9 +110,11 @@ These are ranked by likely supported-board uplift, not just implementation ease.
 - Do not spend more time on new EU frameworks until the next highest-value retailer can fit an existing pack.
 - `HawaiiSurf` has now completed the same production path successfully and should be treated as a proven EU Shopify onboarding outcome.
 - `SantoLoco` has now completed the same production path successfully and should be treated as a proven EU Shopify onboarding outcome.
+- `Surf Pirates` has now completed the same production path successfully and should be treated as a proven EU custom onboarding outcome.
 
 ## Risks
 
 - `Mundo Surf` is high yield but slow, so timeout budgets must remain explicit.
+- The first Azure execution in this slice failed on a transient `Mundo Surf` discovery collapse before a clean retry succeeded. Treat this as an EU runtime fragility signal to monitor rather than a blocker for Surf Pirates itself.
 - Several high-value German and French candidates still need proof that they expose real hardboard inventory rather than broad boardsports shells.
 - Cloudflare-protected retailers should remain blocked rather than being forced through brittle workarounds.
