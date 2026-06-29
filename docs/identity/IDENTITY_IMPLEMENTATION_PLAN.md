@@ -23,8 +23,17 @@ Live OAuth was not enabled in Sprint 16.1.
 6. Add frontend sign-in shell wiring for `quivrr.app`.
 7. Add frontend sign-in shell wiring for `quivrr.surf`.
 8. Keep public search anonymous.
+9. Deliver the first usable My Quivrr surface with profile, quiver, saved boards and recent activity.
 
 Sprint 16.2 deliberately does not implement saved boards, watchlists, alerts or notifications.
+
+Sprint 16.3 implements:
+
+- profile read/write
+- quiver CRUD
+- saved boards CRUD
+- recent activity from `UserEvents`
+- authenticated and anonymous event persistence for My Quivrr actions
 
 ## Frontend Integration Sequence
 

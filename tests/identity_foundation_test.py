@@ -151,8 +151,8 @@ class IdentityFoundationTests(unittest.TestCase):
         self.assertEqual(body["status"], "saved")
         self.assertTrue(body["profileComplete"])
         self.assertEqual(body["profile"]["heightCm"], 180)
-        self.assertEqual(body["profile"]["preferredBrands"], '["Album"]')
-        self.assertGreaterEqual(fake_connection.execute.call_count, 2)
+        self.assertEqual(body["profile"]["preferredBrands"], ["Album"])
+        self.assertGreaterEqual(fake_connection.execute.call_count, 3)
 
     def test_logout_is_stateless_client_session_acknowledgement(self):
         response = self.client.post("/api/logout")
@@ -232,20 +232,172 @@ class IdentityFoundationTests(unittest.TestCase):
         self.assertEqual(user["identityProvider"], "google.com")
 
     def test_events_endpoint_accepts_anonymous_payload(self):
-        response = self.client.post(
-            "/api/events",
-            json={
-                "anonymousSessionId": "anon-session-1",
-                "eventType": "search_viewed",
-                "regionCode": "AU",
-            },
-        )
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app.engine, "begin", return_value=fake_context):
+            response = self.client.post(
+                "/api/events",
+                json={
+                    "anonymousSessionId": "anon-session-1",
+                    "eventType": "SearchPerformed",
+                    "regionCode": "AU",
+                },
+            )
 
         self.assertEqual(response.status_code, 200)
         body = response.json()
-        self.assertEqual(body["status"], "accepted_not_persisted")
+        self.assertEqual(body["status"], "persisted")
         self.assertFalse(body["authenticated"])
         self.assertEqual(body["anonymousSessionId"], "anon-session-1")
+        self.assertEqual(body["eventType"], "SearchPerformed")
+
+    def test_saved_boards_endpoint_returns_saved_items(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {"UserId": "user-1", "EntraObjectId": "entra-1", "Email": "surfer@example.com"},
+            "profile": {},
+            "consent": {},
+        }
+        saved_boards = [{
+            "savedBoardId": "saved-1",
+            "brandName": "Album",
+            "modelName": "Bom Dia",
+            "regionCode": "AU",
+            "title": "Album | Bom Dia | PU | 5'6 | 27.1L",
+        }]
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle), patch.object(
+            backend_app.engine, "connect", return_value=fake_context
+        ), patch.object(backend_app, "fetch_saved_boards", return_value=saved_boards):
+            response = self.client.get("/api/my-quivrr/saved-boards", headers={"Authorization": "Bearer token"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["savedBoards"][0]["savedBoardId"], "saved-1")
+
+    def test_saved_board_post_requires_board_reference(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {"UserId": "user-1", "EntraObjectId": "entra-1", "Email": "surfer@example.com"},
+            "profile": {},
+            "consent": {},
+        }
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle):
+            response = self.client.post(
+                "/api/my-quivrr/saved-boards",
+                headers={"Authorization": "Bearer token"},
+                json={"regionCode": "AU"},
+            )
+
+        self.assertEqual(response.status_code, 422)
+
+    def test_quiver_endpoint_returns_items(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {"UserId": "user-1", "EntraObjectId": "entra-1", "Email": "surfer@example.com"},
+            "profile": {},
+            "consent": {},
+        }
+        quiver_items = [{
+            "quiverId": "quiver-1",
+            "title": "Custom Twin",
+            "customBoard": True,
+            "currentBoard": True,
+        }]
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle), patch.object(
+            backend_app.engine, "connect", return_value=fake_context
+        ), patch.object(backend_app, "fetch_user_quiver", return_value=quiver_items):
+            response = self.client.get("/api/my-quivrr/quiver", headers={"Authorization": "Bearer token"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertTrue(response.json()["quiver"][0]["customBoard"])
+
+    def test_quiver_post_accepts_custom_board(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {"UserId": "user-1", "EntraObjectId": "entra-1", "Email": "surfer@example.com"},
+            "profile": {},
+            "consent": {},
+        }
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+        quiver_items = [{
+            "quiverId": "generated-quiver-id",
+            "title": "Album Twin",
+            "customBoard": True,
+            "currentBoard": False,
+        }]
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle), patch.object(
+            backend_app.engine, "begin", return_value=fake_context
+        ), patch.object(backend_app, "fetch_user_quiver", return_value=quiver_items):
+            response = self.client.post(
+                "/api/my-quivrr/quiver",
+                headers={"Authorization": "Bearer token"},
+                json={
+                    "customBoard": True,
+                    "customBrandName": "Album",
+                    "customModelName": "Twin Thing",
+                    "status": "Favourite board",
+                },
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "created")
+        self.assertEqual(response.json()["quiver"][0]["quiverId"], "generated-quiver-id")
+
+    def test_profile_endpoint_includes_recent_activity_counts(self):
+        bundle = {
+            "isNewUser": False,
+            "user": {
+                "UserId": "user-1",
+                "EntraObjectId": "entra-1",
+                "Email": "surfer@example.com",
+                "DisplayName": "Test Surfer",
+                "IdentityProvider": "entra_external_id",
+                "HomeRegion": "AU",
+                "CreatedUtc": None,
+                "LastLoginUtc": None,
+            },
+            "profile": {"PreferredBrands": '["Album"]'},
+            "consent": {},
+        }
+        fake_connection = MagicMock()
+        fake_context = MagicMock()
+        fake_context.__enter__.return_value = fake_connection
+        fake_context.__exit__.return_value = None
+
+        with patch.object(backend_app, "resolve_persisted_identity_bundle", return_value=bundle), patch.object(
+            backend_app.engine, "connect", return_value=fake_context
+        ), patch.object(backend_app, "fetch_recent_activity", return_value=[{"eventType": "BoardViewed"}]), patch.object(
+            backend_app, "fetch_saved_boards", return_value=[{"savedBoardId": "saved-1"}]
+        ), patch.object(
+            backend_app, "fetch_user_quiver", return_value=[{"quiverId": "quiver-1", "currentBoard": True}]
+        ):
+            response = self.client.get("/api/my-quivrr/profile", headers={"Authorization": "Bearer token"})
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["savedBoardsCount"], 1)
+        self.assertEqual(body["quiverCount"], 1)
+        self.assertEqual(body["currentBoardCount"], 1)
+        self.assertEqual(body["recentActivity"][0]["eventType"], "BoardViewed")
 
     def test_jwt_validator_module_exports_expected_functions(self):
         self.assertTrue(callable(entra_external_id.get_jwks))
@@ -268,6 +420,9 @@ class IdentityFoundationTests(unittest.TestCase):
             "dbo.RecommendationHistory",
         ):
             self.assertIn(table_name, text)
+        quiver_script = Path("sql/identity/002_create_my_quivrr_quiver.sql")
+        self.assertTrue(quiver_script.exists())
+        self.assertIn("dbo.UserQuiver", quiver_script.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
