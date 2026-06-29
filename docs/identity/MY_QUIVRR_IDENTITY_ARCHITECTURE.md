@@ -38,11 +38,15 @@ The API exposes protected Sprint 16.2 endpoints:
 - `GET /api/my-quivrr/profile`
 - `PUT /api/my-quivrr/profile`
 - `POST /api/logout`
+- `GET /api/my-quivrr/quiver`
+- `POST /api/my-quivrr/quiver`
+- `DELETE /api/my-quivrr/quiver/{id}`
+- `GET /api/my-quivrr/saved-boards`
+- `POST /api/my-quivrr/saved-boards`
+- `DELETE /api/my-quivrr/saved-boards/{id}`
 
 The following endpoints remain placeholders and must not be surfaced as product features until their own sprint:
 
-- `GET /api/my-quivrr/saved-boards`
-- `POST /api/my-quivrr/saved-boards`
 - `GET /api/my-quivrr/watchlist`
 - `POST /api/my-quivrr/watchlist`
 
@@ -73,6 +77,8 @@ User behaviour events are stored in `dbo.UserEvents` rather than mixed into tran
 ## Bodhi Readiness
 
 Recommendation inputs and outputs belong in `dbo.RecommendationHistory`. Bodhi should use this only after the authenticated profile flow is implemented and consent rules are confirmed.
+
+Sprint 16.3 adds `docs/identity/MY_QUIVRR_PROFILE_AND_QUIVER.md` as the operational contract for profile fields, quiver data, saved boards and recent activity.
 
 ## Frontend Integration Points
 

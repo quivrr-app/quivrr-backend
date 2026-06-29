@@ -1198,6 +1198,24 @@ def preferred_brands_payload(value):
     return normalise_optional_text(value)
 
 
+def parse_preferred_brands(value):
+    if value in (None, ""):
+        return []
+    if isinstance(value, list):
+        return value
+    try:
+        parsed = json.loads(value)
+        if isinstance(parsed, list):
+            return [str(item) for item in parsed if str(item).strip()]
+    except (TypeError, ValueError, json.JSONDecodeError):
+        pass
+    return [
+        item.strip()
+        for item in str(value).split(",")
+        if item and item.strip()
+    ]
+
+
 def fetch_identity_bundle(connection, user_id: str) -> dict:
     user_row = row_to_dict(connection.execute(
         text("""
@@ -1417,6 +1435,288 @@ def profile_is_complete(profile: dict | None) -> bool:
     return any(profile.get(field) not in (None, "") for field in fields)
 
 
+def format_board_summary(brand_name, model_name, construction, length, volume_litres):
+    summary_parts = [
+        brand_name,
+        model_name,
+        construction,
+        length,
+        f"{volume_litres}L" if volume_litres not in (None, "") else None,
+    ]
+    return " | ".join(part for part in summary_parts if part)
+
+
+def serialise_saved_board(row: dict) -> dict:
+    return {
+        "savedBoardId": str(row.get("SavedBoardId")) if row.get("SavedBoardId") is not None else None,
+        "boardModelId": row.get("BoardModelId"),
+        "boardSizeId": row.get("BoardSizeId"),
+        "regionCode": row.get("RegionCode"),
+        "note": row.get("Notes"),
+        "createdUtc": str(row.get("CreatedUtc")) if row.get("CreatedUtc") is not None else None,
+        "brandName": row.get("BrandName"),
+        "modelName": row.get("ModelName"),
+        "construction": row.get("Construction"),
+        "length": row.get("LengthFeetInches"),
+        "width": row.get("Width"),
+        "thickness": row.get("Thickness"),
+        "volumeLitres": float(row.get("VolumeLitres")) if row.get("VolumeLitres") is not None else None,
+        "title": format_board_summary(
+            row.get("BrandName"),
+            row.get("ModelName"),
+            row.get("Construction"),
+            row.get("LengthFeetInches"),
+            row.get("VolumeLitres"),
+        ),
+    }
+
+
+def serialise_quiver_item(row: dict) -> dict:
+    custom_brand = row.get("CustomBrandName")
+    custom_model = row.get("CustomModelName")
+    brand_name = row.get("BrandName") or custom_brand
+    model_name = row.get("ModelName") or custom_model
+
+    return {
+        "quiverId": str(row.get("QuiverId")) if row.get("QuiverId") is not None else None,
+        "boardModelId": row.get("BoardModelId"),
+        "boardSizeId": row.get("BoardSizeId"),
+        "nickname": row.get("Nickname"),
+        "purchaseYear": row.get("PurchaseYear"),
+        "status": row.get("Status"),
+        "currentBoard": bool(row.get("CurrentBoard")),
+        "notes": row.get("Notes"),
+        "brandName": brand_name,
+        "modelName": model_name,
+        "construction": row.get("Construction") or row.get("CustomConstruction"),
+        "length": row.get("LengthFeetInches"),
+        "width": row.get("Width"),
+        "thickness": row.get("Thickness"),
+        "volumeLitres": float(row.get("VolumeLitres")) if row.get("VolumeLitres") is not None else (
+            float(row.get("CustomVolumeLitres")) if row.get("CustomVolumeLitres") is not None else None
+        ),
+        "customBoard": bool(row.get("IsCustomBoard")),
+        "customBrandName": custom_brand,
+        "customModelName": custom_model,
+        "customDimensions": row.get("CustomDimensions"),
+        "customConstruction": row.get("CustomConstruction"),
+        "customProductUrl": row.get("CustomProductUrl"),
+        "customImageUrl": row.get("CustomImageUrl"),
+        "createdUtc": str(row.get("CreatedUtc")) if row.get("CreatedUtc") is not None else None,
+        "updatedUtc": str(row.get("UpdatedUtc")) if row.get("UpdatedUtc") is not None else None,
+        "title": (
+            f"{custom_brand or ''} {custom_model or ''}".strip()
+            if row.get("IsCustomBoard")
+            else format_board_summary(
+                row.get("BrandName"),
+                row.get("ModelName"),
+                row.get("Construction"),
+                row.get("LengthFeetInches"),
+                row.get("VolumeLitres"),
+            )
+        ),
+    }
+
+
+def serialise_user_event(row: dict) -> dict:
+    payload = row.get("EventPayload")
+    parsed_payload = None
+    if payload:
+        try:
+            parsed_payload = json.loads(payload)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            parsed_payload = {"raw": payload}
+
+    title = (
+        format_board_summary(
+            row.get("BrandName"),
+            row.get("ModelName"),
+            None,
+            None,
+            None,
+        )
+        or row.get("ManufacturerName")
+        or row.get("EventType")
+    )
+
+    return {
+        "userEventId": row.get("UserEventId"),
+        "eventType": row.get("EventType"),
+        "regionCode": row.get("RegionCode"),
+        "brandName": row.get("BrandName"),
+        "modelName": row.get("ModelName"),
+        "boardModelId": row.get("BoardModelId"),
+        "boardSizeId": row.get("BoardSizeId"),
+        "manufacturerName": row.get("ManufacturerName"),
+        "createdUtc": str(row.get("CreatedUtc")) if row.get("CreatedUtc") is not None else None,
+        "title": title,
+        "payload": parsed_payload,
+    }
+
+
+def fetch_saved_boards(connection, user_id: str) -> list[dict]:
+    rows = connection.execute(
+        text("""
+            SELECT
+                sb.SavedBoardId,
+                sb.BoardModelId,
+                sb.BoardSizeId,
+                sb.RegionCode,
+                sb.Notes,
+                sb.CreatedUtc,
+                b.BrandName,
+                bm.ModelName,
+                bs.Construction,
+                bs.LengthFeetInches,
+                bs.Width,
+                bs.Thickness,
+                bs.VolumeLitres
+            FROM dbo.SavedBoards sb
+            LEFT JOIN dbo.BoardSizes bs
+                ON sb.BoardSizeId = bs.BoardSizeId
+            LEFT JOIN dbo.BoardModels bm
+                ON COALESCE(sb.BoardModelId, bs.BoardModelId) = bm.BoardModelId
+            LEFT JOIN dbo.Brands b
+                ON bm.BrandId = b.BrandId
+            WHERE sb.UserId = :user_id
+            ORDER BY sb.CreatedUtc DESC
+        """),
+        {"user_id": user_id},
+    ).fetchall()
+    return [serialise_saved_board(row_to_dict(row)) for row in rows]
+
+
+def fetch_user_quiver(connection, user_id: str) -> list[dict]:
+    rows = connection.execute(
+        text("""
+            SELECT
+                uq.QuiverId,
+                uq.BoardModelId,
+                uq.BoardSizeId,
+                uq.Nickname,
+                uq.PurchaseYear,
+                uq.Status,
+                uq.CurrentBoard,
+                uq.Notes,
+                uq.IsCustomBoard,
+                uq.CustomBrandName,
+                uq.CustomModelName,
+                uq.CustomDimensions,
+                uq.CustomConstruction,
+                uq.CustomVolumeLitres,
+                uq.CustomProductUrl,
+                uq.CustomImageUrl,
+                uq.CreatedUtc,
+                uq.UpdatedUtc,
+                b.BrandName,
+                bm.ModelName,
+                bs.Construction,
+                bs.LengthFeetInches,
+                bs.Width,
+                bs.Thickness,
+                bs.VolumeLitres
+            FROM dbo.UserQuiver uq
+            LEFT JOIN dbo.BoardSizes bs
+                ON uq.BoardSizeId = bs.BoardSizeId
+            LEFT JOIN dbo.BoardModels bm
+                ON COALESCE(uq.BoardModelId, bs.BoardModelId) = bm.BoardModelId
+            LEFT JOIN dbo.Brands b
+                ON bm.BrandId = b.BrandId
+            WHERE uq.UserId = :user_id
+            ORDER BY
+                CASE WHEN uq.CurrentBoard = 1 THEN 0 ELSE 1 END,
+                uq.UpdatedUtc DESC,
+                uq.CreatedUtc DESC
+        """),
+        {"user_id": user_id},
+    ).fetchall()
+    return [serialise_quiver_item(row_to_dict(row)) for row in rows]
+
+
+def fetch_recent_activity(connection, user_id: str, limit: int = 20) -> list[dict]:
+    bounded_limit = min(max(int(limit), 1), 20)
+    rows = connection.execute(
+        text(f"""
+            SELECT TOP {bounded_limit}
+                UserEventId,
+                EventType,
+                RegionCode,
+                BrandName,
+                ModelName,
+                BoardModelId,
+                BoardSizeId,
+                ManufacturerName,
+                EventPayload,
+                CreatedUtc
+            FROM dbo.UserEvents
+            WHERE UserId = :user_id
+            ORDER BY CreatedUtc DESC, UserEventId DESC
+        """),
+        {"user_id": user_id},
+    ).fetchall()
+    return [serialise_user_event(row_to_dict(row)) for row in rows]
+
+
+def write_user_event(
+    connection,
+    *,
+    event_type: str,
+    user_id: str | None = None,
+    anonymous_session_id: str | None = None,
+    region_code: str | None = None,
+    brand_name: str | None = None,
+    model_name: str | None = None,
+    board_model_id: int | None = None,
+    board_size_id: int | None = None,
+    retailer_id: int | None = None,
+    manufacturer_name: str | None = None,
+    payload: dict | None = None,
+):
+    connection.execute(
+        text("""
+            INSERT INTO dbo.UserEvents (
+                UserId,
+                AnonymousSessionId,
+                EventType,
+                RegionCode,
+                BrandName,
+                ModelName,
+                BoardModelId,
+                BoardSizeId,
+                RetailerId,
+                ManufacturerName,
+                EventPayload
+            )
+            VALUES (
+                :user_id,
+                :anonymous_session_id,
+                :event_type,
+                :region_code,
+                :brand_name,
+                :model_name,
+                :board_model_id,
+                :board_size_id,
+                :retailer_id,
+                :manufacturer_name,
+                :event_payload
+            )
+        """),
+        {
+            "user_id": user_id,
+            "anonymous_session_id": anonymous_session_id,
+            "event_type": normalise_optional_text(event_type, 128),
+            "region_code": normalise_optional_text(region_code, 16),
+            "brand_name": normalise_optional_text(brand_name, 128),
+            "model_name": normalise_optional_text(model_name, 256),
+            "board_model_id": board_model_id,
+            "board_size_id": board_size_id,
+            "retailer_id": retailer_id,
+            "manufacturer_name": normalise_optional_text(manufacturer_name, 128),
+            "event_payload": json.dumps(payload) if payload else None,
+        },
+    )
+
+
 def serialise_identity_bundle(bundle: dict) -> dict:
     user = bundle.get("user") or {}
     profile = bundle.get("profile")
@@ -1446,7 +1746,7 @@ def serialise_identity_bundle(bundle: dict) -> dict:
             "waveType": profile.get("WaveType") if profile else None,
             "waveSize": profile.get("WaveSize") if profile else None,
             "surfFrequency": profile.get("SurfFrequency") if profile else None,
-            "preferredBrands": profile.get("PreferredBrands") if profile else None,
+            "preferredBrands": parse_preferred_brands(profile.get("PreferredBrands")) if profile else [],
             "homeBreak": profile.get("HomeBreak") if profile else None,
             "homeCountry": profile.get("HomeCountry") if profile else None,
             "updatedUtc": str(profile.get("UpdatedUtc")) if profile and profile.get("UpdatedUtc") is not None else None,
@@ -1477,7 +1777,26 @@ def get_me(authorization: str | None = Header(default=None)):
 @app.get("/api/my-quivrr/profile")
 def get_my_quivrr_profile(authorization: str | None = Header(default=None)):
     bundle = resolve_persisted_identity_bundle(authorization)
-    return serialise_identity_bundle(bundle)
+    user_id = str(bundle["user"]["UserId"])
+
+    try:
+        with engine.connect() as connection:
+            recent_activity = fetch_recent_activity(connection, user_id)
+            saved_boards = fetch_saved_boards(connection, user_id)
+            quiver = fetch_user_quiver(connection, user_id)
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="My Quivrr profile storage is temporarily unavailable.",
+        ) from exc
+
+    return {
+        **serialise_identity_bundle(bundle),
+        "recentActivity": recent_activity,
+        "savedBoardsCount": len(saved_boards),
+        "quiverCount": len(quiver),
+        "currentBoardCount": len([item for item in quiver if item.get("currentBoard")]),
+    }
 
 
 @app.put("/api/my-quivrr/profile")
@@ -1538,6 +1857,13 @@ def put_my_quivrr_profile(
                 """),
                 {"user_id": user_id, **updates},
             )
+            write_user_event(
+                connection,
+                user_id=str(user_id),
+                event_type="ProfileUpdated",
+                region_code=updates["home_region"],
+                payload={"updatedFields": sorted(payload.keys())},
+            )
             updated_bundle = fetch_identity_bundle(connection, str(user_id))
             updated_bundle["isNewUser"] = False
     except (OperationalError, DBAPIError) as exc:
@@ -1562,11 +1888,17 @@ def post_logout():
 
 @app.get("/api/my-quivrr/saved-boards")
 def get_saved_boards(authorization: str | None = Header(default=None)):
-    resolve_required_identity_user(authorization)
-    return {
-        "status": "not_implemented",
-        "savedBoards": [],
-    }
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = str(bundle["user"]["UserId"])
+    try:
+        with engine.connect() as connection:
+            saved_boards = fetch_saved_boards(connection, user_id)
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Saved boards are temporarily unavailable.",
+        ) from exc
+    return {"savedBoards": saved_boards, "count": len(saved_boards)}
 
 
 @app.post("/api/my-quivrr/saved-boards")
@@ -1574,12 +1906,337 @@ def post_saved_board(
     payload: dict | None = Body(default=None),
     authorization: str | None = Header(default=None),
 ):
-    resolve_required_identity_user(authorization)
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = str(bundle["user"]["UserId"])
     payload = payload or {}
-    return {
-        "status": "accepted_not_persisted",
-        "receivedFields": sorted(payload.keys()),
+    board_model_id = payload.get("boardModelId")
+    board_size_id = payload.get("boardSizeId")
+    region_code = normalise_optional_text(payload.get("regionCode"), 16)
+    notes = normalise_optional_text(payload.get("note") or payload.get("notes"))
+    if board_model_id is None and board_size_id is None:
+        raise HTTPException(status_code=422, detail="boardModelId or boardSizeId is required.")
+
+    try:
+        with engine.begin() as connection:
+            existing = row_to_dict(connection.execute(
+                text("""
+                    SELECT TOP 1 SavedBoardId
+                    FROM dbo.SavedBoards
+                    WHERE UserId = :user_id
+                      AND COALESCE(BoardModelId, -1) = COALESCE(:board_model_id, -1)
+                      AND COALESCE(BoardSizeId, -1) = COALESCE(:board_size_id, -1)
+                      AND COALESCE(RegionCode, '') = COALESCE(:region_code, '')
+                """),
+                {
+                    "user_id": user_id,
+                    "board_model_id": board_model_id,
+                    "board_size_id": board_size_id,
+                    "region_code": region_code,
+                },
+            ).fetchone())
+
+            if existing:
+                connection.execute(
+                    text("""
+                        UPDATE dbo.SavedBoards
+                        SET Notes = :notes
+                        WHERE SavedBoardId = :saved_board_id
+                    """),
+                    {"saved_board_id": existing["SavedBoardId"], "notes": notes},
+                )
+                saved_board_id = str(existing["SavedBoardId"])
+                status = "updated"
+            else:
+                saved_board_id = str(uuid4())
+                connection.execute(
+                    text("""
+                        INSERT INTO dbo.SavedBoards (
+                            SavedBoardId,
+                            UserId,
+                            BoardModelId,
+                            BoardSizeId,
+                            RegionCode,
+                            Notes
+                        )
+                        VALUES (
+                            :saved_board_id,
+                            :user_id,
+                            :board_model_id,
+                            :board_size_id,
+                            :region_code,
+                            :notes
+                        )
+                    """),
+                    {
+                        "saved_board_id": saved_board_id,
+                        "user_id": user_id,
+                        "board_model_id": board_model_id,
+                        "board_size_id": board_size_id,
+                        "region_code": region_code,
+                        "notes": notes,
+                    },
+                )
+                status = "saved"
+
+            write_user_event(
+                connection,
+                user_id=user_id,
+                event_type="BoardSaved",
+                region_code=region_code,
+                board_model_id=board_model_id,
+                board_size_id=board_size_id,
+                payload={"savedBoardId": saved_board_id},
+            )
+            saved_boards = fetch_saved_boards(connection, user_id)
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(status_code=503, detail="Saved boards are temporarily unavailable.") from exc
+
+    saved_board = next((item for item in saved_boards if item["savedBoardId"] == saved_board_id), None)
+    return {"status": status, "savedBoard": saved_board, "savedBoards": saved_boards}
+
+
+@app.delete("/api/my-quivrr/saved-boards/{saved_board_id}")
+def delete_saved_board(saved_board_id: str, authorization: str | None = Header(default=None)):
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = str(bundle["user"]["UserId"])
+    try:
+        with engine.begin() as connection:
+            existing = row_to_dict(connection.execute(
+                text("""
+                    SELECT TOP 1 SavedBoardId, BoardModelId, BoardSizeId, RegionCode
+                    FROM dbo.SavedBoards
+                    WHERE SavedBoardId = :saved_board_id
+                      AND UserId = :user_id
+                """),
+                {"saved_board_id": saved_board_id, "user_id": user_id},
+            ).fetchone())
+            if not existing:
+                raise HTTPException(status_code=404, detail="Saved board not found.")
+
+            connection.execute(
+                text("""
+                    DELETE FROM dbo.SavedBoards
+                    WHERE SavedBoardId = :saved_board_id
+                      AND UserId = :user_id
+                """),
+                {"saved_board_id": saved_board_id, "user_id": user_id},
+            )
+            write_user_event(
+                connection,
+                user_id=user_id,
+                event_type="BoardRemoved",
+                region_code=existing.get("RegionCode"),
+                board_model_id=existing.get("BoardModelId"),
+                board_size_id=existing.get("BoardSizeId"),
+                payload={"source": "saved_board"},
+            )
+    except HTTPException:
+        raise
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(status_code=503, detail="Saved boards are temporarily unavailable.") from exc
+
+    return {"status": "deleted", "savedBoardId": saved_board_id}
+
+
+@app.get("/api/my-quivrr/quiver")
+def get_quiver(authorization: str | None = Header(default=None)):
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = str(bundle["user"]["UserId"])
+    try:
+        with engine.connect() as connection:
+            quiver = fetch_user_quiver(connection, user_id)
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(status_code=503, detail="My Quivrr quiver is temporarily unavailable.") from exc
+    return {"quiver": quiver, "count": len(quiver)}
+
+
+@app.post("/api/my-quivrr/quiver")
+def post_quiver_item(
+    payload: dict | None = Body(default=None),
+    authorization: str | None = Header(default=None),
+):
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = str(bundle["user"]["UserId"])
+    payload = payload or {}
+    quiver_id = normalise_optional_text(payload.get("quiverId"))
+    board_model_id = payload.get("boardModelId")
+    board_size_id = payload.get("boardSizeId")
+    is_custom_board = bool(payload.get("customBoard")) or bool(payload.get("customModelName"))
+    custom_model_name = normalise_optional_text(payload.get("customModelName"), 256)
+    if board_model_id is None and board_size_id is None and not custom_model_name:
+        raise HTTPException(status_code=422, detail="Provide a board reference or a custom board.")
+
+    params = {
+        "quiver_id": quiver_id or str(uuid4()),
+        "user_id": user_id,
+        "board_model_id": board_model_id,
+        "board_size_id": board_size_id,
+        "nickname": normalise_optional_text(payload.get("nickname"), 128),
+        "purchase_year": normalise_optional_int(payload.get("purchaseYear")),
+        "status": normalise_optional_text(payload.get("status"), 64),
+        "current_board": 1 if payload.get("currentBoard") else 0,
+        "notes": normalise_optional_text(payload.get("notes")),
+        "is_custom_board": 1 if is_custom_board else 0,
+        "custom_brand_name": normalise_optional_text(payload.get("customBrandName"), 128),
+        "custom_model_name": custom_model_name,
+        "custom_dimensions": normalise_optional_text(payload.get("customDimensions"), 128),
+        "custom_construction": normalise_optional_text(payload.get("customConstruction"), 128),
+        "custom_volume_litres": normalise_optional_float(payload.get("customVolumeLitres")),
+        "custom_product_url": normalise_optional_text(payload.get("customProductUrl"), 512),
+        "custom_image_url": normalise_optional_text(payload.get("customImageUrl"), 512),
     }
+
+    try:
+        with engine.begin() as connection:
+            if params["current_board"] == 1:
+                connection.execute(
+                    text("""
+                        UPDATE dbo.UserQuiver
+                        SET CurrentBoard = 0, UpdatedUtc = SYSUTCDATETIME()
+                        WHERE UserId = :user_id
+                    """),
+                    {"user_id": user_id},
+                )
+
+            existing = row_to_dict(connection.execute(
+                text("""
+                    SELECT TOP 1 QuiverId
+                    FROM dbo.UserQuiver
+                    WHERE QuiverId = :quiver_id
+                      AND UserId = :user_id
+                """),
+                {"quiver_id": params["quiver_id"], "user_id": user_id},
+            ).fetchone())
+
+            if existing:
+                connection.execute(
+                    text("""
+                        UPDATE dbo.UserQuiver
+                        SET
+                            BoardModelId = :board_model_id,
+                            BoardSizeId = :board_size_id,
+                            Nickname = :nickname,
+                            PurchaseYear = :purchase_year,
+                            Status = :status,
+                            CurrentBoard = :current_board,
+                            Notes = :notes,
+                            IsCustomBoard = :is_custom_board,
+                            CustomBrandName = :custom_brand_name,
+                            CustomModelName = :custom_model_name,
+                            CustomDimensions = :custom_dimensions,
+                            CustomConstruction = :custom_construction,
+                            CustomVolumeLitres = :custom_volume_litres,
+                            CustomProductUrl = :custom_product_url,
+                            CustomImageUrl = :custom_image_url,
+                            UpdatedUtc = SYSUTCDATETIME()
+                        WHERE QuiverId = :quiver_id
+                          AND UserId = :user_id
+                    """),
+                    params,
+                )
+                status = "updated"
+            else:
+                connection.execute(
+                    text("""
+                        INSERT INTO dbo.UserQuiver (
+                            QuiverId,
+                            UserId,
+                            BoardModelId,
+                            BoardSizeId,
+                            Nickname,
+                            PurchaseYear,
+                            Status,
+                            CurrentBoard,
+                            Notes,
+                            IsCustomBoard,
+                            CustomBrandName,
+                            CustomModelName,
+                            CustomDimensions,
+                            CustomConstruction,
+                            CustomVolumeLitres,
+                            CustomProductUrl,
+                            CustomImageUrl
+                        )
+                        VALUES (
+                            :quiver_id,
+                            :user_id,
+                            :board_model_id,
+                            :board_size_id,
+                            :nickname,
+                            :purchase_year,
+                            :status,
+                            :current_board,
+                            :notes,
+                            :is_custom_board,
+                            :custom_brand_name,
+                            :custom_model_name,
+                            :custom_dimensions,
+                            :custom_construction,
+                            :custom_volume_litres,
+                            :custom_product_url,
+                            :custom_image_url
+                        )
+                    """),
+                    params,
+                )
+                status = "created"
+
+            write_user_event(
+                connection,
+                user_id=user_id,
+                event_type="QuiverUpdated",
+                board_model_id=board_model_id,
+                board_size_id=board_size_id,
+                payload={"quiverId": params["quiver_id"], "status": status, "customBoard": is_custom_board},
+            )
+            quiver = fetch_user_quiver(connection, user_id)
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(status_code=503, detail="My Quivrr quiver is temporarily unavailable.") from exc
+
+    quiver_item = next((item for item in quiver if item["quiverId"] == params["quiver_id"]), None)
+    return {"status": status, "quiverItem": quiver_item, "quiver": quiver}
+
+
+@app.delete("/api/my-quivrr/quiver/{quiver_id}")
+def delete_quiver_item(quiver_id: str, authorization: str | None = Header(default=None)):
+    bundle = resolve_persisted_identity_bundle(authorization)
+    user_id = str(bundle["user"]["UserId"])
+    try:
+        with engine.begin() as connection:
+            existing = row_to_dict(connection.execute(
+                text("""
+                    SELECT TOP 1 QuiverId, BoardModelId, BoardSizeId
+                    FROM dbo.UserQuiver
+                    WHERE QuiverId = :quiver_id
+                      AND UserId = :user_id
+                """),
+                {"quiver_id": quiver_id, "user_id": user_id},
+            ).fetchone())
+            if not existing:
+                raise HTTPException(status_code=404, detail="Quiver item not found.")
+
+            connection.execute(
+                text("""
+                    DELETE FROM dbo.UserQuiver
+                    WHERE QuiverId = :quiver_id
+                      AND UserId = :user_id
+                """),
+                {"quiver_id": quiver_id, "user_id": user_id},
+            )
+            write_user_event(
+                connection,
+                user_id=user_id,
+                event_type="BoardRemoved",
+                board_model_id=existing.get("BoardModelId"),
+                board_size_id=existing.get("BoardSizeId"),
+                payload={"source": "quiver"},
+            )
+    except HTTPException:
+        raise
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(status_code=503, detail="My Quivrr quiver is temporarily unavailable.") from exc
+
+    return {"status": "deleted", "quiverId": quiver_id}
 
 
 @app.get("/api/my-quivrr/watchlist")
@@ -1619,8 +2276,32 @@ def post_user_event(
             detail="AnonymousSessionId is required when no authenticated user is supplied.",
         )
 
+    try:
+        with engine.begin() as connection:
+            user_id = None
+            if user:
+                ensured = ensure_identity_user(user)
+                user_id = str(ensured["user"]["UserId"])
+
+            write_user_event(
+                connection,
+                user_id=user_id,
+                anonymous_session_id=anonymous_session_id,
+                event_type=payload.get("eventType") or payload.get("EventType") or "UnknownEvent",
+                region_code=payload.get("regionCode") or payload.get("RegionCode"),
+                brand_name=payload.get("brandName") or payload.get("BrandName"),
+                model_name=payload.get("modelName") or payload.get("ModelName"),
+                board_model_id=payload.get("boardModelId") or payload.get("BoardModelId"),
+                board_size_id=payload.get("boardSizeId") or payload.get("BoardSizeId"),
+                retailer_id=payload.get("retailerId") or payload.get("RetailerId"),
+                manufacturer_name=payload.get("manufacturerName") or payload.get("ManufacturerName"),
+                payload=payload,
+            )
+    except (OperationalError, DBAPIError) as exc:
+        raise HTTPException(status_code=503, detail="Event intake is temporarily unavailable.") from exc
+
     return {
-        "status": "accepted_not_persisted",
+        "status": "persisted",
         "authenticated": user is not None,
         "anonymousSessionId": anonymous_session_id,
         "eventType": payload.get("eventType") or payload.get("EventType"),
