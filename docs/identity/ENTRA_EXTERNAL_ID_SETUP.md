@@ -25,6 +25,19 @@ The current backend reads these variables at runtime. Protected endpoints return
 7. Add backend environment variables to Azure App Service configuration.
 8. Restart the backend app service only after configuration is complete.
 
+## Provider Readiness Checklist
+
+Do not enable public auth until at least one provider completes a full live flow:
+
+1. Branded My Quivrr provider chooser is live.
+2. Provider button is enabled only when its Entra path is configured.
+3. Provider returns to the correct Quivrr redirect URI.
+4. Frontend exchanges the code successfully with PKCE.
+5. `GET /api/me` returns `200`.
+6. First login creates `dbo.Users`, `dbo.UserProfiles` and `dbo.UserConsents`.
+7. Profile save, reload and logout work.
+8. Public search still works while logged out.
+
 ## Redirect URI Placeholders
 
 Production placeholders:
@@ -60,6 +73,81 @@ The browser configuration is public SPA metadata and must not include secrets. C
 
 If `clientId` or `authority` is missing, the My Quivrr modal remains visible but sign-in reports that Entra frontend configuration is pending.
 
+The frontend readiness config now also supports provider flags:
+
+```html
+<script>
+  window.QUIVRR_AUTH_CONFIG = {
+    enabled: false,
+    authority: "",
+    clientId: "",
+    redirectUri: "",
+    postLogoutRedirectUri: "",
+    scopes: ["openid", "profile", "email"],
+    apiBaseUrl: "https://quivrr-backend-api.azurewebsites.net",
+    providers: {
+      google: { enabled: false, authorizeUrl: "", message: "Google sign-in is being enabled." },
+      apple: { enabled: false, authorizeUrl: "", message: "Apple sign-in is being enabled." },
+      email: { enabled: false, authorizeUrl: "", message: "Email sign-in is being enabled." },
+      microsoft: { enabled: false, authorizeUrl: "", message: "Microsoft sign-in is being enabled." }
+    }
+  };
+</script>
+```
+
+## Entra Portal Areas And Required Setup
+
+These are the concrete portal areas the current Quivrr rollout needs reviewed before public enablement.
+
+### Google
+
+- Portal area: `Microsoft Entra admin center -> External Identities -> All identity providers -> Google`
+- Required setup:
+  - Google client ID
+  - Google client secret
+  - the redirect and origin values required by the Google provider setup flow
+- Quivrr note:
+  - Keep Google disabled in `auth-config.js` until the provider completes a full live sign-in and `/api/me` validation.
+
+### Apple
+
+- Portal area: `Microsoft Entra admin center -> External Identities -> All identity providers -> Apple`
+- Required setup:
+  - Apple Services ID
+  - Apple Team ID
+  - Apple Key ID
+  - Apple private key
+- Quivrr note:
+  - Keep Apple disabled until Apple returns cleanly to one of the registered Quivrr redirect URIs and `/api/me` succeeds.
+
+### Email
+
+- Portal areas:
+  - `Microsoft Entra admin center -> External Identities -> All identity providers -> Email one-time passcode`
+  - the sign-up / sign-in user flow or customer experience that exposes email sign-in to customers
+- Required setup:
+  - confirm the chosen email sign-in method
+  - confirm the selected flow returns a usable code to the Quivrr redirect URI
+- Quivrr note:
+  - Do not mark Email ready until a real email-based login finishes the full PKCE callback and `/api/me` validation.
+
+### Microsoft Personal Accounts
+
+- Portal area:
+  - the Microsoft identity provider configuration inside Entra External ID
+  - plus the backing provider/client registration used during the Microsoft account handoff
+- Observed live blocker:
+  - production testing with `dunn.nathan@hotmail.com` reached `login.live.com` and failed with `invalid_request` because the `redirect_uri` was not registered for that provider/client handoff
+- Required fix:
+  - align the provider-specific Microsoft handoff with the live Quivrr redirect URIs:
+    - `https://quivrr.surf/`
+    - `https://quivrr.app/australia/`
+    - `https://quivrr.app/europe/`
+    - `https://quivrr.app/indonesia/`
+    - `https://quivrr.app/united-states/`
+- Quivrr note:
+  - Microsoft personal accounts remain not production-ready until that provider-specific redirect issue is corrected and re-tested live.
+
 ## SQL Migration Order
 
 Run the identity migration after the existing production schema is available:
@@ -84,14 +172,15 @@ The validation path uses:
 ## Runtime Flow
 
 1. User clicks My Quivrr.
-2. Static frontend starts Microsoft Entra External ID authorization-code-with-PKCE flow.
-3. Entra handles Email, Google, Microsoft and Apple-ready provider selection according to tenant configuration.
-4. Frontend receives the code on the same page and exchanges it for tokens.
-5. Frontend calls `GET /api/me` with `Authorization: Bearer <access token>`.
-6. Backend validates the JWT and looks up `dbo.Users.EntraObjectId`.
-7. Existing users get `LastLoginUtc` and `IdentityProvider` updated.
-8. New users are inserted into `dbo.Users`, `dbo.UserProfiles` and `dbo.UserConsents`.
-9. Profile fields remain optional and can be saved later through `PUT /api/my-quivrr/profile`.
+2. Static frontend shows a Quivrr-branded provider chooser first.
+3. Only provider buttons marked ready in `auth-config.js` start a Microsoft Entra External ID authorization-code-with-PKCE flow.
+4. Entra handles Email, Google, Microsoft and Apple-ready provider selection according to tenant configuration.
+5. Frontend receives the code on the same page and exchanges it for tokens.
+6. Frontend calls `GET /api/me` with `Authorization: Bearer <access token>`.
+7. Backend validates the JWT and looks up `dbo.Users.EntraObjectId`.
+8. Existing users get `LastLoginUtc` and `IdentityProvider` updated.
+9. New users are inserted into `dbo.Users`, `dbo.UserProfiles` and `dbo.UserConsents`.
+10. Profile fields remain optional and can be saved later through `PUT /api/my-quivrr/profile`.
 
 ## Operational Notes
 

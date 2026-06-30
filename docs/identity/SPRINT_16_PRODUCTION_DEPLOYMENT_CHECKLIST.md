@@ -80,6 +80,14 @@ Required redirect URIs should include the live public pages that host My Quivrr:
 
 Also register post-logout redirect URIs for the same public surfaces.
 
+Provider readiness must be validated explicitly:
+
+- Google provider configured and returns to Quivrr correctly.
+- Apple provider configured and returns to Quivrr correctly.
+- Email sign-in flow configured and returns a usable authorization code.
+- Microsoft personal account provider redirect URI issue resolved before public enablement.
+- At least one provider completes a full live sign-in plus `/api/me` validation before `enabled=true`.
+
 ## Backend Validation
 
 Run and confirm:
@@ -91,13 +99,48 @@ Run and confirm:
 5. Quiver and saved-board endpoints work for authenticated users only.
 6. Search, retailer inventory and manufacturer inventory endpoints remain publicly accessible.
 
+## Production Validation Status
+
+Validation run completed on June 30, 2026 against live production.
+
+Completed successfully:
+
+- Backend Entra External ID configuration is live.
+- Anonymous `GET /api/me` now returns `401 Authentication is required.` instead of the pre-configuration `503` contract.
+- Invalid and malformed JWTs return fast `401` responses.
+- Public endpoints remained healthy during identity configuration validation:
+  - `/`
+  - `/api/brands`
+  - `/api/search?boardSizeId=179264&region=AU`
+- Frontend `auth-config.js` remains disabled on both `quivrr.app` and `quivrr.surf`.
+- With `enabled=false`, My Quivrr opens safely and shows the branded provider chooser plus provider-specific "sign-in is being enabled" messaging.
+
+Blocked / not yet complete:
+
+- Full first-user sign-in was blocked by mandatory Microsoft Authenticator enrollment in the Entra tenant during live production testing.
+- Because first sign-in could not complete, the following production checks remain blocked:
+  - automatic creation of `Users`, `UserProfiles`, `UserConsents`
+  - authenticated `/api/me`
+  - profile onboarding, skip flow, profile update and logout after live token issuance
+  - cross-site authenticated continuity between `quivrr.surf` and `quivrr.app`
+  - authenticated `UserEvents` verification
+- Production testing with a Microsoft personal account reached `login.live.com` and failed with an `invalid_request redirect_uri` mismatch, which confirms the Microsoft provider handoff is not ready for public auth enablement.
+
+Current recommendation:
+
+- Do not set frontend `auth-config.js` to `enabled=true` yet.
+- Resolve the tenant-side first-login MFA/onboarding path or provide an approved validation identity that can complete the live Entra flow.
+- Re-run the blocked first-user and returning-user checks after tenant policy is confirmed.
+
 ## Frontend Validation
 
 With `enabled=false`:
 
 - My Quivrr entry remains visible.
 - Clicking it does not crash the page.
-- The modal reports that sign-in is being enabled.
+- The modal shows the branded provider chooser.
+- Continue as guest closes the modal and leaves public search available.
+- Disabled providers report which sign-in path is still being enabled.
 
 With `enabled=true`:
 
