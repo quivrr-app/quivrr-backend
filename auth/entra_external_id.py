@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 from functools import lru_cache
@@ -13,6 +14,9 @@ ENTRA_CONFIG_KEYS = {
     "jwks_url": "ENTRA_EXTERNAL_ID_JWKS_URL",
     "audience": "ENTRA_EXTERNAL_ID_AUDIENCE",
 }
+
+
+logger = logging.getLogger(__name__)
 
 
 class AuthConfigurationError(RuntimeError):
@@ -59,6 +63,50 @@ def _require_config() -> dict[str, str]:
         )
 
     return config
+
+
+def _normalise_issuer(value: str | None) -> str | None:
+    if not value:
+        return None
+    return value.rstrip("/")
+
+
+def _allowed_issuers(config: dict[str, str]) -> set[str]:
+    tenant_id = config["tenant_id"]
+    configured_issuer = _normalise_issuer(config["issuer"])
+    issuers = {configured_issuer} if configured_issuer else set()
+
+    jwks_host = urlparse(config["jwks_url"]).hostname or ""
+    if jwks_host:
+        issuers.add(_normalise_issuer(f"https://{jwks_host}/{tenant_id}/v2.0"))
+
+    parsed_configured = urlparse(config["issuer"])
+    configured_host = parsed_configured.hostname or ""
+    if configured_host.endswith(".ciamlogin.com") and configured_host != jwks_host:
+        issuers.add(_normalise_issuer(f"https://{configured_host}/{tenant_id}/v2.0"))
+
+    issuers.add(_normalise_issuer(f"https://login.microsoftonline.com/{tenant_id}/v2.0"))
+    return {issuer for issuer in issuers if issuer}
+
+
+def _allowed_audiences(config: dict[str, str]) -> set[str]:
+    configured_audience = config["audience"]
+    client_id = config["client_id"]
+    audiences = {
+        configured_audience,
+        client_id,
+        f"api://{configured_audience}",
+        f"api://{client_id}",
+    }
+    return {audience for audience in audiences if audience}
+
+
+def _claim_matches_audience(claim_value, allowed_audiences: set[str]) -> bool:
+    if isinstance(claim_value, str):
+        return claim_value in allowed_audiences
+    if isinstance(claim_value, list):
+        return any(isinstance(item, str) and item in allowed_audiences for item in claim_value)
+    return False
 
 
 @lru_cache(maxsize=1)
@@ -111,13 +159,28 @@ def validate_access_token(token: str) -> dict:
             token,
             signing_key.key,
             algorithms=["RS256"],
-            audience=config["audience"],
-            issuer=config["issuer"],
-            options={"require": ["exp", "aud", "iss", "sub"]},
+            options={
+                "require": ["exp", "sub"],
+                "verify_aud": False,
+                "verify_iss": False,
+            },
         )
+
+        issuer = _normalise_issuer(claims.get("iss"))
+        if not issuer or issuer not in _allowed_issuers(config):
+            raise AuthValidationError("Access token issuer validation failed.")
+
+        audience = claims.get("aud")
+        if not audience or not _claim_matches_audience(audience, _allowed_audiences(config)):
+            raise AuthValidationError("Access token audience validation failed.")
+
+    except AuthValidationError:
+        raise
     except jwt.PyJWTError as exc:
+        logger.warning("Entra token validation failed: %s", exc.__class__.__name__)
         raise AuthValidationError("Access token validation failed.") from exc
     except Exception as exc:
+        logger.warning("Entra token signing key validation failed: %s", exc.__class__.__name__)
         raise AuthValidationError("Access token signing key validation failed.") from exc
 
     return claims
